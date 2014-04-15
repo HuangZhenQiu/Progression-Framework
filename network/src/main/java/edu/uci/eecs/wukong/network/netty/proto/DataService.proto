@@ -1,0 +1,27 @@
+package cloud.rpc;
+
+//define where the generated code be placed
+option java_package = "edu.uci.eecs.wukong.network.netty.service";
+
+//enable service code generation
+option java_generic_services = true;
+
+
+message Datagram{
+	required int32 serviceId = 1;
+	repeated int32 data = 2;
+}
+
+message Feedback {
+	required int32 returnId = 1;
+}
+
+
+service BlockingDataService {
+	rpc send(Datagram) returns(Feedback);
+}
+
+service NonBlockingDataService {
+    rpc send(Datagram) returns(Feedback);
+}
+

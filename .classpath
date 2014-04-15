@@ -1,15 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="model/src/test/java"/>
-	<classpathentry kind="src" path="core/src/test/java"/>
 	<classpathentry kind="src" path="core/src/main/java"/>
+	<classpathentry kind="src" path="storage/src/main/java"/>
+	<classpathentry kind="src" path="profile/src/main/java"/>
 	<classpathentry kind="src" path="model/src/main/java"/>
 	<classpathentry kind="src" path="network/src/main/java"/>
-	<classpathentry kind="src" path="network/src/test/java"/>
-	<classpathentry kind="src" path="profile/src/test/java"/>
-	<classpathentry kind="src" path="progression-manager/src/test/java"/>
-	<classpathentry kind="src" path="storage/src/test/java"/>
-	<classpathentry kind="lib" path="progression-manager/target/dependency/junit-3.8.1.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="target/dependency/junit-3.8.1.jar"/>
+	<classpathentry kind="lib" path="target/dependency/netty-4.0.0.Alpha8.jar"/>
+	<classpathentry kind="lib" path="target/dependency/protobuf-java-2.5.0.jar"/>
+	<classpathentry kind="lib" path="target/dependency/slf4j-api-1.6.1.jar"/>
+	<classpathentry kind="lib" path="target/dependency/netty-buffer-4.0.15.Final.jar"/>
+	<classpathentry kind="lib" path="target/dependency/netty-codec-4.0.15.Final.jar"/>
+	<classpathentry kind="lib" path="target/dependency/netty-common-4.0.15.Final.jar"/>
+	<classpathentry kind="lib" path="target/dependency/netty-handler-4.0.15.Final.jar"/>
+	<classpathentry kind="lib" path="target/dependency/netty-transport-4.0.15.Final.jar"/>
+	<classpathentry kind="lib" path="target/dependency/protobuf-rpc-pro-duplex-3.2.2.jar"/>
 	<classpathentry kind="output" path="build"/>
 </classpath>

@@ -4,11 +4,43 @@
   <groupId>edu.uci.eecs.wukong</groupId>
   <artifactId>progression-manager</artifactId>
   <version>0.0.1-SNAPSHOT</version>
+  <properties>
+		<slf4jVersion>1.6.1</slf4jVersion>
+  </properties>
   <modules>
-  	<module>core</module>
+  	
   	<module>model</module>
   	<module>profile</module>
   	<module>storage</module>
   	<module>network</module>
+  	<module>core</module>
   </modules>
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8.1</version>
+      <scope>test</scope>
+    </dependency>
+   <dependency>
+		<groupId>io.netty</groupId>
+		<artifactId>netty</artifactId>
+		<version>4.0.0.Alpha8</version>
+	</dependency>
+  	<dependency>
+		<groupId>com.google.protobuf</groupId>
+		<artifactId>protobuf-java</artifactId>
+		<version>2.5.0</version>
+	</dependency>
+	<dependency>
+		<groupId>com.googlecode.protobuf-rpc-pro</groupId>
+		<artifactId>protobuf-rpc-pro-duplex</artifactId>
+		<version>3.2.2</version>
+	</dependency>
+	<dependency>
+		<groupId>org.slf4j</groupId>
+		<artifactId>slf4j-api</artifactId>
+		<version>${slf4jVersion}</version>
+	</dependency>
+  </dependencies>
 </project>

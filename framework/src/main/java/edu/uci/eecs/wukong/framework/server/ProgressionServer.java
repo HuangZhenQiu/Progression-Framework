@@ -8,9 +8,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import edu.uci.eecs.wukong.framework.dispatch.Dispatcher;
-import edu.uci.eecs.wukong.network.netty.CommunicationServer;
-import edu.uci.eecs.wukong.network.netty.service.DataService;
-import edu.uci.eecs.wukong.network.netty.service.ProgressionDataServiceFactory;
+import edu.uci.eecs.wukong.rpc.netty.CommunicationServer;
+import edu.uci.eecs.wukong.rpc.netty.service.DataService;
+import edu.uci.eecs.wukong.rpc.netty.service.ProgressionDataServiceFactory;
 
 public class ProgressionServer {
 	

@@ -8,9 +8,11 @@
 		<slf4jVersion>1.6.1</slf4jVersion>
   </properties>
   <modules>
+    <module>framework</module>
+    <module>plugin</module>
   	<module>storage</module>
-  	<module>network</module>
-  	<module>framework</module>
+  	<module>rpc</module>
+
   </modules>
   <dependencies>
     <dependency>

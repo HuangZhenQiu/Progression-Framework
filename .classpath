@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="core/src/main/java"/>
 	<classpathentry kind="src" path="storage/src/main/java"/>
+	<classpathentry kind="src" path="framework/src/main/java"/>
 	<classpathentry kind="src" path="profile/src/main/java"/>
 	<classpathentry kind="src" path="model/src/main/java"/>
 	<classpathentry kind="src" path="network/src/main/java"/>

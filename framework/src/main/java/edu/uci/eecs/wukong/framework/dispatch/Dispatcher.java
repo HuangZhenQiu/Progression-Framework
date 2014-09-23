@@ -8,11 +8,11 @@
  * Contributors:
  *     LLAMA Project Group Member
  *******************************************************************************/
-package edu.uci.eecs.wukong.core.dispatch;
+package edu.uci.eecs.wukong.framework.dispatch;
 
-import edu.uci.eecs.wukong.core.event.Event;
-import edu.uci.eecs.wukong.core.event.ReasonEvent;
-import edu.uci.eecs.wukong.core.event.RuleMatchEvent;
+import edu.uci.eecs.wukong.framework.event.Event;
+import edu.uci.eecs.wukong.framework.event.ReasonEvent;
+import edu.uci.eecs.wukong.framework.event.RuleMatchEvent;
 
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.BlockingQueue;

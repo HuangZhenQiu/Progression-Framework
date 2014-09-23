@@ -1,4 +1,4 @@
-package edu.uci.eecs.wukong.core.dispatch;
+package edu.uci.eecs.wukong.framework.dispatch;
 
 public class TaskType {
 	public static enum Type {APPENDER, DISPACHER, MATCHER, EXECUTOR};

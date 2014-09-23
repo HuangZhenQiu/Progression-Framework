@@ -1,14 +1,13 @@
-package edu.uci.eecs.wukong.core.server;
+package edu.uci.eecs.wukong.framework.server;
 
 import com.googlecode.protobuf.pro.duplex.PeerInfo;
-
 import com.google.protobuf.BlockingService;
 import com.google.protobuf.Service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import edu.uci.eecs.wukong.core.dispatch.Dispatcher;
+import edu.uci.eecs.wukong.framework.dispatch.Dispatcher;
 import edu.uci.eecs.wukong.network.netty.CommunicationServer;
 import edu.uci.eecs.wukong.network.netty.service.DataService;
 import edu.uci.eecs.wukong.network.netty.service.ProgressionDataServiceFactory;

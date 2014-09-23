@@ -1,6 +1,6 @@
-package edu.uci.eecs.wukong.core.dispatch;
+package edu.uci.eecs.wukong.framework.dispatch;
 
-import edu.uci.eecs.wukong.core.event.Event;
+import edu.uci.eecs.wukong.framework.event.Event;
 
 public class EventDispatchTask<T extends Event> extends ProgressionTask {
 

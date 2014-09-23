@@ -1,6 +1,6 @@
-package edu.uci.eecs.wukong.core.dispatch;
+package edu.uci.eecs.wukong.framework.dispatch;
 
-import edu.uci.eecs.wukong.core.event.RuleMatchEvent;
+import edu.uci.eecs.wukong.framework.event.RuleMatchEvent;
 
 public class JessRuleMatchTask<T extends RuleMatchEvent> extends ProgressionTask {
 

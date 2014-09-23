@@ -8,11 +8,10 @@
     <version>0.0.1-SNAPSHOT</version>
   </parent>
   
-  <artifactId>core</artifactId>
+  <artifactId>framework</artifactId>
   <packaging>jar</packaging>
   <version>0.0.1-SNAPSHOT</version>
-  <name>core</name>
-
+  <name>framework</name>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

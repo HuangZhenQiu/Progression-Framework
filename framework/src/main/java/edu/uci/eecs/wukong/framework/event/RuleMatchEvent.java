@@ -1,4 +1,4 @@
-package edu.uci.eecs.wukong.core.event;
+package edu.uci.eecs.wukong.framework.event;
 
 public class RuleMatchEvent extends Event {
 

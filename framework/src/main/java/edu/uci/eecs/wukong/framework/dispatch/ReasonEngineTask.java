@@ -1,6 +1,6 @@
-package edu.uci.eecs.wukong.core.dispatch;
+package edu.uci.eecs.wukong.framework.dispatch;
 
-import edu.uci.eecs.wukong.core.event.ReasonEvent;
+import edu.uci.eecs.wukong.framework.event.ReasonEvent;
 
 public class ReasonEngineTask<T extends ReasonEvent> extends ProgressionTask{
 

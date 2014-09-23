@@ -8,12 +8,9 @@
 		<slf4jVersion>1.6.1</slf4jVersion>
   </properties>
   <modules>
-  	<module>model</module>
-  	<module>profile</module>
   	<module>storage</module>
   	<module>network</module>
   	<module>framework</module>
-  	
   </modules>
   <dependencies>
     <dependency>

@@ -5,16 +5,29 @@
   <parent>
     <artifactId>progression</artifactId>
     <groupId>edu.uci.eecs.wukong</groupId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.1</version>
   </parent>
-  
   <artifactId>framework</artifactId>
   <packaging>jar</packaging>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>0.0.1</version>
   <name>framework</name>
+  
+  <repositories>
+    <repository>
+      <id>General</id>
+      <name>general</name>
+      <url>http://repo.maven.apache.org/maven2</url>
+    </repository>
+    <repository>
+      <id>Smack</id>
+      <name>smack</name>
+      <url>https://maven-repository.com/</url>
+    </repository>
+  </repositories>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <slf4jVersion>1.7.9</slf4jVersion>
   </properties>
   <dependencies>
     <dependency>
@@ -25,8 +38,8 @@
     </dependency>
 	<dependency>
 		<groupId>io.netty</groupId>
-		<artifactId>netty</artifactId>
-		<version>4.0.0.Alpha8</version>
+		<artifactId>netty-all</artifactId>
+		<version>4.0.24.Final</version>
 	</dependency>
   	<dependency>
 		<groupId>com.google.protobuf</groupId>
@@ -34,15 +47,113 @@
 		<version>2.5.0</version>
 	</dependency>
 	<dependency>
-		<groupId>org.slf4j</groupId>
-		<artifactId>slf4j-api</artifactId>
-		<version>${slf4jVersion}</version>
+		<groupId>com.google.code.gson</groupId>
+		<artifactId>gson</artifactId>
+		<version>2.3.1</version>
 	</dependency>
 	<dependency>
+		<groupId>org.apache.httpcomponents</groupId>
+		<artifactId>httpclient</artifactId>
+		<version>4.4-beta1</version>
+	</dependency>
+	<dependency>
+		<groupId>commons-httpclient</groupId>
+		<artifactId>commons-httpclient</artifactId>
+		<version>3.1</version>
+	</dependency>
+	<dependency>
+		<groupId>com.google.guava</groupId>
+		<artifactId>guava</artifactId>
+		<version>18.0</version>
+	</dependency>
+	<dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-api</artifactId>
+        <version>${slf4jVersion}</version>
+    </dependency>
+    <dependency>
+        <!-- any library that uses commons-logging will be directed to slf4j -->
+        <groupId>org.slf4j</groupId>
+        <artifactId>jcl-over-slf4j</artifactId>
+        <version>${slf4jVersion}</version>
+        </dependency>
+    <dependency>
+        <!-- any library that uses slf4j will be directed to java.util.logging -->
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-jdk14</artifactId>
+        <version>${slf4jVersion}</version>
+    </dependency>
+    <dependency>
+        <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>${slf4jVersion}</version>
+            <scope>test</scope>
+    </dependency>
+    <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-log4j12</artifactId>
+        <version>${slf4jVersion}</version>
+    </dependency>
+	<dependency>
 		<groupId>edu.uci.eecs.wukong</groupId>
-		<artifactId>network</artifactId>
+		<artifactId>rpc</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
-		<scope>compile</scope>
+	</dependency>
+	<dependency>
+  		<groupId>org.igniterealtime.smack</groupId>
+  		<artifactId>smack</artifactId>
+  		<version>3.1.0</version>
+	</dependency>
+	<dependency>
+  		<groupId>org.igniterealtime.smack</groupId>
+  		<artifactId>smackx</artifactId>
+  		<version>3.1.0</version>
+	</dependency>
+	<dependency>
+		<groupId>org.igniterealtime.smack</groupId>
+		<artifactId>smack-extensions</artifactId>
+		<version>4.0.6</version>
+	</dependency>
+	<dependency>
+		<groupId>io.netty</groupId>
+		<artifactId>netty-all</artifactId>
+		<version>4.0.24.Final</version>
+	</dependency>
+  	<dependency>
+		<groupId>com.google.protobuf</groupId>
+		<artifactId>protobuf-java</artifactId>
+		<version>2.5.0</version>
+	</dependency>
+	<dependency>
+		<groupId>com.googlecode.protobuf-rpc-pro</groupId>
+		<artifactId>protobuf-rpc-pro-duplex</artifactId>
+		<version>3.2.2</version>
 	</dependency>
   </dependencies>
+  <build>
+  	<plugins>
+  	<plugin>
+  		<artifactId>maven-assembly-plugin</artifactId>
+  		<configuration>
+    		<archive>
+      		<manifest>
+        		<mainClass>edu.uci.eecs.wukong.framework.ProgressionServer</mainClass>
+      		</manifest>
+    		</archive>
+    		<descriptorRefs>
+      		<descriptorRef>jar-with-dependencies</descriptorRef>
+    		</descriptorRefs>
+  		</configuration>
+  		<executions>
+    		<execution>
+      		<id>make-assembly</id> <!-- this is used for inheritance merges -->
+      		<phase>package</phase> <!-- bind to the packaging phase -->
+      		<goals>
+        		<goal>single</goal>
+      		</goals>
+    		</execution>
+  		</executions>
+	</plugin>
+    </plugins>
+   </build>
 </project>

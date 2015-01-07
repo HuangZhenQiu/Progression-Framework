@@ -1,23 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="storage/src/main/java"/>
-	<classpathentry kind="src" path="plugin/src/test/java"/>
-	<classpathentry kind="src" path="plugin/src/main/java"/>
-	<classpathentry kind="src" path="rpc/src/test/java"/>
-	<classpathentry kind="src" path="storage/src/test/java"/>
 	<classpathentry kind="src" path="framework/src/test/java"/>
-	<classpathentry kind="src" path="rpc/src/main/java"/>
+	<classpathentry kind="src" path="framework/src/main/config"/>
 	<classpathentry kind="src" path="framework/src/main/java"/>
-	<classpathentry kind="lib" path="target/dependency/junit-3.8.1.jar"/>
-	<classpathentry kind="lib" path="target/dependency/netty-4.0.0.Alpha8.jar"/>
-	<classpathentry kind="lib" path="target/dependency/protobuf-java-2.5.0.jar"/>
-	<classpathentry kind="lib" path="target/dependency/slf4j-api-1.6.1.jar"/>
-	<classpathentry kind="lib" path="target/dependency/netty-buffer-4.0.15.Final.jar"/>
-	<classpathentry kind="lib" path="target/dependency/netty-codec-4.0.15.Final.jar"/>
-	<classpathentry kind="lib" path="target/dependency/netty-common-4.0.15.Final.jar"/>
-	<classpathentry kind="lib" path="target/dependency/netty-handler-4.0.15.Final.jar"/>
-	<classpathentry kind="lib" path="target/dependency/netty-transport-4.0.15.Final.jar"/>
-	<classpathentry kind="lib" path="target/dependency/protobuf-rpc-pro-duplex-3.2.2.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jre7"/>
-	<classpathentry kind="output" path="build"/>
+	<classpathentry kind="var" path="M2_REPO"/>
+	<classpathentry kind="var" path="ECLIPSE_HOME"/>
+	<classpathentry kind="var" path="M2_REPO/jivesoftware/smack/3.1.0/smack-3.1.0.jar"/>
+	<classpathentry kind="var" path="M2_REPO/com/google/guava/guava/18.0/guava-18.0.jar"/>
+	<classpathentry kind="var" path="M2_REPO/com/google/protobuf/protobuf-java/2.5.0/protobuf-java-2.5.0.jar"/>
+	<classpathentry kind="var" path="M2_REPO/com/googlecode/protobuf-rpc-pro/protobuf-rpc-pro-duplex/3.2.2/protobuf-rpc-pro-duplex-3.2.2.jar"/>
+	<classpathentry kind="var" path="M2_REPO/io/netty/netty-all/4.0.24.Final/netty-all-4.0.24.Final.jar"/>
+	<classpathentry kind="var" path="M2_REPO/jivesoftware/smackx/3.1.0/smackx-3.1.0.jar"/>
+	<classpathentry kind="var" path="M2_REPO/jline/jline/0.9.1/jline-0.9.1.jar"/>
+	<classpathentry kind="var" path="M2_REPO/xpp3/xpp3/1.1.4c/xpp3-1.1.4c.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/igniterealtime/smack/smack-core/4.0.6/smack-core-4.0.6.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/igniterealtime/smack/smack-extensions/4.0.6/smack-extensions-4.0.6.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="var" path="M2_REPO/commons-httpclient/commons-httpclient/3.1/commons-httpclient-3.1.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/apache/httpcomponents/httpclient/4.4-beta1/httpclient-4.4-beta1.jar"/>
+	<classpathentry kind="var" path="M2_REPO/com/google/code/gson/gson/2.3.1/gson-2.3.1.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/slf4j/slf4j-api/1.7.9/slf4j-api-1.7.9.jar"/>
+	<classpathentry kind="var" path="M2_REPO/log4j/log4j/1.2.17/log4j-1.2.17.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/slf4j/slf4j-log4j12/1.7.9/slf4j-log4j12-1.7.9.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/slf4j/slf4j-jdk14/1.7.9/slf4j-jdk14-1.7.9.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/slf4j/jcl-over-slf4j/1.7.9/jcl-over-slf4j-1.7.9.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/apache/httpcomponents/httpcore/4.4-beta1/httpcore-4.4-beta1.jar"/>
+	<classpathentry kind="output" path="target/classes"/>
 </classpath>

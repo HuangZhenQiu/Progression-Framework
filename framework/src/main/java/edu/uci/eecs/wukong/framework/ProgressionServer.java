@@ -61,7 +61,7 @@ public class ProgressionServer {
 	
 	//start the llama cloud server
 	public void start() {
-		
+		this.pluginManager.init();
 		this.server.start();
 		this.dispatcher.start();
 		this.pipeline.start();

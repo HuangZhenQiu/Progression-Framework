@@ -1,10 +1,14 @@
 package edu.uci.eecs.wukong.framework.manager;
 
+import com.google.gson.Gson;
 import edu.uci.eecs.wukong.framework.Plugin;
 import edu.uci.eecs.wukong.framework.client.XMPPContextClient;
 import edu.uci.eecs.wukong.framework.context.Context;
+import edu.uci.eecs.wukong.framework.context.DemoContext;
 import edu.uci.eecs.wukong.framework.context.ExecutionContext;
+import edu.uci.eecs.wukong.framework.context.ContextListener;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.List;
@@ -19,35 +23,54 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 public class ContextManager {
 	private static Logger logger = LoggerFactory.getLogger(ContextManager.class);
+	private static Gson gson = new Gson();
 	private Map<Plugin, List<String>> pluginContextMap;
 	private Map<String, Context> contexts;
 	private XMPPContextClient contextClient;
-	private Set<String> topics;
+	private Set<String> topicFilterSet;
 	private ContextEventListenser contextListener;
+	private List<ContextListener> listeners;
 	
 	public ContextManager() {
 		pluginContextMap = new HashMap<Plugin, List<String>>();
 		contexts = new ConcurrentHashMap<String, Context>();
 		contextClient = XMPPContextClient.getInstance();
-		topics = new HashSet<String>();
+		topicFilterSet = new HashSet<String>();
 		contextListener = new ContextEventListenser();
+		listeners = new ArrayList<ContextListener>();
 	}
 	
 	private class ContextEventListenser implements ItemEventListener<PayloadItem<Context>> {
 		public void handlePublishedItems(ItemPublishEvent evt){
 			for (Object object :evt.getItems()) {
-				PayloadItem<Context> item = (PayloadItem<Context>)object;
-				Context context = item.getPayload();
-				contexts.put(context.getTopicId(), context);;
+				PayloadItem item = (PayloadItem)object;
+				String message = item.getPayload().toString();
+				int start = message.indexOf('{');
+				int end = message.indexOf('}');
+				DemoContext context = gson.fromJson(message.substring(start, end + 1), DemoContext.class);
+				contexts.put(context.getTopicId(), context);
+				for(ContextListener listener : listeners) {
+					listener.onContextArrival(context);
+				}
 			}
+		}
+	}
+	
+	public synchronized void subsribeContext(ContextListener listener) {
+		this.listeners.add(listener);
+	}
+	
+	public synchronized void unsubsribeContext(ContextListener listener) {
+		if (this.listeners.contains(listener)) {
+			this.listeners.remove(listener);
 		}
 	}
 	
 	public void subscribe(Plugin plugin, List<String> topics) {
 		for (String topic : topics) {
-			if(!topics.contains(topic)) {
+			if(!topicFilterSet.contains(topic)) {
 				contextClient.subscribe(topic, contextListener);
-				topics.add(topic);
+				topicFilterSet.add(topic);
 			}
 		}
 		
@@ -61,7 +84,6 @@ public class ContextManager {
 		for(String topic : subscribedTopics) {
 			pluginContext.put(topic, contexts.get(topic));
 		}
-		
 		return new ExecutionContext(pluginContext);
 	}
 }

@@ -18,7 +18,6 @@ import edu.uci.eecs.wukong.framework.context.ContextListener;
 public class ProgressionExtensionPoint extends ExtensionPoint<ProgressionExtension> implements ContextListener,
 	Runnable {
 	private static Logger logger = LoggerFactory.getLogger(ProgressionExtensionPoint.class);
-	private Map<String, List<ProgressionExtension>> contextMap;
 	private ConfigurationManager configurationManager;
 	private Queue<Context> contexts;
 	
@@ -39,7 +38,6 @@ public class ProgressionExtensionPoint extends ExtensionPoint<ProgressionExtensi
 	
 	public ProgressionExtensionPoint(ConfigurationManager configurationManager) {
 		this.configurationManager = configurationManager;
-		contextMap = new HashMap<String, List<ProgressionExtension>>();
 		contexts = new ConcurrentLinkedQueue<Context>();
 	}
 	
@@ -47,12 +45,12 @@ public class ProgressionExtensionPoint extends ExtensionPoint<ProgressionExtensi
 		while(true) {
 			Context context = contexts.poll();
 			if(context != null) {
-				List<ProgressionExtension> extensions= contextMap.get(context.getTopicId());
+				logger.info("Progression Extension Point is polling new context:" + context.toString());
+
 				for(ProgressionExtension progressionExtension : extensions) {
 					this.executor.execute(new ProgressionTask(progressionExtension, context));
 				}
 			}
-			logger.info("Progression Extension Point is polling new context to invoke plugin's extension.");
 		}
 	}
 	

@@ -23,6 +23,10 @@
       <name>smack</name>
       <url>https://maven-repository.com/</url>
     </repository>
+     <repository>
+    	<id>opencast-public</id>
+    	<url>http://repository.opencastproject.org/nexus/content/repositories/public/</url>
+  	</repository>
   </repositories>
 
   <properties>
@@ -95,9 +99,14 @@
         <version>${slf4jVersion}</version>
     </dependency>
 	<dependency>
-		<groupId>edu.uci.eecs.wukong</groupId>
-		<artifactId>rpc</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
+		<groupId>org.igniterealtime.smack</groupId>
+		<artifactId>smack-core</artifactId>
+		<version>4.0.6</version>
+	</dependency>
+	<dependency>
+		<groupId>org.igniterealtime.smack</groupId>
+		<artifactId>smack-java7</artifactId>
+		<version>4.0.1</version>
 	</dependency>
 	<dependency>
   		<groupId>org.igniterealtime.smack</groupId>
@@ -113,6 +122,11 @@
 		<groupId>org.igniterealtime.smack</groupId>
 		<artifactId>smack-extensions</artifactId>
 		<version>4.0.6</version>
+	</dependency>
+	<dependency>
+        <groupId>org.igniterealtime.smack</groupId>
+        <artifactId>smack-tcp</artifactId>
+        <version>4.0.6</version>
 	</dependency>
 	<dependency>
 		<groupId>io.netty</groupId>

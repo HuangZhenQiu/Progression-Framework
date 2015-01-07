@@ -12,7 +12,12 @@ public class PluginManager {
 		this.pipeline = pipeline;
 	}
 	
+	public void init() {
+		registerPlugin(new DemoPlugin());
+	}
+	
 	public void registerPlugin(Plugin plugin) {
 		contextManager.subscribe(plugin, plugin.registerContext());
+		pipeline.registerExtension(plugin.registerExtension());
 	}
 }

@@ -6,6 +6,7 @@ import edu.uci.eecs.wukong.framework.util.Configuration;
 import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.SASLAuthentication;
 import org.jivesoftware.smack.XMPPConnection;
+import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smackx.pubsub.ConfigureForm;
 import org.jivesoftware.smackx.pubsub.FormType;
 import org.jivesoftware.smackx.pubsub.Node;
@@ -34,10 +35,12 @@ public class XMPPContextClient {
 	
 	private XMPPContextClient(){
 		connectionConfig = new ConnectionConfiguration(
-				systemConfig.getXMPPAddress(), Integer.parseInt(systemConfig.getXMPPPort()));
-		connection = new XMPPConnection(connectionConfig);
+				systemConfig.getXMPPAddress(),
+				Integer.parseInt(systemConfig.getXMPPPort()), systemConfig.getXMPPServerName());
+		connectionConfig.setSecurityMode(ConnectionConfiguration.SecurityMode.disabled);
+		connection = new XMPPTCPConnection(connectionConfig);
 		try {
-			SASLAuthentication.supportSASLMechanism("PLAIN", 0);
+			//SASLAuthentication.supportSASLMechanism("PLAIN", 0);
 			connection.connect();
 			connection.login(systemConfig.getXMPPUserName(), systemConfig.getXMPPPassword());
 			manager = new PubSubManager(connection, systemConfig.getXMPPServerName());
@@ -52,6 +55,7 @@ public class XMPPContextClient {
 			Node  eventNode = manager.getNode(nodeId);
 			eventNode.addItemEventListener(listener);
 			eventNode.subscribe(connection.getUser());
+			logger.info("XMPP client subcribe nodeId: " + nodeId);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} 
@@ -59,7 +63,7 @@ public class XMPPContextClient {
 	
 	public void publish(String id, Context context) {
 		try {
-			LeafNode node = manager.getNode(id);
+			LeafNode node = (LeafNode)manager.getNode(id);
 			if (node == null) {
 				node = createNode(id);
 			}
@@ -83,6 +87,7 @@ public class XMPPContextClient {
 			return node;
 		} catch (Exception e) {
 			e.printStackTrace();
+			logger.error(e.toString());
 		}
 		
 		return null;

@@ -20,6 +20,7 @@ public class Pipeline {
 		this.contextManager = contextManager;
 		this.configurationManager = configuraionManager;
 		this.progressionPoint = new ProgressionExtensionPoint(configuraionManager);
+		this.contextManager.subsribeContext(progressionPoint);
 	}
 	
 	public void registerExtension(List<Extension> extensions) {

@@ -1,6 +1,7 @@
 package edu.uci.eecs.wukong.framework.client;
 
 import edu.uci.eecs.wukong.framework.entity.ConfigurationEntity;
+import edu.uci.eecs.wukong.framework.entity.ConfigurationReport;
 import edu.uci.eecs.wukong.framework.util.Configuration;
 
 import java.io.IOException;
@@ -47,9 +48,10 @@ public class ConfigurationClient {
 	private static Gson gson = new Gson();
 	private PoolingHttpClientConnectionManager connectionManager;
 	private CloseableHttpClient client;
-	private final static String CONFIG_METHOD = "/config/ConfigService";
+	private final static String CONFIG_METHOD = "/configuration";
 	private final static String CONTENT_TYPE_VALUE = "application/json";
-	private final static String CONFIG_URL = "http://" + configuration.getMasterAddress() + "/"+ CONFIG_METHOD;
+	private final static String CONFIG_URL = "http://" + configuration.getMasterAddress()
+			+ ":" + configuration.getMasterPort() + "/"+ CONFIG_METHOD;
 
 	private static HttpRequestRetryHandler retryHandler = new HttpRequestRetryHandler() {
 		public boolean retryRequest(
@@ -104,21 +106,19 @@ public class ConfigurationClient {
 		return configurationClient;
 	}
 	
-	public void sendConfigurationMessage(List<ConfigurationEntity> entities)
+	public void sendTestMessage()
 			throws ClientProtocolException, IOException {
-		send(CONFIG_URL, null, gson.toJson(entities));
+		send(CONFIG_URL, "TEST MESSAGE");
+	}
+	
+	public void sendConfigurationMessage(ConfigurationReport report)
+			throws ClientProtocolException, IOException {
+		send(CONFIG_URL, gson.toJson(report));
 	}
 
-	private void send(String url, Map<String, String> paramters, String content)
+	private void send(String url, String content)
 			throws ClientProtocolException, IOException {
-		StringBuffer buffer = new StringBuffer(url);
-		List<NameValuePair> qparams = new ArrayList<NameValuePair>();
-		for (Entry<String, String> entry : paramters.entrySet()) {
-			 qparams.add(new BasicNameValuePair(entry.getKey(), entry.getValue()));
-		}
-		buffer.append("?");
-		buffer.append(URLEncodedUtils.format(qparams, "UTF-8"));
-		HttpPost httpPost = new HttpPost(buffer.toString());
+		HttpPost httpPost = new HttpPost(url);
 		httpPost.setHeader(HTTP.CONTENT_TYPE, CONTENT_TYPE_VALUE);
 		StringEntity se = new StringEntity(content, ContentType.create(CONTENT_TYPE_VALUE, Consts.UTF_8));
 		httpPost.setEntity(se);

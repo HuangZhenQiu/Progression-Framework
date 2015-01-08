@@ -12,12 +12,14 @@ import org.slf4j.LoggerFactory;
 import edu.uci.eecs.wukong.framework.entity.ConfigurationEntity;
 import edu.uci.eecs.wukong.framework.extension.ProgressionExtension;
 import edu.uci.eecs.wukong.framework.manager.ConfigurationManager;
+import edu.uci.eecs.wukong.framework.util.Configuration;
 import edu.uci.eecs.wukong.framework.context.Context;
 import edu.uci.eecs.wukong.framework.context.ContextListener;
 
 public class ProgressionExtensionPoint extends ExtensionPoint<ProgressionExtension> implements ContextListener,
 	Runnable {
 	private static Logger logger = LoggerFactory.getLogger(ProgressionExtensionPoint.class);
+	private static Configuration configuration = Configuration.getInstance();
 	private ConfigurationManager configurationManager;
 	private Queue<Context> contexts;
 	
@@ -31,7 +33,7 @@ public class ProgressionExtensionPoint extends ExtensionPoint<ProgressionExtensi
 		
 		public void run() {
 			List<ConfigurationEntity> entities = extension.execute(currentContext);
-			configurationManager.send(entities);
+			configurationManager.send(configuration. , entities);
 		}
 		
 	}

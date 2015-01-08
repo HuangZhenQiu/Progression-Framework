@@ -8,6 +8,15 @@ public class DemoContext extends Context{
 	public int ppnum5;
 	public int ppnum6;
 	
+	public boolean equals(DemoContext context) {
+		if(this.ppnum1 == context.ppnum1 && this.ppnum2 == context.ppnum2
+				&& this.ppnum3 == context.ppnum3 && this.ppnum4 == context.ppnum4
+				&& this.ppnum5 == context.ppnum5 && this.ppnum6 == context.ppnum6) {
+			return true;
+		}
+		
+		return false;
+	}
 	public DemoContext() {
 		super("Location");
 	}

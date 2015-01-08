@@ -45,6 +45,7 @@ public class ContextManager {
 			for (Object object :evt.getItems()) {
 				PayloadItem item = (PayloadItem)object;
 				String message = item.getPayload().toString();
+				logger.info(message);
 				int start = message.indexOf('{');
 				int end = message.indexOf('}');
 				DemoContext context = gson.fromJson(message.substring(start, end + 1), DemoContext.class);

@@ -12,6 +12,13 @@ public class Configuration {
 	private static final String XMPP_PASSWORD = "XMPP.PASSWORD";
 	private static final String MASTER_ADDRESS = "MASTER.ADDRESS";
 	private static final String MASTER_PORT = "MASTER.PORT";
+	private static final String DEMO_KICHEN_SECONDS = "DEMO.KICHEN.SECONDS";
+	private static final String DEMO_TABLE_SECONDS = "DEMO.TABLE.SECONDS";
+	private static final String DEMO_APPLICATION_ID = "DEMO.APPLICATION.ID";
+	private static final String DEMO_KICHEN_SLIDER_ID = "DEMO.KICHEN.SLIDER.ID";
+	private static final String DEMO_TABLE_SLIDER_ID = "DEMO.TABLE.SLIDER.ID";
+	private static final String DEMO_OUTER_SLIDER_ID = "DEMO.OUTER.SLIDER.ID";
+	private static final String DEMO_WALL_SLIDER_ID = "DEMO.WALL.SLIDER.ID";
 	private static Configuration configuration;
 	private static Properties properties = new Properties();
 
@@ -59,5 +66,33 @@ public class Configuration {
 	
 	public String getMasterPort() {
 		return properties.getProperty(MASTER_PORT);
+	}
+	
+	public int getDemoKichenSeconds() {
+		return Integer.parseInt(properties.getProperty(DEMO_KICHEN_SECONDS));
+	}
+	
+	public int getDemoTableSeconds() {
+		return Integer.parseInt(properties.getProperty(DEMO_TABLE_SECONDS));
+	}
+	
+	public String getDemoApplicationId() {
+		return properties.getProperty(DEMO_APPLICATION_ID);
+	}
+	
+	public String getKichenSliderId() {
+		return properties.getProperty(DEMO_KICHEN_SLIDER_ID);
+	}
+	
+	public String getTableSliderId() {
+		return properties.getProperty(DEMO_TABLE_SLIDER_ID);
+	}
+	
+	public String getOuterSliderId() {
+		return properties.getProperty(DEMO_OUTER_SLIDER_ID);
+	}
+	
+	public String getWallSliderId() {
+		return properties.getProperty(DEMO_WALL_SLIDER_ID);
 	}
 }

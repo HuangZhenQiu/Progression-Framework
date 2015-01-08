@@ -33,7 +33,7 @@ public class ProgressionExtensionPoint extends ExtensionPoint<ProgressionExtensi
 		
 		public void run() {
 			List<ConfigurationEntity> entities = extension.execute(currentContext);
-			configurationManager.send(configuration. , entities);
+			configurationManager.send(configuration.getDemoApplicationId() , entities);
 		}
 		
 	}

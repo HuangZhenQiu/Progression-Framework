@@ -21,11 +21,10 @@ public class DemoProgressionExtension implements ProgressionExtension<FeatureEnt
 	private static String TABLE_SLIDER_COMPONENT_ID = configuration.getTableSliderId();
 	private static String DEMO_SLIDER_COMPONENT_ID = configuration.getOuterSliderId();
 	private static String WALL_LIGHT_SLIDER_COMPONENT_ID = configuration.getWallSliderId();
-	private static int LEVEL_ONE = 40;
-	private static int LEVEL_TWO = 60;
-	private static int LEVEL_THREE = 80;
+	private static int LEVEL_TWO = 40;
+	private static int LEVEL_THREE = 70;
 	private static int LEVEL_FOUR = 99;
-	private DemoContext lastContext;
+	private DemoContext lastContext = null;
 
 	// Triggered by general data pipeline
 	public  List<ConfigurationEntity> execute(List<FeatureEntity> data, ExecutionContext context) {

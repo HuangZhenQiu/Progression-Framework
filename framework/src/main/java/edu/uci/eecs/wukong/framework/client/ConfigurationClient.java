@@ -113,6 +113,7 @@ public class ConfigurationClient {
 	
 	public void sendConfigurationMessage(ConfigurationReport report)
 			throws ClientProtocolException, IOException {
+		LOGGER.info("Send out configuration report: " + gson.toJson(report));
 		send(CONFIG_URL, gson.toJson(report));
 	}
 

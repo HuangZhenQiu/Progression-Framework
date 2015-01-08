@@ -24,6 +24,7 @@ public class DemoProgressionExtension implements ProgressionExtension<FeatureEnt
 	private static int LEVEL_TWO = 40;
 	private static int LEVEL_THREE = 70;
 	private static int LEVEL_FOUR = 99;
+	private static int status; // 1 kichen, 2 table, 3 general
 	private DemoContext lastContext = null;
 
 	// Triggered by general data pipeline
@@ -40,17 +41,34 @@ public class DemoProgressionExtension implements ProgressionExtension<FeatureEnt
 			if (lastContext == null) {
 				lastContext = demoContext;
 			} else {
-				if (!lastContext.equals(context)) {
+				if (!lastContext.equals(demoContext)) {
 					if (isEnterRoom(demoContext)) {
+						status = 3;
 						return generateEnterRoomCommand(entities);
 					}
-				} else {
-					if (isInKichen(demoContext)) {
+					lastContext = demoContext;
+				} else if (!lastContext.isTriggered()){
+					if (isInKichen(demoContext) && status != 1) {
+						lastContext.setTriggered(true);
+						status = 1;
 						return generateInKichenCommand(entities);
 					}
 					
-					if (isInTableConversation(demoContext)) {
+					if (isInTableConversation(demoContext) && status != 2) {
+						lastContext.setTriggered(true);
+						status = 2;
 						return generateInTableConversation(entities);
+					}
+					
+					if (isPeopleExist(demoContext) && status != 3) {
+						status = 3;
+						try {
+							Thread.sleep(10000);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} //Delay the message
+						return generateEnterRoomCommand(entities);
 					}
 				}
 			}
@@ -99,6 +117,16 @@ public class DemoProgressionExtension implements ProgressionExtension<FeatureEnt
 	
 	private boolean isEnterRoom(DemoContext context) {
 		if(isEmpty(lastContext) && !isEmpty(context)) {
+			return true;
+		}
+		
+		return false;
+	}
+	
+	private boolean isPeopleExist(DemoContext context) {
+	
+		if (context.ppnum1 > 0 || context.ppnum2 > 0 || context.ppnum3 > 0
+				|| context.ppnum4 > 0 || context.ppnum5 > 0 || context.ppnum6 > 0) {
 			return true;
 		}
 		

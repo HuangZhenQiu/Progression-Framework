@@ -7,9 +7,11 @@ public abstract class Context implements PacketExtension {
 	private String topicId;
 	private long timestamp;
 	private long lasttime;
+	private boolean isTriggered;
 	
 	public Context(String topicId) {
 		this.topicId = topicId;
+		this.isTriggered = false;
 	}
 	
 	public String getTopicId() {
@@ -37,5 +39,13 @@ public abstract class Context implements PacketExtension {
 	
 	public String getNamespace() {
 		return "";
+	}
+
+	public boolean isTriggered() {
+		return isTriggered;
+	}
+
+	public void setTriggered(boolean isTriggered) {
+		this.isTriggered = isTriggered;
 	}
 }

@@ -2,18 +2,18 @@ package edu.uci.eecs.wukong.framework.extension;
 
 import edu.uci.eecs.wukong.framework.context.Context;
 import edu.uci.eecs.wukong.framework.context.ExecutionContext;
-import edu.uci.eecs.wukong.framework.entity.ConfigurationEntity;
+import edu.uci.eecs.wukong.framework.entity.ConfigurationCommand;
 import edu.uci.eecs.wukong.framework.entity.FeatureEntity;
 
 import java.util.List;
 public interface ProgressionExtension<T extends FeatureEntity> extends Extension<T> {
 	
 	// Triggered by general data pipeline
-	public List<ConfigurationEntity> execute(List<T> data, ExecutionContext context);
+	public ConfigurationCommand execute(List<T> data, ExecutionContext context);
 	
 	// Triggered by context switch
-	public List<ConfigurationEntity> execute(Context context);
+	public ConfigurationCommand execute(Context context);
 	
 	// Triggered by timer
-	public List<ConfigurationEntity> execute();
+	public ConfigurationCommand execute();
 }

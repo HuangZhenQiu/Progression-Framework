@@ -9,6 +9,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import edu.uci.eecs.wukong.framework.entity.ConfigurationCommand;
 import edu.uci.eecs.wukong.framework.entity.ConfigurationEntity;
 import edu.uci.eecs.wukong.framework.extension.ProgressionExtension;
 import edu.uci.eecs.wukong.framework.manager.ConfigurationManager;
@@ -32,8 +33,21 @@ public class ProgressionExtensionPoint extends ExtensionPoint<ProgressionExtensi
 		}
 		
 		public void run() {
-			List<ConfigurationEntity> entities = extension.execute(currentContext);
-			configurationManager.send(configuration.getDemoApplicationId() , entities);
+			try {
+				ConfigurationCommand command = extension.execute(currentContext);
+				if(!command.isDelayed()) {
+					List<ConfigurationEntity> entities = command.getEntities();
+					configurationManager.send(configuration.getDemoApplicationId() , entities);
+				} else {
+					for (ConfigurationEntity entity : command.getEntities()) {
+						configurationManager.send(configuration.getDemoApplicationId() , entity);
+						Thread.sleep(command.getSeconds() * 1000);
+					}
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				logger.info(e.toString());
+			}
 		}
 		
 	}

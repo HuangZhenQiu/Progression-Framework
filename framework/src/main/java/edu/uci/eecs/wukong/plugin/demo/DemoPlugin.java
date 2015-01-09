@@ -13,7 +13,7 @@ public class DemoPlugin extends Plugin {
 	}
 	public List<Extension> registerExtension() {
 		List<Extension> extensions = new ArrayList<Extension>();
-		extensions.add(new DemoProgressionExtension());
+		extensions.add(new Demo2ProgressionExtension());
 		return extensions;
 	}
 	

@@ -27,4 +27,13 @@ public class ConfigurationManager{
 			logger.error(e.toString());
 		}
 	}
+	
+	public void send(String appId, ConfigurationEntity entity) {
+		try {
+			client.sendConfigurationMessage(new ConfigurationReport(appId, entity));
+		} catch (Exception e) {
+			logger.error("Fail to send reconfiguration message to master");
+			logger.error(e.toString());
+		}
+	}
 }

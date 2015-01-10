@@ -1,3 +1,22 @@
+/**
+ * This extension implements the rules that designed by Professor Lin. In the demo, we will
+ * use four slides to control four groups of lights. Group 1 includes 3, 4, 5. Group 2
+ * includes 7, 7, 8, 8. Group 3 includes 12. Group four includes 15. If there is no people
+ * in the detectable range of kinnect, then all the light should be closed. In the demo, every 
+ * light's lightness can be adjusted between 0 - 99.
+ * 
+ * 1) When some one temporarily enter into the detectable section (3, 4, 6), the extension should change lights
+ * in group 1 to 50.
+ * 2) If user left the room, we just turn off lights of group one after two seconds.
+ * 3）When some one stay in kichen (4 + 6) for 5 seconds, we turn all lights in Group 1 and Group 2
+ * to 99.
+ * 4) If user left after finishing works in kichen, it firstly turn off lights in Group 1, and then Group
+ * 2 after 2 seconds.
+ * 5) If user enter section 5 and stay there for 5 seconds, it turn group 1 to 50, and Group 3 and 4 
+ * to 99
+ * 6) If user left section 5, it turn off Group 4, 3 and 1 sequentially.
+ * 
+ */
 package edu.uci.eecs.wukong.plugin.demo;
 
 import java.util.ArrayList;
@@ -6,31 +25,32 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import edu.uci.eecs.wukong.framework.entity.ConfigurationCommand;
-import edu.uci.eecs.wukong.framework.entity.ConfigurationEntity;
-import edu.uci.eecs.wukong.framework.entity.FeatureEntity;
 import edu.uci.eecs.wukong.framework.context.Context;
 import edu.uci.eecs.wukong.framework.context.DemoContext;
 import edu.uci.eecs.wukong.framework.context.ExecutionContext;
+import edu.uci.eecs.wukong.framework.entity.ConfigurationCommand;
+import edu.uci.eecs.wukong.framework.entity.ConfigurationEntity;
+import edu.uci.eecs.wukong.framework.entity.FeatureEntity;
 import edu.uci.eecs.wukong.framework.extension.ProgressionExtension;
 import edu.uci.eecs.wukong.framework.util.Configuration;
 
 public class DemoProgressionExtension implements ProgressionExtension<FeatureEntity> {
 	private static Logger logger = LoggerFactory.getLogger(DemoProgressionExtension.class);
 	private static Configuration configuration = Configuration.getInstance();
-	private static String KICHEN_SLIDER_COMPONENT_ID = configuration.getKichenSliderId();
-	private static String TABLE_SLIDER_COMPONENT_ID = configuration.getTableSliderId();
-	private static String DEMO_SLIDER_COMPONENT_ID = configuration.getOuterSliderId();
-	private static String WALL_LIGHT_SLIDER_COMPONENT_ID = configuration.getWallSliderId();
-	private static int LEVEL_TWO = 40;
-	private static int LEVEL_THREE = 70;
-	private static int LEVEL_FOUR = 99;
-	private static int status; // 1 kichen, 2 table, 3 general
+	private static String KICHEN_SLIDER_COMPONENT_ID = configuration.getKichenSliderId(); // 3, 4, 5
+	private static String TABLE_SLIDER_COMPONENT_ID = configuration.getTableSliderId(); // 7, 7, 8, 8
+	private static String OUTER_SLIDER_COMPONENT_ID = configuration.getOuterSliderId(); // 12
+	private static String WALL_LIGHT_SLIDER_COMPONENT_ID = configuration.getWallSliderId(); // 15
+	private static int LEVEL_ONE = 0;
+	private static int LEVEL_TWO = 50;
+	private static int LEVEL_THREE = 99;
+	private static int status; // 0 Nobody, 1 kitchen PassOver, 2, Passover left, 3 kitchen Stay, 4 kitchen left after stay, 5 table stay, 6 stable left after stay 
 	private DemoContext lastContext = null;
+	private static long lastTime = 0;
 
 	// Triggered by general data pipeline
 	public  ConfigurationCommand execute(List<FeatureEntity> data, ExecutionContext context) {
-		return  ConfigurationCommand.getEmptyCommand();
+		return ConfigurationCommand.getEmptyCommand();
 	}
 	
 	// Triggered by context switch
@@ -39,42 +59,83 @@ public class DemoProgressionExtension implements ProgressionExtension<FeatureEnt
 		List<ConfigurationEntity> entities = new ArrayList<ConfigurationEntity>();
 		if(context instanceof DemoContext) {
 			DemoContext demoContext = (DemoContext) context;
-			if (lastContext == null) {
-				lastContext = demoContext;
-			} else {
-				if (!lastContext.equals(demoContext)) {
-					if (isEnterRoom(demoContext)) {
-						status = 3;
-						return generateEnterRoomCommand(entities);
+			logger.info(">>>>>>>>>>>>status:"+status);
+			if (status == 0) { //Nobody
+				if (isPeopleExist(demoContext)) {
+					status = 1;
+					logger.info("<<<<<<<status to:" + status);
+					lastTime = demoContext.getTimestamp();
+					return generateEnterRoomCommand(entities);
+				} else {
+					if (isLastEnoughTime(lastTime, demoContext, configuration.getDemoKichenSeconds())) {
+						lastTime = demoContext.getTimestamp();
+						return generateTurnOffCommand(entities);
 					}
-					lastContext = demoContext;
-				} else if (!lastContext.isTriggered()){
-					if (isInKichen(demoContext) && status != 1) {
-						lastContext.setTriggered(true);
-						status = 1;
+				}
+			} else if (status == 1) {
+				if (isInKichen(demoContext)) {
+					if (isLastEnoughTime(lastTime, demoContext, configuration.getDemoKichenSeconds())) {
+						status = 3;
+						logger.info("<<<<<<<status to:" + status);
+						lastTime = demoContext.getTimestamp();
 						return generateInKichenCommand(entities);
 					}
-					
-					if (isInTableConversation(demoContext) && status != 2) {
-						lastContext.setTriggered(true);
-						status = 2;
-						return generateInTableConversation(entities);
+				} else if (isInTableConversation(demoContext)) {
+					status = 5;
+					logger.info("<<<<<<<status to:" + status);
+					lastTime = demoContext.getTimestamp();
+					return generateInTableConversation(entities);
+				} else {
+					if (isLastEnoughTime(lastTime, demoContext, configuration.getDemoKichenSeconds())) {
+						status = 0;
+						logger.info("<<<<<<<status to:" + status);
+						lastTime = demoContext.getTimestamp();
+						return generateTurnOffCommand(entities);
 					}
-					
-					if (isPeopleExist(demoContext) && status != 3) {
-						status = 3;
-						try {
-							Thread.sleep(10000);
-						} catch (InterruptedException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						} //Delay the message
+				}
+			} else if (status == 3) {
+				if (isInKichen(demoContext)) {
+					if (isLastEnoughTime(lastTime, demoContext, configuration.getDemoKichenSeconds())) {
+						lastTime = demoContext.getTimestamp();
+						return generateInKichenCommand(entities);
+					}
+				} else if (isInTableConversation(demoContext)) {
+					status = 5;
+					logger.info("<<<<<<<status to:" + status);
+					lastTime = demoContext.getTimestamp();
+					return generateInTableConversation(entities);
+				} else {
+					if (isLastEnoughTime(lastTime, demoContext, configuration.getDemoKichenSeconds())) {
+						status = 1;
+						logger.info("<<<<<<<status to:" + status);
+						lastTime = demoContext.getTimestamp();
 						return generateEnterRoomCommand(entities);
 					}
 				}
+			} else if (status == 5) {
+				if (isInKichen(demoContext)) {
+					if (isLastEnoughTime(lastTime, demoContext, configuration.getDemoKichenSeconds())) {
+						status = 3;
+						logger.info("<<<<<<<status to:" + status);
+						lastTime = demoContext.getTimestamp();
+						return generateInKichenCommand(entities);
+					}
+				} else if (isInTableConversation(demoContext)) {
+					if (isLastEnoughTime(lastTime, demoContext, configuration.getDemoKichenSeconds())) {
+						lastTime = demoContext.getTimestamp();
+						return generateInTableConversation(entities);
+					}
+				} else {
+					if (isLastEnoughTime(lastTime, demoContext, configuration.getDemoKichenSeconds())) {
+						status = 1;
+						logger.info("<<<<<<<status to:" + status);
+						lastTime = demoContext.getTimestamp();
+						return generateEnterRoomCommand(entities);
+					}
+				}
+
 			}
 		}
-		
 		return ConfigurationCommand.getEmptyCommand();
 	}
 	
@@ -84,26 +145,34 @@ public class DemoProgressionExtension implements ProgressionExtension<FeatureEnt
 	}
 	
 	private ConfigurationCommand generateEnterRoomCommand(List<ConfigurationEntity> entities) {
-		entities.add(new ConfigurationEntity(KICHEN_SLIDER_COMPONENT_ID, LEVEL_THREE));
-		entities.add(new ConfigurationEntity(TABLE_SLIDER_COMPONENT_ID, LEVEL_THREE));
-		entities.add(new ConfigurationEntity(DEMO_SLIDER_COMPONENT_ID, LEVEL_THREE));
-		entities.add(new ConfigurationEntity(WALL_LIGHT_SLIDER_COMPONENT_ID, LEVEL_THREE));
+		entities.add(new ConfigurationEntity(KICHEN_SLIDER_COMPONENT_ID, LEVEL_TWO));
+		entities.add(new ConfigurationEntity(TABLE_SLIDER_COMPONENT_ID, LEVEL_ONE));
+		entities.add(new ConfigurationEntity(OUTER_SLIDER_COMPONENT_ID, LEVEL_ONE));
+		entities.add(new ConfigurationEntity(WALL_LIGHT_SLIDER_COMPONENT_ID, LEVEL_ONE));
 		return new ConfigurationCommand(entities);
 	}
 	
 	private ConfigurationCommand generateInKichenCommand(List<ConfigurationEntity> entities) {
 		entities.add(new ConfigurationEntity(KICHEN_SLIDER_COMPONENT_ID, LEVEL_THREE));
-		entities.add(new ConfigurationEntity(TABLE_SLIDER_COMPONENT_ID, LEVEL_FOUR));
-		entities.add(new ConfigurationEntity(DEMO_SLIDER_COMPONENT_ID, LEVEL_THREE));
-		entities.add(new ConfigurationEntity(WALL_LIGHT_SLIDER_COMPONENT_ID, LEVEL_THREE));
+		entities.add(new ConfigurationEntity(TABLE_SLIDER_COMPONENT_ID, LEVEL_THREE));
+		entities.add(new ConfigurationEntity(OUTER_SLIDER_COMPONENT_ID, LEVEL_ONE));
+		entities.add(new ConfigurationEntity(WALL_LIGHT_SLIDER_COMPONENT_ID, LEVEL_ONE));
 		return new ConfigurationCommand(entities);
 	}
 	
 	private ConfigurationCommand generateInTableConversation(List<ConfigurationEntity> entities) {
 		entities.add(new ConfigurationEntity(KICHEN_SLIDER_COMPONENT_ID, LEVEL_TWO));
-		entities.add(new ConfigurationEntity(TABLE_SLIDER_COMPONENT_ID, LEVEL_FOUR));
-		entities.add(new ConfigurationEntity(DEMO_SLIDER_COMPONENT_ID, LEVEL_TWO));
-		entities.add(new ConfigurationEntity(WALL_LIGHT_SLIDER_COMPONENT_ID, LEVEL_TWO));
+		entities.add(new ConfigurationEntity(TABLE_SLIDER_COMPONENT_ID, LEVEL_TWO));
+		entities.add(new ConfigurationEntity(OUTER_SLIDER_COMPONENT_ID, LEVEL_THREE));
+		entities.add(new ConfigurationEntity(WALL_LIGHT_SLIDER_COMPONENT_ID, LEVEL_THREE));
+		return new ConfigurationCommand(entities);
+	}
+	
+	private ConfigurationCommand generateTurnOffCommand(List<ConfigurationEntity> entities) {
+		entities.add(new ConfigurationEntity(KICHEN_SLIDER_COMPONENT_ID, LEVEL_ONE));
+		entities.add(new ConfigurationEntity(TABLE_SLIDER_COMPONENT_ID, LEVEL_ONE));
+		entities.add(new ConfigurationEntity(OUTER_SLIDER_COMPONENT_ID, LEVEL_ONE));
+		entities.add(new ConfigurationEntity(WALL_LIGHT_SLIDER_COMPONENT_ID, LEVEL_ONE));
 		return new ConfigurationCommand(entities);
 	}
 	
@@ -135,20 +204,16 @@ public class DemoProgressionExtension implements ProgressionExtension<FeatureEnt
 	}
 	
 	private boolean isInKichen(DemoContext context) {
-		if (context.equals(lastContext)) {
-			if (context.ppnum4 > 0 && isLastEnoughTime(lastContext, context, configuration.getDemoKichenSeconds())) {
-				return true;
-			}
+		if (context.ppnum4 > 0 || context.ppnum6 > 0 || context.ppnum3 > 0) {
+			return true;
 		}
 		
 		return false;
 	}
 	
 	private boolean isInTableConversation(DemoContext context) {
-		if (context.equals(lastContext)) {
-			if (context.ppnum3 > 0 && isLastEnoughTime(lastContext, context, configuration.getDemoKichenSeconds())) {
-				return true;
-			}
+		if (context.ppnum5 > 0) {
+			return true;
 		}
 		
 		return false;
@@ -156,6 +221,15 @@ public class DemoProgressionExtension implements ProgressionExtension<FeatureEnt
 	
 	private boolean isLastEnoughTime(DemoContext oldContext, DemoContext newContext, int seconds) {
 		Long secondPast = (newContext.getTimestamp() - oldContext.getTimestamp());
+		if (secondPast > seconds) {
+			return true;
+		}
+		
+		return false;
+	}
+	
+	private boolean isLastEnoughTime(Long ltime, DemoContext newContext, int seconds) {
+		Long secondPast = (newContext.getTimestamp() - ltime);
 		if (secondPast > seconds) {
 			return true;
 		}

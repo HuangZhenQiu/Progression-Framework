@@ -26,6 +26,7 @@ public class ConfigurationCommand {
 		this.type = type;
 		this.isDelayed = false;
 		this.seconds = 0;
+		this.entities =  new ArrayList<Entity>();
 	}
 
 	public ConfigurationCommand(String start, ConfigurationType type, int seconds) {

@@ -31,8 +31,11 @@ import edu.uci.eecs.wukong.framework.context.ExecutionContext;
 import edu.uci.eecs.wukong.framework.entity.ConfigurationCommand;
 import edu.uci.eecs.wukong.framework.entity.ConfigurationEntity;
 import edu.uci.eecs.wukong.framework.entity.FeatureEntity;
+import edu.uci.eecs.wukong.framework.entity.Entity;
+import edu.uci.eecs.wukong.framework.entity.HueEntity;
 import edu.uci.eecs.wukong.framework.extension.ProgressionExtension;
 import edu.uci.eecs.wukong.framework.util.Configuration;
+import edu.uci.eecs.wukong.framework.manager.ConfigurationManager.ConfigurationType;
 
 public class DemoProgressionExtension implements ProgressionExtension<FeatureEntity> {
 	private static Logger logger = LoggerFactory.getLogger(DemoProgressionExtension.class);
@@ -49,13 +52,14 @@ public class DemoProgressionExtension implements ProgressionExtension<FeatureEnt
 	private static long lastTime = 0;
 
 	// Triggered by general data pipeline
-	public  ConfigurationCommand execute(List<FeatureEntity> data, ExecutionContext context) {
+	public  List<ConfigurationCommand> execute(List<FeatureEntity> data, ExecutionContext context) {
 		return ConfigurationCommand.getEmptyCommand();
 	}
 	
 	// Triggered by context switch
-	public  ConfigurationCommand execute(Context context) {
+	public  List<ConfigurationCommand> execute(Context context) {
 		logger.info("DemoProgressionExtension received new context");
+		List<ConfigurationCommand> commands = new ArrayList<ConfigurationCommand>();
 		List<ConfigurationEntity> entities = new ArrayList<ConfigurationEntity>();
 		if(context instanceof DemoContext) {
 			DemoContext demoContext = (DemoContext) context;
@@ -65,11 +69,12 @@ public class DemoProgressionExtension implements ProgressionExtension<FeatureEnt
 					status = 1;
 					logger.info("<<<<<<<status to:" + status);
 					lastTime = demoContext.getTimestamp();
-					return generateEnterRoomCommand(entities);
+					commands.add(generateEnterRoomCommand(entities));
 				} else {
 					if (isLastEnoughTime(lastTime, demoContext, configuration.getDemoKichenSeconds())) {
 						lastTime = demoContext.getTimestamp();
-						return generateTurnOffCommand(entities);
+						commands.add(generateCloseHueCommand());
+						commands.add(generateTurnOffCommand(entities));
 					}
 				}
 			} else if (status == 1) {
@@ -78,38 +83,40 @@ public class DemoProgressionExtension implements ProgressionExtension<FeatureEnt
 						status = 3;
 						logger.info("<<<<<<<status to:" + status);
 						lastTime = demoContext.getTimestamp();
-						return generateInKichenCommand(entities);
+						commands.add(generateInKichenCommand(entities));
 					}
 				} else if (isInTableConversation(demoContext)) {
 					status = 5;
 					logger.info("<<<<<<<status to:" + status);
 					lastTime = demoContext.getTimestamp();
-					return generateInTableConversation(entities);
+					commands.add(generateInTableConversation(entities));
 				} else {
 					if (isLastEnoughTime(lastTime, demoContext, configuration.getDemoKichenSeconds())) {
 						status = 0;
 						logger.info("<<<<<<<status to:" + status);
 						lastTime = demoContext.getTimestamp();
-						return generateTurnOffCommand(entities);
+						commands.add(generateCloseHueCommand());
+						commands.add(generateTurnOffCommand(entities));
 					}
 				}
 			} else if (status == 3) {
 				if (isInKichen(demoContext)) {
 					if (isLastEnoughTime(lastTime, demoContext, configuration.getDemoKichenSeconds())) {
 						lastTime = demoContext.getTimestamp();
-						return generateInKichenCommand(entities);
+						commands.add(generateInKichenCommand(entities));
 					}
 				} else if (isInTableConversation(demoContext)) {
 					status = 5;
 					logger.info("<<<<<<<status to:" + status);
 					lastTime = demoContext.getTimestamp();
-					return generateInTableConversation(entities);
+					commands.add(generateInTableConversation(entities));
+					commands.add(generateOpenHueCommand());
 				} else {
 					if (isLastEnoughTime(lastTime, demoContext, configuration.getDemoKichenSeconds())) {
 						status = 1;
 						logger.info("<<<<<<<status to:" + status);
 						lastTime = demoContext.getTimestamp();
-						return generateEnterRoomCommand(entities);
+						commands.add(generateEnterRoomCommand(entities));
 					}
 				}
 			} else if (status == 5) {
@@ -118,62 +125,79 @@ public class DemoProgressionExtension implements ProgressionExtension<FeatureEnt
 						status = 3;
 						logger.info("<<<<<<<status to:" + status);
 						lastTime = demoContext.getTimestamp();
-						return generateInKichenCommand(entities);
+						commands.add(generateInKichenCommand(entities));
 					}
 				} else if (isInTableConversation(demoContext)) {
 					if (isLastEnoughTime(lastTime, demoContext, configuration.getDemoKichenSeconds())) {
 						lastTime = demoContext.getTimestamp();
-						return generateInTableConversation(entities);
+						commands.add(generateInTableConversation(entities));
+						commands.add(generateOpenHueCommand());
 					}
 				} else {
 					if (isLastEnoughTime(lastTime, demoContext, configuration.getDemoKichenSeconds())) {
 						status = 1;
 						logger.info("<<<<<<<status to:" + status);
 						lastTime = demoContext.getTimestamp();
-						return generateEnterRoomCommand(entities);
+						commands.add(generateEnterRoomCommand(entities));
 					}
 				}
 
 			}
 		}
-		return ConfigurationCommand.getEmptyCommand();
+		return commands;
 	}
 	
 	// Triggered by timer
-	public  ConfigurationCommand execute() {
+	public  List<ConfigurationCommand> execute() {
 		return ConfigurationCommand.getEmptyCommand();
 	}
 	
 	private ConfigurationCommand generateEnterRoomCommand(List<ConfigurationEntity> entities) {
-		entities.add(new ConfigurationEntity(KICHEN_SLIDER_COMPONENT_ID, LEVEL_TWO));
-		entities.add(new ConfigurationEntity(TABLE_SLIDER_COMPONENT_ID, LEVEL_ONE));
-		entities.add(new ConfigurationEntity(OUTER_SLIDER_COMPONENT_ID, LEVEL_ONE));
-		entities.add(new ConfigurationEntity(WALL_LIGHT_SLIDER_COMPONENT_ID, LEVEL_ONE));
-		return new ConfigurationCommand(entities);
+		ConfigurationCommand command = new ConfigurationCommand("Master", ConfigurationType.POST);
+		command.addEntity(new ConfigurationEntity(KICHEN_SLIDER_COMPONENT_ID, LEVEL_TWO));
+		command.addEntity(new ConfigurationEntity(TABLE_SLIDER_COMPONENT_ID, LEVEL_ONE));
+		command.addEntity(new ConfigurationEntity(OUTER_SLIDER_COMPONENT_ID, LEVEL_ONE));
+		command.addEntity(new ConfigurationEntity(WALL_LIGHT_SLIDER_COMPONENT_ID, LEVEL_ONE));
+		return command;
 	}
 	
 	private ConfigurationCommand generateInKichenCommand(List<ConfigurationEntity> entities) {
-		entities.add(new ConfigurationEntity(KICHEN_SLIDER_COMPONENT_ID, LEVEL_THREE));
-		entities.add(new ConfigurationEntity(TABLE_SLIDER_COMPONENT_ID, LEVEL_THREE));
-		entities.add(new ConfigurationEntity(OUTER_SLIDER_COMPONENT_ID, LEVEL_ONE));
-		entities.add(new ConfigurationEntity(WALL_LIGHT_SLIDER_COMPONENT_ID, LEVEL_ONE));
-		return new ConfigurationCommand(entities);
+		ConfigurationCommand command = new ConfigurationCommand("Master", ConfigurationType.POST);
+		command.addEntity(new ConfigurationEntity(KICHEN_SLIDER_COMPONENT_ID, LEVEL_THREE));
+		command.addEntity(new ConfigurationEntity(TABLE_SLIDER_COMPONENT_ID, LEVEL_THREE));
+		command.addEntity(new ConfigurationEntity(OUTER_SLIDER_COMPONENT_ID, LEVEL_ONE));
+		command.addEntity(new ConfigurationEntity(WALL_LIGHT_SLIDER_COMPONENT_ID, LEVEL_ONE));
+		return command;
 	}
 	
 	private ConfigurationCommand generateInTableConversation(List<ConfigurationEntity> entities) {
-		entities.add(new ConfigurationEntity(KICHEN_SLIDER_COMPONENT_ID, LEVEL_TWO));
-		entities.add(new ConfigurationEntity(TABLE_SLIDER_COMPONENT_ID, LEVEL_TWO));
-		entities.add(new ConfigurationEntity(OUTER_SLIDER_COMPONENT_ID, LEVEL_THREE));
-		entities.add(new ConfigurationEntity(WALL_LIGHT_SLIDER_COMPONENT_ID, LEVEL_THREE));
-		return new ConfigurationCommand(entities);
+		ConfigurationCommand command = new ConfigurationCommand("Master", ConfigurationType.POST);
+		command.addEntity(new ConfigurationEntity(KICHEN_SLIDER_COMPONENT_ID, LEVEL_TWO));
+		command.addEntity(new ConfigurationEntity(TABLE_SLIDER_COMPONENT_ID, LEVEL_TWO));
+		command.addEntity(new ConfigurationEntity(OUTER_SLIDER_COMPONENT_ID, LEVEL_THREE));
+		command.addEntity(new ConfigurationEntity(WALL_LIGHT_SLIDER_COMPONENT_ID, LEVEL_THREE));
+		return command;
 	}
 	
 	private ConfigurationCommand generateTurnOffCommand(List<ConfigurationEntity> entities) {
-		entities.add(new ConfigurationEntity(KICHEN_SLIDER_COMPONENT_ID, LEVEL_ONE));
-		entities.add(new ConfigurationEntity(TABLE_SLIDER_COMPONENT_ID, LEVEL_ONE));
-		entities.add(new ConfigurationEntity(OUTER_SLIDER_COMPONENT_ID, LEVEL_ONE));
-		entities.add(new ConfigurationEntity(WALL_LIGHT_SLIDER_COMPONENT_ID, LEVEL_ONE));
-		return new ConfigurationCommand(entities);
+		ConfigurationCommand command = new ConfigurationCommand("Master", ConfigurationType.POST, 2);
+		command.addEntity(new ConfigurationEntity(KICHEN_SLIDER_COMPONENT_ID, LEVEL_ONE));
+		command.addEntity(new ConfigurationEntity(TABLE_SLIDER_COMPONENT_ID, LEVEL_ONE));
+		command.addEntity(new ConfigurationEntity(OUTER_SLIDER_COMPONENT_ID, LEVEL_ONE));
+		command.addEntity(new ConfigurationEntity(WALL_LIGHT_SLIDER_COMPONENT_ID, LEVEL_ONE));
+		return command;
+	}
+	
+	private ConfigurationCommand generateCloseHueCommand() {
+		ConfigurationCommand command = new ConfigurationCommand("Hue", ConfigurationType.PUT);
+		command.addEntity(new HueEntity());
+		return command;
+	}
+	
+	private ConfigurationCommand generateOpenHueCommand() {
+		ConfigurationCommand command = new ConfigurationCommand("Hue", ConfigurationType.PUT);
+		command.addEntity(new HueEntity(255, 100, 18000));
+		return command;
 	}
 	
 	private boolean isEmpty(DemoContext context) {

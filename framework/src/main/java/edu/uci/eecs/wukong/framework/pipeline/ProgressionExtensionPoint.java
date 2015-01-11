@@ -1,8 +1,6 @@
 package edu.uci.eecs.wukong.framework.pipeline;
 
 import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -10,7 +8,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import edu.uci.eecs.wukong.framework.entity.ConfigurationCommand;
-import edu.uci.eecs.wukong.framework.entity.ConfigurationEntity;
+import edu.uci.eecs.wukong.framework.entity.Entity;
+import edu.uci.eecs.wukong.framework.entity.HueEntity;
+import edu.uci.eecs.wukong.framework.entity.ConfigurationReport;
 import edu.uci.eecs.wukong.framework.extension.ProgressionExtension;
 import edu.uci.eecs.wukong.framework.manager.ConfigurationManager;
 import edu.uci.eecs.wukong.framework.util.Configuration;
@@ -34,14 +34,24 @@ public class ProgressionExtensionPoint extends ExtensionPoint<ProgressionExtensi
 		
 		public void run() {
 			try {
-				ConfigurationCommand command = extension.execute(currentContext);
-				if(!command.isDelayed()) {
-					List<ConfigurationEntity> entities = command.getEntities();
-					configurationManager.send(configuration.getDemoApplicationId() , entities);
-				} else {
-					for (ConfigurationEntity entity : command.getEntities()) {
-						configurationManager.send(configuration.getDemoApplicationId() , entity);
-						Thread.sleep(command.getSeconds() * 1000);
+				List<ConfigurationCommand> commands = extension.execute(currentContext);
+				for (ConfigurationCommand command: commands) {
+					List<Entity> entities = command.getEntities();
+					if(!command.isDelayed()) {
+						if(command.getTarget().equals("Master")) {
+							configurationManager.sendMasterReport(command.getType(),
+									new ConfigurationReport(configuration.getDemoApplicationId() , entities));
+						} else {
+							for(Entity entity : command.getEntities()) {
+								configurationManager.sendHueConfiguration(command.getType(), (HueEntity)entity);
+							}
+						}
+					} else {
+						for (Entity entity : command.getEntities()) {
+							configurationManager.sendMasterReport(command.getType(),
+									new ConfigurationReport(configuration.getDemoApplicationId() , entity));
+							Thread.sleep(command.getSeconds() * 1000);
+						}
 					}
 				}
 			} catch (Exception e) {

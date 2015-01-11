@@ -5,15 +5,15 @@ import java.util.ArrayList;
 
 public class ConfigurationReport {
 	private String applicationId;
-	private List<ConfigurationEntity> entities;
+	private List<Entity> entities;
 	
-	public ConfigurationReport(String appId, ConfigurationEntity entity) {
+	public ConfigurationReport(String appId, Entity entity) {
 		this.applicationId = appId;
-		this.entities = new ArrayList<ConfigurationEntity>();
+		this.entities = new ArrayList<Entity>();
 		this.entities.add(entity);
 		
 	}
-	public ConfigurationReport(String appId, List<ConfigurationEntity> entities) {
+	public ConfigurationReport(String appId, List<Entity> entities) {
 		this.applicationId = appId;
 		this.entities = entities;
 	}
@@ -26,11 +26,11 @@ public class ConfigurationReport {
 		this.applicationId = applicationId;
 	}
 
-	public List<ConfigurationEntity> getEntities() {
+	public List<Entity> getEntities() {
 		return entities;
 	}
 
-	public void setEntities(List<ConfigurationEntity> entities) {
+	public void setEntities(List<Entity> entities) {
 		this.entities = entities;
 	}
 	

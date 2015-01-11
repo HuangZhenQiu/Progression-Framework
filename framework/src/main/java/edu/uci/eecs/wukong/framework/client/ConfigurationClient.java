@@ -1,16 +1,10 @@
 package edu.uci.eecs.wukong.framework.client;
 
-import edu.uci.eecs.wukong.framework.entity.ConfigurationEntity;
-import edu.uci.eecs.wukong.framework.entity.ConfigurationReport;
-import edu.uci.eecs.wukong.framework.util.Configuration;
+import edu.uci.eecs.wukong.framework.manager.ConfigurationManager.ConfigurationType;
 
 import java.io.IOException;
 import java.io.InterruptedIOException;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,20 +16,19 @@ import org.apache.commons.httpclient.HttpStatus;
 import org.apache.http.Consts;
 import org.apache.http.HttpEntityEnclosingRequest;
 import org.apache.http.HttpRequest;
-import org.apache.http.NameValuePair;
 import org.apache.http.StatusLine;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpRequestRetryHandler;
 import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.protocol.HttpClientContext;
-import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
-import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.protocol.HttpContext;
 
@@ -43,15 +36,16 @@ import com.google.gson.Gson;
 
 public class ConfigurationClient {
 	private final static Logger LOGGER = LoggerFactory.getLogger(ConfigurationClient.class);
-	private final static Configuration configuration = Configuration.getInstance();
-	private static ConfigurationClient configurationClient;
-	private static Gson gson = new Gson();
+	private final static String CONTENT_TYPE_VALUE = "application/json";
+	private String name;
+	private String ip;
+	private String port;
+	private String method;
 	private PoolingHttpClientConnectionManager connectionManager;
 	private CloseableHttpClient client;
-	private final static String CONFIG_METHOD = "/configuration";
-	private final static String CONTENT_TYPE_VALUE = "application/json";
-	private final static String CONFIG_URL = "http://" + configuration.getMasterAddress()
-			+ ":" + configuration.getMasterPort() + "/"+ CONFIG_METHOD;
+
+	private String CONFIG_URL = "http://" + ip
+			+ ":" + port + "/"+ method;
 
 	private static HttpRequestRetryHandler retryHandler = new HttpRequestRetryHandler() {
 		public boolean retryRequest(
@@ -89,49 +83,88 @@ public class ConfigurationClient {
 	    }
 	};
 
-	private ConfigurationClient() {
+	public ConfigurationClient(String name, String ip, String port, String method) {
 		// Use default connection parameters setting, 20 connections 2 routs per
 		// connection.
-		connectionManager = new PoolingHttpClientConnectionManager();
-		client = HttpClients.custom().setRetryHandler(retryHandler)
+		this.name = name;
+		this.ip = ip;
+		this.port = port;
+		this.method = method;
+		this.connectionManager = new PoolingHttpClientConnectionManager();
+		this.client = HttpClients.custom().setRetryHandler(retryHandler)
 				.setConnectionManager(connectionManager).build();
-	}
-
-	public static synchronized ConfigurationClient getInstance() {
-		if (configurationClient == null) {
-			configurationClient = new ConfigurationClient();
-			LOGGER.info("Configuration client is initialized in progression server.");
-		}
-
-		return configurationClient;
 	}
 	
 	public void sendTestMessage()
 			throws ClientProtocolException, IOException {
-		send(CONFIG_URL, "TEST MESSAGE");
+		sendConfigurationMessage(ConfigurationType.POST, "TEST MESSAGE");
 	}
 	
-	public void sendConfigurationMessage(ConfigurationReport report)
+	public void sendConfigurationMessage(ConfigurationType type, String content)
 			throws ClientProtocolException, IOException {
-		LOGGER.info("Send out configuration report: " + gson.toJson(report));
-		send(CONFIG_URL, gson.toJson(report));
+		LOGGER.info("Send out configuration report: " + content);
+		switch (type) {
+			case POST:
+				send(new HttpPost(CONFIG_URL), content);
+			case PUT:
+				send(new HttpPut(CONFIG_URL), content);
+				
+		}
+		
 	}
 
-	private void send(String url, String content)
-			throws ClientProtocolException, IOException {
-		HttpPost httpPost = new HttpPost(url);
-		httpPost.setHeader(HTTP.CONTENT_TYPE, CONTENT_TYPE_VALUE);
+	private void send(HttpEntityEnclosingRequestBase method, String content) {
+		method.setHeader(HTTP.CONTENT_TYPE, CONTENT_TYPE_VALUE);
 		StringEntity se = new StringEntity(content, ContentType.create(CONTENT_TYPE_VALUE, Consts.UTF_8));
-		httpPost.setEntity(se);
-		CloseableHttpResponse response = client.execute(httpPost);
+		method.setEntity(se);
+		CloseableHttpResponse response = null;
 		try {
+			response = client.execute(method);
 			StatusLine statusLine = response.getStatusLine();
 			int statusCode = response.getStatusLine().getStatusCode();
 			if (statusCode != HttpStatus.SC_OK) {
 				LOGGER.error("Master is not accessible.");
 			}
+		} catch (Exception e) {
+			LOGGER.error("Can't open configuration client " + name);
 		} finally {
-			response.close();
+			try {
+				response.close();
+			} catch (Exception e) {
+				LOGGER.error("Can't close response");
+			}
 		}
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getIp() {
+		return ip;
+	}
+
+	public void setIp(String ip) {
+		this.ip = ip;
+	}
+
+	public String getPort() {
+		return port;
+	}
+
+	public void setPort(String port) {
+		this.port = port;
+	}
+
+	public String getMethod() {
+		return method;
+	}
+
+	public void setMethod(String method) {
+		this.method = method;
 	}
 }

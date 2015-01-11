@@ -9,11 +9,11 @@ import java.util.List;
 public interface ProgressionExtension<T extends FeatureEntity> extends Extension<T> {
 	
 	// Triggered by general data pipeline
-	public ConfigurationCommand execute(List<T> data, ExecutionContext context);
+	public List<ConfigurationCommand> execute(List<T> data, ExecutionContext context);
 	
 	// Triggered by context switch
-	public ConfigurationCommand execute(Context context);
+	public List<ConfigurationCommand> execute(Context context);
 	
 	// Triggered by timer
-	public ConfigurationCommand execute();
+	public List<ConfigurationCommand> execute();
 }

@@ -12,6 +12,8 @@ public class Configuration {
 	private static final String XMPP_PASSWORD = "XMPP.PASSWORD";
 	private static final String MASTER_ADDRESS = "MASTER.ADDRESS";
 	private static final String MASTER_PORT = "MASTER.PORT";
+	private static final String HUE_ADDRESS = "HUE.ADDRESS";
+	private static final String HUE_POST = "HUE.PORT";
 	private static final String DEMO_KICHEN_SECONDS = "DEMO.KICHEN.SECONDS";
 	private static final String DEMO_TABLE_SECONDS = "DEMO.TABLE.SECONDS";
 	private static final String DEMO_APPLICATION_ID = "DEMO.APPLICATION.ID";
@@ -66,6 +68,14 @@ public class Configuration {
 	
 	public String getMasterPort() {
 		return properties.getProperty(MASTER_PORT);
+	}
+	
+	public String getHueAddress() {
+		return properties.getProperty(HUE_ADDRESS);
+	}
+	
+	public String getHuePort() {
+		return properties.getProperty(HUE_POST);
 	}
 	
 	public int getDemoKichenSeconds() {

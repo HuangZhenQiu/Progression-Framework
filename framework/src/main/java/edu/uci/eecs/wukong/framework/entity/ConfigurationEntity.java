@@ -1,6 +1,6 @@
 package edu.uci.eecs.wukong.framework.entity;
 
-public class ConfigurationEntity {
+public class ConfigurationEntity implements Entity{
 	private String componentId;
 	private int value;
 	

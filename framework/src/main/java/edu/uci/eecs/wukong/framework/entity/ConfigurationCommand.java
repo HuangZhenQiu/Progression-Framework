@@ -1,40 +1,54 @@
 package edu.uci.eecs.wukong.framework.entity;
 
+import edu.uci.eecs.wukong.framework.manager.ConfigurationManager.ConfigurationType;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class ConfigurationCommand {
-	private static ConfigurationCommand emptyCommand;
-	private List<ConfigurationEntity> entities;
+	private static List<ConfigurationCommand> emptyCommands;
+	private String target;
+	private ConfigurationType type;
+	private List<Entity> entities;
 	private boolean isDelayed;
 	private int seconds;
 	
-	public static ConfigurationCommand getEmptyCommand() {
-		if (emptyCommand == null) {
-			emptyCommand = new ConfigurationCommand(new ArrayList<ConfigurationEntity>());
+	public static List<ConfigurationCommand> getEmptyCommand() {
+		if (emptyCommands == null) {
+			emptyCommands = new ArrayList<ConfigurationCommand>();
 		}
 		
-		return emptyCommand;
+		return emptyCommands;
 	}
 	
-	public ConfigurationCommand(List<ConfigurationEntity> entities) {
-		this.entities = entities;
+	public ConfigurationCommand(String target, ConfigurationType type) {
+		this.target = target;
+		this.type = type;
 		this.isDelayed = false;
 		this.seconds = 0;
 	}
 
-	public ConfigurationCommand(List<ConfigurationEntity> entities, int seconds) {
-		this.entities = entities;
+	public ConfigurationCommand(String start, ConfigurationType type, int seconds) {
 		this.isDelayed = true;
+		this.type = type;
 		this.seconds = seconds;
+		this.entities =  new ArrayList<Entity>();
+	}
+	
+	public void addEntity(Entity entity) {
+		this.entities.add(entity);
+	}
+	
+	public ConfigurationType getType() {
+		return type;
+	}
+	
+	public String getTarget() {
+		return target;
 	}
 
-	public List<ConfigurationEntity> getEntities() {
+	public List<Entity> getEntities() {
 		return entities;
-	}
-
-	public void setEntities(List<ConfigurationEntity> entities) {
-		this.entities = entities;
 	}
 
 	public boolean isDelayed() {

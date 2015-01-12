@@ -46,7 +46,7 @@ public class ConfigurationManager{
 	public void sendHueConfiguration(ConfigurationType type, HueEntity entity) {
 		try {
 			ConfigurationClient client = clients.get("Hue");
-			client.sendConfigurationMessage(type, gson.toJson(entity));
+			client.sendConfigurationMessage(type, gson.toJson(entity.getContent()));
 		} catch (Exception e) {
 			logger.error("Fail to send reconfiguration message to Hue");
 			logger.error(e.toString());

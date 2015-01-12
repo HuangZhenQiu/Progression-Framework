@@ -15,7 +15,8 @@ public class HueEntity implements Entity {
 	public HueEntity(int sat, int bri, int hue) {
 		content = new HashMap<String, Object>();
 		isOn = true;
-		content.put("on", sat);
+		content.put("on", isOn);
+		content.put("sat", sat);
 		content.put("bri", bri);
 		content.put("hue", hue);
 	}

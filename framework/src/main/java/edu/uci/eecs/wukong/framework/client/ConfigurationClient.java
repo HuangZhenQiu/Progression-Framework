@@ -43,9 +43,7 @@ public class ConfigurationClient {
 	private String method;
 	private PoolingHttpClientConnectionManager connectionManager;
 	private CloseableHttpClient client;
-
-	private String CONFIG_URL = "http://" + ip
-			+ ":" + port + "/"+ method;
+	private String CONFIG_URL;
 
 	private static HttpRequestRetryHandler retryHandler = new HttpRequestRetryHandler() {
 		public boolean retryRequest(
@@ -90,6 +88,8 @@ public class ConfigurationClient {
 		this.ip = ip;
 		this.port = port;
 		this.method = method;
+		this.CONFIG_URL = "http://" + ip
+				+ ":" + port + "/"+ method;
 		this.connectionManager = new PoolingHttpClientConnectionManager();
 		this.client = HttpClients.custom().setRetryHandler(retryHandler)
 				.setConnectionManager(connectionManager).build();

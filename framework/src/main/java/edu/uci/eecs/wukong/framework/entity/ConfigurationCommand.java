@@ -29,8 +29,9 @@ public class ConfigurationCommand {
 		this.entities =  new ArrayList<Entity>();
 	}
 
-	public ConfigurationCommand(String start, ConfigurationType type, int seconds) {
+	public ConfigurationCommand(String target, ConfigurationType type, int seconds) {
 		this.isDelayed = true;
+		this.target = target;
 		this.type = type;
 		this.seconds = seconds;
 		this.entities =  new ArrayList<Entity>();

@@ -47,10 +47,16 @@ public class ProgressionExtensionPoint extends ExtensionPoint<ProgressionExtensi
 							}
 						}
 					} else {
-						for (Entity entity : command.getEntities()) {
-							configurationManager.sendMasterReport(command.getType(),
-									new ConfigurationReport(configuration.getDemoApplicationId() , entity));
-							Thread.sleep(command.getSeconds() * 1000);
+						if(command.getTarget().equals("Master")) {
+							for (Entity entity : entities) {
+								configurationManager.sendMasterReport(command.getType(),
+										new ConfigurationReport(configuration.getDemoApplicationId() , entity));
+								Thread.sleep(command.getSeconds() * 1000);
+							}
+						} else {
+							for(Entity entity : entities) {
+								configurationManager.sendHueConfiguration(command.getType(), (HueEntity)entity);
+							}
 						}
 					}
 				}

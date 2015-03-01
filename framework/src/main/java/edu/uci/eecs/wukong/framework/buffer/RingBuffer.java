@@ -18,7 +18,7 @@ public class RingBuffer {
 	
 	public RingBuffer(int capacity) {
 		this.buffer = ByteBuffer.allocateDirect(capacity);
-		this.buffer.order(ByteOrder.LITTLE_ENDIAN);
+		this.buffer.order(ByteOrder.BIG_ENDIAN);
 		this.header = 0;
 		this.size = 0;
 		this.capacity = capacity;
@@ -38,11 +38,23 @@ public class RingBuffer {
 		return buffer.getInt((header - index + capacity) % capacity);
 	}
 	
+	/**
+	 * 
+	 * @param dst the array data should be written to
+	 * @param offset offset in the ring buffer
+	 * @param length
+	 */
 	public void get(byte[] dst, int offset, int length) {
-		buffer.get(dst, offset, length);
+		for(int i=0; i < length; i++) {
+			dst[i] = buffer.get(offset + i);
+		}
 	}
 	
-	public synchronized void put(int content) {
+	protected void put(int content) {
+		buffer.putInt(header, content);
+	}
+	
+	public synchronized void append(int content) {
 		buffer.putInt(header, content);
 		header = (header + 4) % capacity;
 		if (size + 4 <= capacity) {
@@ -50,7 +62,7 @@ public class RingBuffer {
 		}
 	}
 	
-	public synchronized void put(short content) {
+	public synchronized void append(short content) {
 		buffer.putShort(header, content);
 		header = (header + 2) % capacity;
 		if (size + 2 <= getCapacity()) {

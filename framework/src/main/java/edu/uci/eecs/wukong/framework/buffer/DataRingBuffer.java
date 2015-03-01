@@ -8,7 +8,7 @@ package edu.uci.eecs.wukong.framework.buffer;
  *
  */
 public final class DataRingBuffer extends RingBuffer {
-	private static final int DATA_SIZE = 6;
+	public static final int DATA_SIZE = 6;
 	private int initial;
 	private int last;
 	
@@ -23,8 +23,8 @@ public final class DataRingBuffer extends RingBuffer {
 			initial = time;
 		}
 		
-		this.put(time - last);
-		this.put(value);
+		this.append(time - last);
+		this.append(value);
 		this.last = time;
 	}
  }

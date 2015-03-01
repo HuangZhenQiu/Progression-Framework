@@ -9,13 +9,20 @@ package edu.uci.eecs.wukong.framework.buffer;
  *
  */
 public final class TimeIndexBuffer extends RingBuffer {
+	private static final int INTEGER_LENGTH = 4;
 	public TimeIndexBuffer(int capacity) {
 		// an integer to record the index on data buffer
 		super(4 * capacity);
+		this.put(0); // Point the index of start point to the start of data buffer
 	}
 	
-	public int getTimeIndex(int index) {
-		return this.getReverseInteger(index);
+	/**
+	 * Find the position of units ahead of current time.
+	 * @param index
+	 * @return
+	 */
+	public int getTimeIndex(int units) {
+		return this.getReverseInteger(INTEGER_LENGTH * units);
 	}
 	
 	public int getCurrentTimeIndex() {
@@ -26,7 +33,7 @@ public final class TimeIndexBuffer extends RingBuffer {
 	 * Put the index of data buffer at current time interval
 	 * @param pos
 	 */
-	public void putIndex(int pos) {
-		this.put(pos);
+	public void appendIndex(int pos) {
+		this.append(pos);
 	}
 }

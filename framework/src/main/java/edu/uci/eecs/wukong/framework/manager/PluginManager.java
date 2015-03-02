@@ -1,8 +1,8 @@
 package edu.uci.eecs.wukong.framework.manager;
 
-import edu.uci.eecs.wukong.framework.Plugin;
 import edu.uci.eecs.wukong.plugin.demo.DemoPlugin;
 import edu.uci.eecs.wukong.framework.pipeline.Pipeline;
+import edu.uci.eecs.wukong.framework.plugin.Plugin;
 public class PluginManager {
 	private ContextManager contextManager;
 	private Pipeline pipeline;

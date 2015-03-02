@@ -6,25 +6,10 @@ import java.nio.ByteBuffer;
 
 import org.apache.commons.lang.ArrayUtils;
 
-
-
 public final class DoubleTimeIndexDataBuffer {
 	private TimeIndexBuffer indexBuffer;
 	private DataRingBuffer dataBuffer;
 	private int interval; //in seconds
-	
-	public static class DataPoint {
-		private int deviation;
-		private short value;
-		public DataPoint(int deviation, short value) {
-			this.deviation = deviation;
-			this.value = value;
-		}
-		
-		public String toString() {
-			return deviation + ":" + value;
-		}
-	}
 	
 	public DoubleTimeIndexDataBuffer(int dataCapacity, int timeUnits, int interval){
 		this.indexBuffer = new TimeIndexBuffer(timeUnits);

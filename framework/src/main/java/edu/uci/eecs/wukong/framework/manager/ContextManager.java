@@ -1,12 +1,13 @@
 package edu.uci.eecs.wukong.framework.manager;
 
 import com.google.gson.Gson;
-import edu.uci.eecs.wukong.framework.Plugin;
+
 import edu.uci.eecs.wukong.framework.client.XMPPContextClient;
 import edu.uci.eecs.wukong.framework.context.Context;
 import edu.uci.eecs.wukong.framework.context.DemoContext;
 import edu.uci.eecs.wukong.framework.context.ExecutionContext;
 import edu.uci.eecs.wukong.framework.context.ContextListener;
+import edu.uci.eecs.wukong.framework.plugin.Plugin;
 
 import java.util.ArrayList;
 import java.util.HashSet;

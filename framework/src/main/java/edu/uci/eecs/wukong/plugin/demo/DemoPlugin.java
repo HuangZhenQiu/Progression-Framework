@@ -3,8 +3,8 @@ package edu.uci.eecs.wukong.plugin.demo;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.uci.eecs.wukong.framework.Plugin;
 import edu.uci.eecs.wukong.framework.extension.Extension;
+import edu.uci.eecs.wukong.framework.plugin.Plugin;
 
 public class DemoPlugin extends Plugin {
 	

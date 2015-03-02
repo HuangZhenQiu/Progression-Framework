@@ -27,5 +27,6 @@
 	<classpathentry kind="var" path="M2_REPO/org/igniterealtime/smack/smack/3.4.1/smack-3.4.1.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/igniterealtime/smack/smackx/3.4.1/smackx-3.4.1.jar"/>
 	<classpathentry kind="var" path="M2_REPO/junit/junit/4.11/junit-4.11.jar"/>
+	<classpathentry kind="var" path="M2_REPO/commons-lang/commons-lang/2.6/commons-lang-2.6.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

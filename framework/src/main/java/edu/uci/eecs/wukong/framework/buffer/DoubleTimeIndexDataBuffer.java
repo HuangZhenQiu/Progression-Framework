@@ -2,6 +2,7 @@ package edu.uci.eecs.wukong.framework.buffer;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TimerTask;
 import java.nio.ByteBuffer;
 
 import org.apache.commons.lang.ArrayUtils;
@@ -9,12 +10,28 @@ import org.apache.commons.lang.ArrayUtils;
 public final class DoubleTimeIndexDataBuffer {
 	private TimeIndexBuffer indexBuffer;
 	private DataRingBuffer dataBuffer;
+	private BufferIndexer indexer;
 	private int interval; //in seconds
+	
+	private class BufferIndexer extends TimerTask {
+		private DoubleTimeIndexDataBuffer buffer;
+		public BufferIndexer(DoubleTimeIndexDataBuffer buffer) {
+			this.buffer = buffer;
+		}
+		
+		@Override
+		public void run() {
+			// TODO Auto-generated method stub
+			buffer.getTimeIndexBuffer().appendIndex(buffer.getDataRingBuffer().getHeader());
+		}
+		
+	}
 	
 	public DoubleTimeIndexDataBuffer(int dataCapacity, int timeUnits, int interval){
 		this.indexBuffer = new TimeIndexBuffer(timeUnits);
 		this.dataBuffer = new DataRingBuffer(dataCapacity);
 		this.interval = interval;
+		this.indexer = new BufferIndexer(this);
 	}
 	
 	public void addElement(int timestampe,  short value) {
@@ -66,5 +83,17 @@ public final class DoubleTimeIndexDataBuffer {
 	
 	public int getInterval() {
 		return this.interval;
+	}
+	
+	public BufferIndexer getIndexer() {
+		return this.indexer;
+	}
+	
+	protected TimeIndexBuffer getTimeIndexBuffer() {
+		return this.indexBuffer;
+	}
+	
+	protected DataRingBuffer getDataRingBuffer() {
+		return this.dataBuffer;
 	}
 }

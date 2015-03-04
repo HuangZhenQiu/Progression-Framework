@@ -42,6 +42,7 @@ public class NIOUdpClient {
 			buffer.putInt(device);
 			buffer.putInt(port);
 			buffer.putInt(value);
+			buffer.flip();
 			channel.send(buffer, server);
 		} catch (Exception e) {
 			logger.error(e.toString());

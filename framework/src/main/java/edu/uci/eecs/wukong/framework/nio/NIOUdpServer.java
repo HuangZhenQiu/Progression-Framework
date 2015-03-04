@@ -1,16 +1,15 @@
 package edu.uci.eecs.wukong.framework.nio;
 
-import edu.uci.eecs.wukong.framework.dispatch.Dispatcher;
+import edu.uci.eecs.wukong.framework.ProgressionKey.PhysicalKey;
+import edu.uci.eecs.wukong.framework.manager.BufferManager;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
-import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
-import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.Iterator;
 
@@ -21,14 +20,14 @@ public class NIOUdpServer {
 	private static Logger logger = LoggerFactory.getLogger(NIOUdpServer.class);
 	private static int BUFFER_SIZE = 1024;
 	private static int PROPRESSION_PORT = 8000;
-	private Dispatcher dispatcher;
+	private BufferManager bufferManager;
 	
 	protected NIOUdpServer() {
-		
+		// Only used for testing
 	}
 	
-	public NIOUdpServer(Dispatcher dispatcher) {
-		this.dispatcher = dispatcher;
+	public NIOUdpServer(BufferManager bufferManager) {
+		this.bufferManager = bufferManager;
 	}
 	
 	private static class ChannelAttachment{
@@ -85,11 +84,15 @@ public class NIOUdpServer {
 		ChannelAttachment attachment = (ChannelAttachment)key.attachment();
 		attachment.address = channel.receive(attachment.buffer);
 		System.out.println(Arrays.toString(attachment.buffer.array()));
-		int size = attachment.buffer.position() / 12;
-		/*for (int i =0; i < size; i++) {
-			System.out.println(attachment.buffer.getInt(i * 12) + ":"
-				+ attachment.buffer.getInt(i * 12 + 4) + ":" + attachment.buffer.getInt(i * 12 + 8));
-		}*/
+		// TODO(HuangZhenqiu) Add buffer in the client size to prove the transmission speedy.
+		int size = attachment.buffer.position() / 6;
+		for (int i =0; i < size; i++) {
+			short deviceId = attachment.buffer.getShort(i * 6);
+			short portId = attachment.buffer.getShort(i * 6 + 2);
+			short value = attachment.buffer.getShort(i * 6 + 4);
+			// Force to convert to int to reduce size.
+			bufferManager.addData(new PhysicalKey(deviceId, portId), (int)System.currentTimeMillis(), value);
+		}
 		attachment.buffer.clear();
 		// TODO put data into dispatcher.
 	}

@@ -16,23 +16,23 @@ package edu.uci.eecs.wukong.framework;
  */
 public class ProgressionKey {
 	public static class PhysicalKey {
-		private String deviceId;
-		private String portId;
-		public PhysicalKey(String deviceId, String portId) {
+		private Short deviceId;   // 0 - 255
+		private Short portId;     // 0 - 255
+		public PhysicalKey(Short deviceId, Short portId) {
 			this.deviceId = deviceId;
 			this.portId = portId;
 		}
 		
-		public String getDeviceId() {
+		public Short getDeviceId() {
 			return deviceId;
 		}
-		public void setDeviceId(String deviceId) {
+		public void setDeviceId(Short deviceId) {
 			this.deviceId = deviceId;
 		}
-		public String getPortId() {
+		public Short getPortId() {
 			return portId;
 		}
-		public void setPortId(String portId) {
+		public void setPortId(Short portId) {
 			this.portId = portId;
 		}
 	}

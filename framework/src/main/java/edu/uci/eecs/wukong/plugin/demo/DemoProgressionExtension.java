@@ -50,6 +50,8 @@ public class DemoProgressionExtension implements ProgressionExtension<FeatureEnt
 	private static int status; // 0 Nobody, 1 kitchen PassOver, 2, Passover left, 3 kitchen Stay, 4 kitchen left after stay, 5 table stay, 6 stable left after stay 
 	private DemoContext lastContext = null;
 	private static long lastTime = 0;
+	
+	
 
 	// Triggered by general data pipeline
 	public  List<ConfigurationCommand> execute(List<FeatureEntity> data, ExecutionContext context) {
@@ -259,5 +261,10 @@ public class DemoProgressionExtension implements ProgressionExtension<FeatureEnt
 		}
 		
 		return false;
+	}
+
+	public void activate(Object model) {
+		// TODO Auto-generated method stub
+		
 	}
 }

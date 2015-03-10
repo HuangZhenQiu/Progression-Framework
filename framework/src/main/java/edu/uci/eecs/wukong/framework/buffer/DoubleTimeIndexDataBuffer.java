@@ -7,15 +7,15 @@ import java.nio.ByteBuffer;
 
 import org.apache.commons.lang.ArrayUtils;
 
-public final class DoubleTimeIndexDataBuffer {
+public final class DoubleTimeIndexDataBuffer<T> {
 	private TimeIndexBuffer indexBuffer;
-	private DataRingBuffer dataBuffer;
+	private DataRingBuffer<T> dataBuffer;
 	private BufferIndexer indexer;
 	private int interval; //in seconds
 	
 	private class BufferIndexer extends TimerTask {
-		private DoubleTimeIndexDataBuffer buffer;
-		public BufferIndexer(DoubleTimeIndexDataBuffer buffer) {
+		private DoubleTimeIndexDataBuffer<T> buffer;
+		public BufferIndexer(DoubleTimeIndexDataBuffer<T> buffer) {
 			this.buffer = buffer;
 		}
 		
@@ -29,12 +29,12 @@ public final class DoubleTimeIndexDataBuffer {
 	
 	public DoubleTimeIndexDataBuffer(int dataCapacity, int timeUnits, int interval){
 		this.indexBuffer = new TimeIndexBuffer(timeUnits);
-		this.dataBuffer = new DataRingBuffer(dataCapacity);
+		this.dataBuffer = new DataRingBuffer<T>(dataCapacity);
 		this.interval = interval;
 		this.indexer = new BufferIndexer(this);
 	}
 	
-	public void addElement(int timestampe,  short value) {
+	public void addElement(int timestampe,  T value) {
 		this.dataBuffer.addElement(timestampe, value);
 		System.out.println("Data Buffer Header: " + dataBuffer.getHeader());
 	}
@@ -93,7 +93,7 @@ public final class DoubleTimeIndexDataBuffer {
 		return this.indexBuffer;
 	}
 	
-	protected DataRingBuffer getDataRingBuffer() {
+	protected DataRingBuffer<T> getDataRingBuffer() {
 		return this.dataBuffer;
 	}
 }

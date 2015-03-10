@@ -24,19 +24,41 @@ public class RingBuffer {
 		this.capacity = capacity;
 	}
 	
-	public Short getShort(int index) {
+	public Byte getByte(int index) {
+		if(index > size)
+			throw new IllegalArgumentException();
+		return buffer.get(index);
+	}
+	
+	public short getShort(int index) {
 		if(index > size)
 			throw new IllegalArgumentException();
 		return buffer.getShort(index);
 	}
 	
 	public int getInteger(int index) {
+		if(index > size)
+			throw new IllegalArgumentException();
+		return buffer.getInt(index);
+	}
+	
+	public long getLong(int index) {
+		if(index > size)
+			throw new IllegalArgumentException();
+		return buffer.getInt(index);
+	}
+	
+	public double getDouble(int index) {
+		if(index > size)
+			throw new IllegalArgumentException();
 		return buffer.getInt(index);
 	}
 	
 	public int getReverseInteger(int index) {
 		return buffer.getInt((header - index + capacity) % capacity);
 	}
+	
+	
 	
 	/**
 	 * 
@@ -54,19 +76,35 @@ public class RingBuffer {
 		buffer.putInt(header, content);
 	}
 	
-	public synchronized void append(int content) {
+	public synchronized void appendInt(int content) {
 		buffer.putInt(header, content);
-		header = (header + 4) % capacity;
-		if (size + 4 <= capacity) {
-			size += 4;
-		}
+		updateSize(4);
 	}
 	
-	public synchronized void append(short content) {
+	public synchronized void appendShort(short content) {
 		buffer.putShort(header, content);
-		header = (header + 2) % capacity;
-		if (size + 2 <= getCapacity()) {
-			size += 2;
+		updateSize(2);
+	}
+	
+	public synchronized void appendByte(byte content) {
+		buffer.put(header, content);
+		updateSize(1);
+	}
+	
+	public synchronized void appendLong(long content) {
+		buffer.putLong(header, content);
+		updateSize(8);
+	}
+	
+	public synchronized void appendDouble(double content) {
+		buffer.putDouble(header, content);
+		updateSize(8);
+	}
+	
+	private void updateSize(int length) {
+		header = (header + length) % capacity;
+		if (size + length <= getCapacity()) {
+			size += length;
 		}
 	}
 	

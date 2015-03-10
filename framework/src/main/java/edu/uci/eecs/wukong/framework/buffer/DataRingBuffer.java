@@ -7,7 +7,7 @@ package edu.uci.eecs.wukong.framework.buffer;
  * @author Peter
  *
  */
-public final class DataRingBuffer extends RingBuffer {
+public final class DataRingBuffer<T extends Object> extends RingBuffer {
 	public static final int DATA_SIZE = 6;
 	private int initial;
 	private int last;
@@ -18,13 +18,30 @@ public final class DataRingBuffer extends RingBuffer {
 		this.last = 0;
 	}
 	
-	public synchronized void addElement(int time, short value) {
+	public synchronized void addElement(int time, T value) {
+		if(!( value instanceof Byte || value instanceof Short || value instanceof Integer
+				|| value instanceof Double || value instanceof Long)) {
+			throw new IllegalArgumentException("Only support Byte, Integer, Double and Long as type of data.");
+		}
 		if(initial == 0) {
 			initial = time;
 		}
 		
-		this.append(time - last);
-		this.append(value);
+		// Add time deviation
+		this.appendInt(time - last);
+		
+		if (value instanceof Byte) {
+			this.appendByte((Byte) value);
+		} else if(value instanceof Short) {
+			this.appendShort((Short) value);
+		} else if (value instanceof Integer) {
+			this.appendInt((Integer) value);
+		} else if (value instanceof Double) {
+			this.appendDouble((Double) value);
+		} else {
+			this.appendLong((Long) value);
+		}
+		
 		this.last = time;
 	}
  }

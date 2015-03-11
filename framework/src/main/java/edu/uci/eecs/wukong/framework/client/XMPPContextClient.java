@@ -18,6 +18,8 @@ import org.jivesoftware.smackx.pubsub.listener.ItemEventListener;
 import org.jivesoftware.smackx.pubsub.AccessModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+
 public class XMPPContextClient {
 	private static Logger logger = LoggerFactory.getLogger(XMPPContextClient.class);
 	private final static Configuration systemConfig= Configuration.getInstance(); 

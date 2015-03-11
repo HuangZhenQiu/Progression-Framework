@@ -1,9 +1,9 @@
 package edu.uci.eecs.wukong.framework.buffer;
 
-public class DataPoint {
+public class DataPoint<T> {
 	private int deviation;
-	private short value;
-	public DataPoint(int deviation, short value) {
+	private T value;
+	public DataPoint(int deviation, T value) {
 		this.deviation = deviation;
 		this.value = value;
 	}

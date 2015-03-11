@@ -5,6 +5,6 @@ package edu.uci.eecs.wukong.framework.entity;
  * @author Peter Huang
  *
  */
-public class FeatureEntity {
+public interface FeatureEntity {
 
 }

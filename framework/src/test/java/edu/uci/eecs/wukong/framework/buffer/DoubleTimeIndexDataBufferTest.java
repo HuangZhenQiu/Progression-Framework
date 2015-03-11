@@ -4,7 +4,6 @@ import junit.framework.TestCase;
 import static org.junit.Assert.*;
 
 import java.util.List;
-import edu.uci.eecs.wukong.framework.buffer.DoubleTimeIndexDataBuffer.DataPoint;
 
 public class DoubleTimeIndexDataBufferTest extends TestCase{
 	

@@ -34,6 +34,6 @@ public final class TimeIndexBuffer extends RingBuffer {
 	 * @param pos
 	 */
 	public void appendIndex(int pos) {
-		this.append(pos);
+		this.appendInt(pos);
 	}
 }

@@ -12,7 +12,7 @@ import edu.uci.eecs.wukong.framework.ProgressionKey.LogicalKey;
  * @author Peter
  *
  */
-public interface Operator {
+public interface Operator<T> {
 	
 	/**
 	 * The bind function should return the logical keys for the data sources, from which progression
@@ -28,5 +28,8 @@ public interface Operator {
 	 * 
 	 * @return
 	 */
-	public Object operate(List<List<DataPoint>> data);
+	public T operate(List<List<DataPoint<T>>> data);
+	
+	
+	public void addDataSource(LogicalKey key, int interval);
 }

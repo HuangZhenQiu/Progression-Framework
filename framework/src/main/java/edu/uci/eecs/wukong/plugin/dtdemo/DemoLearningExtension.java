@@ -58,7 +58,8 @@ public class DemoLearningExtension implements LearningExtension<DemoFeatureEntit
 		return this.isActive;
 	}
 	
-	public List<Double> predict(List<DemoFeatureEntity> data, ExecutionContext context) throws Exception {
+	public List<Double> predict(List<DemoFeatureEntity> data,
+			ExecutionContext context) throws Exception {
 		Instance observation = new DenseInstance(attributeNumber);
 		// Use context to build observation
 		List<Double> result = new ArrayList<Double>();

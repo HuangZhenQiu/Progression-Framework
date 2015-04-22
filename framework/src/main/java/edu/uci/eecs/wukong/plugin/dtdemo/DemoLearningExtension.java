@@ -22,7 +22,7 @@ public class DemoLearningExtension implements LearningExtension<DemoFeatureEntit
 	public DemoLearningExtension() {
 		this.attributeNumber = 7; // Context + Light Sensor
 		this.attributes = new FastVector<Attribute>(7);
-		this.tree = new MSP();
+		this.tree = new M5P();
 		this.isActive = false;
 		Attribute light1 = new Attribute("light1");
 		Attribute light2 = new Attribute("light2");

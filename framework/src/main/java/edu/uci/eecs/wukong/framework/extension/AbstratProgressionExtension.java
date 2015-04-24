@@ -22,4 +22,8 @@ public abstract class AbstratProgressionExtension<T extends FeatureEntity> imple
 	public abstract void execute(Context context);
 
 	public abstract void execute();
+	
+	public Plugin getPlugin() {
+		return this.plugin;
+	}
 }

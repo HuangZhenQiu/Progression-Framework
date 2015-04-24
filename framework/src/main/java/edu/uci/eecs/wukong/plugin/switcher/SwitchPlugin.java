@@ -10,17 +10,19 @@ import edu.uci.eecs.wukong.framework.plugin.Plugin;
 
 public class SwitchPlugin extends Plugin {
 	
-	@Input(interval = 5)
-	private String input;
+	@Input
+	private Boolean switchInput;
+	@Input
+	private Double temparature;
 	@Output
-	private String threshold;
+	private Double threshold;
 	
 	public SwitchPlugin() {
 		super("Smart Switch");
 	}
 	public List<Extension> registerExtension() {
 		List<Extension> extensions = new ArrayList<Extension>();
-		extensions.add(new SwitchProgressionExtension());
+		extensions.add(new SwitchProgressionExtension(this));
 		return extensions;
 	}
 	
@@ -29,5 +31,22 @@ public class SwitchPlugin extends Plugin {
 		contexts.add("uid");
 		return contexts;
 	}
-	
+	public Boolean getSwitchInput() {
+		return switchInput;
+	}
+	public void setSwitchInput(Boolean switchInput) {
+		this.switchInput = switchInput;
+	}
+	public Double getTemparature() {
+		return temparature;
+	}
+	public void setTemparature(Double temparature) {
+		this.temparature = temparature;
+	}
+	public Double getThreshold() {
+		return threshold;
+	}
+	public void setThreshold(Double threshold) {
+		this.threshold = threshold;
+	}
 }

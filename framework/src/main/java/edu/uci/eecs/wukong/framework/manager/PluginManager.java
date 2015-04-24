@@ -30,6 +30,7 @@ public class PluginManager {
 		
 	}
 	
+	// Dirty Property Propagation
 	public void updateProperty(PropertyChangeEvent event) {
 		
 	}

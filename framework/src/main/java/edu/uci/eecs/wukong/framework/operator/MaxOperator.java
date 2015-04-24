@@ -4,12 +4,11 @@ import java.util.List;
 
 import edu.uci.eecs.wukong.framework.buffer.DataPoint;
 
-public class MaxOperator<T> extends AbstractOperator<T> {
+public class MaxOperator<T> extends SingleOperator<T> {
 
 	@Override
-	public T operate(List<List<DataPoint<T>>> data) {
+	public T operate(List<DataPoint<T>> data) {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
 }

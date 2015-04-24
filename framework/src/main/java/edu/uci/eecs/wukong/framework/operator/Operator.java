@@ -23,13 +23,5 @@ public interface Operator<T> {
 	public Map<LogicalKey, Integer> bind();
 	
 	
-	/**
-	 * @param data
-	 * 
-	 * @return
-	 */
-	public T operate(List<List<DataPoint<T>>> data);
-	
-	
 	public void addDataSource(LogicalKey key, int interval);
 }

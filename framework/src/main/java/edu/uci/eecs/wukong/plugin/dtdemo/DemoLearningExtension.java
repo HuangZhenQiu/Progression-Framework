@@ -12,7 +12,7 @@ import weka.core.Instances;
 import edu.uci.eecs.wukong.framework.context.ExecutionContext;
 import edu.uci.eecs.wukong.framework.extension.LearningExtension;
 
-public class DemoLearningExtension implements LearningExtension<DemoFeatureEntity> {
+public class DemoLearningExtension implements LearningExtension<Number> {
 	private int attributeNumber;
 	private FastVector<Attribute> attributes;
 	private Instances traniningSet;
@@ -41,12 +41,12 @@ public class DemoLearningExtension implements LearningExtension<DemoFeatureEntit
 		this.traniningSet = new Instances("Rel", attributes, 10);
 		
 	}
-	public void apply(List<DemoFeatureEntity> data,
+	public void apply(List<Number> data,
 			ExecutionContext context) {
 		Instance sample = new DenseInstance(attributeNumber);
 		int i = 0;
-		for (DemoFeatureEntity entity : data) {
-			sample.setValue(attributes.get(i), entity.getValue());
+		for (Number entity : data) {
+			sample.setValue(attributes.get(i), entity.doubleValue());
 			i++;
 		}
 		this.traniningSet.add(sample);
@@ -58,7 +58,7 @@ public class DemoLearningExtension implements LearningExtension<DemoFeatureEntit
 		return this.isActive;
 	}
 	
-	public List<Double> predict(List<DemoFeatureEntity> data,
+	public List<Double> predict(List<Number> data,
 			ExecutionContext context) throws Exception {
 		Instance observation = new DenseInstance(attributeNumber);
 		// Use context to build observation

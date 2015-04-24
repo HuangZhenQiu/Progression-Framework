@@ -4,11 +4,13 @@ import java.util.List;
 
 import edu.uci.eecs.wukong.framework.buffer.DataPoint;
 
-public class MinOperator<T> extends SingleOperator<T> {
+public class DefaultOperator<T> extends SingleOperator<T> {
 
 	@Override
 	public T operate(List<DataPoint<T>> data) {
-		// TODO Auto-generated method stub
+		if (data.size() !=0) {
+			return data.get(0).getValue();
+		}
 		return null;
 	}
 

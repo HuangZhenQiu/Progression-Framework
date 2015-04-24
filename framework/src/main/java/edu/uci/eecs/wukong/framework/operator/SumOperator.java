@@ -4,12 +4,16 @@ import java.util.List;
 
 import edu.uci.eecs.wukong.framework.buffer.DataPoint;
 
-public class SumOperator<T> extends AbstractOperator<T> {
+public class SumOperator<T extends Number> extends SingleOperator<Number> {
 
 	@Override
-	public T operate(List<List<DataPoint<T>>> data) {
+	public Number operate(List<DataPoint<Number>> data) {
 		// TODO Auto-generated method stub
-		return null;
+		Number number = 0;
+		for (DataPoint<Number> point : data) {
+			number = number.doubleValue() + point.getValue().doubleValue();
+		}
+		
+		return number;
 	}
-
 }

@@ -22,6 +22,8 @@ public class SwitchPlugin extends Plugin {
 	}
 	public List<Extension> registerExtension() {
 		List<Extension> extensions = new ArrayList<Extension>();
+		extensions.add(new SwitchFeatureExtensionExtension());
+		extensions.add(new SwitchLearningExtension());
 		extensions.add(new SwitchProgressionExtension(this));
 		return extensions;
 	}

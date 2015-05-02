@@ -4,7 +4,7 @@ import java.util.List;
 
 import edu.uci.eecs.wukong.framework.buffer.DataPoint;
 
-public abstract class MultipleOperator<T> extends AbstractOperator<T> {
+public abstract class MultipleOperator<T extends Number> extends AbstractOperator<Number> {
 	
-	public abstract T operate(List<List<DataPoint<T>>> data);
+	public abstract Number operate(List<List<DataPoint<T>>> data);
 }

@@ -4,10 +4,10 @@ import java.util.List;
 
 import edu.uci.eecs.wukong.framework.buffer.DataPoint;
 
-public class DefaultOperator<T> extends SingleOperator<T> {
+public class DefaultOperator<T extends Number> extends SingleOperator<Number> {
 
 	@Override
-	public T operate(List<DataPoint<T>> data) {
+	public Number operate(List<DataPoint<Number>> data) {
 		if (data.size() !=0) {
 			return data.get(0).getValue();
 		}

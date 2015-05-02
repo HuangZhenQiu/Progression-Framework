@@ -4,12 +4,17 @@ import java.util.List;
 
 import edu.uci.eecs.wukong.framework.buffer.DataPoint;
 
-public class MinOperator<T> extends SingleOperator<T> {
+public class MinOperator<T extends Number> extends SingleOperator<Number> {
 
 	@Override
-	public T operate(List<DataPoint<T>> data) {
+	public Number operate(List<DataPoint<Number>> data) {
 		// TODO Auto-generated method stub
-		return null;
+		Number min = Double.MAX_VALUE;
+		for (DataPoint<Number> point : data) {
+			if (min.doubleValue() > point.getValue().doubleValue()) {
+				min = point.getValue().doubleValue();
+			}
+		}
+		return min;
 	}
-
 }

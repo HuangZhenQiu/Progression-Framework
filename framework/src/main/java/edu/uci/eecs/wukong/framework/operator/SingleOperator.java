@@ -4,7 +4,7 @@ import java.util.List;
 
 import edu.uci.eecs.wukong.framework.buffer.DataPoint;
 
-public abstract class SingleOperator<T> extends AbstractOperator<T> {
+public abstract class SingleOperator<T extends Number> extends AbstractOperator<Number> {
 
 	/**
 	 * @param data

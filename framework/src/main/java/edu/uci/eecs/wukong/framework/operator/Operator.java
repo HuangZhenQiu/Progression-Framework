@@ -1,9 +1,7 @@
 package edu.uci.eecs.wukong.framework.operator;
 
-import java.util.List;
 import java.util.Map;
 
-import edu.uci.eecs.wukong.framework.buffer.DataPoint;
 import edu.uci.eecs.wukong.framework.ProgressionKey.LogicalKey;
 
 /**

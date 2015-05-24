@@ -21,7 +21,10 @@ public class Configuration {
 	private static final String DEMO_TABLE_SLIDER_ID = "DEMO.TABLE.SLIDER.ID";
 	private static final String DEMO_OUTER_SLIDER_ID = "DEMO.OUTER.SLIDER.ID";
 	private static final String DEMO_WALL_SLIDER_ID = "DEMO.WALL.SLIDER.ID";
+	private static final String GATEWAY_IP = "GATEWAY.IP";
+	private static final String GATEWAY_PORT = "GATEWAY.PORT";
 	private static Configuration configuration;
+
 	private static Properties properties = new Properties();
 
 	private Configuration() {
@@ -40,6 +43,14 @@ public class Configuration {
 			configuration = new Configuration();
 		}
 		return configuration;
+	}
+	
+	public String getGatewayIP() {
+		return properties.getProperty(GATEWAY_IP);
+	}
+	
+	public Short getGatewayPort() {
+		return Short.parseShort(properties.getProperty(GATEWAY_PORT));
 	}
 	
 	public String getXMPPServerName() {

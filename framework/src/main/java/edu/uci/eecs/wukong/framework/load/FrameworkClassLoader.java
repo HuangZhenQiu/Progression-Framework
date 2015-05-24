@@ -1,5 +1,28 @@
 package edu.uci.eecs.wukong.framework.load;
 
-public class FrameworkClassLoader {
+import java.lang.ClassLoader;
+import java.util.HashMap;
+import java.lang.Class;
 
+public class FrameworkClassLoader extends ClassLoader {
+	private HashMap<String, Class> classes;
+	
+	public FrameworkClassLoader() {
+		this.classes = new HashMap<String, Class>();
+	}
+	
+	public synchronized Class loadClass(String className) {
+		Class result = (Class)classes.get(className); 
+        if (result == null){
+        	try {
+        	    result = super.getClass().getClassLoader().loadClass(className);
+        	    classes.put(className, result);
+        	    return result; 
+    	    } catch (ClassNotFoundException e) { 
+    	         System.out.println(e.toString());
+    	    } 
+        }
+        
+        return result;
+	}
 }

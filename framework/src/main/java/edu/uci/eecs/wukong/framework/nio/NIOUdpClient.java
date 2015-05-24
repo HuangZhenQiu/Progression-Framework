@@ -16,15 +16,18 @@ public class NIOUdpClient {
 	private static final int BUFFER_SIZE = 1024;
 	private String domain;
 	private int port;
-	private ByteBuffer buffer;
+	private ByteBuffer sendBuffer;
+	private ByteBuffer receiveBuffer;
 	private DatagramChannel channel;
 	private SocketAddress server;
 	
 	public NIOUdpClient(String domain, int port) throws IOException {
 		this.domain = domain;
 		this.port = port;
-		this.buffer = ByteBuffer.allocateDirect(1024);
-		this.buffer.order(ByteOrder.BIG_ENDIAN);
+		this.sendBuffer = ByteBuffer.allocateDirect(BUFFER_SIZE);
+		this.sendBuffer.order(ByteOrder.BIG_ENDIAN);
+		this.receiveBuffer = ByteBuffer.allocateDirect(BUFFER_SIZE);
+		this.receiveBuffer.order(ByteOrder.BIG_ENDIAN);
 		this.channel = DatagramChannel.open();
 		this.server = new InetSocketAddress(domain, port);
 	}
@@ -32,21 +35,36 @@ public class NIOUdpClient {
 	public void connect() throws Exception {
 		SocketAddress address = new InetSocketAddress(0);
 		DatagramSocket socket = channel.socket();
-		socket.setSoTimeout(1000);
+		socket.setSoTimeout(3000);
 		socket.bind(address);
 	}
 	
-	public void send(int device, int port, int value) {
+	public synchronized void send(int device, int port, int value) {
 		try {
-			buffer.clear();
-			buffer.putInt(device);
-			buffer.putInt(port);
-			buffer.putInt(value);
-			buffer.flip();
-			channel.send(buffer, server);
+			sendBuffer.clear();
+			sendBuffer.putInt(device);
+			sendBuffer.putInt(port);
+			sendBuffer.putInt(value);
+			sendBuffer.flip();
+			channel.send(sendBuffer, server);
 		} catch (Exception e) {
 			logger.error(e.toString());
 		}
+	}
+	
+	public synchronized byte[] send(byte[] message) {
+		receiveBuffer.clear();
+		try {
+			sendBuffer.clear();
+			sendBuffer.put(message);
+			sendBuffer.flip();
+			channel.send(sendBuffer, server);
+			channel.receive(receiveBuffer);
+		} catch (Exception e) {
+			logger.error(e.toString());
+		}
+		
+		return receiveBuffer.array();
 	}
 	
 	public void close() throws Exception {

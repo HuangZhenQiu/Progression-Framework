@@ -5,12 +5,12 @@ import java.util.List;
 import java.util.Map;
 
 import edu.uci.eecs.wukong.framework.ProgressionKey.LogicalKey;
-import edu.uci.eecs.wukong.framework.extension.FeatureAbtractionExtension;
+import edu.uci.eecs.wukong.framework.extension.FeatureAbstractionExtension;
 import edu.uci.eecs.wukong.framework.operator.AverageOperator;
 import edu.uci.eecs.wukong.framework.operator.DefaultOperator;
 import edu.uci.eecs.wukong.framework.operator.Operator;
 
-public class SwitchFeatureExtensionExtension implements FeatureAbtractionExtension {
+public class SwitchFeatureExtensionExtension implements FeatureAbstractionExtension {
 
 	public List<Operator> registerOperators(Map<String, LogicalKey> logicId) {
 		List<Operator> operators = new ArrayList<Operator>();

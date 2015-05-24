@@ -10,8 +10,7 @@ import edu.uci.eecs.wukong.framework.operator.Operator;
  * 
  * 
  * @author Peter
- *
  */
-public interface FeatureAbtractionExtension extends Extension {
+public interface FeatureAbstractionExtension extends Extension {
 	public List<Operator> registerOperators(Map<String, LogicalKey> logicId);
 }

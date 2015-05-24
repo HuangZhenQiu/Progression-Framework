@@ -2,6 +2,7 @@ package edu.uci.eecs.wukong.framework.nio;
 
 import edu.uci.eecs.wukong.framework.ProgressionKey.PhysicalKey;
 import edu.uci.eecs.wukong.framework.manager.BufferManager;
+import edu.uci.eecs.wukong.framework.wkpf.MPTNMessageListener;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -11,19 +12,23 @@ import java.nio.channels.DatagramChannel;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class NIOUdpServer {
+public class NIOUdpServer extends Thread {
 	private static Logger logger = LoggerFactory.getLogger(NIOUdpServer.class);
 	private static int BUFFER_SIZE = 1024;
 	private static int PROPRESSION_PORT = 8000;
-	private BufferManager bufferManager;
+	// TODO (Peter Huang) Buffer Manager should be moved out of NIOUdpServer
+	private BufferManager bufferManager; 
+	private List<MPTNMessageListener> listeners;
 	
-	protected NIOUdpServer() {
-		// Only used for testing
+	public NIOUdpServer() {
+		this.listeners = new ArrayList<MPTNMessageListener>();
 	}
 	
 	public NIOUdpServer(BufferManager bufferManager) {
@@ -39,7 +44,12 @@ public class NIOUdpServer {
 		}
 	}
 	
-	public void start() {
+	public void addMPTNMessageListener(MPTNMessageListener listener) {
+		this.listeners.add(listener);
+	}
+	
+	@Override
+	public void run() {
 		try {
 			Selector selector = Selector.open();
 			DatagramChannel channel = DatagramChannel.open();

@@ -4,17 +4,22 @@ import edu.uci.eecs.wukong.framework.manager.ConfigurationManager;
 import edu.uci.eecs.wukong.framework.manager.ContextManager;
 import edu.uci.eecs.wukong.framework.extension.Extension;
 import edu.uci.eecs.wukong.framework.extension.ProgressionExtension;
+import edu.uci.eecs.wukong.framework.extension.FeatureAbstractionExtension;
+import edu.uci.eecs.wukong.framework.extension.LearningExtension;
 
 import java.util.List;
 import java.lang.Thread;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 public class Pipeline {
 	private final static Logger LOGGER = LoggerFactory.getLogger(Pipeline.class);
 	private ContextManager contextManager;
 	private ConfigurationManager configurationManager;
+	private FeatureAbstractionPoint featureAbstractionPoint;
 	private ProgressionExtensionPoint progressionPoint;
+	private LearningPoint learningPoint;
 	
 	public Pipeline(ContextManager contextManager, ConfigurationManager configuraionManager) {
 		this.contextManager = contextManager;
@@ -28,12 +33,24 @@ public class Pipeline {
 			if (extension instanceof ProgressionExtension) {
 				progressionPoint.register((ProgressionExtension)extension);
 			}
+			
+			if (extension instanceof FeatureAbstractionExtension) {
+				featureAbstractionPoint.register((FeatureAbstractionExtension) extension);
+			}
+			
+			if (extension instanceof LearningExtension) {
+				learningPoint.register((LearningExtension) extension);
+			}
 		}
 	}
 	
 	public void start() {
-		Thread thread = new Thread(progressionPoint);
-		thread.start();
+		Thread featureAbstraction = new Thread(featureAbstractionPoint);
+		Thread learning = new Thread(learningPoint);
+		Thread progression = new Thread(progressionPoint);
+		featureAbstraction.start();
+		learning.start();
+		progression.start();
 		LOGGER.info("Progression Pipeline get started.");
 	}
 }

@@ -1,18 +1,20 @@
 package edu.uci.eecs.wukong.framework.wkpf;
 
-import java.util.List;
-
 public interface WKPFMessageListener {
 
-	public boolean onWKPFRemoteProgram(byte[] message);
+	public void onWKPFRemoteProgram(byte[] message);
 	
-	public List<String> onWKPFGetWuClassList();
+	public void onWKPFGetWuClassList(byte[] message);
 	
-	public List<String> onWKPFGetWuObjectList();
+	public void onWKPFGetWuObjectList(byte[] message);
 	
-	public int onWKPFReadProperty(int objectId, int portId);
+	public void onWKPFReadProperty(byte[] message);
 	
-	public int onWKPFWriteProperty(int objectId, int portId);
+	public void onWKPFWriteProperty(byte[] message);
 	
-	public boolean onWKPFMonitoredData(int deviceId, int portId);
+	public void onWKPFMonitoredData(byte[] message);
+	
+	public void onWKPFSetLocation(byte[] message);
+	
+	public void onWKPFGetLocation(byte[] message);
 }

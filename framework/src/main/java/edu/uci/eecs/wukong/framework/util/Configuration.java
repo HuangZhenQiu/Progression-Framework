@@ -23,6 +23,9 @@ public class Configuration {
 	private static final String DEMO_WALL_SLIDER_ID = "DEMO.WALL.SLIDER.ID";
 	private static final String GATEWAY_IP = "GATEWAY.IP";
 	private static final String GATEWAY_PORT = "GATEWAY.PORT";
+	private static final String PROGRESSION_SERVER_IP = "PROGRESSION.SERVER.IP";
+	private static final String PROGRESSION_SERVER_PORT = "PROGRESSION.SERVER.PORT";
+	
 	private static Configuration configuration;
 
 	private static Properties properties = new Properties();
@@ -43,6 +46,14 @@ public class Configuration {
 			configuration = new Configuration();
 		}
 		return configuration;
+	}
+	
+	public String getProgressionServerIP() {
+		return properties.getProperty(PROGRESSION_SERVER_IP);
+	}
+	
+	public String getProgressionServerPort() {
+		return properties.getProperty(PROGRESSION_SERVER_PORT);
 	}
 	
 	public String getGatewayIP() {

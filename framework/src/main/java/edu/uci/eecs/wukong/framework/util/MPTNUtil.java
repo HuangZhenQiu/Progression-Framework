@@ -1,0 +1,63 @@
+package edu.uci.eecs.wukong.framework.util;
+
+import java.nio.ByteBuffer;
+
+public class MPTNUtil {
+	
+	public final static int MPTN_ID_LEN = 4;
+	public final static int MPTN_MASTER_ID = 0;
+	public final static int MPTN_MAX_ID = 2 ^ (MPTN_ID_LEN * 8) - 1;
+	public final static int MPTN_MSGTYPE_LEN  = 1;
+	public final static int MPTN_DEST_BYTE_OFFSET = 0;
+	public final static int MPTN_SRC_BYTE_OFFSET = MPTN_DEST_BYTE_OFFSET + MPTN_ID_LEN;
+	public final static int MPTN_MSATYPE_BYTE_OFFSET = MPTN_SRC_BYTE_OFFSET + MPTN_ID_LEN;
+	public final static int MPTN_PAYLOAD_BYTE_OFFSET = MPTN_MSATYPE_BYTE_OFFSET + MPTN_MSGTYPE_LEN;
+	
+	// Message types of multiple protocol transmission network in wukong
+	public final static byte MPTN_MSQTYPE_GWDISCOVER = 0;
+	public final static byte MPTN_MSQTYPE_GWOFFER = 1;
+	public final static byte MPTN_MSQTYPE_IDREQ = 2;
+	public final static byte MPTN_MSQTYPE_IDACK = 3;
+	public final static byte MPTN_MSQTYPE_IDNAK = 4;	
+	public final static byte MPTN_MSATYPE_FWDREQ = 24;
+
+	public static byte[] createMPTNPacket(int sourceId, int destId, byte type, byte[] payload) {
+		int size = 9 + payload.length;
+		ByteBuffer buffer = ByteBuffer.allocate(size);
+		buffer.putInt(destId);
+		buffer.putInt(sourceId);
+		buffer.put(type);
+		buffer.put(payload);
+		return buffer.array();
+	}
+	
+	public static byte[] createMPTNHeader(int ipaddress, short port, int nodeId, byte type) {
+		ByteBuffer buffer = ByteBuffer.allocate(10);
+		buffer.put((byte)0xAA);
+		buffer.put((byte)0x55);
+		buffer.put(getByteValue(nodeId, 0));
+		buffer.put(getByteValue(ipaddress, 0));
+		buffer.put(getByteValue(ipaddress, 8));
+		buffer.put(getByteValue(ipaddress, 16));
+		buffer.put(getByteValue(ipaddress, 24));
+		buffer.put(getByteValue(ipaddress, 0));
+		buffer.put(getByteValue(ipaddress, 8));
+		buffer.put(type);
+		return buffer.array();
+	}
+	
+	public static int IPToInteger(String ipstr) {
+		int result = 0;
+		String[] addresses =  ipstr.split("\\.");
+		for (int i=3; i >=0; i++) {
+			int ip = Integer.parseInt(addresses[i]);
+			result |=ip << (i * 8);
+		}
+		
+		return result;
+	}
+	
+	private static byte getByteValue(int value, int deviation) {
+		return new Integer(value >> deviation).byteValue();
+	}
+}

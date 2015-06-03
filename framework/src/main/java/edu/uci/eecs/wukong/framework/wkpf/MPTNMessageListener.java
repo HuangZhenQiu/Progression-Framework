@@ -1,7 +1,7 @@
 package edu.uci.eecs.wukong.framework.wkpf;
 
-import io.netty.channel.socket.DatagramChannel;
+import java.nio.ByteBuffer;
 
 public interface MPTNMessageListener {
-	public void onMessage(DatagramChannel channel, byte[] message);
+	public void onMessage(ByteBuffer bytes);
 }

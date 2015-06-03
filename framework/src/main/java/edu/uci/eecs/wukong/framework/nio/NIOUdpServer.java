@@ -1,7 +1,5 @@
 package edu.uci.eecs.wukong.framework.nio;
 
-import edu.uci.eecs.wukong.framework.ProgressionKey.PhysicalKey;
-import edu.uci.eecs.wukong.framework.manager.BufferManager;
 import edu.uci.eecs.wukong.framework.wkpf.MPTNMessageListener;
 
 import java.io.IOException;
@@ -11,7 +9,6 @@ import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
-import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -22,17 +19,12 @@ import org.slf4j.LoggerFactory;
 public class NIOUdpServer extends Thread {
 	private static Logger logger = LoggerFactory.getLogger(NIOUdpServer.class);
 	private static int BUFFER_SIZE = 1024;
-	private static int PROPRESSION_PORT = 8000;
-	// TODO (Peter Huang) Buffer Manager should be moved out of NIOUdpServer
-	private BufferManager bufferManager; 
+	private int port;
 	private List<MPTNMessageListener> listeners;
 	
-	public NIOUdpServer() {
+	public NIOUdpServer(int port) {
+		this.port = port;
 		this.listeners = new ArrayList<MPTNMessageListener>();
-	}
-	
-	public NIOUdpServer(BufferManager bufferManager) {
-		this.bufferManager = bufferManager;
 	}
 	
 	private static class ChannelAttachment{
@@ -48,12 +40,18 @@ public class NIOUdpServer extends Thread {
 		this.listeners.add(listener);
 	}
 	
+	public void fireMPTNMessage(ByteBuffer bytes) {
+		for (MPTNMessageListener listener : listeners) {
+			listener.onMessage(bytes);
+		}
+	}
+	
 	@Override
 	public void run() {
 		try {
 			Selector selector = Selector.open();
 			DatagramChannel channel = DatagramChannel.open();
-			InetSocketAddress address = new InetSocketAddress(PROPRESSION_PORT);
+			InetSocketAddress address = new InetSocketAddress(port);
 			channel.socket().bind(address);
 			channel.configureBlocking(false);
 			SelectionKey clientKey = channel.register(selector, SelectionKey.OP_READ);
@@ -93,22 +91,12 @@ public class NIOUdpServer extends Thread {
 		DatagramChannel channel = (DatagramChannel) key.channel();
 		ChannelAttachment attachment = (ChannelAttachment)key.attachment();
 		attachment.address = channel.receive(attachment.buffer);
-		System.out.println(Arrays.toString(attachment.buffer.array()));
-		// TODO(HuangZhenqiu) Add buffer in the client size to prove the transmission speedy.
-		int size = attachment.buffer.position() / 6;
-		for (int i =0; i < size; i++) {
-			short deviceId = attachment.buffer.getShort(i * 6);
-			short portId = attachment.buffer.getShort(i * 6 + 2);
-			short value = attachment.buffer.getShort(i * 6 + 4);
-			// Force to convert to int to reduce size.
-			bufferManager.addData(new PhysicalKey(deviceId, portId), (int)System.currentTimeMillis(), value);
-		}
+		fireMPTNMessage(attachment.buffer.duplicate());
 		attachment.buffer.clear();
-		// TODO put data into dispatcher.
 	}
 	
 	public static void main(String[] args) {
-		NIOUdpServer server = new NIOUdpServer();
+		NIOUdpServer server = new NIOUdpServer(5000);
 		server.start();
 	}
 }

@@ -69,12 +69,12 @@ public final class DoubleTimeIndexDataBuffer<T> {
 	}
 	
 	
-	public List<DataPoint> readDataPoint(int units) {
+	public List<DataPoint<Short>> readDataPoint(int units) {
 		ByteBuffer data = read(units);
 		int size = data.capacity() / DataRingBuffer.DATA_SIZE;
-		List<DataPoint> points = new ArrayList<DataPoint>();
+		List<DataPoint<Short>> points = new ArrayList<DataPoint<Short>>();
 		while(size > 0) {
-			points.add(new DataPoint(data.getInt(), data.getShort()));
+			points.add(new DataPoint<Short>(data.getInt(), data.getShort()));
 			size --;
 		}
 		

@@ -3,6 +3,7 @@ package edu.uci.eecs.wukong.framework.plugin;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.List;
+
 import edu.uci.eecs.wukong.framework.extension.Extension;
 
 public abstract class Plugin {

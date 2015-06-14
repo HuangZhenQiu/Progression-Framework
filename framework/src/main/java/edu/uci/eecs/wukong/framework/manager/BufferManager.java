@@ -57,23 +57,27 @@ public class BufferManager {
 		return true;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void addRealTimeData(PhysicalKey key, short value) {
 		if(!channelMap.containsKey(key)) {
 			throw new IllegalArgumentException("Insert into a chanel don't exist:" + key);
 		}
-		
-		channelMap.get(key).append(value);
+
+		Channel<Short> channel = (Channel<Short>)channelMap.get(key);
+		channel.append(value);
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void addData(PhysicalKey key, int time, short value) throws IllegalArgumentException {
 		if(!bufferMap.containsKey(key)) {
 			throw new IllegalArgumentException("Insert into a buffer don't exist:" + key);
 		}
 		
-		bufferMap.get(key).addElement(time, value);
+		DoubleTimeIndexDataBuffer<Short> buffer = (DoubleTimeIndexDataBuffer<Short>) bufferMap.get(key);
+		buffer.addElement(time, value);
 	}
 	
-	public List<DataPoint> getData(PhysicalKey key, int units) {
+	public List<DataPoint<Short>> getData(PhysicalKey key, int units) {
 		if(!bufferMap.containsKey(key)) {
 			throw new IllegalArgumentException("Fetch from a buffer don't exist:" + key);
 		}

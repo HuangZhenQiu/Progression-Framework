@@ -22,7 +22,7 @@ public class Channel<T extends Number> {
 	private Queue<T> queue; // TODO leave it here for user operation optimization
 	private List<ChannelListener<T>> listeners;
 	
-	public Channel(PhysicalKey key, Class type) {
+	public Channel(PhysicalKey key) {
 		this.key = key;
 		this.queue = new ArrayDeque<T>();
 		this.listeners = new ArrayList<ChannelListener<T>>();

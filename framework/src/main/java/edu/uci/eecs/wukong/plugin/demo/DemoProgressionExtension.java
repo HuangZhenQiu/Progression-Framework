@@ -31,7 +31,6 @@ import edu.uci.eecs.wukong.framework.context.ExecutionContext;
 import edu.uci.eecs.wukong.framework.entity.ConfigurationCommand;
 import edu.uci.eecs.wukong.framework.entity.ConfigurationEntity;
 import edu.uci.eecs.wukong.framework.entity.FeatureEntity;
-import edu.uci.eecs.wukong.framework.entity.Entity;
 import edu.uci.eecs.wukong.framework.entity.HueEntity;
 import edu.uci.eecs.wukong.framework.extension.ProgressionExtension;
 import edu.uci.eecs.wukong.framework.util.Configuration;
@@ -264,6 +263,21 @@ public class DemoProgressionExtension implements ProgressionExtension<FeatureEnt
 	}
 
 	public void activate(Object model) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void setup() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void execute(ExecutionContext context) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void clean(ExecutionContext context) {
 		// TODO Auto-generated method stub
 		
 	}

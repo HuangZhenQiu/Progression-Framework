@@ -5,14 +5,15 @@ import java.util.HashMap;
 import java.lang.Class;
 
 public class FrameworkClassLoader extends ClassLoader {
-	private HashMap<String, Class> classes;
+	private HashMap<String, Class<?>> classes;
 	
 	public FrameworkClassLoader() {
-		this.classes = new HashMap<String, Class>();
+		super(FrameworkClassLoader.class.getClassLoader());
+		this.classes = new HashMap<String, Class<?>>();
 	}
 	
-	public synchronized Class loadClass(String className) {
-		Class result = (Class)classes.get(className); 
+	public synchronized Class<?> loadClass(String className) {
+		Class<?> result = (Class<?>)classes.get(className); 
         if (result == null){
         	try {
         	    result = super.getClass().getClassLoader().loadClass(className);

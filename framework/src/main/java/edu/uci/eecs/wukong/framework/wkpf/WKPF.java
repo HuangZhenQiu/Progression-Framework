@@ -26,6 +26,14 @@ public class WKPF implements WKPFMessageListener{
 	public void enterLearn() throws IOException {
 		
 	}
+	
+	public void addWuClass(WuClass wuClass) {
+		this.wuclasses.add(wuClass);
+	}
+	
+	public void addWuObject(WuObject wuObject) {
+		this.wuobjects.add(wuObject);
+	}
 
 	public void onWKPFRemoteProgram(byte[] message) {
 		// TODO Auto-generated method stub
@@ -63,7 +71,6 @@ public class WKPF implements WKPFMessageListener{
 	}
 
 	public void onWKPFGetLocation(byte[] message) {
-		// TODO Auto-generated method stub
-		
+		mptn.send();
 	}
 }

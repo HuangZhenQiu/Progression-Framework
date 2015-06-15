@@ -9,14 +9,19 @@ import edu.uci.eecs.wukong.framework.extension.FeatureAbstractionExtension;
 import edu.uci.eecs.wukong.framework.operator.AverageOperator;
 import edu.uci.eecs.wukong.framework.operator.DefaultOperator;
 import edu.uci.eecs.wukong.framework.operator.Operator;
+import edu.uci.eecs.wukong.framework.plugin.Plugin;
 
-public class SwitchFeatureExtensionExtension implements FeatureAbstractionExtension {
+public class SwitchFeatureExtensionExtension extends FeatureAbstractionExtension {
+	public SwitchFeatureExtensionExtension(Plugin plugin) {
+		super(plugin);
+		// TODO Auto-generated constructor stub
+	}
 
 	public List<Operator> registerOperators(Map<String, LogicalKey> logicId) {
 		List<Operator> operators = new ArrayList<Operator>();
 		
 		// Set operator for plugin property switchInput
-		DefaultOperator<Boolean> operator= new DefaultOperator<Boolean>();
+		DefaultOperator<Integer> operator= new DefaultOperator<Integer>();
 		operator.addDataSource(logicId.get("switchInput"), 0);
 		
 		// Set operator for plugin property temparature

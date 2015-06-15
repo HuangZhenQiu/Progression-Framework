@@ -8,13 +8,15 @@ import edu.uci.eecs.wukong.framework.context.Context;
 import edu.uci.eecs.wukong.framework.context.ExecutionContext;
 import edu.uci.eecs.wukong.framework.context.UserContext;
 import edu.uci.eecs.wukong.framework.extension.LearningExtension;
+import edu.uci.eecs.wukong.framework.plugin.Plugin;
 
-public class SwitchLearningExtension implements LearningExtension<Number> {
+public class SwitchLearningExtension extends LearningExtension<Number> {
 	
 	private Object content;
 	private Map<String, Double> model;
 	
-	public SwitchLearningExtension() {
+	public SwitchLearningExtension(Plugin plugin) {
+		super(plugin);
 		model = new HashMap<String, Double>();
 	}
 

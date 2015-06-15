@@ -17,13 +17,13 @@ public class SwitchPlugin extends Plugin {
 	@Output
 	private Double threshold;
 	
-	public SwitchPlugin() {
-		super("Smart Switch");
+	public SwitchPlugin(String appId) {
+		super(appId, "Smart Switch");
 	}
 	public List<Extension> registerExtension() {
 		List<Extension> extensions = new ArrayList<Extension>();
-		extensions.add(new SwitchFeatureExtensionExtension());
-		extensions.add(new SwitchLearningExtension());
+		extensions.add(new SwitchFeatureExtensionExtension(this));
+		extensions.add(new SwitchLearningExtension(this));
 		extensions.add(new SwitchProgressionExtension(this));
 		return extensions;
 	}

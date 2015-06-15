@@ -16,12 +16,13 @@ public class FeatureAbstractionPoint extends ExtensionPoint<FeatureAbstractionEx
 	private List<FeatureAbstractionExtension> extentions;
 	private BufferManager bufferManager; 
 	
-	public FeatureAbstractionPoint (BufferManager  bufferManage) {
+	public FeatureAbstractionPoint (BufferManager  bufferManage, Pipeline pipeline) {
+		super(pipeline);
 		this.bufferManager = bufferManager;
 		this.extensions = new ArrayList<FeatureAbstractionExtension>();
 	}
 	
-	public synchronized appendExtension(FeatureAbstractionExtension extension) {
+	public synchronized void appendExtension(FeatureAbstractionExtension extension) {
 		this.extensions.add(extension);
 	}
 	

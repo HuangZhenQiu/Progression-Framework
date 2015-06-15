@@ -10,6 +10,9 @@ public class LearningPoint extends ExtensionPoint<LearningExtension> implements 
 	private static Logger logger = LoggerFactory.getLogger(LearningPoint.class);
 	private static Configuration configuration = Configuration.getInstance();
 	
+	public LearningPoint(Pipeline pipeline) {
+		super(pipeline);
+	}
 	public void run() {
 		// TODO Auto-generated method stub
 		

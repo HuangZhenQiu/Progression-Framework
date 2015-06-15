@@ -24,6 +24,12 @@ public class ProgressionExtensionPoint extends ExtensionPoint<ProgressionExtensi
 	private ConfigurationManager configurationManager;
 	private Queue<Context> contexts;
 	
+	public ProgressionExtensionPoint(ConfigurationManager configurationManager, Pipeline pipeline) {
+		super(pipeline);
+		this.configurationManager = configurationManager;
+		contexts = new ConcurrentLinkedQueue<Context>();
+	}
+	
 	private class ProgressionTask implements Runnable{
 		private ProgressionExtension<?> extension;
 		private Context currentContext;
@@ -66,11 +72,6 @@ public class ProgressionExtensionPoint extends ExtensionPoint<ProgressionExtensi
 			}
 		}
 		
-	}
-	
-	public ProgressionExtensionPoint(ConfigurationManager configurationManager) {
-		this.configurationManager = configurationManager;
-		contexts = new ConcurrentLinkedQueue<Context>();
 	}
 	
 	public void run() {

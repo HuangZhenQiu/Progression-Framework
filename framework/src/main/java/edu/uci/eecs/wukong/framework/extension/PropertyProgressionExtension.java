@@ -4,19 +4,33 @@ import edu.uci.eecs.wukong.framework.context.Context;
 import edu.uci.eecs.wukong.framework.context.ExecutionContext;
 import edu.uci.eecs.wukong.framework.entity.ConfigurationCommand;
 import edu.uci.eecs.wukong.framework.entity.FeatureEntity;
+import edu.uci.eecs.wukong.framework.plugin.Plugin;
 
 import java.util.List;
-interface PropertyProgressionExtension<T extends FeatureEntity> extends Extension<T> {
+public abstract class PropertyProgressionExtension<T extends FeatureEntity> extends AbstractExtension<T> {
 	
+	public PropertyProgressionExtension(Plugin plugin) {
+		super(plugin);
+		// TODO Auto-generated constructor stub
+	}
+
 	// Put trained model into the progression extension
-	public void activate(Object model);
+	public void activate(Object model) {
+		
+	}
 	
 	// Triggered by general data pipeline
-	public void execute(List<T> data, ExecutionContext context);
+	public void execute(List<T> data, ExecutionContext context) {
+		
+	}
 	
 	// Triggered by context switch
-	public void execute(Context context);
+	public void execute(Context context) {
+		
+	}
 	
 	// Triggered by timer
-	public void execute();
+	public void execute() {
+		
+	}
 }

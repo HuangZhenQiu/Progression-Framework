@@ -11,15 +11,17 @@ import weka.core.Instance;
 import weka.core.Instances;
 import edu.uci.eecs.wukong.framework.context.ExecutionContext;
 import edu.uci.eecs.wukong.framework.extension.LearningExtension;
+import edu.uci.eecs.wukong.framework.plugin.Plugin;
 
-public class DemoLearningExtension implements LearningExtension<Number> {
+public class DemoLearningExtension extends LearningExtension<Number> {
 	private int attributeNumber;
 	private FastVector<Attribute> attributes;
 	private Instances traniningSet;
 	private M5P tree;
 	private boolean isActive;
 	
-	public DemoLearningExtension() {
+	public DemoLearningExtension(Plugin plugin) {
+		super(plugin);
 		this.attributeNumber = 7; // Context + Light Sensor
 		this.attributes = new FastVector<Attribute>(7);
 		this.tree = new M5P();

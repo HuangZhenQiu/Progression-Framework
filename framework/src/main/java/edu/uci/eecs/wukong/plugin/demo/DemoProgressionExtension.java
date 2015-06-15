@@ -35,8 +35,9 @@ import edu.uci.eecs.wukong.framework.entity.HueEntity;
 import edu.uci.eecs.wukong.framework.extension.ProgressionExtension;
 import edu.uci.eecs.wukong.framework.util.Configuration;
 import edu.uci.eecs.wukong.framework.manager.ConfigurationManager.ConfigurationType;
+import edu.uci.eecs.wukong.framework.plugin.Plugin;
 
-public class DemoProgressionExtension implements ProgressionExtension<FeatureEntity> {
+public class DemoProgressionExtension extends ProgressionExtension<FeatureEntity> {
 	private static Logger logger = LoggerFactory.getLogger(DemoProgressionExtension.class);
 	private static Configuration configuration = Configuration.getInstance();
 	private static String KICHEN_SLIDER_COMPONENT_ID = configuration.getKichenSliderId(); // 3, 4, 5
@@ -50,7 +51,9 @@ public class DemoProgressionExtension implements ProgressionExtension<FeatureEnt
 	private DemoContext lastContext = null;
 	private static long lastTime = 0;
 	
-	
+	public DemoProgressionExtension(Plugin plugin) {
+		super(plugin);
+	}
 
 	// Triggered by general data pipeline
 	public  List<ConfigurationCommand> execute(List<FeatureEntity> data, ExecutionContext context) {

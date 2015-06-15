@@ -1,5 +1,6 @@
 package edu.uci.eecs.wukong.framework.pipeline;
 
+import edu.uci.eecs.wukong.framework.manager.BufferManager;
 import edu.uci.eecs.wukong.framework.manager.ConfigurationManager;
 import edu.uci.eecs.wukong.framework.manager.ContextManager;
 import edu.uci.eecs.wukong.framework.extension.Extension;
@@ -21,10 +22,13 @@ public class Pipeline {
 	private ProgressionExtensionPoint progressionPoint;
 	private LearningPoint learningPoint;
 	
-	public Pipeline(ContextManager contextManager, ConfigurationManager configuraionManager) {
+	public Pipeline(ContextManager contextManager,
+			ConfigurationManager configuraionManager, BufferManager bufferManager) {
 		this.contextManager = contextManager;
 		this.configurationManager = configuraionManager;
 		this.progressionPoint = new ProgressionExtensionPoint(configuraionManager);
+		this.featureAbstractionPoint = new FeatureAbstractionPoint(bufferManager);
+		this.learningPoint = new LearningPoint();
 		this.contextManager.subsribeContext(progressionPoint);
 	}
 	

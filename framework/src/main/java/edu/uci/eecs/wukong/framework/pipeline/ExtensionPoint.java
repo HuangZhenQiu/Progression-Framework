@@ -9,10 +9,12 @@ import java.util.ArrayList;
 public abstract class ExtensionPoint<E extends Extension> {
 	protected List<E> extensions;
 	protected ExecutorService executor;
+	protected Pipeline pipeline;
 	
-	public ExtensionPoint() {
-		executor = Executors.newFixedThreadPool(5);
-		extensions = new ArrayList<E>();
+	public ExtensionPoint(Pipeline pipeline) {
+		this.executor = Executors.newFixedThreadPool(5);
+		this.extensions = new ArrayList<E>();
+		this.pipeline = pipeline;
 	}
 	
 	public void register(E extension) {

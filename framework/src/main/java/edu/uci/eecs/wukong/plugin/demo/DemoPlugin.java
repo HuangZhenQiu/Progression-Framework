@@ -8,12 +8,13 @@ import edu.uci.eecs.wukong.framework.plugin.Plugin;
 
 public class DemoPlugin extends Plugin {
 	
-	public DemoPlugin() {
-		super("Demo");
+	public DemoPlugin(String appId) {
+		super(appId, "Demo");
 	}
+	
 	public List<Extension> registerExtension() {
 		List<Extension> extensions = new ArrayList<Extension>();
-		extensions.add(new DemoProgressionExtension());
+		extensions.add(new DemoProgressionExtension(this));
 		return extensions;
 	}
 	

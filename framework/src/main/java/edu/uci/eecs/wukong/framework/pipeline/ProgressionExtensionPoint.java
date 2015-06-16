@@ -1,6 +1,7 @@
 package edu.uci.eecs.wukong.framework.pipeline;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -11,6 +12,7 @@ import edu.uci.eecs.wukong.framework.entity.ConfigurationCommand;
 import edu.uci.eecs.wukong.framework.entity.Entity;
 import edu.uci.eecs.wukong.framework.entity.HueEntity;
 import edu.uci.eecs.wukong.framework.entity.ConfigurationReport;
+import edu.uci.eecs.wukong.framework.extension.AbstractExtension;
 import edu.uci.eecs.wukong.framework.extension.ProgressionExtension;
 import edu.uci.eecs.wukong.framework.manager.ConfigurationManager;
 import edu.uci.eecs.wukong.framework.util.Configuration;
@@ -79,9 +81,11 @@ public class ProgressionExtensionPoint extends ExtensionPoint<ProgressionExtensi
 			Context context = contexts.poll();
 			if(context != null) {
 				logger.info("Progression Extension Point is polling new context:" + context.toString());
-
-				for(ProgressionExtension progressionExtension : extensions) {
-					this.executor.execute(new ProgressionTask(progressionExtension, context));
+				for(Map.Entry<String, AbstractExtension> entry : this.extensionMap.entrySet()) {
+					ProgressionExtension extension = (ProgressionExtension) entry.getValue();
+					if (extension.isSubcribedTopic(context.getTopicId())) {
+						this.executor.execute(new ProgressionTask(extension, context));
+					}
 				}
 			}
 		}

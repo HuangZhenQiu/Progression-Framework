@@ -33,6 +33,7 @@ public class SwitchPlugin extends Plugin {
 		contexts.add("uid");
 		return contexts;
 	}
+	
 	public Boolean getSwitchInput() {
 		return switchInput;
 	}

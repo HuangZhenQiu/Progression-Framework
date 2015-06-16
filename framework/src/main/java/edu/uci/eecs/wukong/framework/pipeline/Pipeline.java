@@ -3,11 +3,16 @@ package edu.uci.eecs.wukong.framework.pipeline;
 import edu.uci.eecs.wukong.framework.manager.BufferManager;
 import edu.uci.eecs.wukong.framework.manager.ConfigurationManager;
 import edu.uci.eecs.wukong.framework.manager.ContextManager;
+import edu.uci.eecs.wukong.framework.plugin.Plugin;
+import edu.uci.eecs.wukong.framework.context.Context;
+import edu.uci.eecs.wukong.framework.context.ContextListener;
+import edu.uci.eecs.wukong.framework.context.ExecutionContext;
 import edu.uci.eecs.wukong.framework.extension.Extension;
 import edu.uci.eecs.wukong.framework.extension.ProgressionExtension;
 import edu.uci.eecs.wukong.framework.extension.FeatureAbstractionExtension;
 import edu.uci.eecs.wukong.framework.extension.LearningExtension;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.lang.Thread;
 
@@ -16,13 +21,15 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.annotations.VisibleForTesting;
 
-public class Pipeline {
+public class Pipeline implements ContextListener{
 	private final static Logger LOGGER = LoggerFactory.getLogger(Pipeline.class);
 	private ContextManager contextManager;
 	private ConfigurationManager configurationManager;
+	private BufferManager bufferManager;
 	private FeatureAbstractionPoint featureAbstractionPoint;
 	private ProgressionExtensionPoint progressionPoint;
 	private LearningPoint learningPoint;
+	private ExecutionContext executionContext;
 	
 	@VisibleForTesting
 	public Pipeline() {
@@ -30,13 +37,25 @@ public class Pipeline {
 	}
 	
 	public Pipeline(ContextManager contextManager,
-			ConfigurationManager configuraionManager, BufferManager bufferManager) {
+			ConfigurationManager configuraionManager) {
 		this.contextManager = contextManager;
 		this.configurationManager = configuraionManager;
+		this.bufferManager = new BufferManager();
 		this.progressionPoint = new ProgressionExtensionPoint(configuraionManager, this);
 		this.featureAbstractionPoint = new FeatureAbstractionPoint(bufferManager, this);
 		this.learningPoint = new LearningPoint(this);
-		this.contextManager.subsribeContext(progressionPoint);
+		this.contextManager.subsribeContext(learningPoint);
+		this.contextManager.subsribeContext(this);
+		this.executionContext = new ExecutionContext();
+	}
+	
+	public List<Context> getCurrentContext(Plugin plugin) {
+		List<Context> contexts = new ArrayList<Context>();
+		for (String topicId : plugin.registerContext()) {
+			contexts.add(executionContext.getContext(topicId));
+		}
+		
+		return contexts;
 	}
 	
 	public void registerExtension(List<Extension> extensions) {
@@ -63,5 +82,20 @@ public class Pipeline {
 		learning.start();
 		progression.start();
 		LOGGER.info("Progression Pipeline get started.");
+	}
+
+	public void onContextArrival(Context context) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void onContextExpired(Context context) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void onContextDeleted(Context context) {
+		// TODO Auto-generated method stub
+		
 	}
 }

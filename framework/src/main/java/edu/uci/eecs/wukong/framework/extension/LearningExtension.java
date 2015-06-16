@@ -14,7 +14,7 @@ public abstract class LearningExtension<T extends Number> extends AbstractExtens
 		// TODO Auto-generated constructor stub
 	}
 
-	public abstract void apply(List<T> data, Context context);
+	public abstract void apply(List<T> data, List<Context> context);
 	
 	public abstract Object train() throws Exception;
 

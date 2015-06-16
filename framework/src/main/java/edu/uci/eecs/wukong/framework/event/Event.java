@@ -25,4 +25,8 @@ public class Event<T extends Number> implements Comparable<Event>, IEvent<T>{
 		// TODO Auto-generated method stub
 		return data;
 	}
+	
+	public String getAppId() {
+		return this.appId;
+	}
 }

@@ -10,13 +10,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import edu.uci.eecs.wukong.framework.context.Context;
+import edu.uci.eecs.wukong.framework.context.ContextListener;
 import edu.uci.eecs.wukong.framework.event.Event;
 import edu.uci.eecs.wukong.framework.event.IEvent;
 import edu.uci.eecs.wukong.framework.extension.LearningExtension;
 import edu.uci.eecs.wukong.framework.util.Configuration;
 
 @SuppressWarnings("rawtypes")
-public class LearningPoint extends ExtensionPoint<LearningExtension> implements Runnable{
+public class LearningPoint extends ExtensionPoint<LearningExtension> implements ContextListener, Runnable{
 	private static Logger logger = LoggerFactory.getLogger(LearningPoint.class);
 	private static Configuration configuration = Configuration.getInstance();
 	private Map<LearningExtension, Event> lastEvent;
@@ -27,21 +28,31 @@ public class LearningPoint extends ExtensionPoint<LearningExtension> implements 
 		this.events = new PriorityBlockingQueue<Event>();
 		this.lastEvent = new HashMap<LearningExtension, Event>();
 	}
+	
+	
+	public void dipatchModel(String appId, Object model) {
+		
+	}
 
 	private class LearningTask implements Runnable{
 		private LearningExtension<?> extension;
 		private IEvent event;
-		private Context currentContext;
-		public LearningTask(LearningExtension extension, IEvent event, Context context) {
+		private List<Context> contexts;
+		public LearningTask(LearningExtension extension, IEvent event, List<Context> contexts) {
 			this.extension = extension;
 			this.event = event;
-			this.currentContext = context;
+			this.contexts = contexts;
 		}
 		
 		public void run() {
 			try {
-				if (!extension.getPlugin().isOnline()) {
-					extension.apply(event.getData(), currentContext);
+				if (!extension.getPlugin().isOnline() && !extension.isReady()) {
+					extension.apply(event.getData(), contexts);
+					// Remove from 
+					if (extension.isReady()) {
+						Object object= extension.train();
+						dipatchModel(extension.getPlugin().getAppId(), object);
+					}
 				}
 				
 			} catch (Exception e) {
@@ -53,7 +64,30 @@ public class LearningPoint extends ExtensionPoint<LearningExtension> implements 
 	}
 
 	public void run() {
-		Event event = events.poll();
+		while(true) {
+			Event event = events.poll();
+			LearningExtension extension = (LearningExtension) this.extensionMap.get(event.getAppId());
+			if (extension != null) {
+				this.executor.execute(new LearningTask(extension, event,
+						pipeline.getCurrentContext(extension.getPlugin())));
+			} else {
+				logger.error("Cant't find learning extension for the appId: " + event.getAppId());
+			}
+		}
+	}
+
+	public void onContextArrival(Context context) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void onContextExpired(Context context) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void onContextDeleted(Context context) {
+		// TODO Auto-generated method stub
 		
 	}
 }

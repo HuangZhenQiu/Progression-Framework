@@ -8,6 +8,7 @@ import edu.uci.eecs.wukong.framework.plugin.Plugin;
 
 import java.util.List;
 public abstract class ProgressionExtension<T extends FeatureEntity> extends AbstractExtension<T> {
+	private Object model;
 	
 	public ProgressionExtension(Plugin plugin) {
 		super(plugin);
@@ -15,7 +16,9 @@ public abstract class ProgressionExtension<T extends FeatureEntity> extends Abst
 	}
 
 	// Put trained model into the progression extension
-	public abstract void activate(Object model);
+	public void activate(Object model) {
+		this.model = model;
+	}
 	
 	// Triggered by general data pipeline
 	public abstract List<ConfigurationCommand> execute(List<T> data, ExecutionContext context);

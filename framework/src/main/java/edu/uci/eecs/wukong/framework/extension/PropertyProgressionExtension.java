@@ -2,7 +2,6 @@ package edu.uci.eecs.wukong.framework.extension;
 
 import edu.uci.eecs.wukong.framework.context.Context;
 import edu.uci.eecs.wukong.framework.context.ExecutionContext;
-import edu.uci.eecs.wukong.framework.entity.ConfigurationCommand;
 import edu.uci.eecs.wukong.framework.entity.FeatureEntity;
 import edu.uci.eecs.wukong.framework.plugin.Plugin;
 

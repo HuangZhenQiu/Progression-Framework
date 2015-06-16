@@ -10,6 +10,7 @@ public abstract class Plugin {
 	private String name;
 	private String appId;
 	private boolean online;
+	private boolean learning;
 	private PropertyChangeSupport support;
 	
 	public Plugin(String appId, String name, boolean online) {
@@ -21,6 +22,7 @@ public abstract class Plugin {
 	public Plugin(String appId, String name) {
 		this.appId = appId;
 		this.online = false;
+		this.learning = false;
 		this.support = new PropertyChangeSupport(this);
 	}
 
@@ -33,6 +35,14 @@ public abstract class Plugin {
 		support.addPropertyChangeListener(propertyName, listener);
 	}
 	
+	public boolean isLearning() {
+		return learning;
+	}
+
+	public void setLearning(boolean learning) {
+		this.learning = learning;
+	}
+
 	public String getAppId() {
 		return this.appId;
 	}

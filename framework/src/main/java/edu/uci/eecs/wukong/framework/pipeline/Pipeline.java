@@ -14,6 +14,8 @@ import java.lang.Thread;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.annotations.VisibleForTesting;
+
 public class Pipeline {
 	private final static Logger LOGGER = LoggerFactory.getLogger(Pipeline.class);
 	private ContextManager contextManager;
@@ -22,13 +24,18 @@ public class Pipeline {
 	private ProgressionExtensionPoint progressionPoint;
 	private LearningPoint learningPoint;
 	
+	@VisibleForTesting
+	public Pipeline() {
+		
+	}
+	
 	public Pipeline(ContextManager contextManager,
 			ConfigurationManager configuraionManager, BufferManager bufferManager) {
 		this.contextManager = contextManager;
 		this.configurationManager = configuraionManager;
-		this.progressionPoint = new ProgressionExtensionPoint(configuraionManager);
-		this.featureAbstractionPoint = new FeatureAbstractionPoint(bufferManager);
-		this.learningPoint = new LearningPoint();
+		this.progressionPoint = new ProgressionExtensionPoint(configuraionManager, this);
+		this.featureAbstractionPoint = new FeatureAbstractionPoint(bufferManager, this);
+		this.learningPoint = new LearningPoint(this);
 		this.contextManager.subsribeContext(progressionPoint);
 	}
 	

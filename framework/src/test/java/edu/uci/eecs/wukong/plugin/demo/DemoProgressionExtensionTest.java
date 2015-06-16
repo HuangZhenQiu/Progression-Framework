@@ -8,7 +8,7 @@ public class DemoProgressionExtensionTest extends TestCase {
 
 	@Test
 	public void testEnterRoom() {
-		DemoProgressionExtension extension = new DemoProgressionExtension();
+		DemoProgressionExtension extension = new DemoProgressionExtension(null);
 		DemoContext context1 =  new DemoContext(0,0,0,0,0,0);
 		context1.setTimestamp(1000000);
 		DemoContext context2 =  new DemoContext(0,1,0,0,0,0);
@@ -19,7 +19,7 @@ public class DemoProgressionExtensionTest extends TestCase {
 	
 	@Test
 	public void testStayAtKichenNotLongEnough() {
-		DemoProgressionExtension extension = new DemoProgressionExtension();
+		DemoProgressionExtension extension = new DemoProgressionExtension(null);
 		DemoContext context1 =  new DemoContext(0,0,3,0,0,0);
 		context1.setTimestamp(1000000);
 		DemoContext context2 =  new DemoContext(0,0,3,0,0,0);
@@ -30,7 +30,7 @@ public class DemoProgressionExtensionTest extends TestCase {
 	
 	@Test
 	public void testStayAtKichen() {
-		DemoProgressionExtension extension = new DemoProgressionExtension();
+		DemoProgressionExtension extension = new DemoProgressionExtension(null);
 		DemoContext context1 =  new DemoContext(0,0,3,0,0,0);
 		context1.setTimestamp(1000000);
 		DemoContext context2 =  new DemoContext(0,0,3,0,0,0);

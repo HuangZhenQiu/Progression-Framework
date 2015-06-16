@@ -2,33 +2,66 @@ package edu.uci.eecs.wukong.framework.manager;
 
 import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 
+import edu.uci.eecs.wukong.framework.ProgressionKey.*;
+import edu.uci.eecs.wukong.framework.annotation.Input;
 import edu.uci.eecs.wukong.framework.annotation.Output;
 import edu.uci.eecs.wukong.framework.exception.PluginNotFoundException;
 import edu.uci.eecs.wukong.framework.pipeline.Pipeline;
 import edu.uci.eecs.wukong.framework.plugin.Plugin;
 import edu.uci.eecs.wukong.framework.plugin.PluginPropertyMonitor;
+import edu.uci.eecs.wukong.framework.wkpf.Model.WuClass;
+import edu.uci.eecs.wukong.framework.wkpf.Model.WuObject;
 import edu.uci.eecs.wukong.framework.wkpf.WKPF;
+
 public class PluginManager {
 	private static final String PLUGIN_PATH = "edu.uci.eecs.wukong.plugin";
+	private static Integer port = 0;
 	private ContextManager contextManager;
 	private PluginPropertyMonitor propertyMonitor;
 	private Pipeline pipeline;
 	private List<Plugin> plugins;
+	private Map<String, WuClass> registedClasses;
 	private WKPF wkpf;
+	private String[] PLUGINS = {"DemoPlugin", "SwitchPlugin"};
 	
 	public PluginManager(ContextManager contextManager, Pipeline pipeline) {
 		this.contextManager = contextManager;
 		this.pipeline = pipeline;
 		this.propertyMonitor = new PluginPropertyMonitor(this);
+		this.registedClasses = new HashMap<String, WuClass>();
 		this.plugins = new ArrayList<Plugin>();
 	}
 	
 	// init the Wuclasses that are discoveriable through WKPF
-	public void init() {
+	public void init() throws Exception {
+		for (int i = 0; i < PLUGINS.length; i++) {
+			String path = PLUGIN_PATH + '.' + PLUGINS[i];
+			ClassLoader loader = PluginManager.class.getClassLoader();
+			Class<?> c = loader.loadClass(path);
+			Map<Integer, String> properties = new HashMap<Integer, String>();
+			Integer id = 0;
+			for (Field field : c.getDeclaredFields()) {
+				String name = field.getName();
+				Annotation[] annotations = field.getDeclaredAnnotations();
+				for (Annotation annotation : annotations) {
+					if (annotation.annotationType().equals(Output.class) ||
+							annotation.annotationType().equals(Input.class)) {
+						properties.put(id, name);
+						id ++;
+					}
+				}
+			}
+			
+			WuClass wuClass =  new WuClass(1, properties);
+			registedClasses.put(PLUGINS[i], wuClass);
+			wkpf.addWuClass(wuClass);
+		}
 	}
 	
 	public void registerPlugin(Plugin plugin) {
@@ -36,9 +69,14 @@ public class PluginManager {
 		pipeline.registerExtension(plugin.registerExtension());
 		bindPropertyUpdateEvent(plugin);
 		plugins.add(plugin);
+		
+		WuClass wclass = registedClasses.get(plugin.getName());
+		WuObject object = new WuObject(wclass, port);
+		wkpf.addWuObject(object);
 	}
 	
-	public void registerPlugin(String name) throws Exception {
+	public void registerPlugin(String name, String appId, Map<String,
+			PhysicalKey> propertyMap) throws Exception {
 		int pos = name.lastIndexOf('.');
 		String path = "";
 		if (pos == -1) {
@@ -47,9 +85,13 @@ public class PluginManager {
 			throw new PluginNotFoundException("Try to load from wrong plugin path.");
 		}
 		
+		if (!registedClasses.containsKey(name)) {
+			throw new PluginNotFoundException("Try to load unregisted plugin.");
+		}
+		
 		ClassLoader loader = PluginManager.class.getClassLoader();
 		Class<?> c = loader.loadClass(path);
-		Plugin plugin = (Plugin)c.getConstructor().newInstance();
+		Plugin plugin = (Plugin)c.getConstructor(String.class, String.class).newInstance(name, appId);
 		registerPlugin(plugin);
 	}
 	

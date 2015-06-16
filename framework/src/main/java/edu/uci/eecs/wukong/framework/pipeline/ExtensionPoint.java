@@ -21,7 +21,7 @@ public abstract class ExtensionPoint<E extends AbstractExtension> {
 		this.pipeline = pipeline;
 	}
 	
-	public void register(E extension) {
+	public synchronized void register(E extension) {
 		extensionMap.put(extension.getAppId(), extension);
 	}
 }

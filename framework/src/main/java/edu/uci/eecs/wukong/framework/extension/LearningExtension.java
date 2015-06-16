@@ -5,7 +5,7 @@ import java.util.List;
 import edu.uci.eecs.wukong.framework.context.Context;
 import edu.uci.eecs.wukong.framework.plugin.Plugin;
 
-public abstract class LearningExtension<T extends Number> extends AbstractExtension<T> {
+public abstract class LearningExtension<T extends Number> extends AbstractExtension {
 	private boolean ready;
 	
 	public LearningExtension(Plugin plugin) {

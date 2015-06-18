@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import edu.uci.eecs.wukong.framework.context.Context;
 import edu.uci.eecs.wukong.framework.context.ContextListener;
+import edu.uci.eecs.wukong.framework.context.ExecutionContext;
 import edu.uci.eecs.wukong.framework.event.Event;
 import edu.uci.eecs.wukong.framework.event.IEvent;
 import edu.uci.eecs.wukong.framework.extension.LearningExtension;
@@ -37,11 +38,11 @@ public class LearningPoint extends ExtensionPoint<LearningExtension> implements 
 	private class LearningTask implements Runnable{
 		private LearningExtension<?> extension;
 		private IEvent event;
-		private List<Context> contexts;
-		public LearningTask(LearningExtension extension, IEvent event, List<Context> contexts) {
+		private ExecutionContext contexts;
+		public LearningTask(LearningExtension extension, IEvent event, ExecutionContext context) {
 			this.extension = extension;
 			this.event = event;
-			this.contexts = contexts;
+			this.contexts = context;
 		}
 		
 		public void run() {

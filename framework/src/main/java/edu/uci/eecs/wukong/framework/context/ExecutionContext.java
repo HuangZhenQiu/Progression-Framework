@@ -25,4 +25,8 @@ public class ExecutionContext {
 	public Context getContext(String key) {
 		return contexts.get(key);
 	}
+	
+	public void addContext(Context context) {
+		contexts.put(context.getTopicId(), context);
+	}
 }

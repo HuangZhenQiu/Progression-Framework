@@ -4,9 +4,7 @@ import edu.uci.eecs.wukong.framework.context.Context;
 import edu.uci.eecs.wukong.framework.util.Configuration;
 
 import org.jivesoftware.smack.ConnectionConfiguration;
-import org.jivesoftware.smack.SASLAuthentication;
 import org.jivesoftware.smack.XMPPConnection;
-import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smackx.pubsub.ConfigureForm;
 import org.jivesoftware.smackx.pubsub.FormType;
 import org.jivesoftware.smackx.pubsub.Node;
@@ -40,12 +38,12 @@ public class XMPPContextClient {
 				systemConfig.getXMPPAddress(),
 				Integer.parseInt(systemConfig.getXMPPPort()), systemConfig.getXMPPServerName());
 		connectionConfig.setSecurityMode(ConnectionConfiguration.SecurityMode.disabled);
-		connection = new XMPPTCPConnection(connectionConfig);
+		connection = new XMPPConnection(connectionConfig);
 		try {
 			//SASLAuthentication.supportSASLMechanism("PLAIN", 0);
 			connection.connect();
 			connection.login(systemConfig.getXMPPUserName(), systemConfig.getXMPPPassword());
-			manager = new PubSubManager(connection, systemConfig.getXMPPServerName());
+			manager = new PubSubManager(connection);
 			logger.info("XMPP client is initialized!");
 		} catch(Exception e) {
 			e.printStackTrace();

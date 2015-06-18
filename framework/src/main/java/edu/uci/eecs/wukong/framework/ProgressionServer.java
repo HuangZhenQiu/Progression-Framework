@@ -7,8 +7,6 @@ import com.google.protobuf.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import edu.uci.eecs.wukong.framework.dispatch.Dispatcher;
-import edu.uci.eecs.wukong.framework.manager.BufferManager;
 import edu.uci.eecs.wukong.framework.manager.ContextManager;
 import edu.uci.eecs.wukong.framework.manager.ConfigurationManager;
 import edu.uci.eecs.wukong.framework.manager.PluginManager;
@@ -20,7 +18,6 @@ import edu.uci.eecs.wukong.rpc.netty.service.ProgressionDataServiceFactory;
 public class ProgressionServer {
 	private static Logger logger = LoggerFactory.getLogger(ProgressionServer.class);
 	
-	private Dispatcher dispatcher;
 	private CommunicationServer server;
 	private ContextManager contextManager;
 	private PluginManager pluginManager;
@@ -30,7 +27,6 @@ public class ProgressionServer {
 	public ProgressionServer(PeerInfo peerInfo) {
 		
 		init(peerInfo);
-		this.dispatcher = Dispatcher.instance();
 		this.contextManager = new ContextManager();
 		this.configurationManager = new ConfigurationManager();
 		this.pipeline = new Pipeline(contextManager, configurationManager);	
@@ -62,16 +58,19 @@ public class ProgressionServer {
 	
 	//start the llama cloud server
 	public void start() {
-		this.pluginManager.init();
-		this.server.start();
-		this.dispatcher.start();
-		this.pipeline.start();
+		try {
+			this.pluginManager.init();
+			this.server.start();
+			this.pipeline.start();
+		} catch (Exception e) {
+			System.out.println(e.toString());
+			logger.error("Fail to start progression server.");
+		}
 	}
 	
 	public void shutdown() {
 		
 		this.server.shutdown();
-		this.dispatcher.shutdown();
 	}
 	
 	

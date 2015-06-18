@@ -4,12 +4,20 @@ import java.util.List;
 
 import edu.uci.eecs.wukong.framework.buffer.DataPoint;
 
-public class AverageOperator<T> extends SingleOperator<T> {
+public class AverageOperator<T extends Number> extends SingleOperator<Number> {
 
 	@Override
-	public T operate(List<DataPoint<T>> data) {
-		// TODO Auto-generated method stub
-		return null;
+	public Number operate(List<DataPoint<Number>> data) {
+		if (data.size() == 0) {
+			return new Double(0);
+		}
+
+		Double avr = new Double(0);
+		for (DataPoint<Number> point : data) {
+			avr += point.getValue().doubleValue();
+		}
+
+		return avr/data.size();
 	}
 
 }

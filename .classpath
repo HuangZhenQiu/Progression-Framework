@@ -11,7 +11,6 @@
 	<classpathentry kind="var" path="M2_REPO/io/netty/netty-all/4.0.24.Final/netty-all-4.0.24.Final.jar"/>
 	<classpathentry kind="var" path="M2_REPO/jline/jline/0.9.1/jline-0.9.1.jar"/>
 	<classpathentry kind="var" path="M2_REPO/xpp3/xpp3/1.1.4c/xpp3-1.1.4c.jar"/>
-	<classpathentry kind="var" path="M2_REPO/org/igniterealtime/smack/smack-core/4.0.6/smack-core-4.0.6.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/igniterealtime/smack/smack-extensions/4.0.6/smack-extensions-4.0.6.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="var" path="M2_REPO/commons-httpclient/commons-httpclient/3.1/commons-httpclient-3.1.jar"/>
@@ -24,10 +23,11 @@
 	<classpathentry kind="var" path="M2_REPO/org/slf4j/jcl-over-slf4j/1.7.9/jcl-over-slf4j-1.7.9.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/apache/httpcomponents/httpcore/4.4-beta1/httpcore-4.4-beta1.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/igniterealtime/smack/smack-tcp/4.1.0-alpha5/smack-tcp-4.1.0-alpha5.jar"/>
-	<classpathentry kind="var" path="M2_REPO/org/igniterealtime/smack/smack/3.4.1/smack-3.4.1.jar"/>
-	<classpathentry kind="var" path="M2_REPO/org/igniterealtime/smack/smackx/3.4.1/smackx-3.4.1.jar"/>
 	<classpathentry kind="var" path="M2_REPO/junit/junit/4.11/junit-4.11.jar"/>
 	<classpathentry kind="var" path="M2_REPO/commons-lang/commons-lang/2.6/commons-lang-2.6.jar"/>
 	<classpathentry kind="var" path="M2_REPO/nz/ac/waikato/cms/weka/weka-dev/3.7.5/weka-dev-3.7.5.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/igniterealtime/smack/smack/3.2.1/smack-3.2.1.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/igniterealtime/smack/smackx/3.2.1/smackx-3.2.1.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/igniterealtime/smack/smack-core/4.2.0-alpha1/smack-core-4.2.0-alpha1.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

@@ -12,6 +12,7 @@ import edu.uci.eecs.wukong.framework.entity.ConfigurationCommand;
 import edu.uci.eecs.wukong.framework.entity.Entity;
 import edu.uci.eecs.wukong.framework.entity.HueEntity;
 import edu.uci.eecs.wukong.framework.entity.ConfigurationReport;
+import edu.uci.eecs.wukong.framework.exception.ExtensionNotFoundException;
 import edu.uci.eecs.wukong.framework.extension.AbstractExtension;
 import edu.uci.eecs.wukong.framework.extension.ProgressionExtension;
 import edu.uci.eecs.wukong.framework.manager.ConfigurationManager;
@@ -30,6 +31,16 @@ public class ProgressionExtensionPoint extends ExtensionPoint<ProgressionExtensi
 		super(pipeline);
 		this.configurationManager = configurationManager;
 		contexts = new ConcurrentLinkedQueue<Context>();
+	}
+	
+	public void applyModel(String appId, Object model) throws Exception {
+		ProgressionExtension extension = (ProgressionExtension) this.extensionMap.get(appId);
+		if (extension != null) {
+			extension.activate(model);
+			extension.getPlugin().setOnline(true);
+		} else {
+			throw new ExtensionNotFoundException("Progression extension is not found for app :" + appId);
+		}	
 	}
 	
 	private class ProgressionTask implements Runnable{

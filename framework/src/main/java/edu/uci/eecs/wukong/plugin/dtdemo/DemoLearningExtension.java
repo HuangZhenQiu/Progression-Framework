@@ -18,14 +18,12 @@ public class DemoLearningExtension extends LearningExtension<Number> {
 	private FastVector<Attribute> attributes;
 	private Instances traniningSet;
 	private M5P tree;
-	private boolean isActive;
 	
 	public DemoLearningExtension(Plugin plugin) {
 		super(plugin);
 		this.attributeNumber = 7; // Context + Light Sensor
 		this.attributes = new FastVector<Attribute>(7);
 		this.tree = new M5P();
-		this.isActive = false;
 		Attribute light1 = new Attribute("light1");
 		Attribute light2 = new Attribute("light2");
 		Attribute light3 = new Attribute("light3");
@@ -54,10 +52,9 @@ public class DemoLearningExtension extends LearningExtension<Number> {
 		this.traniningSet.add(sample);
 	}
 
-	public boolean train() throws Exception{
+	public Object train() throws Exception{
 		tree.buildClassifier(this.traniningSet);
-		this.isActive = true;
-		return this.isActive;
+		return tree;
 	}
 	
 	public List<Double> predict(List<Number> data,

@@ -49,13 +49,20 @@ public class Pipeline implements ContextListener{
 		this.executionContext = new ExecutionContext();
 	}
 	
-	public List<Context> getCurrentContext(Plugin plugin) {
-		List<Context> contexts = new ArrayList<Context>();
+	public ExecutionContext getCurrentContext(Plugin plugin) {
+		ExecutionContext context = new ExecutionContext();
 		for (String topicId : plugin.registerContext()) {
-			contexts.add(executionContext.getContext(topicId));
+			Context cont = executionContext.getContext(topicId);
+			if (cont != null) {
+				context.addContext(cont);
+			}
 		}
 		
-		return contexts;
+		return context;
+	}
+	
+	public void dipatchModel(String appId, Object model) throws Exception {
+		progressionPoint.applyModel(appId, model);
 	}
 	
 	public void registerExtension(List<Extension> extensions) {

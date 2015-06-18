@@ -18,7 +18,7 @@ public class SwitchPlugin extends Plugin {
 	private Double threshold;
 	
 	public SwitchPlugin(String appId) {
-		super(appId, "Smart Switch");
+		super(appId, "SwitchPlugin");
 	}
 	public List<Extension> registerExtension() {
 		List<Extension> extensions = new ArrayList<Extension>();

@@ -2,7 +2,7 @@ package edu.uci.eecs.wukong.framework.extension;
 
 import java.util.List;
 
-import edu.uci.eecs.wukong.framework.context.Context;
+import edu.uci.eecs.wukong.framework.context.ExecutionContext;
 import edu.uci.eecs.wukong.framework.plugin.Plugin;
 
 public abstract class LearningExtension<T extends Number> extends AbstractExtension {
@@ -14,7 +14,7 @@ public abstract class LearningExtension<T extends Number> extends AbstractExtens
 		// TODO Auto-generated constructor stub
 	}
 
-	public abstract void apply(List<T> data, List<Context> context);
+	public abstract void apply(List<T> data, ExecutionContext context);
 	
 	public abstract Object train() throws Exception;
 

@@ -21,7 +21,7 @@ public class UserContext extends Context {
 		return null;
 	}
 
-	public CharSequence toXML() {
+	public String toXML() {
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -3,6 +3,7 @@ package edu.uci.eecs.wukong.framework.wkpf;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,9 +22,11 @@ public class MPTN implements MPTNMessageListener{
 	// Address for communication between IP device with gateway
 	private int nodeId; 
 	// Address for communication between IP device in network
-	private String longAddress;
+	private long longAddress;
 	
 	private List<WKPFMessageListener> listeners;
+	private byte HEADER_TYPE_1 = 1;
+	private byte HEADER_TYPE_2 = 2;
 	
 	public MPTN() {
 		
@@ -43,12 +46,37 @@ public class MPTN implements MPTNMessageListener{
 		this.listeners.add(listener);
 	}
 	
-	public synchronized void acquireID() {
-		
+	public synchronized void info() {
+		ByteBuffer buffer = ByteBuffer.allocate(100);
+		appendMPTNHeader(buffer, 0);
+		gatewayClient.send(buffer.array());
 	}
 	
-	public void send() {
+	public synchronized void acquireID() {
 		
+		ByteBuffer buffer = ByteBuffer.allocate(100);
+		appendMPTNHeader(buffer, nodeId);
+		MPTNUtil.appendMPTNPacket(buffer, nodeId, MPTNUtil.MPTN_MAX_ID,
+				MPTNUtil.MPTN_MSQTYPE_IDREQ, UUID.randomUUID().toString().getBytes());
+		gatewayClient.send(buffer.array());
+	}
+	
+	/**
+	 * Use for send WKPF message
+	 * @param destId
+	 * @param payload
+	 */
+	public void send(int destId, byte[] payload) {
+		int size = payload.length + 100;
+		ByteBuffer buffer = ByteBuffer.allocate(size);
+		MPTNUtil.appendMPTNPacket(buffer, nodeId, destId,
+				MPTNUtil.MPTN_MSATYPE_FWDREQ, payload);
+	}
+	
+	private void appendMPTNHeader(ByteBuffer buffer, int nodeId) {
+		int ipaddress = MPTNUtil.IPToInteger(configuration.getGatewayIP());
+		short port = configuration.getGatewayPort();
+		MPTNUtil.appendMPTNHeader(buffer, ipaddress, port, nodeId, HEADER_TYPE_1);
 	}
 
 	public void onMessage(ByteBuffer message) {
@@ -70,6 +98,15 @@ public class MPTN implements MPTNMessageListener{
 		}
 	}
 	
+	/**
+	 * Handle the response for INFO response.
+	 * 
+	 * @param message
+	 */
+	private void processInfoMessage(ByteBuffer message) {
+		this.nodeId = message.getInt();
+	}
+	
 	
 	/**
 	 * Handle the response for ID acquire.
@@ -77,7 +114,7 @@ public class MPTN implements MPTNMessageListener{
 	 * @param message
 	 */
 	private void processIDMessage(ByteBuffer message) {
-		
+		this.longAddress = message.getInt();
 	}
 	
 	/**

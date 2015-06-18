@@ -24,7 +24,7 @@ public class WKPF implements WKPFMessageListener{
 	}
 	
 	public void enterLearn() throws IOException {
-		
+
 	}
 	
 	public void addWuClass(WuClass wuClass) {

@@ -21,18 +21,14 @@ public class MPTNUtil {
 	public final static byte MPTN_MSQTYPE_IDNAK = 4;	
 	public final static byte MPTN_MSATYPE_FWDREQ = 24;
 
-	public static byte[] createMPTNPacket(int sourceId, int destId, byte type, byte[] payload) {
-		int size = 9 + payload.length;
-		ByteBuffer buffer = ByteBuffer.allocate(size);
+	public static void appendMPTNPacket(ByteBuffer buffer, int sourceId, int destId, byte type, byte[] payload) {
 		buffer.putInt(destId);
 		buffer.putInt(sourceId);
 		buffer.put(type);
 		buffer.put(payload);
-		return buffer.array();
 	}
 	
-	public static byte[] createMPTNHeader(int ipaddress, short port, int nodeId, byte type) {
-		ByteBuffer buffer = ByteBuffer.allocate(10);
+	public static void appendMPTNHeader(ByteBuffer buffer, int ipaddress, short port, int nodeId, byte type) {
 		buffer.put((byte)0xAA);
 		buffer.put((byte)0x55);
 		buffer.put(getByteValue(nodeId, 0));
@@ -43,7 +39,6 @@ public class MPTNUtil {
 		buffer.put(getByteValue(ipaddress, 0));
 		buffer.put(getByteValue(ipaddress, 8));
 		buffer.put(type);
-		return buffer.array();
 	}
 	
 	public static int IPToInteger(String ipstr) {

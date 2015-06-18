@@ -35,7 +35,7 @@ public class ContextManager {
 	public ContextManager() {
 		pluginContextMap = new HashMap<Plugin, List<String>>();
 		contexts = new ConcurrentHashMap<String, Context>();
-		contextClient = XMPPContextClient.getInstance();
+		// contextClient = XMPPContextClient.getInstance();
 		topicFilterSet = new HashSet<String>();
 		contextListener = new ContextEventListenser();
 		listeners = new ArrayList<ContextListener>();

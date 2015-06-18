@@ -28,7 +28,7 @@ public class PluginManager {
 	private List<Plugin> plugins;
 	private Map<String, WuClass> registedClasses;
 	private WKPF wkpf;
-	private String[] PLUGINS = {"DemoPlugin", "SwitchPlugin"};
+	private String[] PLUGINS = {"demo.DemoPlugin", "switcher.SwitchPlugin"};
 	
 	public PluginManager(ContextManager contextManager, Pipeline pipeline) {
 		this.contextManager = contextManager;
@@ -36,6 +36,7 @@ public class PluginManager {
 		this.propertyMonitor = new PluginPropertyMonitor(this);
 		this.registedClasses = new HashMap<String, WuClass>();
 		this.plugins = new ArrayList<Plugin>();
+		this.wkpf = new WKPF(this);
 	}
 	
 	// init the Wuclasses that are discoveriable through WKPF

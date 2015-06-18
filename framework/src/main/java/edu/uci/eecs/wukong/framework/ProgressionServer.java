@@ -63,7 +63,7 @@ public class ProgressionServer {
 			this.server.start();
 			this.pipeline.start();
 		} catch (Exception e) {
-			System.out.println(e.toString());
+			e.printStackTrace();
 			logger.error("Fail to start progression server.");
 		}
 	}

@@ -67,12 +67,14 @@ public class LearningPoint extends ExtensionPoint<LearningExtension> implements 
 	public void run() {
 		while(true) {
 			Event event = events.poll();
-			LearningExtension extension = (LearningExtension) this.extensionMap.get(event.getAppId());
-			if (extension != null) {
-				this.executor.execute(new LearningTask(extension, event,
-						pipeline.getCurrentContext(extension.getPlugin())));
-			} else {
-				logger.error("Cant't find learning extension for the appId: " + event.getAppId());
+			if (event != null) {
+				LearningExtension extension = (LearningExtension) this.extensionMap.get(event.getAppId());
+				if (extension != null) {
+					this.executor.execute(new LearningTask(extension, event,
+							pipeline.getCurrentContext(extension.getPlugin())));
+				} else {
+					logger.error("Cant't find learning extension for the appId: " + event.getAppId());
+				}
 			}
 		}
 	}

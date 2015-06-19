@@ -11,6 +11,7 @@ import java.lang.reflect.Field;
 import edu.uci.eecs.wukong.framework.ProgressionKey.*;
 import edu.uci.eecs.wukong.framework.annotation.Input;
 import edu.uci.eecs.wukong.framework.annotation.Output;
+import edu.uci.eecs.wukong.framework.annotation.WuClassID;
 import edu.uci.eecs.wukong.framework.exception.PluginNotFoundException;
 import edu.uci.eecs.wukong.framework.pipeline.Pipeline;
 import edu.uci.eecs.wukong.framework.plugin.Plugin;
@@ -59,13 +60,15 @@ public class PluginManager {
 				}
 			}
 			
-			WuClass wuClass =  new WuClass(1, properties);
+			WuClassID classId = c.getAnnotation(WuClassID.class);
+			WuClass wuClass =  new WuClass(classId.number(), properties);
 			registedClasses.put(PLUGINS[i], wuClass);
 			wkpf.addWuClass(wuClass);
 		}
 	}
 	
-	public void registerPlugin(Plugin plugin) {
+	public void registerPlugin(Plugin plugin, Map<String,
+			PhysicalKey> propertyMap) {
 		contextManager.subscribe(plugin, plugin.registerContext());
 		pipeline.registerExtension(plugin.registerExtension());
 		bindPropertyUpdateEvent(plugin);
@@ -93,7 +96,7 @@ public class PluginManager {
 		ClassLoader loader = PluginManager.class.getClassLoader();
 		Class<?> c = loader.loadClass(path);
 		Plugin plugin = (Plugin)c.getConstructor(String.class, String.class).newInstance(name, appId);
-		registerPlugin(plugin);
+		registerPlugin(plugin, propertyMap);
 	}
 	
 	// bind the update event of out property for plugin.

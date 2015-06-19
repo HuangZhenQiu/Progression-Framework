@@ -5,11 +5,11 @@ import java.util.List;
 
 import edu.uci.eecs.wukong.framework.annotation.Input;
 import edu.uci.eecs.wukong.framework.annotation.Output;
-import edu.uci.eecs.wukong.framework.annotation.WuClass;
+import edu.uci.eecs.wukong.framework.annotation.WuClassID;
 import edu.uci.eecs.wukong.framework.extension.Extension;
 import edu.uci.eecs.wukong.framework.plugin.Plugin;
 
-@WuClass(number = 1001)
+@WuClassID(number = 1001)
 public class SwitchPlugin extends Plugin {
 	
 	@Input

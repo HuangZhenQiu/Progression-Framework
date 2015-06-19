@@ -1,6 +1,10 @@
 package edu.uci.eecs.wukong.framework.util;
 
 public class WKPFUtil {
+	public static final byte WKPF_PROPERTY_TYPE_SHORT = 0;
+	public static final byte WKPF_PROPERTY_TYPE_BOOLEAN = 1;
+	public static final byte WKPF_PROPERTY_TYPE_REFRESH_RATE = 2;
+	
 	public static final byte REPRG_OPEN                   = 0x10;
 	public static final byte REPRG_OPEN_R                 = 0x11;
 	public static final byte REPRG_WRITE                  = 0x20;

@@ -3,9 +3,11 @@ package edu.uci.eecs.wukong.plugin.demo;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.uci.eecs.wukong.framework.annotation.WuClass;
 import edu.uci.eecs.wukong.framework.extension.Extension;
 import edu.uci.eecs.wukong.framework.plugin.Plugin;
 
+@WuClass(number = 1000)
 public class DemoPlugin extends Plugin {
 	
 	public DemoPlugin(String appId) {

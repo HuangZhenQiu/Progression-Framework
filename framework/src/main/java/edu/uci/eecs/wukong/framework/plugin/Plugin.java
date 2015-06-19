@@ -7,6 +7,8 @@ import java.util.List;
 import edu.uci.eecs.wukong.framework.extension.Extension;
 
 public abstract class Plugin {
+	private static int id = 0;
+	private int pluginId;
 	private String name;
 	private String appId;
 	private boolean online;
@@ -17,6 +19,7 @@ public abstract class Plugin {
 		this.appId = appId;
 		this.name = name;
 		this.online = online;
+		this.pluginId = id ++;
 	}
 
 	public Plugin(String appId, String name) {
@@ -73,5 +76,13 @@ public abstract class Plugin {
 
 	public void setAppId(String appId) {
 		this.appId = appId;
+	}
+
+	public int getPluginId() {
+		return pluginId;
+	}
+
+	public void setPluginId(int pluginId) {
+		this.pluginId = pluginId;
 	}
 }

@@ -73,7 +73,7 @@ public class PluginManager {
 		
 		WuClass wclass = registedClasses.get(plugin.getName());
 		WuObject object = new WuObject(wclass, port);
-		wkpf.addWuObject(object);
+		wkpf.addWuObject(plugin.getPluginId(), object);
 	}
 	
 	public void registerPlugin(String name, String appId, Map<String,
@@ -116,7 +116,14 @@ public class PluginManager {
 	public void updateProperty(PropertyChangeEvent event) {
 		String name = event.getPropertyName();
 		Object value = event.getNewValue();
-		Object plugin = event.getSource();
+		Plugin plugin = (Plugin)event.getSource();
+		if (value instanceof Boolean) {
+			wkpf.sendSetPropertyBoolean(plugin.getPluginId(), name, (Boolean)value);
+		} else if (value instanceof Byte) {
+			wkpf.sendSetPropertyRefreshRate(plugin.getPluginId(), name, (Byte)value);
+		} else if (value instanceof Short) {
+			wkpf.sendSetPropertyShort(plugin.getPluginId(), name, (Short)value);
+		}
 	}
 	
 	public void setWKPF(WKPF wkpf) {

@@ -16,7 +16,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class NIOUdpServer extends Thread {
+public class NIOUdpServer implements Runnable {
 	private static Logger logger = LoggerFactory.getLogger(NIOUdpServer.class);
 	private static int BUFFER_SIZE = 1024;
 	private int port;
@@ -46,7 +46,6 @@ public class NIOUdpServer extends Thread {
 		}
 	}
 	
-	@Override
 	public void run() {
 		try {
 			Selector selector = Selector.open();
@@ -83,6 +82,7 @@ public class NIOUdpServer extends Thread {
 				}
 			}
 		} catch (IOException e) { 
+			e.printStackTrace();
 			logger.error(e.toString());
 		}
 	}
@@ -91,12 +91,13 @@ public class NIOUdpServer extends Thread {
 		DatagramChannel channel = (DatagramChannel) key.channel();
 		ChannelAttachment attachment = (ChannelAttachment)key.attachment();
 		attachment.address = channel.receive(attachment.buffer);
+		attachment.buffer.flip();
 		fireMPTNMessage(attachment.buffer.duplicate());
 		attachment.buffer.clear();
 	}
 	
 	public static void main(String[] args) {
 		NIOUdpServer server = new NIOUdpServer(5000);
-		server.start();
+		server.run();
 	}
 }

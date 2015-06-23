@@ -22,29 +22,33 @@ public class MPTNUtil {
 	public final static byte MPTN_MSATYPE_FWDREQ = 24;
 
 	public static void appendMPTNPacket(ByteBuffer buffer, int sourceId, int destId, byte type, byte[] payload) {
-		buffer.putInt(destId);
-		buffer.putInt(sourceId);
+		appendReversedInt(buffer, destId);
+		appendReversedInt(buffer, sourceId);
 		buffer.put(type);
 		buffer.put(payload);
+	}
+	
+	public static void appendReversedInt(ByteBuffer buffer, int value) {
+		buffer.put(getByteValue(value, 24));
+		buffer.put(getByteValue(value, 16));
+		buffer.put(getByteValue(value, 8));
+		buffer.put(getByteValue(value, 0));
 	}
 	
 	public static void appendMPTNHeader(ByteBuffer buffer, int ipaddress, short port, int nodeId, byte type) {
 		buffer.put((byte)0xAA);
 		buffer.put((byte)0x55);
 		buffer.put(getByteValue(nodeId, 0));
-		buffer.put(getByteValue(ipaddress, 0));
-		buffer.put(getByteValue(ipaddress, 8));
-		buffer.put(getByteValue(ipaddress, 16));
-		buffer.put(getByteValue(ipaddress, 24));
-		buffer.put(getByteValue(ipaddress, 0));
-		buffer.put(getByteValue(ipaddress, 8));
+		appendReversedInt(buffer, ipaddress);
+		buffer.put(new Integer(port%256).byteValue());
+		buffer.put(new Integer(port/256).byteValue());
 		buffer.put(type);
 	}
 	
 	public static int IPToInteger(String ipstr) {
 		int result = 0;
 		String[] addresses =  ipstr.split("\\.");
-		for (int i=3; i >=0; i++) {
+		for (int i=3; i >=0; i--) {
 			int ip = Integer.parseInt(addresses[i]);
 			result |=ip << (i * 8);
 		}

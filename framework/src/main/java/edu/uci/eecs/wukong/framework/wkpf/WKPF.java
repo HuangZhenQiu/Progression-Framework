@@ -1,6 +1,5 @@
 package edu.uci.eecs.wukong.framework.wkpf;
 
-import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,8 +31,8 @@ public class WKPF implements WKPFMessageListener{
 		this.location = "";
 	}
 	
-	public void enterLearn() throws IOException {
-
+	public void start() {
+		mptn.start();
 	}
 	
 	private LinkNode getLinkNode(Integer pluginId, String property) {

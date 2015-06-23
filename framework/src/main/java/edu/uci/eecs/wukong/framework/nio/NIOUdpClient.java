@@ -11,6 +11,8 @@ import java.nio.channels.DatagramChannel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import edu.uci.eecs.wukong.framework.util.MPTNUtil;
+
 public class NIOUdpClient {
 	private static Logger logger = LoggerFactory.getLogger(NIOUdpClient.class);
 	private static final int BUFFER_SIZE = 1024;
@@ -39,6 +41,7 @@ public class NIOUdpClient {
 			sendBuffer.flip();
 			channel.send(sendBuffer, server);
 		} catch (Exception e) {
+			e.printStackTrace();
 			logger.error(e.toString());
 		}
 	}
@@ -50,10 +53,10 @@ public class NIOUdpClient {
 	public static void main(String[] args) {
 		
 		try {
-			NIOUdpClient client = new NIOUdpClient("localhost", 8000);
-			for (int i = 0; i< 100; i++) {
-				//client.send(i, i, i);
-			}
+			NIOUdpClient client = new NIOUdpClient("localhost", 5775);
+			ByteBuffer buffer = ByteBuffer.allocate(10);
+			MPTNUtil.appendMPTNHeader(buffer, MPTNUtil.IPToInteger("127.0.0.1"), (short)9000, 0, (byte)2);
+			client.send(buffer.array());
 			client.close();
 		} catch (Exception e) {
 			System.out.println(e.toString());

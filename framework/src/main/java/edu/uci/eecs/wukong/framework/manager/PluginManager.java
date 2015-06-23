@@ -38,6 +38,7 @@ public class PluginManager {
 		this.registedClasses = new HashMap<String, WuClass>();
 		this.plugins = new ArrayList<Plugin>();
 		this.wkpf = new WKPF(this);
+		this.wkpf.start();
 	}
 	
 	// init the Wuclasses that are discoveriable through WKPF

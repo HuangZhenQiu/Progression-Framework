@@ -22,7 +22,6 @@ import edu.uci.eecs.wukong.framework.wkpf.WKPF;
 
 public class PluginManager {
 	private static final String PLUGIN_PATH = "edu.uci.eecs.wukong.plugin";
-	private static Integer port = 0;
 	private ContextManager contextManager;
 	private PluginPropertyMonitor propertyMonitor;
 	private Pipeline pipeline;
@@ -38,7 +37,6 @@ public class PluginManager {
 		this.registedClasses = new HashMap<String, WuClass>();
 		this.plugins = new ArrayList<Plugin>();
 		this.wkpf = new WKPF(this);
-		this.wkpf.start();
 	}
 	
 	// init the Wuclasses that are discoveriable through WKPF
@@ -66,6 +64,8 @@ public class PluginManager {
 			registedClasses.put(PLUGINS[i], wuClass);
 			wkpf.addWuClass(wuClass);
 		}
+		
+		this.wkpf.start();
 	}
 	
 	public void registerPlugin(Plugin plugin, Map<String,
@@ -76,7 +76,7 @@ public class PluginManager {
 		plugins.add(plugin);
 		
 		WuClass wclass = registedClasses.get(plugin.getName());
-		WuObject object = new WuObject(wclass, port);
+		WuObject object = new WuObject(wclass);
 		wkpf.addWuObject(plugin.getPluginId(), object);
 	}
 	

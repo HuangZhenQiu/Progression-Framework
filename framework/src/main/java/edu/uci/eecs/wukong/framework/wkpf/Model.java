@@ -22,14 +22,27 @@ public class Model {
 		public void addProperty(Integer property, String name) {
 			this.properties.put(property, name);
 		}
+		
+		public short getWuClassId() {
+			return wuclassId;
+		}
 	}
 	
 	public static class WuObject {
+		private static byte sysport = 0;
 		private WuClass type;
-		private int port;
-		public WuObject(WuClass type, int port) {
-			this.port = port;
+		private byte port;
+		public WuObject(WuClass type) {
+			this.port = sysport ++;
 			this.type = type;
+		}
+		
+		public byte getPort() {
+			return this.port;
+		}
+		
+		public WuClass getType() {
+			return this.type;
 		}
 	}
 	

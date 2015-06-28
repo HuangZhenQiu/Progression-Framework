@@ -13,7 +13,7 @@ public abstract class Plugin {
 	private String appId;
 	private boolean online;
 	private boolean learning;
-	private PropertyChangeSupport support;
+	protected PropertyChangeSupport support;
 	
 	public Plugin(String appId, String name, boolean online) {
 		this.appId = appId;

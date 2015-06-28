@@ -52,6 +52,8 @@ public class SwitchPlugin extends Plugin {
 		return threshold;
 	}
 	public void setThreshold(Double threshold) {
+		Double oldValue = this.threshold;
 		this.threshold = threshold;
+		this.support.fireIndexedPropertyChange("threshold", 1, oldValue, threshold);
 	}
 }

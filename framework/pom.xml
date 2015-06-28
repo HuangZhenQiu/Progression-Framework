@@ -153,6 +153,11 @@
 		<artifactId>weka-dev</artifactId>
 		<version>3.7.5</version>
 	</dependency>
+	<dependency>
+		<groupId>mockit</groupId>
+		<artifactId>jmockit</artifactId>
+	<version>0.998</version>
+</dependency>
   </dependencies>
   <build>
   	<plugins>

@@ -12,4 +12,9 @@ public class PluginManagerTest extends TestCase {
 		manager.init();
 	}
 	
+	@Test
+	public void testRegisterPlugin() throws Exception {
+		
+	}
+	
 }

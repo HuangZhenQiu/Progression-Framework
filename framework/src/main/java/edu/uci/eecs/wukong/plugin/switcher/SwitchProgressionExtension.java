@@ -7,7 +7,7 @@ import java.util.Map;
 import edu.uci.eecs.wukong.framework.context.Context;
 import edu.uci.eecs.wukong.framework.context.ExecutionContext;
 import edu.uci.eecs.wukong.framework.context.UserContext;
-import edu.uci.eecs.wukong.framework.extension.AbstratProgressionExtension;
+import edu.uci.eecs.wukong.framework.extension.impl.AbstratProgressionExtension;
 import edu.uci.eecs.wukong.framework.plugin.Plugin;
 
 public class SwitchProgressionExtension extends AbstratProgressionExtension {

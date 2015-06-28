@@ -1,4 +1,4 @@
-package edu.uci.eecs.wukong.framework.extension;
+package edu.uci.eecs.wukong.framework.extension.impl;
 
 import java.util.List;
 import java.util.Map;

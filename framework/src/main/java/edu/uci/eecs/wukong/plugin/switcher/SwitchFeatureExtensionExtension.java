@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import edu.uci.eecs.wukong.framework.ProgressionKey.LogicalKey;
-import edu.uci.eecs.wukong.framework.extension.FeatureAbstractionExtension;
+import edu.uci.eecs.wukong.framework.extension.impl.FeatureAbstractionExtension;
 import edu.uci.eecs.wukong.framework.operator.AverageOperator;
 import edu.uci.eecs.wukong.framework.operator.DefaultOperator;
 import edu.uci.eecs.wukong.framework.operator.Operator;

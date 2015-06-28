@@ -32,7 +32,7 @@ import edu.uci.eecs.wukong.framework.entity.ConfigurationCommand;
 import edu.uci.eecs.wukong.framework.entity.ConfigurationEntity;
 import edu.uci.eecs.wukong.framework.entity.FeatureEntity;
 import edu.uci.eecs.wukong.framework.entity.HueEntity;
-import edu.uci.eecs.wukong.framework.extension.ProgressionExtension;
+import edu.uci.eecs.wukong.framework.extension.impl.ProgressionExtension;
 import edu.uci.eecs.wukong.framework.util.Configuration;
 import edu.uci.eecs.wukong.framework.manager.ConfigurationManager.ConfigurationType;
 import edu.uci.eecs.wukong.framework.plugin.Plugin;

@@ -1,7 +1,7 @@
 package edu.uci.eecs.wukong.framework.pipeline;
 
-import edu.uci.eecs.wukong.framework.extension.AbstractExtension;
 import edu.uci.eecs.wukong.framework.extension.Extension;
+import edu.uci.eecs.wukong.framework.extension.impl.AbstractExtension;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;

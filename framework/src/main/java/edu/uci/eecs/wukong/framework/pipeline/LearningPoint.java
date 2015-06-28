@@ -13,7 +13,7 @@ import edu.uci.eecs.wukong.framework.context.ContextListener;
 import edu.uci.eecs.wukong.framework.context.ExecutionContext;
 import edu.uci.eecs.wukong.framework.event.Event;
 import edu.uci.eecs.wukong.framework.event.IEvent;
-import edu.uci.eecs.wukong.framework.extension.LearningExtension;
+import edu.uci.eecs.wukong.framework.extension.impl.LearningExtension;
 import edu.uci.eecs.wukong.framework.util.Configuration;
 
 @SuppressWarnings("rawtypes")

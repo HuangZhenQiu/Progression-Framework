@@ -6,7 +6,7 @@ import weka.classifiers.trees.M5P;
 import edu.uci.eecs.wukong.framework.context.Context;
 import edu.uci.eecs.wukong.framework.context.ExecutionContext;
 import edu.uci.eecs.wukong.framework.entity.ConfigurationCommand;
-import edu.uci.eecs.wukong.framework.extension.ProgressionExtension;
+import edu.uci.eecs.wukong.framework.extension.impl.ProgressionExtension;
 import edu.uci.eecs.wukong.framework.plugin.Plugin;
 
 public class DemoProgressionExtension extends ProgressionExtension<DemoFeatureEntity> {

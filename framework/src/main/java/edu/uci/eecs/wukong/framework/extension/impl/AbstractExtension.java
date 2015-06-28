@@ -1,6 +1,7 @@
-package edu.uci.eecs.wukong.framework.extension;
+package edu.uci.eecs.wukong.framework.extension.impl;
 
 import edu.uci.eecs.wukong.framework.context.ExecutionContext;
+import edu.uci.eecs.wukong.framework.extension.Extension;
 import edu.uci.eecs.wukong.framework.plugin.Plugin;
 
 public abstract class AbstractExtension implements Extension {

@@ -1,16 +1,16 @@
 package edu.uci.eecs.wukong.plugin.switcher;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import edu.uci.eecs.wukong.framework.context.Context;
-import edu.uci.eecs.wukong.framework.context.ExecutionContext;
 import edu.uci.eecs.wukong.framework.context.UserContext;
+import edu.uci.eecs.wukong.framework.extension.ContextExecutable;
 import edu.uci.eecs.wukong.framework.extension.impl.AbstratProgressionExtension;
 import edu.uci.eecs.wukong.framework.plugin.Plugin;
 
-public class SwitchProgressionExtension extends AbstratProgressionExtension {
+public class SwitchProgressionExtension extends AbstratProgressionExtension
+	implements ContextExecutable {
 	// User ID to threshold Map
 	private Map<String, Double> userThresholdMap;
 	
@@ -34,13 +34,4 @@ public class SwitchProgressionExtension extends AbstratProgressionExtension {
 			}
 		}
 	}
-
-	public void execute(List data, ExecutionContext context) {
-		// TODO Auto-generated method stub
-	}
-
-	public void execute() {
-		// TODO Auto-generated method stub
-	}
-
 }

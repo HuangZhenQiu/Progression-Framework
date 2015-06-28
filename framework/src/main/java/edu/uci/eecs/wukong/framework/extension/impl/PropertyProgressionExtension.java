@@ -10,7 +10,7 @@ import edu.uci.eecs.wukong.framework.extension.TimerExecutable;
 import edu.uci.eecs.wukong.framework.plugin.Plugin;
 
 import java.util.List;
-public abstract class PropertyProgressionExtension<T extends FeatureEntity> extends AbstractExtension 
+public abstract class PropertyProgressionExtension<T extends FeatureEntity> extends AbstratProgressionExtension<T> 
 	implements Activatable, Executable<T>, ContextExecutable, TimerExecutable{
 	
 	public PropertyProgressionExtension(Plugin plugin) {

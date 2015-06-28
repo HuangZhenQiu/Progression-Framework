@@ -5,7 +5,7 @@ import edu.uci.eecs.wukong.framework.extension.Extension;
 import edu.uci.eecs.wukong.framework.plugin.Plugin;
 
 public abstract class AbstractExtension implements Extension {
-	private Plugin plugin;
+	protected Plugin plugin;
 	public AbstractExtension(Plugin plugin) {
 		this.plugin = plugin;
 	}

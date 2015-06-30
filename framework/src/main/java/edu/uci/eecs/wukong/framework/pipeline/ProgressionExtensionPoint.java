@@ -3,6 +3,8 @@ package edu.uci.eecs.wukong.framework.pipeline;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.slf4j.Logger;
@@ -13,34 +15,67 @@ import edu.uci.eecs.wukong.framework.entity.Entity;
 import edu.uci.eecs.wukong.framework.entity.HueEntity;
 import edu.uci.eecs.wukong.framework.entity.ConfigurationReport;
 import edu.uci.eecs.wukong.framework.exception.ExtensionNotFoundException;
+import edu.uci.eecs.wukong.framework.extension.Activatable;
+import edu.uci.eecs.wukong.framework.extension.ContextExecutable;
+import edu.uci.eecs.wukong.framework.extension.TimerExecutable;
 import edu.uci.eecs.wukong.framework.extension.impl.AbstractExtension;
+import edu.uci.eecs.wukong.framework.extension.impl.AbstratProgressionExtension;
 import edu.uci.eecs.wukong.framework.extension.impl.ProgressionExtension;
 import edu.uci.eecs.wukong.framework.manager.ConfigurationManager;
 import edu.uci.eecs.wukong.framework.util.Configuration;
 import edu.uci.eecs.wukong.framework.context.Context;
 import edu.uci.eecs.wukong.framework.context.ContextListener;
 
-public class ProgressionExtensionPoint extends ExtensionPoint<ProgressionExtension> implements ContextListener,
-	Runnable {
+public class ProgressionExtensionPoint extends ExtensionPoint<AbstratProgressionExtension>
+	implements ContextListener, Runnable {
 	private static Logger logger = LoggerFactory.getLogger(ProgressionExtensionPoint.class);
 	private static Configuration configuration = Configuration.getInstance();
+	private Timer timer;
 	private ConfigurationManager configurationManager;
 	private Queue<Context> contexts;
 	
 	public ProgressionExtensionPoint(ConfigurationManager configurationManager, Pipeline pipeline) {
 		super(pipeline);
 		this.configurationManager = configurationManager;
-		contexts = new ConcurrentLinkedQueue<Context>();
+		this.contexts = new ConcurrentLinkedQueue<Context>();
+		this.timer = new Timer(true);
+	}
+	
+	@Override
+	public synchronized void register(AbstratProgressionExtension extension) {
+		super.register(extension);
+		if (extension instanceof TimerExecutable) {
+			ProgressionTimerTask timerTask = new ProgressionTimerTask((TimerExecutable)extension);
+			timer.scheduleAtFixedRate(timerTask, 0, 10 * 1000);
+		}
 	}
 	
 	public void applyModel(String appId, Object model) throws Exception {
-		ProgressionExtension extension = (ProgressionExtension) this.extensionMap.get(appId);
-		if (extension != null) {
-			extension.activate(model);
-			extension.getPlugin().setOnline(true);
-		} else {
-			throw new ExtensionNotFoundException("Progression extension is not found for app :" + appId);
-		}	
+		AbstratProgressionExtension extension = (AbstratProgressionExtension) this.extensionMap.get(appId);
+		
+		if (extension instanceof Activatable) {
+			if (extension != null) {
+				((Activatable)extension).activate(model);
+				extension.getPlugin().setOnline(true);
+			} else {
+				throw new ExtensionNotFoundException("Progression extension is not found for app :" + appId);
+			}	
+		}
+	}
+	
+	private class ProgressionTimerTask extends TimerTask {
+		
+		private TimerExecutable executable;
+
+		public ProgressionTimerTask(TimerExecutable executable) {
+			this.executable = executable;
+		}
+		
+		@Override
+		public void run() {
+			executable.execute();
+		}
+		
 	}
 	
 	private class ProgressionTask implements Runnable{
@@ -94,8 +129,10 @@ public class ProgressionExtensionPoint extends ExtensionPoint<ProgressionExtensi
 				logger.info("Progression Extension Point is polling new context:" + context.toString());
 				for(Map.Entry<String, AbstractExtension> entry : this.extensionMap.entrySet()) {
 					ProgressionExtension extension = (ProgressionExtension) entry.getValue();
-					if (extension.isSubcribedTopic(context.getTopicId())) {
-						this.executor.execute(new ProgressionTask(extension, context));
+					if (extension instanceof ContextExecutable) {
+						if (extension.isSubcribedTopic(context.getTopicId())) {
+							this.executor.execute(new ProgressionTask(extension, context));
+						}
 					}
 				}
 			}

@@ -6,8 +6,12 @@ import edu.uci.eecs.wukong.framework.plugin.Plugin;
 
 import java.util.UUID;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class TestPropertyProgressionExtension extends AbstratProgressionExtension 
 	implements TimerExecutable {
+	private static Logger logger = LoggerFactory.getLogger(TestPropertyProgressionExtension.class);
 
 	public TestPropertyProgressionExtension(Plugin plugin) {
 		super(plugin);
@@ -15,7 +19,8 @@ public class TestPropertyProgressionExtension extends AbstratProgressionExtensio
 
 	public void execute() {
 		if(this.plugin instanceof TestPlugin) {
-			((TestPlugin) plugin).setTestProperty(UUID.randomUUID().toString());
+			((TestPlugin) plugin).setTestProperty((short)UUID.randomUUID().getLeastSignificantBits());
+			logger.info("TestPropertyProgressionExtension updated proerpty: " + ((TestPlugin) plugin).getTestProperty());
 		}
 	}
 

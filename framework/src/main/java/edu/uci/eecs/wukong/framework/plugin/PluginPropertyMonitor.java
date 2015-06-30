@@ -7,14 +7,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import edu.uci.eecs.wukong.framework.manager.PluginManager;
 
 public class PluginPropertyMonitor {
+	private static Logger logger = LoggerFactory.getLogger(PluginPropertyMonitor.class);
 	private PluginManager manager;
 	private Map<Plugin, List<String>> monitoredProperties;
 	
 	private PropertyChangeListener listener = new PropertyChangeListener() {
 		 public void propertyChange(PropertyChangeEvent evt) {
+			 logger.info("Detected Property " + evt.getPropertyName() + "Updated.");
 			 manager.updateProperty(evt);
 		 }
 	};

@@ -8,6 +8,7 @@ import edu.uci.eecs.wukong.framework.context.Context;
 import edu.uci.eecs.wukong.framework.context.ContextListener;
 import edu.uci.eecs.wukong.framework.context.ExecutionContext;
 import edu.uci.eecs.wukong.framework.extension.Extension;
+import edu.uci.eecs.wukong.framework.extension.impl.AbstratProgressionExtension;
 import edu.uci.eecs.wukong.framework.extension.impl.FeatureAbstractionExtension;
 import edu.uci.eecs.wukong.framework.extension.impl.LearningExtension;
 import edu.uci.eecs.wukong.framework.extension.impl.ProgressionExtension;
@@ -67,8 +68,8 @@ public class Pipeline implements ContextListener{
 	
 	public void registerExtension(List<Extension> extensions) {
 		for (Extension extension : extensions) {
-			if (extension instanceof ProgressionExtension) {
-				progressionPoint.register((ProgressionExtension)extension);
+			if (extension instanceof AbstratProgressionExtension) {
+				progressionPoint.register((AbstratProgressionExtension)extension);
 			}
 			
 			if (extension instanceof FeatureAbstractionExtension) {

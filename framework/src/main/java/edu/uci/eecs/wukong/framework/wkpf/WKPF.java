@@ -15,6 +15,7 @@ import edu.uci.eecs.wukong.framework.wkpf.Model.LinkNode;
 import edu.uci.eecs.wukong.framework.wkpf.Model.LinkTable;
 import edu.uci.eecs.wukong.framework.wkpf.Model.WuClass;
 import edu.uci.eecs.wukong.framework.wkpf.Model.WuObject;
+import edu.uci.eecs.wukong.framework.exception.PluginUninitializedException;
 import edu.uci.eecs.wukong.framework.manager.PluginManager;
 
 public class WKPF implements WKPFMessageListener{
@@ -40,45 +41,74 @@ public class WKPF implements WKPFMessageListener{
 		mptn.start();
 	}
 	
-	private LinkNode getLinkNode(Integer pluginId, String property) {
+	private LinkNode getLinkNode(Integer pluginId, String property) throws Exception {
 		WuObject wuobject = wuobjects.get(pluginId);
 		LinkTable map = linkMap.get(wuobject);
+		if (map == null) {
+			throw new PluginUninitializedException("Pugin " + pluginId + " is not initalized");
+		}
+		
 		LinkNode node = map.getDestination(property);
 		return node;
 	}
 	
 	public void sendSetPropertyShort(Integer pluginId, String property, short value) {
-		LinkNode node = getLinkNode(pluginId, property); 
-		ByteBuffer buffer = ByteBuffer.allocate(20);
-		buffer.put(node.getPortId());
-		buffer.putShort(node.getClassId());
-		buffer.put(node.getPropertyId());
-		buffer.put(WKPFUtil.WKPF_PROPERTY_TYPE_SHORT);
-		buffer.putShort(value);
-		mptn.send(node.getNodeId(), buffer.array());
+		
+		try {
+			LinkNode node = getLinkNode(pluginId, property);
+			if (node != null) { 
+				ByteBuffer buffer = ByteBuffer.allocate(20);
+				buffer.put(node.getPortId());
+				buffer.putShort(node.getClassId());
+				buffer.put(node.getPropertyId());
+				buffer.put(WKPFUtil.WKPF_PROPERTY_TYPE_SHORT);
+				buffer.putShort(value);
+				mptn.send(node.getNodeId(), buffer.array());
+			} else {
+				LOGGER.error("Plugin " + pluginId.toString() + " property " + property + "didn't bind to any destination.");
+			}
+		} catch (Exception e) {
+			LOGGER.error(e.toString());
+		}
 	}
 	
 	public void sendSetPropertyBoolean(Integer pluginId, String property, boolean value) {
-		LinkNode node = getLinkNode(pluginId, property);
-		ByteBuffer buffer = ByteBuffer.allocate(20);
-		buffer.put(node.getPortId());
-		buffer.putShort(node.getClassId());
-		buffer.put(node.getPropertyId());
-		buffer.put(WKPFUtil.WKPF_PROPERTY_TYPE_BOOLEAN);
-		byte val = value == true ? (byte)1 : (byte)0;
-		buffer.put(val);
-		mptn.send(node.getNodeId(), buffer.array());
+		try {
+			LinkNode node = getLinkNode(pluginId, property);
+			if (node != null) {
+				ByteBuffer buffer = ByteBuffer.allocate(20);
+				buffer.put(node.getPortId());
+				buffer.putShort(node.getClassId());
+				buffer.put(node.getPropertyId());
+				buffer.put(WKPFUtil.WKPF_PROPERTY_TYPE_BOOLEAN);
+				byte val = value == true ? (byte)1 : (byte)0;
+				buffer.put(val);
+				mptn.send(node.getNodeId(), buffer.array());
+			}  else {
+				LOGGER.error("Plugin " + pluginId.toString() + " property " + property + "didn't bind to any destination.");
+			}
+		} catch (Exception e) {
+			LOGGER.error(e.toString());
+		}
 	}
 	
 	public void sendSetPropertyRefreshRate(Integer pluginId, String property, byte value) {
-		LinkNode node = getLinkNode(pluginId, property);
-		ByteBuffer buffer = ByteBuffer.allocate(20);
-		buffer.put(node.getPortId());
-		buffer.putShort(node.getClassId());
-		buffer.put(node.getPropertyId());
-		buffer.put(WKPFUtil.WKPF_PROPERTY_TYPE_REFRESH_RATE);
-		buffer.put(value);
-		mptn.send(node.getNodeId(), buffer.array());
+		try {
+			LinkNode node = getLinkNode(pluginId, property);
+			if (node != null) {
+				ByteBuffer buffer = ByteBuffer.allocate(20);
+				buffer.put(node.getPortId());
+				buffer.putShort(node.getClassId());
+				buffer.put(node.getPropertyId());
+				buffer.put(WKPFUtil.WKPF_PROPERTY_TYPE_REFRESH_RATE);
+				buffer.put(value);
+				mptn.send(node.getNodeId(), buffer.array());
+			}  else {
+				LOGGER.error("Plugin " + pluginId.toString() + " property " + property + "didn't bind to any destination.");
+			}
+		} catch (Exception e) {
+			LOGGER.error(e.toString());
+		}
 	}
 
 	
@@ -86,8 +116,9 @@ public class WKPF implements WKPFMessageListener{
 		this.wuclasses.add(wuClass);
 	}
 	
-	public void addWuObject(Integer pluginId, WuObject wuObject) {
+	public void addWuObject(Integer pluginId, WuObject wuObject, LinkTable linkTable) {
 		this.wuobjects.put(pluginId, wuObject);
+		this.linkMap.put(wuObject, linkTable);
 	}
 
 	public void onWKPFRemoteProgram(byte[] message) {

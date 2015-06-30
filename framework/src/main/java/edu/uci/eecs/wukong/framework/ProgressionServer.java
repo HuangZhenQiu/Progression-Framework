@@ -11,6 +11,7 @@ import edu.uci.eecs.wukong.framework.manager.ContextManager;
 import edu.uci.eecs.wukong.framework.manager.ConfigurationManager;
 import edu.uci.eecs.wukong.framework.manager.PluginManager;
 import edu.uci.eecs.wukong.framework.pipeline.Pipeline;
+import edu.uci.eecs.wukong.plugin.test.TestPlugin;
 import edu.uci.eecs.wukong.rpc.netty.CommunicationServer;
 import edu.uci.eecs.wukong.rpc.netty.service.DataService;
 import edu.uci.eecs.wukong.rpc.netty.service.ProgressionDataServiceFactory;
@@ -62,9 +63,20 @@ public class ProgressionServer {
 			this.pluginManager.init();
 			this.server.start();
 			this.pipeline.start();
+			this.registerTestPlugin();
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error("Fail to start progression server.");
+		}
+	}
+	
+	// Only for testing purpose
+	private void registerTestPlugin() {
+		TestPlugin plugin = new TestPlugin("001");
+		try {
+			pluginManager.registerPlugin(plugin, null);
+		} catch (Exception e) {
+			logger.info(e.toString());
 		}
 	}
 	

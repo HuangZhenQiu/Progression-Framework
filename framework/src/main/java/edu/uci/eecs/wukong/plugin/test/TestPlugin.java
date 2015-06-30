@@ -12,7 +12,7 @@ import edu.uci.eecs.wukong.framework.plugin.Plugin;
 public class TestPlugin extends Plugin {
 
 	@Output
-	private String testProperty;
+	private short testProperty;
 	
 	public TestPlugin(String appId) {
 		super(appId, "Test");
@@ -30,12 +30,12 @@ public class TestPlugin extends Plugin {
 		return new ArrayList<String>();
 	}
 
-	public String getTestProperty() {
+	public short getTestProperty() {
 		return testProperty;
 	}
 
-	public void setTestProperty(String testProperty) {
-		String oldValue = this.testProperty;
+	public void setTestProperty(short testProperty) {
+		short oldValue = this.testProperty;
 		this.testProperty = testProperty;
 		this.support.fireIndexedPropertyChange("testProperty", 1, oldValue, testProperty);
 	}

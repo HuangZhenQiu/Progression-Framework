@@ -7,7 +7,7 @@ import edu.uci.eecs.wukong.framework.entity.FeatureEntity;
 import edu.uci.eecs.wukong.framework.plugin.Plugin;
 
 import java.util.List;
-public abstract class ProgressionExtension<T extends FeatureEntity> extends AbstractExtension {
+public abstract class ProgressionExtension<T extends FeatureEntity> extends AbstratProgressionExtension {
 	private Object model;
 	
 	public ProgressionExtension(Plugin plugin) {

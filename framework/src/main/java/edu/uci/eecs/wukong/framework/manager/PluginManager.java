@@ -16,6 +16,8 @@ import edu.uci.eecs.wukong.framework.exception.PluginNotFoundException;
 import edu.uci.eecs.wukong.framework.pipeline.Pipeline;
 import edu.uci.eecs.wukong.framework.plugin.Plugin;
 import edu.uci.eecs.wukong.framework.plugin.PluginPropertyMonitor;
+import edu.uci.eecs.wukong.framework.wkpf.Model.LinkNode;
+import edu.uci.eecs.wukong.framework.wkpf.Model.LinkTable;
 import edu.uci.eecs.wukong.framework.wkpf.Model.WuClass;
 import edu.uci.eecs.wukong.framework.wkpf.Model.WuObject;
 import edu.uci.eecs.wukong.framework.wkpf.WKPF;
@@ -28,7 +30,7 @@ public class PluginManager {
 	private List<Plugin> plugins;
 	private Map<String, WuClass> registedClasses;
 	private WKPF wkpf;
-	private String[] PLUGINS = {"demo.DemoPlugin", "switcher.SwitchPlugin"};
+	private String[] PLUGINS = {"demo.DemoPlugin", "switcher.SwitchPlugin", "test.TestPlugin"};
 	
 	public PluginManager(ContextManager contextManager, Pipeline pipeline) {
 		this.contextManager = contextManager;
@@ -69,7 +71,7 @@ public class PluginManager {
 	}
 	
 	public void registerPlugin(Plugin plugin, Map<String,
-			PhysicalKey> propertyMap) {
+			PhysicalKey> propertyMap) throws NoSuchFieldException {
 		contextManager.subscribe(plugin, plugin.registerContext());
 		pipeline.registerExtension(plugin.registerExtension());
 		bindPropertyUpdateEvent(plugin);
@@ -77,7 +79,23 @@ public class PluginManager {
 		
 		WuClass wclass = registedClasses.get(plugin.getName());
 		WuObject object = new WuObject(wclass);
-		wkpf.addWuObject(plugin.getPluginId(), object);
+		
+		LinkTable linkTable = new LinkTable();
+		if (propertyMap != null) {
+			for (Map.Entry<String, PhysicalKey> entry : propertyMap.entrySet()) {
+				Field field = plugin.getClass().getField(entry.getKey());
+				if (field != null) {
+					Annotation[] annotations = field.getDeclaredAnnotations();
+					for (Annotation annotation : annotations) {
+						if (annotation.annotationType().equals(Output.class)) {
+							
+						} else if (annotation.annotationType().equals(Input.class)) {
+						}
+					}
+				}
+			}
+		}
+		wkpf.addWuObject(plugin.getPluginId(), object, linkTable);
 	}
 	
 	public void registerPlugin(String name, String appId, Map<String,
@@ -123,10 +141,10 @@ public class PluginManager {
 		Plugin plugin = (Plugin)event.getSource();
 		if (value instanceof Boolean) {
 			wkpf.sendSetPropertyBoolean(plugin.getPluginId(), name, (Boolean)value);
-		} else if (value instanceof Byte) {
+		} else if (value instanceof Boolean) {
 			wkpf.sendSetPropertyRefreshRate(plugin.getPluginId(), name, (Byte)value);
-		} else if (value instanceof Short) {
-			wkpf.sendSetPropertyShort(plugin.getPluginId(), name, (Short)value);
+		} else if (value instanceof Integer) {
+			wkpf.sendSetPropertyShort(plugin.getPluginId(), name, ((Integer)value).shortValue());
 		}
 	}
 	

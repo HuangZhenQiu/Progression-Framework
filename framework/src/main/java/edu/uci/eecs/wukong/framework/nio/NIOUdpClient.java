@@ -55,7 +55,7 @@ public class NIOUdpClient {
 		try {
 			NIOUdpClient client = new NIOUdpClient("localhost", 5775);
 			ByteBuffer buffer = ByteBuffer.allocate(10);
-			MPTNUtil.appendMPTNHeader(buffer, MPTNUtil.IPToInteger("127.0.0.1"), (short)9000, 0, (byte)2);
+			MPTNUtil.appendMPTNHeader(buffer, MPTNUtil.IPToInteger("127.0.0.1"), (short)9000, 0, (byte)2, (byte)0);
 			client.send(buffer.array());
 			client.close();
 		} catch (Exception e) {

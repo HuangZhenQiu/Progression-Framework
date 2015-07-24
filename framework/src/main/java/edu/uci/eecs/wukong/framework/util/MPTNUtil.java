@@ -1,12 +1,12 @@
 package edu.uci.eecs.wukong.framework.util;
 
 import java.nio.ByteBuffer;
-
+import com.google.common.primitives.UnsignedInteger;
 public class MPTNUtil {
 	
 	public final static int MPTN_ID_LEN = 4;
 	public final static int MPTN_MASTER_ID = 0;
-	public final static int MPTN_MAX_ID = 2 ^ (MPTN_ID_LEN * 8) - 1;
+	public final static UnsignedInteger MPTN_MAX_ID =UnsignedInteger.MAX_VALUE;
 	public final static int MPTN_MSGTYPE_LEN  = 1;
 	public final static int MPTN_DEST_BYTE_OFFSET = 0;
 	public final static int MPTN_SRC_BYTE_OFFSET = MPTN_DEST_BYTE_OFFSET + MPTN_ID_LEN;
@@ -35,7 +35,8 @@ public class MPTNUtil {
 		buffer.put(getByteValue(value, 0));
 	}
 	
-	public static void appendMPTNHeader(ByteBuffer buffer, int ipaddress, short port, int nodeId, byte type) {
+	public static void appendMPTNHeader(ByteBuffer buffer, int ipaddress, short port,
+			int nodeId, byte type, byte payloadByte) {
 		buffer.put((byte)0xAA);
 		buffer.put((byte)0x55);
 		buffer.put(getByteValue(nodeId, 0));
@@ -43,6 +44,7 @@ public class MPTNUtil {
 		buffer.put(new Integer(port%256).byteValue());
 		buffer.put(new Integer(port/256).byteValue());
 		buffer.put(type);
+		buffer.put(payloadByte);
 	}
 	
 	public static int IPToInteger(String ipstr) {

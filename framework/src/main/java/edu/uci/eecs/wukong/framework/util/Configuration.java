@@ -52,8 +52,8 @@ public class Configuration {
 		return properties.getProperty(PROGRESSION_SERVER_IP);
 	}
 	
-	public String getProgressionServerPort() {
-		return properties.getProperty(PROGRESSION_SERVER_PORT);
+	public Short getProgressionServerPort() {
+		return Short.parseShort(properties.getProperty(PROGRESSION_SERVER_PORT));
 	}
 	
 	public String getGatewayIP() {

@@ -63,7 +63,7 @@ public class ProgressionServer {
 			this.pluginManager.init();
 			this.server.start();
 			this.pipeline.start();
-			this.registerTestPlugin();
+			// this.registerTestPlugin();
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error("Fail to start progression server.");

@@ -9,7 +9,7 @@ import edu.uci.eecs.wukong.framework.annotation.WuClassID;
 import edu.uci.eecs.wukong.framework.extension.Extension;
 import edu.uci.eecs.wukong.framework.plugin.Plugin;
 
-@WuClassID(number = 1001)
+@WuClassID(number = 10001)
 public class SwitchPlugin extends Plugin {
 	
 	@Input

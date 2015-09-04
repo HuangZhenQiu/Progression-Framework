@@ -22,6 +22,8 @@ public class WKPF implements WKPFMessageListener{
 	private final static Logger LOGGER = LoggerFactory.getLogger(WKPF.class);
 	private MPTN mptn;
 	private String location;
+	private StringBuffer locationbuffer;
+	private int locationLength;
 	private List<WuClass> wuclasses;
 	private Map<Integer, WuObject> wuobjects;  // Port number to Wuobject;
 	private Map<WuObject, LinkTable> linkMap;
@@ -34,7 +36,7 @@ public class WKPF implements WKPFMessageListener{
 		this.mptn = new MPTN();
 		this.mptn.addWKPFMessageListener(this);
 		this.pluginManager = pluginManager;
-		this.location = "";
+		this.location = "/WuKong";
 	}
 	
 	public void start() {
@@ -139,14 +141,16 @@ public class WKPF implements WKPFMessageListener{
 			LOGGER.error("Message number larger than expected.");
 		}
 		
-		ByteBuffer buffer = ByteBuffer.allocate(4 + WKPFUtil.DEFAULT_OBJECT_SIZE * 3);
+		ByteBuffer buffer = ByteBuffer.allocate(6 + WKPFUtil.DEFAULT_CLASS_SIZE * 3);
 		buffer.put(WKPFUtil.WKPF_GET_WUCLASS_LIST_R);
 		buffer.put(message[1]);
+		buffer.put(message[2]);
+		buffer.put(WKPFUtil.DEFAULT_CLASS_SIZE);
 		buffer.put((byte)totalLength);
-		buffer.put(WKPFUtil.DEFAULT_OBJECT_SIZE);
+		buffer.put((byte)0); // Just is a padding
 		
-		for (int i = WKPFUtil.DEFAULT_OBJECT_SIZE * messageNumber;
-				i < WKPFUtil.DEFAULT_OBJECT_SIZE * (messageNumber + 1); i++) {
+		for (int i = WKPFUtil.DEFAULT_CLASS_SIZE * messageNumber;
+				i < WKPFUtil.DEFAULT_CLASS_SIZE * (messageNumber + 1); i++) {
 			if (i < wuclasses.size()) {
 				buffer.putShort(wuclasses.get(i).getWuClassId());
 				buffer.put(WKPFUtil.PLUGIN_WUCLASS_TYPE);
@@ -168,11 +172,13 @@ public class WKPF implements WKPFMessageListener{
 			LOGGER.error("Message number larger than expected.");
 		}
 		
-		ByteBuffer buffer = ByteBuffer.allocate(4 + WKPFUtil.DEFAULT_OBJECT_SIZE * 4);
+		ByteBuffer buffer = ByteBuffer.allocate(5 + WKPFUtil.DEFAULT_OBJECT_SIZE * 4);
 		buffer.put(WKPFUtil.WKPF_GET_WUOBJECT_LIST_R);
 		buffer.put(message[1]);
+		buffer.put(message[2]);
 		buffer.put((byte)totalLength);
 		buffer.put(WKPFUtil.DEFAULT_OBJECT_SIZE);
+		buffer.put((byte)0); // Just is a padding
 		for (int i = WKPFUtil.DEFAULT_OBJECT_SIZE * messageNumber;
 				i < WKPFUtil.DEFAULT_OBJECT_SIZE * (messageNumber + 1); i++) {
 			if (i < wuobjects.size()) {
@@ -201,11 +207,37 @@ public class WKPF implements WKPFMessageListener{
 	}
 
 	public void onWKPFSetLocation(byte[] message) {
-		// TODO Auto-generated method stub
+		// First message, if offset is 0.
+		int chunkSize = 0;
+		if (message[1] == 0) {
+			chunkSize = message[2];
+			locationLength = message[3];
+			locationbuffer = new StringBuffer();
+			for(int index = 4; index < chunkSize + 3; index ++){
+				locationbuffer.append(message[index]);
+			}
+		} else {
+			chunkSize = message[2];
+			for(int index = 3; index < chunkSize + 3; index ++){
+				locationbuffer.append(message[index]);
+			}
+		}
+		if (message[1] + chunkSize == locationbuffer.length()) {
+			location = locationbuffer.toString();
+		}
 		
+		ByteBuffer buffer = ByteBuffer.allocate(1);
+		buffer.put(WKPFUtil.WKPF_SET_LOCATION_R);
+		mptn.send(MPTNUtil.MPTN_MASTER_ID, buffer.array());
 	}
 
 	public void onWKPFGetLocation(byte[] message) {
-		
+		ByteBuffer buffer = ByteBuffer.allocate(4 + this.location.getBytes().length);
+		buffer.put(WKPFUtil.WKPF_GET_LOCATION_R);
+		buffer.put(message[1]);
+		buffer.put(message[2]);
+		buffer.put((byte)this.location.getBytes().length);
+		buffer.put(location.getBytes());
+		mptn.send(MPTNUtil.MPTN_MASTER_ID, buffer.array());
 	}
 }

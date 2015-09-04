@@ -7,7 +7,7 @@ import edu.uci.eecs.wukong.framework.annotation.WuClassID;
 import edu.uci.eecs.wukong.framework.extension.Extension;
 import edu.uci.eecs.wukong.framework.plugin.Plugin;
 
-@WuClassID(number = 1000)
+@WuClassID(number = 10000)
 public class DemoPlugin extends Plugin {
 	
 	public DemoPlugin(String appId) {

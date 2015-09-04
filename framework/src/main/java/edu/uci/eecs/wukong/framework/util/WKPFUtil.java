@@ -2,8 +2,10 @@ package edu.uci.eecs.wukong.framework.util;
 
 public class WKPFUtil {
 	public static final byte DEFAULT_OBJECT_SIZE = 4;
+	public static final byte DEFAULT_CLASS_SIZE = 3;
 	
-	public static final byte PLUGIN_WUCLASS_TYPE = 1; // Need to confirm with Niels
+	/* Virtual and Can create Instance */
+	public static final byte PLUGIN_WUCLASS_TYPE = 3; // Need to confirm with Niels
 	
 	public static final byte WKPF_PROPERTY_TYPE_SHORT = 0;
 	public static final byte WKPF_PROPERTY_TYPE_BOOLEAN = 1;

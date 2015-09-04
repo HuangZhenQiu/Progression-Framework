@@ -8,7 +8,7 @@ import edu.uci.eecs.wukong.framework.annotation.WuClassID;
 import edu.uci.eecs.wukong.framework.extension.Extension;
 import edu.uci.eecs.wukong.framework.plugin.Plugin;
 
-@WuClassID(number = 1002)
+@WuClassID(number = 10002)
 public class TestPlugin extends Plugin {
 
 	@Output

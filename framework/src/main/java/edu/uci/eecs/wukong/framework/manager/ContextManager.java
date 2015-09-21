@@ -71,7 +71,7 @@ public class ContextManager {
 	public void subscribe(Plugin plugin, List<String> topics) {
 		for (String topic : topics) {
 			if(!topicFilterSet.contains(topic)) {
-				contextClient.subscribe(topic, contextListener);
+				//contextClient.subscribe(topic, contextListener);
 				topicFilterSet.add(topic);
 			}
 		}

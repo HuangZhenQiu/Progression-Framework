@@ -57,7 +57,7 @@ public class ProgressionServer {
 		
 	}
 	
-	//start the llama cloud server
+	//start the progression server
 	public void start() {
 		try {
 			this.pluginManager.init();

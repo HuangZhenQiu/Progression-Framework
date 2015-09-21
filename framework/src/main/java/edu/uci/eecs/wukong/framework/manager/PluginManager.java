@@ -147,7 +147,7 @@ public class PluginManager {
 			wkpf.sendSetPropertyShort(plugin.getPluginId(), name, ((Integer)value).shortValue());
 		}
 	}
-	
+
 	public void setWKPF(WKPF wkpf) {
 		this.wkpf = wkpf;
 	}

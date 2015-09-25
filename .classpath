@@ -30,5 +30,7 @@
 	<classpathentry kind="var" path="M2_REPO/org/igniterealtime/smack/smackx/3.2.1/smackx-3.2.1.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/igniterealtime/smack/smack-core/4.2.0-alpha1/smack-core-4.2.0-alpha1.jar"/>
 	<classpathentry kind="var" path="M2_REPO/mockit/jmockit/0.998/jmockit-0.998.jar"/>
+	<classpathentry kind="var" path="M2_REPO/io/dropwizard/metrics/metrics-core/3.1.2/metrics-core-3.1.2.jar"/>
+	<classpathentry kind="var" path="M2_REPO/io/dropwizard/metrics/metrics-graphite/3.1.2/metrics-graphite-3.1.2.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

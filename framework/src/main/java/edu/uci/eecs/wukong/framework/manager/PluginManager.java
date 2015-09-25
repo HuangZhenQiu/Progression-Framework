@@ -9,17 +9,15 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 
 import edu.uci.eecs.wukong.framework.ProgressionKey.*;
-import edu.uci.eecs.wukong.framework.annotation.Input;
-import edu.uci.eecs.wukong.framework.annotation.Output;
-import edu.uci.eecs.wukong.framework.annotation.WuClassID;
+import edu.uci.eecs.wukong.framework.annotation.WuProperty;
+import edu.uci.eecs.wukong.framework.annotation.WuClass;
 import edu.uci.eecs.wukong.framework.exception.PluginNotFoundException;
 import edu.uci.eecs.wukong.framework.pipeline.Pipeline;
 import edu.uci.eecs.wukong.framework.plugin.Plugin;
 import edu.uci.eecs.wukong.framework.plugin.PluginPropertyMonitor;
-import edu.uci.eecs.wukong.framework.wkpf.Model.LinkNode;
 import edu.uci.eecs.wukong.framework.wkpf.Model.LinkTable;
-import edu.uci.eecs.wukong.framework.wkpf.Model.WuClass;
-import edu.uci.eecs.wukong.framework.wkpf.Model.WuObject;
+import edu.uci.eecs.wukong.framework.wkpf.Model.WuClassModel;
+import edu.uci.eecs.wukong.framework.wkpf.Model.WuObjectModel;
 import edu.uci.eecs.wukong.framework.wkpf.WKPF;
 
 public class PluginManager {
@@ -28,7 +26,7 @@ public class PluginManager {
 	private PluginPropertyMonitor propertyMonitor;
 	private Pipeline pipeline;
 	private List<Plugin> plugins;
-	private Map<String, WuClass> registedClasses;
+	private Map<Short, WuClassModel> registedClasses;
 	private WKPF wkpf;
 	private String[] PLUGINS = {"demo.DemoPlugin", "switcher.SwitchPlugin", "test.TestPlugin"};
 	
@@ -36,7 +34,7 @@ public class PluginManager {
 		this.contextManager = contextManager;
 		this.pipeline = pipeline;
 		this.propertyMonitor = new PluginPropertyMonitor(this);
-		this.registedClasses = new HashMap<String, WuClass>();
+		this.registedClasses = new HashMap<Short, WuClassModel>();
 		this.plugins = new ArrayList<Plugin>();
 		this.wkpf = new WKPF(this);
 	}
@@ -53,18 +51,17 @@ public class PluginManager {
 				String name = field.getName();
 				Annotation[] annotations = field.getDeclaredAnnotations();
 				for (Annotation annotation : annotations) {
-					if (annotation.annotationType().equals(Output.class) ||
-							annotation.annotationType().equals(Input.class)) {
-						properties.put(id, name);
-						id ++;
+					if (annotation.annotationType().equals(WuProperty.class)) {
+						WuProperty property = (WuProperty)annotation;
+						properties.put(property.id(), name);
 					}
 				}
 			}
 			
-			WuClassID classId = c.getAnnotation(WuClassID.class);
-			WuClass wuClass =  new WuClass(classId.number(), properties);
-			registedClasses.put(PLUGINS[i], wuClass);
-			wkpf.addWuClass(wuClass);
+			WuClass wuclass = c.getAnnotation(WuClass.class);
+			WuClassModel wuClassModel =  new WuClassModel(wuclass.id(), properties);
+			registedClasses.put(wuclass.id(), wuClassModel);
+			wkpf.addWuClass(wuClassModel);
 		}
 		
 		this.wkpf.start();
@@ -77,24 +74,10 @@ public class PluginManager {
 		bindPropertyUpdateEvent(plugin);
 		plugins.add(plugin);
 		
-		WuClass wclass = registedClasses.get(plugin.getName());
-		WuObject object = new WuObject(wclass);
+		WuClassModel wclass = registedClasses.get(plugin.getName());
+		WuObjectModel object = new WuObjectModel(wclass);
 		
 		LinkTable linkTable = new LinkTable();
-		if (propertyMap != null) {
-			for (Map.Entry<String, PhysicalKey> entry : propertyMap.entrySet()) {
-				Field field = plugin.getClass().getField(entry.getKey());
-				if (field != null) {
-					Annotation[] annotations = field.getDeclaredAnnotations();
-					for (Annotation annotation : annotations) {
-						if (annotation.annotationType().equals(Output.class)) {
-							
-						} else if (annotation.annotationType().equals(Input.class)) {
-						}
-					}
-				}
-			}
-		}
 		wkpf.addWuObject(plugin.getPluginId(), object, linkTable);
 	}
 	
@@ -125,8 +108,11 @@ public class PluginManager {
 			String name = field.getName();
 			Annotation[] annotations = field.getDeclaredAnnotations();
 			for (Annotation annotation : annotations) {
-				if (annotation.annotationType().equals(Output.class)) {
-					output.add(name);
+				if (annotation.annotationType().equals(WuProperty.class)) {
+					WuProperty property = (WuProperty) annotation;
+					if (property.type().equals("Output")) {
+						output.add(name);
+					}
 				}
 			}
 		}

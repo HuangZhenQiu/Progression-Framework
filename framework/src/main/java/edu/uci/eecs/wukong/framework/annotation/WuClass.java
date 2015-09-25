@@ -8,7 +8,10 @@ import java.lang.annotation.ElementType;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 
-public @interface WuClassID {
+public @interface WuClass {
 	// Wuclass number, should be synchronized with the number defined in standard library.
-	short number() default 0;
+	short id() default 0;
+	
+	// Interested topics of the WuClass, for example "User, Location, Model".
+	String topics() default "";
 }

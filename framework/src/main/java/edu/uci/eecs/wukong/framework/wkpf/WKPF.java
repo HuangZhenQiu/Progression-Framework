@@ -13,8 +13,8 @@ import edu.uci.eecs.wukong.framework.util.MPTNUtil;
 import edu.uci.eecs.wukong.framework.util.WKPFUtil;
 import edu.uci.eecs.wukong.framework.wkpf.Model.LinkNode;
 import edu.uci.eecs.wukong.framework.wkpf.Model.LinkTable;
-import edu.uci.eecs.wukong.framework.wkpf.Model.WuClass;
-import edu.uci.eecs.wukong.framework.wkpf.Model.WuObject;
+import edu.uci.eecs.wukong.framework.wkpf.Model.WuClassModel;
+import edu.uci.eecs.wukong.framework.wkpf.Model.WuObjectModel;
 import edu.uci.eecs.wukong.framework.exception.PluginUninitializedException;
 import edu.uci.eecs.wukong.framework.manager.PluginManager;
 
@@ -23,16 +23,16 @@ public class WKPF implements WKPFMessageListener{
 	private MPTN mptn;
 	private String location;
 	private StringBuffer locationbuffer;
-	private int locationLength;
-	private List<WuClass> wuclasses;
-	private Map<Integer, WuObject> wuobjects;  // Port number to Wuobject;
-	private Map<WuObject, LinkTable> linkMap;
+	private List<WuClassModel> wuclasses;
+	private Map<Integer, WuObjectModel> wuobjects;  // Port number to Wuobject;
+	private Map<WuObjectModel, LinkTable> linkMap;
 	private PluginManager pluginManager;
+	private int locationLength = 0;
 
 	public WKPF(PluginManager pluginManager) {
-		this.wuclasses = new ArrayList<WuClass>();
-		this.wuobjects = new HashMap<Integer, WuObject>();
-		this.linkMap = new HashMap<WuObject, LinkTable>();
+		this.wuclasses = new ArrayList<WuClassModel>();
+		this.wuobjects = new HashMap<Integer, WuObjectModel>();
+		this.linkMap = new HashMap<WuObjectModel, LinkTable>();
 		this.mptn = new MPTN();
 		this.mptn.addWKPFMessageListener(this);
 		this.pluginManager = pluginManager;
@@ -44,7 +44,7 @@ public class WKPF implements WKPFMessageListener{
 	}
 	
 	private LinkNode getLinkNode(Integer pluginId, String property) throws Exception {
-		WuObject wuobject = wuobjects.get(pluginId);
+		WuObjectModel wuobject = wuobjects.get(pluginId);
 		LinkTable map = linkMap.get(wuobject);
 		if (map == null) {
 			throw new PluginUninitializedException("Pugin " + pluginId + " is not initalized");
@@ -114,11 +114,11 @@ public class WKPF implements WKPFMessageListener{
 	}
 
 	
-	public void addWuClass(WuClass wuClass) {
+	public void addWuClass(WuClassModel wuClass) {
 		this.wuclasses.add(wuClass);
 	}
 	
-	public void addWuObject(Integer pluginId, WuObject wuObject, LinkTable linkTable) {
+	public void addWuObject(Integer pluginId, WuObjectModel wuObject, LinkTable linkTable) {
 		this.wuobjects.put(pluginId, wuObject);
 		this.linkMap.put(wuObject, linkTable);
 	}
@@ -182,7 +182,7 @@ public class WKPF implements WKPFMessageListener{
 		for (int i = WKPFUtil.DEFAULT_OBJECT_SIZE * messageNumber;
 				i < WKPFUtil.DEFAULT_OBJECT_SIZE * (messageNumber + 1); i++) {
 			if (i < wuobjects.size()) {
-				WuObject object = wuobjects.get(i);
+				WuObjectModel object = wuobjects.get(i);
 				buffer.put(object.getPort());
 				buffer.putShort(wuclasses.get(i).getWuClassId());
 				buffer.put(WKPFUtil.PLUGIN_WUCLASS_TYPE);

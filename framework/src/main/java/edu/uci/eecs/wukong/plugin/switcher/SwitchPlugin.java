@@ -3,20 +3,19 @@ package edu.uci.eecs.wukong.plugin.switcher;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.uci.eecs.wukong.framework.annotation.Input;
-import edu.uci.eecs.wukong.framework.annotation.Output;
-import edu.uci.eecs.wukong.framework.annotation.WuClassID;
+import edu.uci.eecs.wukong.framework.annotation.WuProperty;
+import edu.uci.eecs.wukong.framework.annotation.WuClass;
 import edu.uci.eecs.wukong.framework.extension.Extension;
 import edu.uci.eecs.wukong.framework.plugin.Plugin;
 
-@WuClassID(number = 10001)
+@WuClass(id = 10001)
 public class SwitchPlugin extends Plugin {
 	
-	@Input
+	@WuProperty(id = 1, type="input", dtype="channel")
 	private Boolean switchInput;
-	@Input
+	@WuProperty(id = 2, type="input", dtype="buffer")
 	private Double temparature;
-	@Output
+	@WuProperty(id = 3, type="output")
 	private Double threshold;
 	
 	public SwitchPlugin(String appId) {

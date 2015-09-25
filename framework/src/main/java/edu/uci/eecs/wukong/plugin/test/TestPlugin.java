@@ -3,15 +3,15 @@ package edu.uci.eecs.wukong.plugin.test;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.uci.eecs.wukong.framework.annotation.Output;
-import edu.uci.eecs.wukong.framework.annotation.WuClassID;
+import edu.uci.eecs.wukong.framework.annotation.WuProperty;
+import edu.uci.eecs.wukong.framework.annotation.WuClass;
 import edu.uci.eecs.wukong.framework.extension.Extension;
 import edu.uci.eecs.wukong.framework.plugin.Plugin;
 
-@WuClassID(number = 10002)
+@WuClass(id = 10002)
 public class TestPlugin extends Plugin {
 
-	@Output
+	@WuProperty(id = 1, type="input")
 	private short testProperty;
 	
 	public TestPlugin(String appId) {

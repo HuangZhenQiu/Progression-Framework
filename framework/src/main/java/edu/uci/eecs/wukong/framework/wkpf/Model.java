@@ -4,17 +4,35 @@ import java.util.Map;
 import java.util.HashMap;
 
 public class Model {
+	
+	/**
+	 * Network Port Property (NPP) represents an unique stream in WuKong system.
+	 */
+	public static class NPP {
+		/* Network ID*/
+		private int nid;
+		/* Represent a particular WuObject in the server*/
+		private byte portId;
+		/* Represent a particular WuProperty of a WuClass*/
+		private byte propertyId;
+		
+		public NPP(int nid, byte portId, byte propertyId) {
+			this.nid = nid;
+			this.portId = portId;
+			this.propertyId = propertyId;
+		}
+	}
 
-	public static class WuClass {
+	public static class WuClassModel {
 		private short wuclassId;
 		private Map<Integer, String> properties;
 		
-		public WuClass(short wuclassId) {
+		public WuClassModel(short wuclassId) {
 			this.wuclassId = wuclassId;
 			this.properties = new HashMap<Integer, String>();
 		}
 		
-		public WuClass(short wuclassId, Map<Integer, String> properties) {
+		public WuClassModel(short wuclassId, Map<Integer, String> properties) {
 			this.wuclassId = wuclassId;
 			this.properties = properties;
 		}
@@ -28,11 +46,11 @@ public class Model {
 		}
 	}
 	
-	public static class WuObject {
+	public static class WuObjectModel {
 		private static byte sysport = 0;
-		private WuClass type;
+		private WuClassModel type;
 		private byte port;
-		public WuObject(WuClass type) {
+		public WuObjectModel(WuClassModel type) {
 			this.port = sysport ++;
 			this.type = type;
 		}
@@ -41,7 +59,7 @@ public class Model {
 			return this.port;
 		}
 		
-		public WuClass getType() {
+		public WuClassModel getType() {
 			return this.type;
 		}
 	}
@@ -88,6 +106,26 @@ public class Model {
 
 		public void setPropertyId(byte propertyId) {
 			this.propertyId = propertyId;
+		}
+	}
+	
+	public static class ComponentMap {
+		
+	}
+	
+	public static class Link {
+		/* Component Id*/
+		private int sourceId;
+		private byte sourcePortId;
+		/* Component Id*/
+		private int destId;
+		private byte destPortId;
+		
+		public Link(int sourceId, byte sourcePortId, int destId, byte destPortId) {
+			this.sourceId = sourceId;
+			this.sourcePortId = sourcePortId;
+			this.destId = destId;
+			this.destPortId = destPortId;
 		}
 	}
 	

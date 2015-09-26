@@ -1,8 +1,6 @@
 package edu.uci.eecs.wukong.framework.wkpf;
 
 public interface WKPFMessageListener {
-
-	public void onWKPFRemoteProgram(byte[] message);
 	
 	public void onWKPFGetWuClassList(byte[] message);
 	
@@ -17,4 +15,10 @@ public interface WKPFMessageListener {
 	public void onWKPFSetLocation(byte[] message);
 	
 	public void onWKPFGetLocation(byte[] message);
+	
+	public void onWKPFRemoteProgramOpen(byte[] message);
+	
+	public void onWKPFRemoteProgramWrite(byte[] message);
+	
+	public void onWKPFRemoteProgramCommit(byte[] message);
 }

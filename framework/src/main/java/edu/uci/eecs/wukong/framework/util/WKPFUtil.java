@@ -11,15 +11,19 @@ public class WKPFUtil {
 	public static final byte WKPF_PROPERTY_TYPE_BOOLEAN = 1;
 	public static final byte WKPF_PROPERTY_TYPE_REFRESH_RATE = 2;
 	
-	public static final byte REPRG_OPEN                   = 0x10;
-	public static final byte REPRG_OPEN_R                 = 0x11;
-	public static final byte REPRG_WRITE                  = 0x20;
-	public static final byte REPRG_WRITE_R_OK             = 0x21;
-	public static final byte REPRG_WRITE_R_RETRANSMIT     = 0x22;
-	public static final byte REPRG_COMMIT                 = 0x30;
-	public static final byte REPRG_COMMIT_R_OK            = 0x31;
-	public static final byte REPRG_COMMIT_R_RETRANSMIT    = 0x32;
-	public static final byte REPRG_COMMIT_R_FAILED        = 0x33;
+	public static final byte WKPF_REPRG_OPEN                 = 0x10;
+	public static final byte WKPF_REPRG_OPEN_R               = 0x11;
+	public static final byte WKPF_REPRG_WRITE                = 0x12;
+	public static final byte WKPF_REPRG_WRITE_R              = 0x13;
+	public static final byte WKPF_REPRG_COMMIT               = 0x14;
+	public static final byte WKPF_REPRG_COMMIT_R             = 0x15;
+	
+	public static final byte WKPF_REPROG_OK                  = 0x00;
+	public static final byte WKPF_REPROG_REQUEST_RETRANSIMIT = 0x01;
+	public static final byte WKPF_REPROG_TOOLARGE            = 0x02;
+	public static final byte WKPF_REPROG_FAILED              = 0x03;
+	
+	
 	
 	public static final byte WKPF_GET_WUCLASS_LIST        = (byte)0x90;
 	public static final byte WKPF_GET_WUCLASS_LIST_R      = (byte)0x91;

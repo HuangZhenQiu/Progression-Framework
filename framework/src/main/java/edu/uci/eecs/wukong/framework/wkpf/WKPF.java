@@ -1,6 +1,7 @@
 package edu.uci.eecs.wukong.framework.wkpf;
 
 import java.nio.ByteBuffer;
+import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,16 +25,20 @@ public class WKPF implements WKPFMessageListener{
 	private String location;
 	private StringBuffer locationbuffer;
 	private List<WuClassModel> wuclasses;
-	private Map<Integer, WuObjectModel> wuobjects;  // Port number to Wuobject;
+	// Port number to Wuobject;
+	private Map<Integer, WuObjectModel> wuobjects;
 	private Map<WuObjectModel, LinkTable> linkMap;
+	private DJAData djaData;
 	private PluginManager pluginManager;
-	private int locationLength = 0;
+	// Location Length
+	private int length = 0;
 
 	public WKPF(PluginManager pluginManager) {
 		this.wuclasses = new ArrayList<WuClassModel>();
 		this.wuobjects = new HashMap<Integer, WuObjectModel>();
 		this.linkMap = new HashMap<WuObjectModel, LinkTable>();
 		this.mptn = new MPTN();
+		this.djaData = new DJAData();
 		this.mptn.addWKPFMessageListener(this);
 		this.pluginManager = pluginManager;
 		this.location = "/WuKong";
@@ -123,11 +128,6 @@ public class WKPF implements WKPFMessageListener{
 		this.linkMap.put(wuObject, linkTable);
 	}
 
-	public void onWKPFRemoteProgram(byte[] message) {
-		// TODO Auto-generated method stub
-		
-	}
-
 	public void onWKPFGetWuClassList(byte[] message) {
 		// TODO Auto-generated method stub
 		if (message.length < 2) {
@@ -211,7 +211,7 @@ public class WKPF implements WKPFMessageListener{
 		int chunkSize = 0;
 		if (message[1] == 0) {
 			chunkSize = message[2];
-			locationLength = message[3];
+			length = message[3];
 			locationbuffer = new StringBuffer();
 			for(int index = 4; index < chunkSize + 3; index ++){
 				locationbuffer.append(message[index]);
@@ -238,6 +238,56 @@ public class WKPF implements WKPFMessageListener{
 		buffer.put(message[2]);
 		buffer.put((byte)this.location.getBytes().length);
 		buffer.put(location.getBytes());
+		mptn.send(MPTNUtil.MPTN_MASTER_ID, buffer.array());
+	}
+	
+	/**
+	 * Reset DJAData Cache to further write operation
+	 */
+	public void onWKPFRemoteProgramOpen(byte[] message) {
+		ByteBuffer buffer = ByteBuffer.allocate(4);
+		buffer.put(WKPFUtil.WKPF_REPRG_OPEN_R);
+		buffer.put(message[1]);
+		buffer.put(message[2]);
+		if (djaData.open()) {
+			buffer.put(WKPFUtil.WKPF_REPROG_OK);
+		} else {
+			buffer.put(WKPFUtil.WKPF_REPROG_FAILED);
+		}
+		mptn.send(MPTNUtil.MPTN_MASTER_ID, buffer.array());
+	}
+	
+	/**
+	 * Write append data into dja
+	 */
+	public void onWKPFRemoteProgramWrite(byte[] message) {
+		ByteBuffer buffer = ByteBuffer.allocate(4);
+		int position = message[4] << 8 + message[3];
+		byte[] data = Arrays.copyOfRange(message, 5, message.length);
+		buffer.put(WKPFUtil.WKPF_REPRG_OPEN_R);
+		buffer.put(message[1]);
+		buffer.put(message[2]);
+		if (djaData.append(position, data)) {
+			buffer.put(WKPFUtil.WKPF_REPROG_OK);
+		} else {
+			buffer.put(WKPFUtil.WKPF_REPROG_FAILED);
+		}
+		mptn.send(MPTNUtil.MPTN_MASTER_ID, buffer.array());
+	}
+	
+	/**
+	 * Commit to close the write operation
+	 */
+	public void onWKPFRemoteProgramCommit(byte[] message) {
+		ByteBuffer buffer = ByteBuffer.allocate(4);
+		buffer.put(WKPFUtil.WKPF_REPRG_OPEN_R);
+		buffer.put(message[1]);
+		buffer.put(message[2]);
+		if (djaData.commit()) {
+			buffer.put(WKPFUtil.WKPF_REPROG_OK);
+		} else {
+			buffer.put(WKPFUtil.WKPF_REPROG_FAILED);
+		}
 		mptn.send(MPTNUtil.MPTN_MASTER_ID, buffer.array());
 	}
 }

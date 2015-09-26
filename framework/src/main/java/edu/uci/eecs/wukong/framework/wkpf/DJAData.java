@@ -44,7 +44,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class DJAData {
 	private final static Logger LOGGER = LoggerFactory.getLogger(MPTN.class);
 	private static final int DEFAULT_SIZE = 1024;
-	private AtomicBoolean readable = new AtomicBoolean(true);
+	private AtomicBoolean readable = new AtomicBoolean(false);
 	private byte[] buffer;
 	private int pos; // The next write position
 	private int size; // Total size of the the buffer
@@ -76,9 +76,12 @@ public class DJAData {
 	 * Close the DJAData, and make it ready for extracting link table 
 	 * and component map.
 	 * 
+	 * TODO(Peter Huang) We need to store the data into a long term storage
+	 * for the recovery when reboot the progression server. 
+	 * 
 	 * @return whether is closed successfully
 	 */
-	public synchronized boolean close() {
+	public synchronized boolean commit() {
 		if (readable.compareAndSet(false, true)) {
 			synchronized(readable) {
 				readable.notifyAll();

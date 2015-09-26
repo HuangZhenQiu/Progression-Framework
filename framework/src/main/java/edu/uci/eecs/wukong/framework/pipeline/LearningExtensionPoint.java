@@ -17,13 +17,13 @@ import edu.uci.eecs.wukong.framework.extension.impl.LearningExtension;
 import edu.uci.eecs.wukong.framework.util.Configuration;
 
 @SuppressWarnings("rawtypes")
-public class LearningPoint extends ExtensionPoint<LearningExtension> implements ContextListener, Runnable{
-	private static Logger logger = LoggerFactory.getLogger(LearningPoint.class);
+public class LearningExtensionPoint extends ExtensionPoint<LearningExtension> implements ContextListener, Runnable{
+	private static Logger logger = LoggerFactory.getLogger(LearningExtensionPoint.class);
 	private static Configuration configuration = Configuration.getInstance();
 	private Map<LearningExtension, Event> lastEvent;
 	private Queue<Event> events;
 	
-	public LearningPoint(Pipeline pipeline) {
+	public LearningExtensionPoint(Pipeline pipeline) {
 		super(pipeline);
 		this.events = new PriorityBlockingQueue<Event>();
 		this.lastEvent = new HashMap<LearningExtension, Event>();

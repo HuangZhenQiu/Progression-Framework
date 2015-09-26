@@ -27,9 +27,9 @@ public class Pipeline implements ContextListener{
 	private ContextManager contextManager;
 	private ConfigurationManager configurationManager;
 	private BufferManager bufferManager;
-	private FeatureAbstractionPoint featureAbstractionPoint;
+	private FeatureAbstractionExtensionPoint featureAbstractionPoint;
 	private ProgressionExtensionPoint progressionPoint;
-	private LearningPoint learningPoint;
+	private LearningExtensionPoint learningPoint;
 	private ExecutionContext executionContext;
 	
 	@VisibleForTesting
@@ -43,8 +43,8 @@ public class Pipeline implements ContextListener{
 		this.configurationManager = configuraionManager;
 		this.bufferManager = new BufferManager();
 		this.progressionPoint = new ProgressionExtensionPoint(configuraionManager, this);
-		this.featureAbstractionPoint = new FeatureAbstractionPoint(bufferManager, this);
-		this.learningPoint = new LearningPoint(this);
+		this.featureAbstractionPoint = new FeatureAbstractionExtensionPoint(bufferManager, this);
+		this.learningPoint = new LearningExtensionPoint(this);
 		this.contextManager.subsribeContext(learningPoint);
 		this.contextManager.subsribeContext(this);
 		this.executionContext = new ExecutionContext();

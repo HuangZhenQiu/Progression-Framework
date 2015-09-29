@@ -7,6 +7,7 @@ import com.google.protobuf.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import edu.uci.eecs.wukong.framework.manager.BufferManager;
 import edu.uci.eecs.wukong.framework.manager.ContextManager;
 import edu.uci.eecs.wukong.framework.manager.ConfigurationManager;
 import edu.uci.eecs.wukong.framework.manager.PluginManager;
@@ -21,6 +22,7 @@ public class ProgressionServer {
 	
 	private CommunicationServer server;
 	private ContextManager contextManager;
+	private BufferManager bufferManager;
 	private PluginManager pluginManager;
 	private Pipeline pipeline;
 	private ConfigurationManager configurationManager;
@@ -28,10 +30,11 @@ public class ProgressionServer {
 	public ProgressionServer(PeerInfo peerInfo) {
 		
 		init(peerInfo);
+		this.bufferManager = new BufferManager();
 		this.contextManager = new ContextManager();
 		this.configurationManager = new ConfigurationManager();
 		this.pipeline = new Pipeline(contextManager, configurationManager);	
-		this.pluginManager = new PluginManager(contextManager, pipeline);
+		this.pluginManager = new PluginManager(contextManager, bufferManager, pipeline);
 	}
 	
 	/**

@@ -8,7 +8,7 @@ public class PluginManagerTest extends TestCase {
 	
 	@Test
 	public void testInitilization() throws Exception {
-		PluginManager manager = new PluginManager(new ContextManager(), new Pipeline());
+		PluginManager manager = new PluginManager(new ContextManager(), new BufferManager(), new Pipeline());
 		manager.init();
 	}
 	

@@ -30,13 +30,13 @@ public class PluginManager {
 	private WKPF wkpf;
 	private String[] PLUGINS = {"demo.DemoPlugin", "switcher.SwitchPlugin", "test.TestPlugin"};
 	
-	public PluginManager(ContextManager contextManager, Pipeline pipeline) {
+	public PluginManager(ContextManager contextManager, BufferManager bufferManager, Pipeline pipeline) {
 		this.contextManager = contextManager;
 		this.pipeline = pipeline;
 		this.propertyMonitor = new PluginPropertyMonitor(this);
 		this.registedClasses = new HashMap<Short, WuClassModel>();
 		this.plugins = new ArrayList<Plugin>();
-		this.wkpf = new WKPF(this);
+		this.wkpf = new WKPF(this, bufferManager);
 	}
 	
 	// init the Wuclasses that are discoveriable through WKPF
@@ -45,15 +45,14 @@ public class PluginManager {
 			String path = PLUGIN_PATH + '.' + PLUGINS[i];
 			ClassLoader loader = PluginManager.class.getClassLoader();
 			Class<?> c = loader.loadClass(path);
-			Map<Integer, String> properties = new HashMap<Integer, String>();
-			Integer id = 0;
+			Map<String, Integer> properties = new HashMap<String, Integer>();
 			for (Field field : c.getDeclaredFields()) {
 				String name = field.getName();
 				Annotation[] annotations = field.getDeclaredAnnotations();
 				for (Annotation annotation : annotations) {
 					if (annotation.annotationType().equals(WuProperty.class)) {
 						WuProperty property = (WuProperty)annotation;
-						properties.put(property.id(), name);
+						properties.put(name, property.id());
 					}
 				}
 			}
@@ -67,6 +66,15 @@ public class PluginManager {
 		this.wkpf.start();
 	}
 	
+	/**
+	 * Create wuobjects from port to Wuclass Id map.
+	 * @param portToClassMap
+	 */
+	public void createWuObjects(Map<Byte, Short> portToClassMap) {
+		
+		
+	}
+	
 	public void registerPlugin(Plugin plugin, Map<String,
 			PhysicalKey> propertyMap) throws NoSuchFieldException {
 		contextManager.subscribe(plugin, plugin.registerContext());
@@ -75,10 +83,9 @@ public class PluginManager {
 		plugins.add(plugin);
 		
 		WuClassModel wclass = registedClasses.get(plugin.getName());
-		WuObjectModel object = new WuObjectModel(wclass);
+		WuObjectModel object = new WuObjectModel(wclass, plugin.getPluginId());
 		
-		LinkTable linkTable = new LinkTable();
-		wkpf.addWuObject(plugin.getPluginId(), object, linkTable);
+		wkpf.addWuObject(plugin.getPluginId(), object);
 	}
 	
 	public void registerPlugin(String name, String appId, Map<String,

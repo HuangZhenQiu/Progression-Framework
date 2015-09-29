@@ -12,35 +12,52 @@ import org.slf4j.LoggerFactory;
 
 import edu.uci.eecs.wukong.framework.util.MPTNUtil;
 import edu.uci.eecs.wukong.framework.util.WKPFUtil;
-import edu.uci.eecs.wukong.framework.wkpf.Model.LinkNode;
+import edu.uci.eecs.wukong.framework.wkpf.Model.Component;
+import edu.uci.eecs.wukong.framework.wkpf.Model.ComponentMap;
+import edu.uci.eecs.wukong.framework.wkpf.Model.Link;
 import edu.uci.eecs.wukong.framework.wkpf.Model.LinkTable;
 import edu.uci.eecs.wukong.framework.wkpf.Model.WuClassModel;
 import edu.uci.eecs.wukong.framework.wkpf.Model.WuObjectModel;
 import edu.uci.eecs.wukong.framework.exception.PluginUninitializedException;
+import edu.uci.eecs.wukong.framework.manager.BufferManager;
 import edu.uci.eecs.wukong.framework.manager.PluginManager;
 
-public class WKPF implements WKPFMessageListener{
+public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 	private final static Logger LOGGER = LoggerFactory.getLogger(WKPF.class);
+	// Multiple Protocol Transportation Network
 	private MPTN mptn;
+	// Location String set by master
 	private String location;
-	private StringBuffer locationbuffer;
-	private List<WuClassModel> wuclasses;
-	// Port number to Wuobject;
-	private Map<Integer, WuObjectModel> wuobjects;
-	private Map<WuObjectModel, LinkTable> linkMap;
-	private DJAData djaData;
-	private PluginManager pluginManager;
 	// Location Length
 	private int length = 0;
+	// Buffer to host data sent by master
+	private StringBuffer locationbuffer;
+	// Wuclass installed in progression server
+	private List<WuClassModel> wuclasses;
+	// Port number to WuObject
+	private Map<Integer, WuObjectModel> portToWuObjectMap;
+	// Plugin Id to WuObject
+	private Map<Integer, WuObjectModel> pluginIdToWuObjectMap;
+	
+	private DJAData djaData;
+	private ComponentMap componentMap = null;
+	private LinkTable linkTable = null;
+	
+	private PluginManager pluginManager;
+	private BufferManager bufferManager;
 
-	public WKPF(PluginManager pluginManager) {
-		this.wuclasses = new ArrayList<WuClassModel>();
-		this.wuobjects = new HashMap<Integer, WuObjectModel>();
-		this.linkMap = new HashMap<WuObjectModel, LinkTable>();
+
+	public WKPF(PluginManager pluginManager, BufferManager bufferManager) {
+		this.wuclasses = new ArrayList<WuClassModel> ();
+		this.portToWuObjectMap = new HashMap<Integer, WuObjectModel> ();
+		this.pluginIdToWuObjectMap = new HashMap<Integer, WuObjectModel> ();
 		this.mptn = new MPTN();
+		this.mptn.register(this);
 		this.djaData = new DJAData();
-		this.mptn.addWKPFMessageListener(this);
+		this.djaData.register(this);
 		this.pluginManager = pluginManager;
+		this.bufferManager = bufferManager;
+		// Intial default location
 		this.location = "/WuKong";
 	}
 	
@@ -48,40 +65,62 @@ public class WKPF implements WKPFMessageListener{
 		mptn.start();
 	}
 	
-	private LinkNode getLinkNode(Integer pluginId, String property) throws Exception {
-		WuObjectModel wuobject = wuobjects.get(pluginId);
-		LinkTable map = linkMap.get(wuobject);
-		if (map == null) {
-			throw new PluginUninitializedException("Pugin " + pluginId + " is not initalized");
-		}
-		
-		LinkNode node = map.getDestination(property);
-		return node;
+	/**
+	 * Called by DJAData after remote programmed by master
+	 */
+	public void update(LinkTable table, ComponentMap map) {
+		this.linkTable = table;
+		this.componentMap = map;
+		createWuObjects();
 	}
 	
+	/**
+	 * Notify the plugin manager to create wuobjects on corresponding port 
+	 */
+	private void createWuObjects() {
+		Map<Byte, Short> wuclassMap = this.componentMap.getWuClassIdList(mptn.getNodeId());
+		pluginManager.createWuObjects(wuclassMap);
+	}
+	
+	/**
+	 * 
+	 * @param pluginId
+	 * @param property
+	 * @param value
+	 */
 	public void sendSetPropertyShort(Integer pluginId, String property, short value) {
 		
 		try {
-			LinkNode node = getLinkNode(pluginId, property);
-			if (node != null) { 
-				ByteBuffer buffer = ByteBuffer.allocate(20);
-				buffer.put(node.getPortId());
-				buffer.putShort(node.getClassId());
-				buffer.put(node.getPropertyId());
-				buffer.put(WKPFUtil.WKPF_PROPERTY_TYPE_SHORT);
-				buffer.putShort(value);
-				mptn.send(node.getNodeId(), buffer.array());
-			} else {
-				LOGGER.error("Plugin " + pluginId.toString() + " property " + property + "didn't bind to any destination.");
+			WuObjectModel wuobject = this.pluginIdToWuObjectMap.get(pluginId);
+			if (wuobject != null) {
+				wuobject.getPort();
+				/*Link node = getLinkNode(pluginId, property);
+				if (node != null) { 
+					ByteBuffer buffer = ByteBuffer.allocate(20);
+					buffer.put(node.getPortId());
+					buffer.putShort(node.getClassId());
+					buffer.put(node.getPropertyId());
+					buffer.put(WKPFUtil.WKPF_PROPERTY_TYPE_SHORT);
+					buffer.putShort(value);
+					mptn.send(node.getNodeId(), buffer.array());
+				} else {
+					LOGGER.error("Plugin " + pluginId.toString() + " property " + property + "didn't bind to any destination.");
+				}*/
 			}
 		} catch (Exception e) {
 			LOGGER.error(e.toString());
 		}
 	}
 	
+	/**
+	 * 
+	 * @param pluginId
+	 * @param property
+	 * @param value
+	 */
 	public void sendSetPropertyBoolean(Integer pluginId, String property, boolean value) {
 		try {
-			LinkNode node = getLinkNode(pluginId, property);
+			/*LinkNode node = getLinkNode(pluginId, property);
 			if (node != null) {
 				ByteBuffer buffer = ByteBuffer.allocate(20);
 				buffer.put(node.getPortId());
@@ -93,15 +132,21 @@ public class WKPF implements WKPFMessageListener{
 				mptn.send(node.getNodeId(), buffer.array());
 			}  else {
 				LOGGER.error("Plugin " + pluginId.toString() + " property " + property + "didn't bind to any destination.");
-			}
+			}*/
 		} catch (Exception e) {
 			LOGGER.error(e.toString());
 		}
 	}
 	
+	/**
+	 * 
+	 * @param pluginId
+	 * @param property
+	 * @param value
+	 */
 	public void sendSetPropertyRefreshRate(Integer pluginId, String property, byte value) {
 		try {
-			LinkNode node = getLinkNode(pluginId, property);
+			/*LinkNode node = getLinkNode(pluginId, property);
 			if (node != null) {
 				ByteBuffer buffer = ByteBuffer.allocate(20);
 				buffer.put(node.getPortId());
@@ -112,7 +157,7 @@ public class WKPF implements WKPFMessageListener{
 				mptn.send(node.getNodeId(), buffer.array());
 			}  else {
 				LOGGER.error("Plugin " + pluginId.toString() + " property " + property + "didn't bind to any destination.");
-			}
+			}*/
 		} catch (Exception e) {
 			LOGGER.error(e.toString());
 		}
@@ -123,9 +168,17 @@ public class WKPF implements WKPFMessageListener{
 		this.wuclasses.add(wuClass);
 	}
 	
-	public void addWuObject(Integer pluginId, WuObjectModel wuObject, LinkTable linkTable) {
-		this.wuobjects.put(pluginId, wuObject);
-		this.linkMap.put(wuObject, linkTable);
+	public void addWuObject(Integer portId, WuObjectModel wuObject) {
+		this.portToWuObjectMap.put(portId, wuObject);
+		this.pluginIdToWuObjectMap.put(wuObject.getPluginId(), wuObject);
+	}
+	
+	/**
+	 * When remote programming started, we need to clear old WuObjects.
+	 */
+	public void clearWuObject() {
+		this.portToWuObjectMap.clear();
+		this.pluginIdToWuObjectMap.clear();
 	}
 
 	public void onWKPFGetWuClassList(byte[] message) {
@@ -166,7 +219,7 @@ public class WKPF implements WKPFMessageListener{
 		}
 		
 		int messageNumber = (int)message[1];
-		int totalLength = wuobjects.size() / 4 +  wuobjects.size() % 4 == 0 ? 0 : 1;
+		int totalLength = portToWuObjectMap.size() / 4 +  portToWuObjectMap.size() % 4 == 0 ? 0 : 1;
 		
 		if (messageNumber > totalLength) {
 			LOGGER.error("Message number larger than expected.");
@@ -181,8 +234,8 @@ public class WKPF implements WKPFMessageListener{
 		buffer.put((byte)0); // Just is a padding
 		for (int i = WKPFUtil.DEFAULT_OBJECT_SIZE * messageNumber;
 				i < WKPFUtil.DEFAULT_OBJECT_SIZE * (messageNumber + 1); i++) {
-			if (i < wuobjects.size()) {
-				WuObjectModel object = wuobjects.get(i);
+			if (i < portToWuObjectMap.size()) {
+				WuObjectModel object = portToWuObjectMap.get(i);
 				buffer.put(object.getPort());
 				buffer.putShort(wuclasses.get(i).getWuClassId());
 				buffer.put(WKPFUtil.PLUGIN_WUCLASS_TYPE);
@@ -196,6 +249,11 @@ public class WKPF implements WKPFMessageListener{
 		
 	}
 
+	/**
+	 * Receive messages from end points from a FBP. We need routes message to
+	 * Buffer message, put it to write place either buffer or channel.
+	 * 
+	 */
 	public void onWKPFWriteProperty(byte[] message) {
 		// TODO Auto-generated method stub
 		

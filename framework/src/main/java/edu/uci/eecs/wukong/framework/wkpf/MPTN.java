@@ -61,7 +61,7 @@ public class MPTN implements MPTNMessageListener{
 		}
 	}
 	
-	public void addWKPFMessageListener(WKPFMessageListener listener) {
+	public void register(WKPFMessageListener listener) {
 		this.listeners.add(listener);
 	}
 	
@@ -188,14 +188,14 @@ public class MPTN implements MPTNMessageListener{
 				byte[] payload = new byte[message.remaining()];
 				message.get(payload);
 				switch(payload[0]) {
-					case WKPFUtil.REPRG_OPEN:
-						fireWKPFRemoteProgram(payload);
+					case WKPFUtil.WKPF_REPRG_OPEN:
+						fireWKPFRemoteProgramOpen(payload);
 						break;
-					case WKPFUtil.REPRG_WRITE:
-						fireWKPFRemoteProgram(payload);
+					case WKPFUtil.WKPF_REPRG_WRITE:
+						fireWKPFRemoteProgramWrite(payload);
 						break;
-					case WKPFUtil.REPRG_COMMIT:
-						fireWKPFRemoteProgram(payload);
+					case WKPFUtil.WKPF_REPRG_COMMIT:
+						fireWKPFRemoteProgramCommit(payload);
 						break;
 					case WKPFUtil.WKPF_GET_WUCLASS_LIST:
 						fireWKPFGetWuClassList(payload);
@@ -229,10 +229,24 @@ public class MPTN implements MPTNMessageListener{
 		}
 	}
 	
-	private void fireWKPFRemoteProgram(byte[] message) {
-		LOGGER.debug("Received remote programming message");
+	private void fireWKPFRemoteProgramOpen(byte[] message) {
+		LOGGER.debug("Received remote programming open message");
 		for (WKPFMessageListener listener : listeners) {
-			listener.onWKPFRemoteProgram(message);
+			listener.onWKPFRemoteProgramOpen(message);
+		}
+	}
+	
+	private void fireWKPFRemoteProgramWrite(byte[] message) {
+		LOGGER.debug("Received remote programming write message");
+		for (WKPFMessageListener listener : listeners) {
+			listener.onWKPFRemoteProgramWrite(message);
+		}
+	}
+	
+	private void fireWKPFRemoteProgramCommit(byte[] message) {
+		LOGGER.debug("Received remote programming commit message");
+		for (WKPFMessageListener listener : listeners) {
+			listener.onWKPFRemoteProgramCommit(message);
 		}
 	}
 	

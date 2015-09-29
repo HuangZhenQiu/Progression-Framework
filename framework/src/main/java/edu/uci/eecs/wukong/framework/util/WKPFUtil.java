@@ -39,4 +39,8 @@ public class WKPFUtil {
 	public static final byte WKPF_SET_LOCATION_R          = (byte)0x9D;
 	
 	public static final byte MONITORING                   = (byte)0xB5;
+	
+	public short getSmallEndianShort(byte big, byte little) {
+		return (short) ((big << 8) + little);
+	}
 }

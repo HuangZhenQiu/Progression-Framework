@@ -1,13 +1,5 @@
 package edu.uci.eecs.wukong.framework.manager;
 
-import java.beans.PropertyChangeEvent;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
-
 import edu.uci.eecs.wukong.framework.ProgressionKey.*;
 import edu.uci.eecs.wukong.framework.annotation.WuProperty;
 import edu.uci.eecs.wukong.framework.annotation.WuClass;
@@ -15,22 +7,36 @@ import edu.uci.eecs.wukong.framework.exception.PluginNotFoundException;
 import edu.uci.eecs.wukong.framework.pipeline.Pipeline;
 import edu.uci.eecs.wukong.framework.plugin.Plugin;
 import edu.uci.eecs.wukong.framework.plugin.PluginPropertyMonitor;
-import edu.uci.eecs.wukong.framework.wkpf.Model.LinkTable;
 import edu.uci.eecs.wukong.framework.wkpf.Model.WuClassModel;
 import edu.uci.eecs.wukong.framework.wkpf.Model.WuObjectModel;
 import edu.uci.eecs.wukong.framework.wkpf.WKPF;
 
+import java.beans.PropertyChangeEvent;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class PluginManager {
-	private static final String PLUGIN_PATH = "edu.uci.eecs.wukong.plugin";
+	private final static Logger LOGGER = LoggerFactory.getLogger(WKPF.class);
+	private final static String PLUGIN_PATH = "edu.uci.eecs.wukong.plugin";
+	private BufferManager bufferManager;
 	private ContextManager contextManager;
 	private PluginPropertyMonitor propertyMonitor;
 	private Pipeline pipeline;
 	private List<Plugin> plugins;
 	private Map<Short, WuClassModel> registedClasses;
 	private WKPF wkpf;
-	private String[] PLUGINS = {"demo.DemoPlugin", "switcher.SwitchPlugin", "test.TestPlugin"};
+	private String[] PLUGINS = {"switcher.SwitchPlugin"};
 	
 	public PluginManager(ContextManager contextManager, BufferManager bufferManager, Pipeline pipeline) {
+		this.bufferManager = bufferManager;
 		this.contextManager = contextManager;
 		this.pipeline = pipeline;
 		this.propertyMonitor = new PluginPropertyMonitor(this);
@@ -39,7 +45,11 @@ public class PluginManager {
 		this.wkpf = new WKPF(this, bufferManager);
 	}
 	
-	// init the Wuclasses that are discoveriable through WKPF
+	/**
+	 * Init the Wuclasses that are discoveriable through WKPF
+	 * 
+	 * @throws Exception
+	 */
 	public void init() throws Exception {
 		for (int i = 0; i < PLUGINS.length; i++) {
 			String path = PLUGIN_PATH + '.' + PLUGINS[i];
@@ -61,21 +71,38 @@ public class PluginManager {
 			WuClassModel wuClassModel =  new WuClassModel(wuclass.id(), properties);
 			registedClasses.put(wuclass.id(), wuClassModel);
 			wkpf.addWuClass(wuClassModel);
+			
+			// A temporary solution for easier mapping and deployment.
+			// Create an instance for each plugin classes as hard WuClass.
 		}
 		
 		this.wkpf.start();
 	}
 	
 	/**
-	 * Create wuobjects from port to Wuclass Id map.
-	 * @param portToClassMap
+	 * Bind wuobjects used in a FBP with meta data sent by remote programming
+	 * 
+	 * @param wuobjects WuObjects to bind
 	 */
-	public void createWuObjects(Map<Byte, Short> portToClassMap) {
-		
-		
+	public void bindWuObjects(Map<Plugin, Map<String, PhysicalKey>> pluginMeta) {
+		for (Entry<Plugin, Map<String, PhysicalKey>> entry : pluginMeta.entrySet()) {
+			try {
+				bindPlugin(entry.getKey(), entry.getValue());
+			} catch (NoSuchFieldException e) {
+				LOGGER.error("Fail to bind an instance of plugin "
+						+ entry.getKey().getName() + " because unrecgonized field");
+			}
+		}
 	}
 	
-	public void registerPlugin(Plugin plugin, Map<String,
+	/**
+	 * Bind a plugin instance into progression pipeline runtime.
+	 * 
+	 * @param plugin  the plugin instance to bind
+	 * @param propertyMap  the map from property to physical key
+	 * @throws NoSuchFieldException
+	 */
+	private void bindPlugin(Plugin plugin, Map<String,
 			PhysicalKey> propertyMap) throws NoSuchFieldException {
 		contextManager.subscribe(plugin, plugin.registerContext());
 		pipeline.registerExtension(plugin.registerExtension());
@@ -85,9 +112,19 @@ public class PluginManager {
 		WuClassModel wclass = registedClasses.get(plugin.getName());
 		WuObjectModel object = new WuObjectModel(wclass, plugin.getPluginId());
 		
+		// TODO (Peter Huang) Bind property Map into buffer manager
+		
 		wkpf.addWuObject(plugin.getPluginId(), object);
 	}
 	
+	/**
+	 * It is a function for dynamic load a plugin within class path.
+	 * 
+	 * @param name the plugin class name 
+	 * @param appId the application id of FBP
+	 * @param propertyMap  property map
+	 * @throws Exception
+	 */
 	public void registerPlugin(String name, String appId, Map<String,
 			PhysicalKey> propertyMap) throws Exception {
 		int pos = name.lastIndexOf('.');
@@ -105,7 +142,7 @@ public class PluginManager {
 		ClassLoader loader = PluginManager.class.getClassLoader();
 		Class<?> c = loader.loadClass(path);
 		Plugin plugin = (Plugin)c.getConstructor(String.class, String.class).newInstance(name, appId);
-		registerPlugin(plugin, propertyMap);
+		bindPlugin(plugin, propertyMap);
 	}
 	
 	// bind the update event of out property for plugin.
@@ -127,7 +164,10 @@ public class PluginManager {
 		propertyMonitor.addMonitorProperty(plugin, output);
 	}
 	
-	// Dirty Property Propagation
+	/**
+	 * Dirty Property Propagation by using the PropertyChangeEvent issued by JVM
+	 * @param event
+	 */
 	public void updateProperty(PropertyChangeEvent event) {
 		String name = event.getPropertyName();
 		Object value = event.getNewValue();

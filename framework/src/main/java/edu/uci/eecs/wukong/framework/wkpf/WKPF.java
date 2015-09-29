@@ -71,15 +71,15 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 	public void update(LinkTable table, ComponentMap map) {
 		this.linkTable = table;
 		this.componentMap = map;
-		createWuObjects();
+		bindWuObjects();
 	}
 	
 	/**
 	 * Notify the plugin manager to create wuobjects on corresponding port 
 	 */
-	private void createWuObjects() {
+	private void bindWuObjects() {
 		Map<Byte, Short> wuclassMap = this.componentMap.getWuClassIdList(mptn.getNodeId());
-		pluginManager.createWuObjects(wuclassMap);
+		// pluginManager.bindWuObjects(wuclassMap);
 	}
 	
 	/**
@@ -187,7 +187,7 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 			LOGGER.error("Received Corrupted Get Wuclass List request.");
 		}
 		
-		int messageNumber = (int)message[1];
+		int messageNumber = (int)message[3];
 		int totalLength = wuclasses.size() / 4 +  wuclasses.size() % 4 == 0 ? 0 : 1;
 		
 		if (messageNumber > totalLength) {
@@ -200,8 +200,8 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 		buffer.put(message[2]);
 		buffer.put(WKPFUtil.DEFAULT_CLASS_SIZE);
 		buffer.put((byte)totalLength);
-		buffer.put((byte)0); // Just is a padding
-		
+		// It is because reply.payload[5:];
+		buffer.put((byte) 0);
 		for (int i = WKPFUtil.DEFAULT_CLASS_SIZE * messageNumber;
 				i < WKPFUtil.DEFAULT_CLASS_SIZE * (messageNumber + 1); i++) {
 			if (i < wuclasses.size()) {
@@ -215,23 +215,23 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 
 	public void onWKPFGetWuObjectList(byte[] message) {
 		if (message.length < 2) {
-			LOGGER.error("Received Corrupted Get Wuclass List request.");
+			LOGGER.error("Received Corrupted Get WuObject List request.");
 		}
 		
-		int messageNumber = (int)message[1];
+		byte messageNumber = message[3];
 		int totalLength = portToWuObjectMap.size() / 4 +  portToWuObjectMap.size() % 4 == 0 ? 0 : 1;
 		
 		if (messageNumber > totalLength) {
 			LOGGER.error("Message number larger than expected.");
 		}
 		
-		ByteBuffer buffer = ByteBuffer.allocate(5 + WKPFUtil.DEFAULT_OBJECT_SIZE * 4);
+		ByteBuffer buffer = ByteBuffer.allocate(6 + WKPFUtil.DEFAULT_OBJECT_SIZE * 4);
 		buffer.put(WKPFUtil.WKPF_GET_WUOBJECT_LIST_R);
 		buffer.put(message[1]);
 		buffer.put(message[2]);
+		buffer.put(messageNumber);
 		buffer.put((byte)totalLength);
-		buffer.put(WKPFUtil.DEFAULT_OBJECT_SIZE);
-		buffer.put((byte)0); // Just is a padding
+		buffer.put((byte) portToWuObjectMap.size());
 		for (int i = WKPFUtil.DEFAULT_OBJECT_SIZE * messageNumber;
 				i < WKPFUtil.DEFAULT_OBJECT_SIZE * (messageNumber + 1); i++) {
 			if (i < portToWuObjectMap.size()) {
@@ -242,6 +242,7 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 			}
 		}
 		
+		mptn.send(MPTNUtil.MPTN_MASTER_ID, buffer.array());
 	}
 
 	public void onWKPFReadProperty(byte[] message) {

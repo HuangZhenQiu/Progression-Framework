@@ -18,8 +18,8 @@ public class SwitchPlugin extends Plugin {
 	@WuProperty(id = 3, type="output")
 	private Double threshold;
 	
-	public SwitchPlugin(String appId) {
-		super(appId, "SwitchPlugin");
+	public SwitchPlugin() {
+		super("SwitchPlugin");
 	}
 	public List<Extension> registerExtension() {
 		List<Extension> extensions = new ArrayList<Extension>();

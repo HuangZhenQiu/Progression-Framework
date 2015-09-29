@@ -6,6 +6,27 @@ import java.util.List;
 
 import edu.uci.eecs.wukong.framework.extension.Extension;
 
+/**
+ * Since we assume there is only one application running at any time,
+ * appId which is unique for a FBP is not used right now. 
+ * 
+ * In current implementation, all of the PrClass is installed in progression
+ * server in advance. To easily integrate the mapping and deploy in master,
+ * The strategy of plugin initialize is like this:
+ * 
+ * 1 Load Plugin Java Classes in Progression Server
+ * 2 Create an instance for each plugin on particular port
+ * 3 WuObjects (for Plugin instance) can be used for mapping and deployment
+ * 4 During Deployment, fetch the link table and component map
+ * 5 Use link table and component map to bind the plugin instance to pipeline 
+ * 
+ * In this way, we split the initialization of a plugin into two stages. First
+ * for object initialization for mapping, and second stage for data binding
+ * and extension registration.
+ *   
+ * TODO (Peter Huang) Make plugin instance reusable for multiple FBP
+ *
+ */
 public abstract class Plugin {
 	private static int id = 0;
 	private int pluginId;
@@ -15,15 +36,13 @@ public abstract class Plugin {
 	private boolean learning;
 	protected PropertyChangeSupport support;
 	
-	public Plugin(String appId, String name, boolean online) {
-		this.appId = appId;
+	public Plugin(String name, boolean online) {
 		this.name = name;
 		this.online = online;
 		this.pluginId = id ++;
 	}
 
-	public Plugin(String appId, String name) {
-		this.appId = appId;
+	public Plugin(String name) {
 		this.online = false;
 		this.learning = false;
 		this.support = new PropertyChangeSupport(this);

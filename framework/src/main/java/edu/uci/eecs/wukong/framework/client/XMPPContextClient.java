@@ -19,7 +19,7 @@ import org.slf4j.LoggerFactory;
 
 
 public class XMPPContextClient {
-	/*private static Logger logger = LoggerFactory.getLogger(XMPPContextClient.class);
+	private static Logger logger = LoggerFactory.getLogger(XMPPContextClient.class);
 	private final static Configuration systemConfig= Configuration.getInstance(); 
 	private static XMPPContextClient client;
 	private ConnectionConfiguration connectionConfig;
@@ -91,6 +91,6 @@ public class XMPPContextClient {
 		}
 		
 		return null;
-	}*/
+	}
 }
 	

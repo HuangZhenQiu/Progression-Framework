@@ -88,88 +88,74 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 	 * @param property
 	 * @param value
 	 */
-	public void sendSetPropertyShort(Integer pluginId, String property, short value) {
+	public void sendSetProperty(Integer pluginId, String property, Object value) {
 		
 		try {
-			WuObjectModel wuobject = this.pluginIdToWuObjectMap.get(pluginId);
-			if (wuobject != null) {
-				wuobject.getPort();
-				/*Link node = getLinkNode(pluginId, property);
-				if (node != null) { 
-					ByteBuffer buffer = ByteBuffer.allocate(20);
-					buffer.put(node.getPortId());
-					buffer.putShort(node.getClassId());
-					buffer.put(node.getPropertyId());
-					buffer.put(WKPFUtil.WKPF_PROPERTY_TYPE_SHORT);
-					buffer.putShort(value);
-					mptn.send(node.getNodeId(), buffer.array());
-				} else {
-					LOGGER.error("Plugin " + pluginId.toString() + " property " + property + "didn't bind to any destination.");
-				}*/
+			if (this.pluginIdToWuObjectMap.containsKey(pluginId)) {
+				WuObjectModel wuobject = this.pluginIdToWuObjectMap.get(pluginId);
+	
+				int componentId = componentMap.getComponentId(wuobject.getPort(), mptn.getNodeId());
+				byte propertyId = wuobject.getPropertyId(property);
+				if (componentId == -1) {
+					LOGGER.error("The plugin is not used in the application, can't propogate dirty message.");
+					return;
+				}
+				
+				if (propertyId == -1) {
+					LOGGER.error("Not recgonized property " + property + " , can find propertyId for it");
+					return;
+				}
+				
+				if (!djaData.isReadable()) {
+					LOGGER.error("Progression server in reprogramming, can send data out.");
+					return;
+				}
+				
+				List<Link> outLinks = linkTable.getOutLinks(componentId, propertyId);
+				for (Link link : outLinks) {
+					int destComponentId = link.getDestId();
+					byte destPropertyId = link.getDestPid();
+					short destWuClassId = componentMap.getWuClassId(destComponentId);
+					int destNodeId = componentMap.getPrimaryEndPointNodeId(destComponentId);
+					byte destPortId = componentMap.getPrimaryEndPointPortId(destComponentId);
+					
+					if (destWuClassId == -1 || destNodeId == -1 || destPortId == -1) {
+						if (destNodeId == mptn.getNodeId()) {
+							// TODO Peter Huang connect two plugins in a progression server together
+						} else {
+							ByteBuffer buffer = ByteBuffer.allocate(7);
+							buffer.put(destPortId);
+							buffer.putShort(destWuClassId);
+							buffer.put(destPropertyId);
+							if (value instanceof Short) {
+								buffer.put(WKPFUtil.WKPF_PROPERTY_TYPE_SHORT);
+								buffer.putShort((Short) value);
+							} else if (value instanceof Boolean) {
+								buffer.put(WKPFUtil.WKPF_PROPERTY_TYPE_BOOLEAN);
+								byte val = (Boolean)value == true ? (byte)1 : (byte)0;
+								buffer.put(val);
+							} else if (value instanceof Byte) {
+								buffer.put(WKPFUtil.WKPF_PROPERTY_TYPE_REFRESH_RATE);
+								buffer.put((Byte)value);
+							}
+							mptn.send(destNodeId, buffer.array());
+						}
+					} else {
+						LOGGER.error("Error in either link table or component map, can't find info for dest info for link " + link);
+					}
+				}
 			}
 		} catch (Exception e) {
 			LOGGER.error(e.toString());
 		}
 	}
 	
-	/**
-	 * 
-	 * @param pluginId
-	 * @param property
-	 * @param value
-	 */
-	public void sendSetPropertyBoolean(Integer pluginId, String property, boolean value) {
-		try {
-			/*LinkNode node = getLinkNode(pluginId, property);
-			if (node != null) {
-				ByteBuffer buffer = ByteBuffer.allocate(20);
-				buffer.put(node.getPortId());
-				buffer.putShort(node.getClassId());
-				buffer.put(node.getPropertyId());
-				buffer.put(WKPFUtil.WKPF_PROPERTY_TYPE_BOOLEAN);
-				byte val = value == true ? (byte)1 : (byte)0;
-				buffer.put(val);
-				mptn.send(node.getNodeId(), buffer.array());
-			}  else {
-				LOGGER.error("Plugin " + pluginId.toString() + " property " + property + "didn't bind to any destination.");
-			}*/
-		} catch (Exception e) {
-			LOGGER.error(e.toString());
-		}
-	}
-	
-	/**
-	 * 
-	 * @param pluginId
-	 * @param property
-	 * @param value
-	 */
-	public void sendSetPropertyRefreshRate(Integer pluginId, String property, byte value) {
-		try {
-			/*LinkNode node = getLinkNode(pluginId, property);
-			if (node != null) {
-				ByteBuffer buffer = ByteBuffer.allocate(20);
-				buffer.put(node.getPortId());
-				buffer.putShort(node.getClassId());
-				buffer.put(node.getPropertyId());
-				buffer.put(WKPFUtil.WKPF_PROPERTY_TYPE_REFRESH_RATE);
-				buffer.put(value);
-				mptn.send(node.getNodeId(), buffer.array());
-			}  else {
-				LOGGER.error("Plugin " + pluginId.toString() + " property " + property + "didn't bind to any destination.");
-			}*/
-		} catch (Exception e) {
-			LOGGER.error(e.toString());
-		}
-	}
-
-	
 	public void addWuClass(WuClassModel wuClass) {
 		this.wuclasses.add(wuClass);
 	}
 	
-	public void addWuObject(Integer portId, WuObjectModel wuObject) {
-		this.portToWuObjectMap.put(portId, wuObject);
+	public void addWuObject(byte portId, WuObjectModel wuObject) {
+		this.portToWuObjectMap.put(new Integer(portId), wuObject);
 		this.pluginIdToWuObjectMap.put(wuObject.getPluginId(), wuObject);
 	}
 	
@@ -225,19 +211,25 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 			LOGGER.error("Message number larger than expected.");
 		}
 		
-		ByteBuffer buffer = ByteBuffer.allocate(6 + WKPFUtil.DEFAULT_OBJECT_SIZE * 4);
+		ByteBuffer buffer = null;
+		int leftSize = totalLength  - messageNumber * WKPFUtil.DEFAULT_OBJECT_SIZE;
+		if (leftSize >= 4) {
+			buffer = ByteBuffer.allocate(6 + WKPFUtil.DEFAULT_OBJECT_SIZE * 4);
+		} else {
+			buffer = ByteBuffer.allocate(6 + leftSize * 4);
+		}
 		buffer.put(WKPFUtil.WKPF_GET_WUOBJECT_LIST_R);
 		buffer.put(message[1]);
 		buffer.put(message[2]);
 		buffer.put(messageNumber);
 		buffer.put((byte)totalLength);
-		buffer.put((byte) portToWuObjectMap.size());
-		for (int i = WKPFUtil.DEFAULT_OBJECT_SIZE * messageNumber;
+		buffer.put((byte)portToWuObjectMap.size());
+		for (int i = WKPFUtil.DEFAULT_OBJECT_SIZE * messageNumber + 1; // Port starts from 1
 				i < WKPFUtil.DEFAULT_OBJECT_SIZE * (messageNumber + 1); i++) {
-			if (i < portToWuObjectMap.size()) {
+			if (i <= portToWuObjectMap.size() && portToWuObjectMap.get(i) != null) {
 				WuObjectModel object = portToWuObjectMap.get(i);
 				buffer.put(object.getPort());
-				buffer.putShort(wuclasses.get(i).getWuClassId());
+				buffer.putShort(object.getType().getWuClassId());
 				buffer.put(WKPFUtil.PLUGIN_WUCLASS_TYPE);
 			}
 		}

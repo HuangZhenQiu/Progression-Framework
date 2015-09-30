@@ -27,6 +27,7 @@ import org.slf4j.LoggerFactory;
 public class PluginManager {
 	private final static Logger LOGGER = LoggerFactory.getLogger(WKPF.class);
 	private final static String PLUGIN_PATH = "edu.uci.eecs.wukong.plugin";
+	private static byte port = 1; 
 	private BufferManager bufferManager;
 	private ContextManager contextManager;
 	private PluginPropertyMonitor propertyMonitor;
@@ -35,7 +36,6 @@ public class PluginManager {
 	private Map<Short, WuClassModel> registedClasses;
 	private WKPF wkpf;
 	private String[] PLUGINS = {"switcher.SwitchPlugin"};
-	private int port = 1;
 	
 	public PluginManager(ContextManager contextManager, BufferManager bufferManager, Pipeline pipeline) {
 		this.bufferManager = bufferManager;
@@ -79,7 +79,7 @@ public class PluginManager {
 			Constructor<?> constructor = c.getConstructor();
 			Plugin plugin = (Plugin) constructor.newInstance();
 			plugins.add(plugin);
-			WuObjectModel wuObjectModel = new WuObjectModel(wuClassModel, plugin.getPluginId());
+			WuObjectModel wuObjectModel = new WuObjectModel(wuClassModel, port, plugin.getPluginId());
 			wkpf.addWuObject(port, wuObjectModel);
 			port++;
 		}
@@ -128,11 +128,9 @@ public class PluginManager {
 		plugins.add(plugin);
 		
 		WuClassModel wclass = registedClasses.get(plugin.getName());
-		WuObjectModel object = new WuObjectModel(wclass, plugin.getPluginId());
+		// WuObjectModel object = new WuObjectModel(wclass, plugin.getPluginId());
 		
 		// TODO (Peter Huang) Bind property Map into buffer manager
-		
-		wkpf.addWuObject(plugin.getPluginId(), object);
 	}
 	
 	/**
@@ -192,7 +190,7 @@ public class PluginManager {
 		Plugin plugin = (Plugin)event.getSource();
 		if (value instanceof Boolean) {
 			wkpf.sendSetPropertyBoolean(plugin.getPluginId(), name, (Boolean)value);
-		} else if (value instanceof Boolean) {
+		} else if (value instanceof Byte) {
 			wkpf.sendSetPropertyRefreshRate(plugin.getPluginId(), name, (Byte)value);
 		} else if (value instanceof Integer) {
 			wkpf.sendSetPropertyShort(plugin.getPluginId(), name, ((Integer)value).shortValue());

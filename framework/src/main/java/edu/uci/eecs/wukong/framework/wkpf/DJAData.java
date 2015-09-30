@@ -325,6 +325,10 @@ public class DJAData {
 		}
 	}
 	
+	public boolean isReadable() {
+		return this.readable.get();
+	}
+	
 	public static class DJAConstants {
 		// File offset constants
 		public static final int FILE_LENGTH_OFFSET = 0;

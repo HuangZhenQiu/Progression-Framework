@@ -39,6 +39,14 @@ public class Model {
 			this.properties = properties;
 		}
 		
+		public int getPropertyId(String property) {
+			if (properties.containsKey(property)) {
+				return properties.get(property);
+			}
+			
+			return -1;
+		}
+		
 		public void addProperty(String name, Integer propertyId) {
 			this.properties.put(name, propertyId);
 		}
@@ -49,14 +57,21 @@ public class Model {
 	}
 	
 	public static class WuObjectModel {
-		private static byte sysport = 0;
 		private WuClassModel type;
 		private int pluginId;
 		private byte port;
-		public WuObjectModel(WuClassModel type, int pluginId) {
-			this.port = sysport ++;
+		public WuObjectModel(WuClassModel type, byte port, int pluginId) {
+			this.port = port;
 			this.type = type;
 			this.pluginId = pluginId;
+		}
+		
+		public byte getPropertyId(String property) {
+			if (type != null) {
+				type.getPropertyId(property);
+			}
+			
+			return -1;
 		}
 		
 		public byte getPort() {
@@ -108,6 +123,18 @@ public class Model {
 			return this.wuclassId;
 		}
 		
+		public int getEndPointSize() {
+			return this.endPoints.size();
+		}
+		
+		public EndPoint getEndPoint(int i) {
+			if (i < getEndPointSize()) {
+				return this.endPoints.get(i);
+			}
+			
+			return null;
+		}
+		
 		public EndPoint getPrimaryEndPoint() {
 			if (endPoints.size() > 0) {
 				endPoints.get(0);
@@ -125,6 +152,50 @@ public class Model {
 		
 		public void addComponent(Component component) {
 			this.components.add(component);
+		}
+		
+		public int getPrimaryEndPointNodeId(int componentId) {
+			if (componentId < components.size()) {
+				components.get(componentId).getPrimaryEndPoint().getNodeId();
+			}
+			
+			return -1;
+		}
+		
+		public byte getPrimaryEndPointPortId(int componentId) {
+			if (componentId < components.size())  {
+				components.get(componentId).getPrimaryEndPoint().getPortId();
+			}
+			
+			return -1;
+		}
+		
+		/**
+		 * Find the component id for the port
+		 * @return
+		 */
+		public int getComponentId(byte portId, int nodeId) {
+			for (int i=0; i < components.size(); i++) {
+				for (int j=0; j < components.get(i).getEndPointSize(); j++) {
+					if (components.get(i).getEndPoint(j).getNodeId() == nodeId &&
+							components.get(i).getEndPoint(j).getPortId() == portId) {
+						return i; // find right component id
+					}
+				}
+			}
+			
+			return -1;
+		}
+		
+		/**
+		 * Get wuclass Id for a component id
+		 */
+		public short getWuClassId(int componentId) {
+			if (componentId < components.size()) {
+				components.get(componentId).getWuClassId();
+			}
+			
+			return -1;
 		}
 		
 		/**
@@ -148,18 +219,20 @@ public class Model {
 	}
 	
 	public static class Link {
-		/* Component Id*/
+		/* Component Id */
 		private int sourceId;
-		private byte sourcePortId;
-		/* Component Id*/
+		/* Property Id */
+		private byte sourcePid;
+		/* Component Id */
 		private int destId;
-		private byte destPortId;
+		/* Property Id */
+		private byte destPid;
 		
-		public Link(int sourceId, byte sourcePortId, int destId, byte destPortId) {
+		public Link(int sourceId, byte sourcePid, int destId, byte destPid) {
 			this.sourceId = sourceId;
-			this.sourcePortId = sourcePortId;
+			this.sourcePid = sourcePid;
 			this.destId = destId;
-			this.destPortId = destPortId;
+			this.destPid = destPid;
 		}
 
 		public int getSourceId() {
@@ -170,12 +243,12 @@ public class Model {
 			this.sourceId = sourceId;
 		}
 
-		public byte getSourcePortId() {
-			return sourcePortId;
+		public byte getSourcePid() {
+			return sourcePid;
 		}
 
-		public void setSourcePortId(byte sourcePortId) {
-			this.sourcePortId = sourcePortId;
+		public void setSourcePid(byte sourcePid) {
+			this.sourcePid = sourcePid;
 		}
 
 		public int getDestId() {
@@ -186,12 +259,12 @@ public class Model {
 			this.destId = destId;
 		}
 
-		public byte getDestPortId() {
-			return destPortId;
+		public byte getDestPid() {
+			return destPid;
 		}
 
-		public void setDestPortId(byte destPortId) {
-			this.destPortId = destPortId;
+		public void setDestPid(byte destPid) {
+			this.destPid = destPid;
 		}
 	}
 	
@@ -203,6 +276,17 @@ public class Model {
 		
 		public void addLink(Link link) {
 			this.links.add(link);
+		}
+		
+		public List<Link> getOutLinks(int srcId, byte propertyId) {
+			List<Link> outLinks = new ArrayList<Link> ();
+			for (Link link : links) {
+				if (link.getSourceId() == srcId && link.getSourcePid() == propertyId) {
+					outLinks.add(link);
+				}
+			}
+			
+			return outLinks;
 		}
 	}
 	

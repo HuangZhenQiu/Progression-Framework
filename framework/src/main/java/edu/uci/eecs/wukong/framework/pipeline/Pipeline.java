@@ -8,7 +8,7 @@ import edu.uci.eecs.wukong.framework.context.Context;
 import edu.uci.eecs.wukong.framework.context.ContextListener;
 import edu.uci.eecs.wukong.framework.context.ExecutionContext;
 import edu.uci.eecs.wukong.framework.extension.Extension;
-import edu.uci.eecs.wukong.framework.extension.impl.AbstratProgressionExtension;
+import edu.uci.eecs.wukong.framework.extension.impl.AbstractProgressionExtension;
 import edu.uci.eecs.wukong.framework.extension.impl.FeatureAbstractionExtension;
 import edu.uci.eecs.wukong.framework.extension.impl.LearningExtension;
 import edu.uci.eecs.wukong.framework.extension.impl.ProgressionExtension;
@@ -68,16 +68,24 @@ public class Pipeline implements ContextListener{
 	
 	public void registerExtension(List<Extension> extensions) {
 		for (Extension extension : extensions) {
-			if (extension instanceof AbstratProgressionExtension) {
-				progressionPoint.register((AbstratProgressionExtension)extension);
-			}
-			
-			if (extension instanceof FeatureAbstractionExtension) {
+			if (extension instanceof AbstractProgressionExtension) {
+				progressionPoint.register((AbstractProgressionExtension)extension);
+			} else if (extension instanceof FeatureAbstractionExtension) {
 				featureAbstractionPoint.register((FeatureAbstractionExtension) extension);
-			}
-			
-			if (extension instanceof LearningExtension) {
+			} else if (extension instanceof LearningExtension) {
 				learningPoint.register((LearningExtension) extension);
+			}
+		}
+	}
+	
+	public void unregisterExtension(List<Extension> extensions) {
+		for (Extension extension : extensions) {
+			if (extension instanceof AbstractProgressionExtension) {
+				progressionPoint.unregister((AbstractProgressionExtension) extension);
+			} else if (extension instanceof FeatureAbstractionExtension) {
+				featureAbstractionPoint.unregister((FeatureAbstractionExtension) extension);
+			} else if (extension instanceof LearningExtension) {
+				learningPoint.unregister((LearningExtension) extension);
 			}
 		}
 	}

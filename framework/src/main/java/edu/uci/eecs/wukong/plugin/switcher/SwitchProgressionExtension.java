@@ -6,10 +6,10 @@ import java.util.Map;
 import edu.uci.eecs.wukong.framework.context.Context;
 import edu.uci.eecs.wukong.framework.context.UserContext;
 import edu.uci.eecs.wukong.framework.extension.ContextExecutable;
-import edu.uci.eecs.wukong.framework.extension.impl.AbstratProgressionExtension;
+import edu.uci.eecs.wukong.framework.extension.impl.AbstractProgressionExtension;
 import edu.uci.eecs.wukong.framework.plugin.Plugin;
 
-public class SwitchProgressionExtension extends AbstratProgressionExtension
+public class SwitchProgressionExtension extends AbstractProgressionExtension
 	implements ContextExecutable {
 	// User ID to threshold Map
 	private Map<String, Double> userThresholdMap;

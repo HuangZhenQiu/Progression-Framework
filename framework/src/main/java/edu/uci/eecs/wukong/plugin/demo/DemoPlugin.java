@@ -10,8 +10,8 @@ import edu.uci.eecs.wukong.framework.plugin.Plugin;
 @WuClass(id = 10000)
 public class DemoPlugin extends Plugin {
 	
-	public DemoPlugin(String appId) {
-		super(appId, "Demo");
+	public DemoPlugin() {
+		super("Demo");
 	}
 	
 	public List<Extension> registerExtension() {

@@ -1,7 +1,7 @@
 package edu.uci.eecs.wukong.plugin.test;
 
 import edu.uci.eecs.wukong.framework.extension.TimerExecutable;
-import edu.uci.eecs.wukong.framework.extension.impl.AbstratProgressionExtension;
+import edu.uci.eecs.wukong.framework.extension.impl.AbstractProgressionExtension;
 import edu.uci.eecs.wukong.framework.plugin.Plugin;
 
 import java.util.UUID;
@@ -9,7 +9,7 @@ import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class TestPropertyProgressionExtension extends AbstratProgressionExtension 
+public class TestPropertyProgressionExtension extends AbstractProgressionExtension 
 	implements TimerExecutable {
 	private static Logger logger = LoggerFactory.getLogger(TestPropertyProgressionExtension.class);
 

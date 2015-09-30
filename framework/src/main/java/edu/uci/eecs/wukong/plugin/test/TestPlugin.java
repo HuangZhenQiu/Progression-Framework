@@ -14,8 +14,8 @@ public class TestPlugin extends Plugin {
 	@WuProperty(id = 1, type="input")
 	private short testProperty;
 	
-	public TestPlugin(String appId) {
-		super(appId, "Test");
+	public TestPlugin() {
+		super("Test");
 	}
 
 	@Override

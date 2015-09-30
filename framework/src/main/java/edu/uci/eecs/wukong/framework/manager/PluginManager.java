@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 
 import org.slf4j.Logger;
@@ -34,6 +35,7 @@ public class PluginManager {
 	private Map<Short, WuClassModel> registedClasses;
 	private WKPF wkpf;
 	private String[] PLUGINS = {"switcher.SwitchPlugin"};
+	private int port = 1;
 	
 	public PluginManager(ContextManager contextManager, BufferManager bufferManager, Pipeline pipeline) {
 		this.bufferManager = bufferManager;
@@ -74,6 +76,12 @@ public class PluginManager {
 			
 			// A temporary solution for easier mapping and deployment.
 			// Create an instance for each plugin classes as hard WuClass.
+			Constructor<?> constructor = c.getConstructor();
+			Plugin plugin = (Plugin) constructor.newInstance();
+			plugins.add(plugin);
+			WuObjectModel wuObjectModel = new WuObjectModel(wuClassModel, plugin.getPluginId());
+			wkpf.addWuObject(port, wuObjectModel);
+			port++;
 		}
 		
 		this.wkpf.start();
@@ -96,13 +104,23 @@ public class PluginManager {
 	}
 	
 	/**
+	 * When master do the remote programming, we need to deallocate binds from physical key to buffer
+	 * for plugins, and also unregister the extensions in pipeline. 
+	 */
+    public void unbindWuObjects() {
+    	// TODO (Peter Huang)
+    	// 1. Change the binding to buffer manager
+    	// 2. Unregister the extensions in pipeline
+    }
+	
+	/**
 	 * Bind a plugin instance into progression pipeline runtime.
 	 * 
 	 * @param plugin  the plugin instance to bind
 	 * @param propertyMap  the map from property to physical key
 	 * @throws NoSuchFieldException
 	 */
-	private void bindPlugin(Plugin plugin, Map<String,
+	public void bindPlugin(Plugin plugin, Map<String,
 			PhysicalKey> propertyMap) throws NoSuchFieldException {
 		contextManager.subscribe(plugin, plugin.registerContext());
 		pipeline.registerExtension(plugin.registerExtension());

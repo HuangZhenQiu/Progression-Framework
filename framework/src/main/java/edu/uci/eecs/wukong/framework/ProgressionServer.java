@@ -75,9 +75,9 @@ public class ProgressionServer {
 	
 	// Only for testing purpose
 	private void registerTestPlugin() {
-		TestPlugin plugin = new TestPlugin("001");
+		TestPlugin plugin = new TestPlugin();
 		try {
-			pluginManager.registerPlugin(plugin, null);
+			pluginManager.bindPlugin(plugin, null);
 		} catch (Exception e) {
 			logger.info(e.toString());
 		}

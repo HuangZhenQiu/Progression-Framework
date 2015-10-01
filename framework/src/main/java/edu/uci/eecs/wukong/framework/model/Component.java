@@ -5,6 +5,12 @@ import java.util.List;
 
 import edu.uci.eecs.wukong.framework.model.EndPoint;
 
+/**
+ * A component presents a node in wukong Flow Based Program. The Component class defines a unit in component map,
+ * which is sent by master for reprogramming. A component could have multiple end-points, because it can be mapped
+ * to multiple nodes for the purpose of fault tolerant. 
+ *
+ */
 public class Component {
 	private short wuclassId;
 	private List<EndPoint> endPoints;
@@ -40,5 +46,23 @@ public class Component {
 		}
 		
 		return null;
+	}
+	
+	@Override
+	public boolean equals(Object object) {
+		if (object instanceof Component) {
+			Component obj = (Component) object;
+			if (this.wuclassId == obj.getWuClassId()
+					&& this.endPoints.equals(obj.endPoints)) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	@Override
+	public int hashCode() {
+		return wuclassId + endPoints.hashCode();
 	}
 }

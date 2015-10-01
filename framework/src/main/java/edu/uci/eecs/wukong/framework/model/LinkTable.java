@@ -25,4 +25,22 @@ public class LinkTable {
 		
 		return outLinks;
 	}
+	
+	@Override
+	public boolean equals(Object object) {
+		if (object instanceof LinkTable) {
+			LinkTable model = (LinkTable) object;
+			if (model.links.equals(model.links)) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	@Override
+	public int hashCode() {
+		return links.hashCode();
+	}
+	
 }

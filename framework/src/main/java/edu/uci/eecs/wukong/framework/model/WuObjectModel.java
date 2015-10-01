@@ -31,4 +31,26 @@ public class WuObjectModel {
 	public int getPluginId() {
 		return this.pluginId;
 	}
+	
+	@Override
+	public boolean equals(Object object) {
+		if (object instanceof WuObjectModel) {
+			WuObjectModel model = (WuObjectModel) object;
+			if (model.pluginId == this.pluginId
+					&& model.port == this.port
+					&& model.type.equals(this.type)) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	@Override
+	public int hashCode() {
+		int base = 33;
+		int code = pluginId * base;
+		code = code * base + port;
+		return code + type.hashCode();
+	}
 }

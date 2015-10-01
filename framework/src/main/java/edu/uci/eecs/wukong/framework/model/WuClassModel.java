@@ -32,4 +32,22 @@ public class WuClassModel {
 	public short getWuClassId() {
 		return wuclassId;
 	}
+	
+	@Override
+	public boolean equals(Object object) {
+		if (object instanceof WuClassModel) {
+			WuClassModel model = (WuClassModel) object;
+			if (model.wuclassId == this.wuclassId
+					&& model.properties.equals(this.properties)) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	@Override
+	public int hashCode() {
+		return this.wuclassId + properties.hashCode();
+	}
 }

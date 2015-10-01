@@ -8,6 +8,9 @@ import java.util.Map;
 import edu.uci.eecs.wukong.framework.model.Component;
 import edu.uci.eecs.wukong.framework.model.EndPoint;
 
+/**
+ * It is a type of DJA file in Wukong. It contains all of the components in a FBP.
+ */
 public class ComponentMap {
 	private List<Component> components;
 	public ComponentMap() {
@@ -80,4 +83,20 @@ public class ComponentMap {
 		
 		return wuclassMap;
 	}
+	
+	@Override
+	public boolean equals(Object object) {
+		if (object instanceof ComponentMap) {
+			ComponentMap map = (ComponentMap) object;
+			return this.components.equals(map.components);
+		}
+		
+		return false;
+	}
+	
+	@Override
+	public int hashCode() {
+		return this.components.hashCode();
+	}
+
 }

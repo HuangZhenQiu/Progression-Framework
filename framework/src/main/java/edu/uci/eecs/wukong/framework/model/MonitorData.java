@@ -14,4 +14,27 @@ public class MonitorData {
 	public Double getValue() {
 		return value;
 	}
+	
+	@Override
+	public boolean equals(Object object) {
+		if (object instanceof MonitorData) {
+			MonitorData model = (MonitorData) object;
+			if (model.nodeId == this.nodeId
+					&& model.portId == this.portId
+					&& model.value == this.value) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	@Override
+	public int hashCode() {
+		int base = 33;
+		int code = nodeId;
+		code = code * base + portId;
+		code = (int) (code * base + value);
+		return code;
+	}
 }

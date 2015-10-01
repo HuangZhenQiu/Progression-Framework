@@ -16,4 +16,19 @@ public class NPP {
 		this.portId = portId;
 		this.propertyId = propertyId;
 	}
+	
+	@Override
+	public boolean equals(Object object) {
+		if (object instanceof NPP) {
+			NPP model = (NPP) object;
+			if (model.nid == this.nid
+					&& model.portId == this.portId
+					&& model.propertyId == this.propertyId) {
+				return true;
+			}
+			
+		}
+			
+		return false;
+	}
 }

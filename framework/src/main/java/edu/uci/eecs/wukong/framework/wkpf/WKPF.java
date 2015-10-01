@@ -12,12 +12,12 @@ import org.slf4j.LoggerFactory;
 
 import edu.uci.eecs.wukong.framework.util.MPTNUtil;
 import edu.uci.eecs.wukong.framework.util.WKPFUtil;
-import edu.uci.eecs.wukong.framework.wkpf.Model.Component;
-import edu.uci.eecs.wukong.framework.wkpf.Model.ComponentMap;
-import edu.uci.eecs.wukong.framework.wkpf.Model.Link;
-import edu.uci.eecs.wukong.framework.wkpf.Model.LinkTable;
-import edu.uci.eecs.wukong.framework.wkpf.Model.WuClassModel;
-import edu.uci.eecs.wukong.framework.wkpf.Model.WuObjectModel;
+import edu.uci.eecs.wukong.framework.model.Component;
+import edu.uci.eecs.wukong.framework.model.ComponentMap;
+import edu.uci.eecs.wukong.framework.model.Link;
+import edu.uci.eecs.wukong.framework.model.LinkTable;
+import edu.uci.eecs.wukong.framework.model.WuClassModel;
+import edu.uci.eecs.wukong.framework.model.WuObjectModel;
 import edu.uci.eecs.wukong.framework.exception.PluginUninitializedException;
 import edu.uci.eecs.wukong.framework.manager.BufferManager;
 import edu.uci.eecs.wukong.framework.manager.PluginManager;

@@ -1,7 +1,7 @@
 package edu.uci.eecs.wukong.framework.metrics;
 
 import com.codahale.metrics.Gauge;
-import edu.uci.eecs.wukong.framework.wkpf.Model.MonitorData;
+import edu.uci.eecs.wukong.framework.model.MonitorData;
 
 /**
  * Codehale Metric Gauge for Sensor data

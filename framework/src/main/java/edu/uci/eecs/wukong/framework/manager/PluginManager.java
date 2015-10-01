@@ -7,8 +7,8 @@ import edu.uci.eecs.wukong.framework.exception.PluginNotFoundException;
 import edu.uci.eecs.wukong.framework.pipeline.Pipeline;
 import edu.uci.eecs.wukong.framework.plugin.Plugin;
 import edu.uci.eecs.wukong.framework.plugin.PluginPropertyMonitor;
-import edu.uci.eecs.wukong.framework.wkpf.Model.WuClassModel;
-import edu.uci.eecs.wukong.framework.wkpf.Model.WuObjectModel;
+import edu.uci.eecs.wukong.framework.model.WuClassModel;
+import edu.uci.eecs.wukong.framework.model.WuObjectModel;
 import edu.uci.eecs.wukong.framework.wkpf.WKPF;
 
 import java.beans.PropertyChangeEvent;
@@ -188,13 +188,7 @@ public class PluginManager {
 		String name = event.getPropertyName();
 		Object value = event.getNewValue();
 		Plugin plugin = (Plugin)event.getSource();
-		if (value instanceof Boolean) {
-			wkpf.sendSetPropertyBoolean(plugin.getPluginId(), name, (Boolean)value);
-		} else if (value instanceof Byte) {
-			wkpf.sendSetPropertyRefreshRate(plugin.getPluginId(), name, (Byte)value);
-		} else if (value instanceof Integer) {
-			wkpf.sendSetPropertyShort(plugin.getPluginId(), name, ((Integer)value).shortValue());
-		}
+		wkpf.sendSetProperty(plugin.getPluginId(), name, value);
 	}
 
 	public void setWKPF(WKPF wkpf) {

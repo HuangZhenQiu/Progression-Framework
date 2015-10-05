@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import edu.uci.eecs.wukong.framework.plugin.Plugin;
-import edu.uci.eecs.wukong.framework.extension.impl.AbstractExtension;
+import edu.uci.eecs.wukong.framework.extension.AbstractExtension;
 
 /**
  * A extension point is a stage of data processing pipeline. It contains 

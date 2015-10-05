@@ -4,7 +4,7 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.List;
 
-import edu.uci.eecs.wukong.framework.extension.Extension;
+import edu.uci.eecs.wukong.framework.api.Extension;
 
 /**
  * Since we assume there is only one application running at any time,

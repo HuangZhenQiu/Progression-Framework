@@ -1,5 +1,6 @@
 package edu.uci.eecs.wukong.framework.pipeline;
 
+import edu.uci.eecs.wukong.framework.api.Extension;
 import edu.uci.eecs.wukong.framework.manager.BufferManager;
 import edu.uci.eecs.wukong.framework.manager.ConfigurationManager;
 import edu.uci.eecs.wukong.framework.manager.ContextManager;
@@ -7,13 +8,10 @@ import edu.uci.eecs.wukong.framework.plugin.Plugin;
 import edu.uci.eecs.wukong.framework.context.Context;
 import edu.uci.eecs.wukong.framework.context.ContextListener;
 import edu.uci.eecs.wukong.framework.context.ExecutionContext;
-import edu.uci.eecs.wukong.framework.extension.Extension;
-import edu.uci.eecs.wukong.framework.extension.impl.AbstractProgressionExtension;
-import edu.uci.eecs.wukong.framework.extension.impl.FeatureAbstractionExtension;
-import edu.uci.eecs.wukong.framework.extension.impl.LearningExtension;
-import edu.uci.eecs.wukong.framework.extension.impl.ProgressionExtension;
+import edu.uci.eecs.wukong.framework.extension.AbstractProgressionExtension;
+import edu.uci.eecs.wukong.framework.extension.FeatureAbstractionExtension;
+import edu.uci.eecs.wukong.framework.extension.LearningExtension;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.lang.Thread;
 

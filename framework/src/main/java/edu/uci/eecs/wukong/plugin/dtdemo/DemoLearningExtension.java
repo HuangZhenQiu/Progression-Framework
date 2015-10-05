@@ -10,7 +10,7 @@ import weka.core.FastVector;
 import weka.core.Instance;
 import weka.core.Instances;
 import edu.uci.eecs.wukong.framework.context.ExecutionContext;
-import edu.uci.eecs.wukong.framework.extension.impl.LearningExtension;
+import edu.uci.eecs.wukong.framework.extension.LearningExtension;
 import edu.uci.eecs.wukong.framework.plugin.Plugin;
 
 public class DemoLearningExtension extends LearningExtension<Number> {

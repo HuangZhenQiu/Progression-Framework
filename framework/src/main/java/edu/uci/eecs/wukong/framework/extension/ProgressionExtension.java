@@ -1,4 +1,4 @@
-package edu.uci.eecs.wukong.framework.extension.impl;
+package edu.uci.eecs.wukong.framework.extension;
 
 import edu.uci.eecs.wukong.framework.context.Context;
 import edu.uci.eecs.wukong.framework.context.ExecutionContext;

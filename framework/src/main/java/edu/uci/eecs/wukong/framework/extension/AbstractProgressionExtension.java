@@ -1,4 +1,4 @@
-package edu.uci.eecs.wukong.framework.extension.impl;
+package edu.uci.eecs.wukong.framework.extension;
 
 import edu.uci.eecs.wukong.framework.entity.FeatureEntity;
 import edu.uci.eecs.wukong.framework.plugin.Plugin;

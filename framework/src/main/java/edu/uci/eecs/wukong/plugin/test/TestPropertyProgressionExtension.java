@@ -1,7 +1,7 @@
 package edu.uci.eecs.wukong.plugin.test;
 
-import edu.uci.eecs.wukong.framework.extension.TimerExecutable;
-import edu.uci.eecs.wukong.framework.extension.impl.AbstractProgressionExtension;
+import edu.uci.eecs.wukong.framework.api.TimerExecutable;
+import edu.uci.eecs.wukong.framework.extension.AbstractProgressionExtension;
 import edu.uci.eecs.wukong.framework.plugin.Plugin;
 
 import java.util.UUID;

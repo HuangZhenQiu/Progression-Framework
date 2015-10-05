@@ -1,12 +1,12 @@
-package edu.uci.eecs.wukong.framework.extension.impl;
+package edu.uci.eecs.wukong.framework.extension;
 
+import edu.uci.eecs.wukong.framework.api.Activatable;
+import edu.uci.eecs.wukong.framework.api.ContextExecutable;
+import edu.uci.eecs.wukong.framework.api.Executable;
+import edu.uci.eecs.wukong.framework.api.TimerExecutable;
 import edu.uci.eecs.wukong.framework.context.Context;
 import edu.uci.eecs.wukong.framework.context.ExecutionContext;
 import edu.uci.eecs.wukong.framework.entity.FeatureEntity;
-import edu.uci.eecs.wukong.framework.extension.Activatable;
-import edu.uci.eecs.wukong.framework.extension.ContextExecutable;
-import edu.uci.eecs.wukong.framework.extension.Executable;
-import edu.uci.eecs.wukong.framework.extension.TimerExecutable;
 import edu.uci.eecs.wukong.framework.plugin.Plugin;
 
 import java.util.List;

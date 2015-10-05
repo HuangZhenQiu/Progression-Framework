@@ -1,6 +1,6 @@
 package edu.uci.eecs.wukong.framework.select;
 
-import edu.uci.eecs.wukong.framework.extension.impl.FeatureAbstractionExtension;
+import edu.uci.eecs.wukong.framework.extension.FeatureAbstractionExtension;
 import edu.uci.eecs.wukong.framework.operator.Operator;
 import edu.uci.eecs.wukong.framework.manager.BufferManager;
 import edu.uci.eecs.wukong.framework.plugin.Plugin;

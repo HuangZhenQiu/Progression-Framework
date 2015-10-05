@@ -3,7 +3,7 @@ package edu.uci.eecs.wukong.plugin.switcher;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.uci.eecs.wukong.framework.extension.impl.FeatureAbstractionExtension;
+import edu.uci.eecs.wukong.framework.extension.FeatureAbstractionExtension;
 import edu.uci.eecs.wukong.framework.operator.AverageOperator;
 import edu.uci.eecs.wukong.framework.operator.DefaultOperator;
 import edu.uci.eecs.wukong.framework.operator.Operator;

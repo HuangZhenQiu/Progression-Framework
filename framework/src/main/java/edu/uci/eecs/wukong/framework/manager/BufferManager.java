@@ -71,7 +71,7 @@ public class BufferManager {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public void addData(NPP key, int time, short value) throws IllegalArgumentException {
+	public void addData(NPP key, long time, short value) throws IllegalArgumentException {
 		if(!bufferMap.containsKey(key)) {
 			throw new IllegalArgumentException("Insert into a buffer don't exist:" + key);
 		}

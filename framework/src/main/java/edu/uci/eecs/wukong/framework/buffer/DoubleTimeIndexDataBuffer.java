@@ -34,7 +34,7 @@ public final class DoubleTimeIndexDataBuffer<T> {
 		this.indexer = new BufferIndexer(this);
 	}
 	
-	public void addElement(int timestampe,  T value) {
+	public void addElement(long timestampe,  T value) {
 		this.dataBuffer.addElement(timestampe, value);
 		System.out.println("Data Buffer Header: " + dataBuffer.getHeader());
 	}

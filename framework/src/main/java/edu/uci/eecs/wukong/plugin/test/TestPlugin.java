@@ -6,12 +6,14 @@ import java.util.List;
 import edu.uci.eecs.wukong.framework.annotation.WuProperty;
 import edu.uci.eecs.wukong.framework.annotation.WuClass;
 import edu.uci.eecs.wukong.framework.extension.Extension;
+import edu.uci.eecs.wukong.framework.model.DataType;
+import edu.uci.eecs.wukong.framework.model.PropertyType;
 import edu.uci.eecs.wukong.framework.plugin.Plugin;
 
 @WuClass(id = 10002)
 public class TestPlugin extends Plugin {
 
-	@WuProperty(id = 1, type="input")
+	@WuProperty(id = 1, type = PropertyType.Input, dtype = DataType.Buffer)
 	private short testProperty;
 	
 	public TestPlugin() {

@@ -6,16 +6,19 @@ import java.util.List;
 import edu.uci.eecs.wukong.framework.annotation.WuProperty;
 import edu.uci.eecs.wukong.framework.annotation.WuClass;
 import edu.uci.eecs.wukong.framework.extension.Extension;
+import edu.uci.eecs.wukong.framework.model.DataType;
+import edu.uci.eecs.wukong.framework.model.PropertyType;
 import edu.uci.eecs.wukong.framework.plugin.Plugin;
+
 
 @WuClass(id = 10001)
 public class SwitchPlugin extends Plugin {
 	
-	@WuProperty(id = 1, type="input", dtype="channel")
+	@WuProperty(id = 1, type = PropertyType.Input, dtype = DataType.Channel)
 	private Boolean switchInput;
-	@WuProperty(id = 2, type="input", dtype="buffer")
+	@WuProperty(id = 2, type = PropertyType.Input, dtype = DataType.Buffer)
 	private Double temparature;
-	@WuProperty(id = 3, type="output")
+	@WuProperty(id = 3, type = PropertyType.Output)
 	private Double threshold;
 	
 	public SwitchPlugin() {

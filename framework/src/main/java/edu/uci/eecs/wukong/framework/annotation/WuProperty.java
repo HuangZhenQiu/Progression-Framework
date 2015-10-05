@@ -5,6 +5,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import edu.uci.eecs.wukong.framework.model.PropertyType;
+import edu.uci.eecs.wukong.framework.model.DataType;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 
@@ -13,11 +15,11 @@ public @interface WuProperty {
 	String name() default "";
 	
 	// Define the type of property, either input or output
-	String type() default "";
+	PropertyType type() default PropertyType.Input;
 	
 	// Define the data type of the output property, either buffer or channel
-	String dtype() default "";
+	DataType dtype() default DataType.Buffer;
 	
 	// Define the id of the property
-	int id();
+	byte id() default 0;
 }

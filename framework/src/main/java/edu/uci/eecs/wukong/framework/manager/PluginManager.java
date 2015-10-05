@@ -56,20 +56,19 @@ public class PluginManager {
 			String path = PLUGIN_PATH + '.' + PLUGINS[i];
 			ClassLoader loader = PluginManager.class.getClassLoader();
 			Class<?> c = loader.loadClass(path);
-			Map<String, Integer> properties = new HashMap<String, Integer>();
+			WuClass wuclass = c.getAnnotation(WuClass.class);
+			WuClassModel wuClassModel =  new WuClassModel(wuclass.id());
 			for (Field field : c.getDeclaredFields()) {
 				String name = field.getName();
 				Annotation[] annotations = field.getDeclaredAnnotations();
 				for (Annotation annotation : annotations) {
 					if (annotation.annotationType().equals(WuProperty.class)) {
 						WuProperty property = (WuProperty)annotation;
-						properties.put(name, property.id());
+						wuClassModel.addProperty(name, property);
 					}
 				}
 			}
 			
-			WuClass wuclass = c.getAnnotation(WuClass.class);
-			WuClassModel wuClassModel =  new WuClassModel(wuclass.id(), properties);
 			registedClasses.put(wuclass.id(), wuClassModel);
 			wkpf.addWuClass(wuClassModel);
 			

@@ -13,10 +13,13 @@ import org.slf4j.LoggerFactory;
 import edu.uci.eecs.wukong.framework.util.MPTNUtil;
 import edu.uci.eecs.wukong.framework.util.WKPFUtil;
 import edu.uci.eecs.wukong.framework.model.ComponentMap;
+import edu.uci.eecs.wukong.framework.model.DataType;
 import edu.uci.eecs.wukong.framework.model.Link;
 import edu.uci.eecs.wukong.framework.model.LinkTable;
+import edu.uci.eecs.wukong.framework.model.NPP;
 import edu.uci.eecs.wukong.framework.model.WuClassModel;
 import edu.uci.eecs.wukong.framework.model.WuObjectModel;
+import edu.uci.eecs.wukong.framework.model.WuPropertyModel;
 import edu.uci.eecs.wukong.framework.manager.BufferManager;
 import edu.uci.eecs.wukong.framework.manager.PluginManager;
 
@@ -243,8 +246,33 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 	public void onWKPFWriteProperty(byte[] message) {
 		byte port = message[3];
 		short wuclassId = WKPFUtil.getLittleEndianShort(message, 4);
-		byte property = message[6];
+		byte propertyId = message[6];
 		byte type = message[7];
+		short value = message[8];
+        if (type != 1) { // If it is not boolean
+            value = (short) ((value << 8) + message[9]);
+        }
+		
+		WuObjectModel wuobject = portToWuObjectMap.get(Byte.valueOf(port));
+		if (wuobject == null) {
+			LOGGER.error("Can't find WuObject with port " + port + " for write property command.");
+			return;
+		}
+		
+		WuPropertyModel wuproperty = wuobject.getType().getPropertyModel(propertyId);
+		if (wuproperty == null) {
+			LOGGER.error("Can't find WuPropety with propertyId " + propertyId + " for write property command.");
+			return;
+		}
+		
+		NPP npp = new NPP(this.mptn.getNodeId(), port, propertyId);
+		// Put data into write container
+		if (wuproperty.getDtype().equals(DataType.Buffer)) {
+			bufferManager.addData(npp, System.currentTimeMillis(), value);
+		} else if (wuproperty.getDtype().equals(DataType.Channel)){
+			bufferManager.addRealTimeData(npp, value);
+		}
+		
 	}
 
 	public void onWKPFMonitoredData(byte[] message) {

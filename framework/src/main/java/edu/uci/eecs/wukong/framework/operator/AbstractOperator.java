@@ -6,17 +6,17 @@ import java.util.HashMap;
 import edu.uci.eecs.wukong.framework.ProgressionKey.LogicalKey;
 
 public abstract class AbstractOperator<T> implements Operator<T> {
-	private Map<LogicalKey, Integer> sourceKeys;
+	private Map<Integer, Integer> sourceKeys;
 	
 	public AbstractOperator() {
-		sourceKeys = new HashMap<LogicalKey, Integer>();
+		sourceKeys = new HashMap<Integer, Integer>();
 	}
 	
-	public void addDataSource(LogicalKey key, int interval) {
+	public void addDataSource(Integer key, int interval) {
 		this.sourceKeys.put(key, interval);
 	}
 	
-	public Map<LogicalKey, Integer> bind() {
+	public Map<Integer, Integer> bind() {
 		return sourceKeys;
 	}
 }

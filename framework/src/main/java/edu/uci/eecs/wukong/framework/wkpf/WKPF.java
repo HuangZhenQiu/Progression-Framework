@@ -12,13 +12,11 @@ import org.slf4j.LoggerFactory;
 
 import edu.uci.eecs.wukong.framework.util.MPTNUtil;
 import edu.uci.eecs.wukong.framework.util.WKPFUtil;
-import edu.uci.eecs.wukong.framework.model.Component;
 import edu.uci.eecs.wukong.framework.model.ComponentMap;
 import edu.uci.eecs.wukong.framework.model.Link;
 import edu.uci.eecs.wukong.framework.model.LinkTable;
 import edu.uci.eecs.wukong.framework.model.WuClassModel;
 import edu.uci.eecs.wukong.framework.model.WuObjectModel;
-import edu.uci.eecs.wukong.framework.exception.PluginUninitializedException;
 import edu.uci.eecs.wukong.framework.manager.BufferManager;
 import edu.uci.eecs.wukong.framework.manager.PluginManager;
 
@@ -35,9 +33,7 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 	// Wuclass installed in progression server
 	private List<WuClassModel> wuclasses;
 	// Port number to WuObject
-	private Map<Integer, WuObjectModel> portToWuObjectMap;
-	// Plugin Id to WuObject
-	private Map<Integer, WuObjectModel> pluginIdToWuObjectMap;
+	private Map<Byte, WuObjectModel> portToWuObjectMap;
 	
 	private DJAData djaData;
 	private ComponentMap componentMap = null;
@@ -49,8 +45,7 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 
 	public WKPF(PluginManager pluginManager, BufferManager bufferManager) {
 		this.wuclasses = new ArrayList<WuClassModel> ();
-		this.portToWuObjectMap = new HashMap<Integer, WuObjectModel> ();
-		this.pluginIdToWuObjectMap = new HashMap<Integer, WuObjectModel> ();
+		this.portToWuObjectMap = new HashMap<Byte, WuObjectModel> ();
 		this.mptn = new MPTN();
 		this.mptn.register(this);
 		this.djaData = new DJAData();
@@ -88,11 +83,11 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 	 * @param property
 	 * @param value
 	 */
-	public void sendSetProperty(Integer pluginId, String property, Object value) {
+	public void sendSetProperty(byte portId, String property, Object value) {
 		
 		try {
-			if (this.pluginIdToWuObjectMap.containsKey(pluginId)) {
-				WuObjectModel wuobject = this.pluginIdToWuObjectMap.get(pluginId);
+			if (this.portToWuObjectMap.containsKey(portId)) {
+				WuObjectModel wuobject = this.portToWuObjectMap.get(portId);
 	
 				int componentId = componentMap.getComponentId(wuobject.getPort(), mptn.getNodeId());
 				byte propertyId = wuobject.getPropertyId(property);
@@ -155,8 +150,7 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 	}
 	
 	public void addWuObject(byte portId, WuObjectModel wuObject) {
-		this.portToWuObjectMap.put(new Integer(portId), wuObject);
-		this.pluginIdToWuObjectMap.put(wuObject.getPluginId(), wuObject);
+		this.portToWuObjectMap.put(portId, wuObject);
 	}
 	
 	/**
@@ -164,7 +158,6 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 	 */
 	public void clearWuObject() {
 		this.portToWuObjectMap.clear();
-		this.pluginIdToWuObjectMap.clear();
 	}
 
 	public void onWKPFGetWuClassList(byte[] message) {
@@ -248,8 +241,10 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 	 * 
 	 */
 	public void onWKPFWriteProperty(byte[] message) {
-		// TODO Auto-generated method stub
-		
+		byte port = message[3];
+		short wuclassId = WKPFUtil.getLittleEndianShort(message, 4);
+		byte property = message[6];
+		byte type = message[7];
 	}
 
 	public void onWKPFMonitoredData(byte[] message) {

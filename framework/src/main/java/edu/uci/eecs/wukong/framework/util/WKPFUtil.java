@@ -40,7 +40,28 @@ public class WKPFUtil {
 	
 	public static final byte MONITORING                   = (byte)0xB5;
 	
-	public short getSmallEndianShort(byte big, byte little) {
-		return (short) ((big << 8) + little);
+	/**
+	 * Get little endian short from the start index of the buffer
+	 * @param start the index in the buffer
+	 * @return the converted short
+	 */
+	public static short getLittleEndianShort(byte[] buffer, int start) {
+		int result = buffer[start];
+		int msb = buffer[start + 1];
+		return (short) (result + msb << 8);
+	}
+	
+	/**
+	 * Get little endian int from the start index of the buffer
+	 * @param start the index of the buffer
+	 * @return the converted int
+	 */
+	public static int getLittleEndianInteger(byte[] buffer, int start) {
+		int result = buffer[start];
+		result += buffer[start + 1] << 8;
+		result += buffer[start + 2] << 16;
+		result += buffer[start + 3] << 24;
+		
+		return result;
 	}
 }

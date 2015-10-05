@@ -19,5 +19,5 @@ public abstract class FeatureAbstractionExtension extends AbstractExtension {
 		// TODO Auto-generated constructor stub
 	}
 
-	public abstract List<Operator> registerOperators(Map<String, LogicalKey> logicId);
+	public abstract List<Operator> registerOperators();
 }

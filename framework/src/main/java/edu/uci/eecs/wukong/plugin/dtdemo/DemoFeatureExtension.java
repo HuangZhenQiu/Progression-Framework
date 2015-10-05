@@ -18,7 +18,7 @@ public class DemoFeatureExtension extends FeatureAbstractionExtension {
 		// TODO Auto-generated constructor stub
 	}
 
-	public List<Operator> registerOperators(Map<String, LogicalKey> logicKeys) {
+	public List<Operator> registerOperators() {
 		List<Operator> operators = new ArrayList<Operator>();
 		return operators;
 	}

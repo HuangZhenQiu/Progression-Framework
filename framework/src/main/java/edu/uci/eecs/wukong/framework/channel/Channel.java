@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
-import edu.uci.eecs.wukong.framework.ProgressionKey.PhysicalKey;
+import edu.uci.eecs.wukong.framework.model.NPP;
 
 /**
  * Channel is used to store real-time data for user's action signal from device.
@@ -18,21 +18,21 @@ import edu.uci.eecs.wukong.framework.ProgressionKey.PhysicalKey;
  *
  */
 public class Channel<T extends Number> {
-	private PhysicalKey key;
+	private NPP key;
 	private Queue<T> queue; // TODO leave it here for user operation optimization
 	private List<ChannelListener<T>> listeners;
 	
-	public Channel(PhysicalKey key) {
+	public Channel(NPP key) {
 		this.key = key;
 		this.queue = new ArrayDeque<T>();
 		this.listeners = new ArrayList<ChannelListener<T>>();
 	}
 
-	public PhysicalKey getKey() {
+	public NPP getKey() {
 		return key;
 	}
 
-	public void setKey(PhysicalKey key) {
+	public void setKey(NPP key) {
 		this.key = key;
 	}
 	

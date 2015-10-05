@@ -27,7 +27,6 @@ import org.slf4j.LoggerFactory;
 public class PluginManager {
 	private final static Logger LOGGER = LoggerFactory.getLogger(WKPF.class);
 	private final static String PLUGIN_PATH = "edu.uci.eecs.wukong.plugin";
-	private static byte port = 1; 
 	private BufferManager bufferManager;
 	private ContextManager contextManager;
 	private PluginPropertyMonitor propertyMonitor;
@@ -79,9 +78,8 @@ public class PluginManager {
 			Constructor<?> constructor = c.getConstructor();
 			Plugin plugin = (Plugin) constructor.newInstance();
 			plugins.add(plugin);
-			WuObjectModel wuObjectModel = new WuObjectModel(wuClassModel, port, plugin.getPluginId());
-			wkpf.addWuObject(port, wuObjectModel);
-			port++;
+			WuObjectModel wuObjectModel = new WuObjectModel(wuClassModel, plugin.getPortId());
+			wkpf.addWuObject(plugin.getPortId(), wuObjectModel);
 		}
 		
 		this.wkpf.start();
@@ -188,7 +186,7 @@ public class PluginManager {
 		String name = event.getPropertyName();
 		Object value = event.getNewValue();
 		Plugin plugin = (Plugin)event.getSource();
-		wkpf.sendSetProperty(plugin.getPluginId(), name, value);
+		wkpf.sendSetProperty(plugin.getPortId(), name, value);
 	}
 
 	public void setWKPF(WKPF wkpf) {

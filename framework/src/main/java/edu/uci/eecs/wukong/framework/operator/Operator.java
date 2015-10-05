@@ -16,10 +16,10 @@ public interface Operator<T> {
 	 * The bind function should return the logical keys for the data sources, from which progression
 	 * framework grasp data in the time range from n time units to most recent. 
 	 * 
-	 * @return the map of logical key and the time units for the key.
+	 * @return the map of propertyId and the time units for the key.
 	 */
-	public Map<LogicalKey, Integer> bind();
+	public Map<Integer, Integer> bind();
 	
 	
-	public void addDataSource(LogicalKey key, int interval);
+	public void addDataSource(Integer key, int interval);
 }

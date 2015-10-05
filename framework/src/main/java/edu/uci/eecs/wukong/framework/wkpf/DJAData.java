@@ -8,6 +8,7 @@ import edu.uci.eecs.wukong.framework.model.ComponentMap;
 import edu.uci.eecs.wukong.framework.model.EndPoint;
 import edu.uci.eecs.wukong.framework.model.Link;
 import edu.uci.eecs.wukong.framework.model.LinkTable;
+import edu.uci.eecs.wukong.framework.util.WKPFUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,13 +67,9 @@ public class DJAData {
 	 * all the extract info operation.
 	 */
 	public synchronized boolean open() {
-		if (readable.compareAndSet(true, false)) {
-			this.pos = 0;
-			return true;
-		} else {
-			LOGGER.error("Fail to open DJAData which is already opened");
-		}	
-		return false;
+		this.readable.set(false);
+		this.pos = 0;
+		return true;
 	}
 	
 	/**
@@ -85,17 +82,12 @@ public class DJAData {
 	 * @return whether is closed successfully
 	 */
 	public synchronized boolean commit() {
-		if (readable.compareAndSet(false, true)) {
-			synchronized(readable) {
-				readable.notifyAll();
-			}
-			// Notify the update of link table and component map
-			fireUpdateEvent();
-			return true;
-		} else {
-			LOGGER.error("Fail to close DJAData which is already closed");
+		synchronized(readable) {
+			readable.notifyAll();
 		}
-		return false;
+		// Notify the update of link table and component map
+		fireUpdateEvent();
+		return true;
 	}
 	
 	/**
@@ -157,7 +149,7 @@ public class DJAData {
 		LinkTable table = new LinkTable();
 		
 		// get the size of links
-		int size = getLittleEndianShort(index);
+		int size = WKPFUtil.getLittleEndianShort(buffer, index);
 		// start index of the links
 		int start = index + 2;
 		for (int i = 0; i < size; i++) {
@@ -178,8 +170,8 @@ public class DJAData {
 	 * 1 byte dest port number
 	 */
 	private Link extractLink(int start) {
-		int srcComponentId = this.getLittleEndianShort(start);
-		int destComponentId = this.getLittleEndianShort(start + 3);
+		int srcComponentId = WKPFUtil.getLittleEndianShort(buffer, start);
+		int destComponentId = WKPFUtil.getLittleEndianShort(buffer, start + 3);
 		
 		return new Link(srcComponentId, buffer[start + 2], destComponentId, buffer[start + 5]);
 	}
@@ -202,12 +194,12 @@ public class DJAData {
 		
 		ComponentMap componentMap = new ComponentMap();
 		// Size of component
-		int size = getLittleEndianShort(index);
+		int size = WKPFUtil.getLittleEndianShort(buffer, index);
 		// start of component offset table;
 		int start = index + 2;
 		for (int i = 0; i < size; i++) {
 			// the offset relative to the start of component map
-			int componentOffset = getLittleEndianShort(start + i * 2);
+			int componentOffset = WKPFUtil.getLittleEndianShort(buffer, start + i * 2);
 			componentMap.addComponent(extractComponent(index + componentOffset));
 		}
 		
@@ -225,7 +217,7 @@ public class DJAData {
 	 */
 	private Component extractComponent(int index) {
 		int endpointSize = buffer[index];
-		short wuclassId = (short) getLittleEndianShort(index + 1);
+		short wuclassId = (short) WKPFUtil.getLittleEndianShort(buffer, index + 1);
 	    
 		Component component = new Component(wuclassId);
 		// Start of end point table
@@ -247,7 +239,7 @@ public class DJAData {
 	 *     1 byte port number
 	 */
 	private EndPoint extractEndPoint(int index) {
-		int nodeId = getLittleEndianInteger(index);
+		int nodeId = WKPFUtil.getLittleEndianInteger(buffer, index);
 		return new EndPoint(nodeId, buffer[index + 4]);
 	}
 	
@@ -267,7 +259,7 @@ public class DJAData {
 		while (start < pos - 3) {
 			byte fileType = this.buffer[start + DJAConstants.FILE_TYPE_OFFSET];
 			if (type != fileType) {
-				start += 3 + getLittleEndianShort(start);
+				start += 3 + WKPFUtil.getLittleEndianShort(buffer, start);
 			}
 		}
 		
@@ -276,31 +268,6 @@ public class DJAData {
 		}
 		
 		return start;
-	}
-	
-	/**
-	 * Get little endian short from the start index of the buffer
-	 * @param start the index in the buffer
-	 * @return the converted short
-	 */
-	private short getLittleEndianShort(int start) {
-		int result = this.buffer[start];
-		int msb = this.buffer[start + 1];
-		return (short) (result + msb << 8);
-	}
-	
-	/**
-	 * Get little endian int from the start index of the buffer
-	 * @param start the index of the buffer
-	 * @return the converted int
-	 */
-	private int getLittleEndianInteger(int start) {
-		int result = buffer[start];
-		result += buffer[start + 1] << 8;
-		result += buffer[start + 2] << 16;
-		result += buffer[start + 3] << 24;
-		
-		return result;
 	}
 	
 	/**

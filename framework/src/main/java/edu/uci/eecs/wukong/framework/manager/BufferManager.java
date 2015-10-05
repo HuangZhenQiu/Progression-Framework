@@ -6,22 +6,25 @@ import java.util.Map;
 import java.util.Timer;
 import java.lang.IllegalArgumentException;
 
-import edu.uci.eecs.wukong.framework.ProgressionKey.PhysicalKey;
 import edu.uci.eecs.wukong.framework.buffer.DataPoint;
 import edu.uci.eecs.wukong.framework.buffer.DoubleTimeIndexDataBuffer;
 import edu.uci.eecs.wukong.framework.channel.Channel;
+import edu.uci.eecs.wukong.framework.model.NPP;
 
 public class BufferManager {
-	private Map<PhysicalKey, DoubleTimeIndexDataBuffer<?>> bufferMap;
-	private Map<PhysicalKey, Channel<?>> channelMap;
+	// Map network port property to buffer
+	private Map<NPP, DoubleTimeIndexDataBuffer<?>> bufferMap;
+	// Map network port property to channel
+	private Map<NPP, Channel<?>> channelMap;
+	// Timer to set index for buffer
 	private Timer timer;
 
 	public BufferManager() {
-		this.bufferMap = new HashMap<PhysicalKey, DoubleTimeIndexDataBuffer<?>>();
-		this.channelMap = new HashMap<PhysicalKey, Channel<?>>();
+		this.bufferMap = new HashMap<NPP, DoubleTimeIndexDataBuffer<?>>();
+		this.channelMap = new HashMap<NPP, Channel<?>>();
 	}
 	
-	public boolean createByteChannel(PhysicalKey key) {
+	private boolean createByteChannel(NPP key) {
 		if(channelMap.containsKey(key)) {
 			return false;
 		}
@@ -31,7 +34,7 @@ public class BufferManager {
 		return true;
 	}
 	
-	public boolean createByteBuffer(PhysicalKey key,
+	private boolean createByteBuffer(NPP key,
 			int capacity, int timeUnits, int interval) {
 		if(bufferMap.containsKey(key)) {
 			return false;
@@ -44,7 +47,7 @@ public class BufferManager {
 		return true;
 	}
 	
-	public boolean createShortBuffer(PhysicalKey key,
+	private boolean createShortBuffer(NPP key,
 			int capacity, int timeUnits, int interval) {
 		if(bufferMap.containsKey(key)) {
 			return false;
@@ -58,7 +61,7 @@ public class BufferManager {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public void addRealTimeData(PhysicalKey key, short value) {
+	public void addRealTimeData(NPP key, short value) {
 		if(!channelMap.containsKey(key)) {
 			throw new IllegalArgumentException("Insert into a chanel don't exist:" + key);
 		}
@@ -68,7 +71,7 @@ public class BufferManager {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public void addData(PhysicalKey key, int time, short value) throws IllegalArgumentException {
+	public void addData(NPP key, int time, short value) throws IllegalArgumentException {
 		if(!bufferMap.containsKey(key)) {
 			throw new IllegalArgumentException("Insert into a buffer don't exist:" + key);
 		}
@@ -77,7 +80,7 @@ public class BufferManager {
 		buffer.addElement(time, value);
 	}
 	
-	public List<DataPoint<Short>> getData(PhysicalKey key, int units) {
+	public List<DataPoint<Short>> getData(NPP key, int units) {
 		if(!bufferMap.containsKey(key)) {
 			throw new IllegalArgumentException("Fetch from a buffer don't exist:" + key);
 		}

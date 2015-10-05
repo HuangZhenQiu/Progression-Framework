@@ -28,8 +28,8 @@ import edu.uci.eecs.wukong.framework.extension.Extension;
  *
  */
 public abstract class Plugin {
-	private static int id = 0;
-	private int pluginId;
+	private static byte id = 0;
+	private byte portId;
 	private String name;
 	private String appId;
 	private boolean online;
@@ -39,7 +39,7 @@ public abstract class Plugin {
 	public Plugin(String name, boolean online) {
 		this.name = name;
 		this.online = online;
-		this.pluginId = id ++;
+		this.portId = id ++;
 	}
 
 	public Plugin(String name) {
@@ -97,11 +97,7 @@ public abstract class Plugin {
 		this.appId = appId;
 	}
 
-	public int getPluginId() {
-		return pluginId;
-	}
-
-	public void setPluginId(int pluginId) {
-		this.pluginId = pluginId;
+	public byte getPortId() {
+		return portId;
 	}
 }

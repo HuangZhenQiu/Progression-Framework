@@ -5,6 +5,7 @@ import edu.uci.eecs.wukong.framework.operator.Operator;
 import edu.uci.eecs.wukong.framework.manager.BufferManager;
 import edu.uci.eecs.wukong.framework.plugin.Plugin;
 import edu.uci.eecs.wukong.framework.model.NPP;
+import edu.uci.eecs.wukong.framework.wkpf.WKPF;
 
 import java.util.HashMap;
 import java.util.List;
@@ -17,13 +18,13 @@ import org.slf4j.LoggerFactory;
 public class FeatureChoosers {
 	private static Logger logger = LoggerFactory.getLogger(FeatureChoosers.class);
 	// Network Id of progression server
-	private int nid;
 	private BufferManager bufferManager;
+	private WKPF wkpf;
 	private Map<Plugin, FeatureChooser> chooserMap;
 	
-	public FeatureChoosers(int nid, BufferManager bufferManager) {
-		this.nid = nid;
+	public FeatureChoosers(BufferManager bufferManager, WKPF wkpf) {
 		this.bufferManager = bufferManager;
+		this.wkpf = wkpf;
 		this.chooserMap = new HashMap<Plugin, FeatureChooser>();
 	}
 	
@@ -35,7 +36,7 @@ public class FeatureChoosers {
 			Map<Integer, Integer>  portToInterval = operator.bind();
 			Map<NPP, Integer> nppMap = new HashMap<NPP, Integer> ();
 			for (Entry<Integer, Integer> entry : portToInterval.entrySet()) {
-				NPP npp = new NPP(nid, plugin.getPortId(), entry.getKey().byteValue());
+				NPP npp = new NPP(wkpf.getNetworkId(), plugin.getPortId(), entry.getKey().byteValue());
 				nppMap.put(npp, entry.getValue());
 			}
 			bindMap.put(operator, nppMap);

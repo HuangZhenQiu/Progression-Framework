@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +22,8 @@ import edu.uci.eecs.wukong.framework.model.WuClassModel;
 import edu.uci.eecs.wukong.framework.model.WuObjectModel;
 import edu.uci.eecs.wukong.framework.model.WuPropertyModel;
 import edu.uci.eecs.wukong.framework.manager.BufferManager;
-import edu.uci.eecs.wukong.framework.manager.PluginManager;
+import edu.uci.eecs.wukong.framework.plugin.PluginInitListener;
+import edu.uci.eecs.wukong.framework.plugin.Plugin;
 
 public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 	private final static Logger LOGGER = LoggerFactory.getLogger(WKPF.class);
@@ -41,19 +43,17 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 	private DJAData djaData;
 	private ComponentMap componentMap = null;
 	private LinkTable linkTable = null;
-	
-	private PluginManager pluginManager;
 	private BufferManager bufferManager;
+	private List<PluginInitListener> listeners;
 
-
-	public WKPF(PluginManager pluginManager, BufferManager bufferManager) {
+	public WKPF(BufferManager bufferManager) {
 		this.wuclasses = new ArrayList<WuClassModel> ();
 		this.portToWuObjectMap = new HashMap<Byte, WuObjectModel> ();
+		this.listeners = new ArrayList<PluginInitListener> ();
 		this.mptn = new MPTN();
 		this.mptn.register(this);
 		this.djaData = new DJAData();
 		this.djaData.register(this);
-		this.pluginManager = pluginManager;
 		this.bufferManager = bufferManager;
 		// Intial default location
 		this.location = "/WuKong";
@@ -61,6 +61,10 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 	
 	public void start() {
 		mptn.start();
+	}
+	
+	public void register(PluginInitListener listener) {
+		this.listeners.add(listener);
 	}
 	
 	/**
@@ -77,7 +81,15 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 	 */
 	private void bindWuObjects() {
 		Map<Byte, Short> wuclassMap = this.componentMap.getWuClassIdList(mptn.getNodeId());
-		// pluginManager.bindWuObjects(wuclassMap);
+		List<Plugin> plugins = new ArrayList<Plugin> ();
+		
+		for (Entry<Byte, Short> entry : wuclassMap.entrySet()) {
+			plugins.add(portToWuObjectMap.get(entry.getKey()).getPlugin());
+		}
+		
+		for (PluginInitListener listener : listeners) {
+			listener.bindPlugins(plugins);
+		}
 	}
 	
 	/**
@@ -363,5 +375,9 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 			buffer.put(WKPFUtil.WKPF_REPROG_FAILED);
 		}
 		mptn.send(MPTNUtil.MPTN_MASTER_ID, buffer.array());
+	}
+	
+	public int getNetworkId() {
+		return this.mptn.getNodeId();
 	}
 }

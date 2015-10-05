@@ -1,12 +1,13 @@
 package edu.uci.eecs.wukong.framework.model;
 
 import edu.uci.eecs.wukong.framework.model.WuClassModel;
+import edu.uci.eecs.wukong.framework.plugin.Plugin;
 
 public class WuObjectModel {
 	private WuClassModel type;
-	private byte port;
-	public WuObjectModel(WuClassModel type, byte port) {
-		this.port = port;
+	private Plugin plugin;
+	public WuObjectModel(WuClassModel type, Plugin plugin) {
+		this.plugin = plugin;
 		this.type = type;
 	}
 	
@@ -18,8 +19,12 @@ public class WuObjectModel {
 		return -1;
 	}
 	
+	public Plugin getPlugin() {
+		return this.plugin;
+	}
+	
 	public byte getPort() {
-		return this.port;
+		return this.plugin.getPortId();
 	}
 	
 	public WuClassModel getType() {
@@ -30,7 +35,7 @@ public class WuObjectModel {
 	public boolean equals(Object object) {
 		if (object instanceof WuObjectModel) {
 			WuObjectModel model = (WuObjectModel) object;
-			if (model.port == this.port
+			if (model.plugin.getPortId() == this.plugin.getPortId()
 					&& model.type.equals(this.type)) {
 				return true;
 			}
@@ -42,7 +47,7 @@ public class WuObjectModel {
 	@Override
 	public int hashCode() {
 		int base = 33;
-		int code = port;
+		int code = plugin.getPortId();
 		return code * base + type.hashCode();
 	}
 }

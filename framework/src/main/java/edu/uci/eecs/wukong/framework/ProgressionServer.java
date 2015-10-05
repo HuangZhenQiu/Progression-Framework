@@ -12,6 +12,8 @@ import edu.uci.eecs.wukong.framework.manager.ContextManager;
 import edu.uci.eecs.wukong.framework.manager.ConfigurationManager;
 import edu.uci.eecs.wukong.framework.manager.PluginManager;
 import edu.uci.eecs.wukong.framework.pipeline.Pipeline;
+import edu.uci.eecs.wukong.framework.select.FeatureChoosers;
+import edu.uci.eecs.wukong.framework.wkpf.WKPF;
 import edu.uci.eecs.wukong.plugin.test.TestPlugin;
 import edu.uci.eecs.wukong.rpc.netty.CommunicationServer;
 import edu.uci.eecs.wukong.rpc.netty.service.DataService;
@@ -24,7 +26,9 @@ public class ProgressionServer {
 	private ContextManager contextManager;
 	private BufferManager bufferManager;
 	private PluginManager pluginManager;
+	private FeatureChoosers featureChoosers;
 	private Pipeline pipeline;
+	private WKPF wkpf;
 	private ConfigurationManager configurationManager;
 	
 	public ProgressionServer(PeerInfo peerInfo) {
@@ -33,8 +37,11 @@ public class ProgressionServer {
 		this.bufferManager = new BufferManager();
 		this.contextManager = new ContextManager();
 		this.configurationManager = new ConfigurationManager();
-		this.pipeline = new Pipeline(contextManager, configurationManager);	
-		this.pluginManager = new PluginManager(contextManager, bufferManager, pipeline);
+		this.wkpf = new WKPF(bufferManager);
+		this.featureChoosers = new FeatureChoosers(bufferManager, wkpf);
+		this.pipeline = new Pipeline(contextManager, configurationManager, featureChoosers);	
+		this.pluginManager = new PluginManager(wkpf, contextManager, pipeline);
+		this.wkpf.register(pluginManager);
 	}
 	
 	/**
@@ -64,6 +71,7 @@ public class ProgressionServer {
 	public void start() {
 		try {
 			this.pluginManager.init();
+			this.wkpf.start();
 			this.server.start();
 			this.pipeline.start();
 			// this.registerTestPlugin();
@@ -77,7 +85,7 @@ public class ProgressionServer {
 	private void registerTestPlugin() {
 		TestPlugin plugin = new TestPlugin();
 		try {
-			pluginManager.bindPlugin(plugin, null);
+			pluginManager.bindPlugin(plugin);
 		} catch (Exception e) {
 			logger.info(e.toString());
 		}

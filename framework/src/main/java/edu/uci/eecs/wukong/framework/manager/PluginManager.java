@@ -1,12 +1,13 @@
 package edu.uci.eecs.wukong.framework.manager;
 
-import edu.uci.eecs.wukong.framework.ProgressionKey.*;
 import edu.uci.eecs.wukong.framework.annotation.WuProperty;
 import edu.uci.eecs.wukong.framework.annotation.WuClass;
 import edu.uci.eecs.wukong.framework.exception.PluginNotFoundException;
 import edu.uci.eecs.wukong.framework.pipeline.Pipeline;
 import edu.uci.eecs.wukong.framework.plugin.Plugin;
+import edu.uci.eecs.wukong.framework.plugin.PluginInitListener;
 import edu.uci.eecs.wukong.framework.plugin.PluginPropertyMonitor;
+import edu.uci.eecs.wukong.framework.model.NPP;
 import edu.uci.eecs.wukong.framework.model.WuClassModel;
 import edu.uci.eecs.wukong.framework.model.WuObjectModel;
 import edu.uci.eecs.wukong.framework.wkpf.WKPF;
@@ -24,26 +25,25 @@ import java.lang.reflect.Field;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class PluginManager {
-	private final static Logger LOGGER = LoggerFactory.getLogger(WKPF.class);
+public class PluginManager implements PluginInitListener {
+	private final static Logger LOGGER = LoggerFactory.getLogger(PluginManager.class);
 	private final static String PLUGIN_PATH = "edu.uci.eecs.wukong.plugin";
-	private BufferManager bufferManager;
 	private ContextManager contextManager;
 	private PluginPropertyMonitor propertyMonitor;
 	private Pipeline pipeline;
 	private List<Plugin> plugins;
+	/* WuclassId to WuClass model */
 	private Map<Short, WuClassModel> registedClasses;
 	private WKPF wkpf;
 	private String[] PLUGINS = {"switcher.SwitchPlugin"};
 	
-	public PluginManager(ContextManager contextManager, BufferManager bufferManager, Pipeline pipeline) {
-		this.bufferManager = bufferManager;
+	public PluginManager(WKPF wkpf, ContextManager contextManager, Pipeline pipeline) {
 		this.contextManager = contextManager;
 		this.pipeline = pipeline;
 		this.propertyMonitor = new PluginPropertyMonitor(this);
 		this.registedClasses = new HashMap<Short, WuClassModel>();
 		this.plugins = new ArrayList<Plugin>();
-		this.wkpf = new WKPF(this, bufferManager);
+		this.wkpf = wkpf;
 	}
 	
 	/**
@@ -77,38 +77,21 @@ public class PluginManager {
 			Constructor<?> constructor = c.getConstructor();
 			Plugin plugin = (Plugin) constructor.newInstance();
 			plugins.add(plugin);
-			WuObjectModel wuObjectModel = new WuObjectModel(wuClassModel, plugin.getPortId());
+			WuObjectModel wuObjectModel = new WuObjectModel(wuClassModel, plugin);
 			wkpf.addWuObject(plugin.getPortId(), wuObjectModel);
 		}
-		
-		this.wkpf.start();
 	}
 	
 	/**
 	 * Bind wuobjects used in a FBP with meta data sent by remote programming
 	 * 
-	 * @param wuobjects WuObjects to bind
+	 * @param wuobjectMap map port to wuclassId
 	 */
-	public void bindWuObjects(Map<Plugin, Map<String, PhysicalKey>> pluginMeta) {
-		for (Entry<Plugin, Map<String, PhysicalKey>> entry : pluginMeta.entrySet()) {
-			try {
-				bindPlugin(entry.getKey(), entry.getValue());
-			} catch (NoSuchFieldException e) {
-				LOGGER.error("Fail to bind an instance of plugin "
-						+ entry.getKey().getName() + " because unrecgonized field");
-			}
+	public void bindPlugins(List<Plugin> plugins) {
+		for (Plugin plugin : plugins) {
+			bindPlugin(plugin);
 		}
 	}
-	
-	/**
-	 * When master do the remote programming, we need to deallocate binds from physical key to buffer
-	 * for plugins, and also unregister the extensions in pipeline. 
-	 */
-    public void unbindWuObjects() {
-    	// TODO (Peter Huang)
-    	// 1. Change the binding to buffer manager
-    	// 2. Unregister the extensions in pipeline
-    }
 	
 	/**
 	 * Bind a plugin instance into progression pipeline runtime.
@@ -117,18 +100,22 @@ public class PluginManager {
 	 * @param propertyMap  the map from property to physical key
 	 * @throws NoSuchFieldException
 	 */
-	public void bindPlugin(Plugin plugin, Map<String,
-			PhysicalKey> propertyMap) throws NoSuchFieldException {
+	public void bindPlugin(Plugin plugin) {
 		contextManager.subscribe(plugin, plugin.registerContext());
 		pipeline.registerExtension(plugin.registerExtension());
 		bindPropertyUpdateEvent(plugin);
-		plugins.add(plugin);
-		
-		WuClassModel wclass = registedClasses.get(plugin.getName());
-		// WuObjectModel object = new WuObjectModel(wclass, plugin.getPluginId());
-		
-		// TODO (Peter Huang) Bind property Map into buffer manager
 	}
+	
+	/**
+	 * When master do the remote programming, we need to deallocate binds from physical key to buffer
+	 * for plugins, and also unregister the extensions in pipeline. 
+	 */
+    public void unbindPlugin() {
+    	for (Plugin plugin : plugins) {
+    		
+    		pipeline.unregisterExtension(plugin.registerExtension());
+    	}
+    }
 	
 	/**
 	 * It is a function for dynamic load a plugin within class path.
@@ -139,7 +126,7 @@ public class PluginManager {
 	 * @throws Exception
 	 */
 	public void registerPlugin(String name, String appId, Map<String,
-			PhysicalKey> propertyMap) throws Exception {
+			NPP> propertyMap) throws Exception {
 		int pos = name.lastIndexOf('.');
 		String path = "";
 		if (pos == -1) {
@@ -155,7 +142,7 @@ public class PluginManager {
 		ClassLoader loader = PluginManager.class.getClassLoader();
 		Class<?> c = loader.loadClass(path);
 		Plugin plugin = (Plugin)c.getConstructor(String.class, String.class).newInstance(name, appId);
-		bindPlugin(plugin, propertyMap);
+		bindPlugin(plugin);
 	}
 	
 	// bind the update event of out property for plugin.
@@ -186,9 +173,5 @@ public class PluginManager {
 		Object value = event.getNewValue();
 		Plugin plugin = (Plugin)event.getSource();
 		wkpf.sendSetProperty(plugin.getPortId(), name, value);
-	}
-
-	public void setWKPF(WKPF wkpf) {
-		this.wkpf = wkpf;
 	}
 }

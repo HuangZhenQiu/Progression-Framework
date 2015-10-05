@@ -1,14 +1,16 @@
 package edu.uci.eecs.wukong.framework.manager;
 
-import org.junit.Test;
 import edu.uci.eecs.wukong.framework.pipeline.Pipeline;
+import edu.uci.eecs.wukong.framework.wkpf.WKPF;
+import org.junit.Test;
 import junit.framework.TestCase;
 
 public class PluginManagerTest extends TestCase {
 	
 	@Test
 	public void testInitilization() throws Exception {
-		PluginManager manager = new PluginManager(new ContextManager(), new BufferManager(), new Pipeline());
+		BufferManager bufferManager = new BufferManager();
+		PluginManager manager = new PluginManager(new WKPF(bufferManager), new ContextManager(), new Pipeline());
 		manager.init();
 	}
 	

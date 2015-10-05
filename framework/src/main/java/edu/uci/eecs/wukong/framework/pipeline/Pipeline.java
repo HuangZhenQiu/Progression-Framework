@@ -5,6 +5,7 @@ import edu.uci.eecs.wukong.framework.manager.BufferManager;
 import edu.uci.eecs.wukong.framework.manager.ConfigurationManager;
 import edu.uci.eecs.wukong.framework.manager.ContextManager;
 import edu.uci.eecs.wukong.framework.plugin.Plugin;
+import edu.uci.eecs.wukong.framework.select.FeatureChoosers;
 import edu.uci.eecs.wukong.framework.context.Context;
 import edu.uci.eecs.wukong.framework.context.ContextListener;
 import edu.uci.eecs.wukong.framework.context.ExecutionContext;
@@ -25,6 +26,7 @@ public class Pipeline implements ContextListener{
 	private ContextManager contextManager;
 	private ConfigurationManager configurationManager;
 	private BufferManager bufferManager;
+	private FeatureChoosers featureChoosers;
 	private FeatureAbstractionExtensionPoint featureAbstractionPoint;
 	private ProgressionExtensionPoint progressionPoint;
 	private LearningExtensionPoint learningPoint;
@@ -36,12 +38,12 @@ public class Pipeline implements ContextListener{
 	}
 	
 	public Pipeline(ContextManager contextManager,
-			ConfigurationManager configuraionManager) {
+			ConfigurationManager configuraionManager, FeatureChoosers featureChoosers) {
 		this.contextManager = contextManager;
 		this.configurationManager = configuraionManager;
-		this.bufferManager = new BufferManager();
+		this.featureChoosers = featureChoosers;
 		this.progressionPoint = new ProgressionExtensionPoint(configuraionManager, this);
-		this.featureAbstractionPoint = new FeatureAbstractionExtensionPoint(bufferManager, this);
+		this.featureAbstractionPoint = new FeatureAbstractionExtensionPoint(featureChoosers, this);
 		this.learningPoint = new LearningExtensionPoint(this);
 		this.contextManager.subsribeContext(learningPoint);
 		this.contextManager.subsribeContext(this);

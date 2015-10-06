@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import edu.uci.eecs.wukong.framework.context.Context;
+import edu.uci.eecs.wukong.framework.context.BaseContext;
 import edu.uci.eecs.wukong.framework.context.ExecutionContext;
 import edu.uci.eecs.wukong.framework.context.UserContext;
 import edu.uci.eecs.wukong.framework.extension.LearningExtension;
@@ -21,7 +21,7 @@ public class SwitchLearningExtension extends LearningExtension<Number> {
 	}
 
 	public void apply(List<Number> data, ExecutionContext context) {
-		Context userContext = context.getContext("UID");
+		BaseContext userContext = context.getContext("UID");
 		if (userContext instanceof UserContext) {
 			String uid = ((UserContext) userContext).getUid();
 			

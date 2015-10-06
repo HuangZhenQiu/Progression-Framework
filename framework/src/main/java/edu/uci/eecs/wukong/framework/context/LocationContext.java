@@ -1,7 +1,7 @@
 package edu.uci.eecs.wukong.framework.context;
 
 
-public class LocationContext extends Context {
+public class LocationContext extends BaseContext {
 	private String place;
 	private String population;
 	

@@ -2,14 +2,14 @@ package edu.uci.eecs.wukong.framework.context;
 
 import org.jivesoftware.smack.packet.PacketExtension;
 
-public abstract class Context implements PacketExtension {
-	private String publisher;
+public abstract class BaseContext implements PacketExtension {
 	private String topicId;
+	private String publisher;
 	private long timestamp;
 	private long lasttime;
 	private boolean isTriggered;
 	
-	public Context(String topicId) {
+	public BaseContext(String topicId) {
 		this.topicId = topicId;
 		this.isTriggered = false;
 	}

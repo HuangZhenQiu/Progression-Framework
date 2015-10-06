@@ -7,7 +7,10 @@ import java.util.ArrayList;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
+import edu.uci.eecs.wukong.framework.api.Channelable;
 import edu.uci.eecs.wukong.framework.model.NPP;
+import edu.uci.eecs.wukong.framework.model.ChannelData;
+import edu.uci.eecs.wukong.framework.extension.AbstractProgressionExtension;
 
 /**
  * Channel is used to store real-time data for user's action signal from device.
@@ -17,15 +20,15 @@ import edu.uci.eecs.wukong.framework.model.NPP;
  * @author Peter
  *
  */
-public class Channel<T extends Number> {
+public class Channel {
 	private NPP key;
-	private Queue<T> queue; // TODO leave it here for user operation optimization
-	private List<ChannelListener<T>> listeners;
+	private Queue<Short> queue; // TODO leave it here for user operation optimization
+	private List<Channelable> listeners;
 	
 	public Channel(NPP key) {
 		this.key = key;
-		this.queue = new ArrayDeque<T>();
-		this.listeners = new ArrayList<ChannelListener<T>>();
+		this.queue = new ArrayDeque<Short>();
+		this.listeners = new ArrayList<Channelable>();
 	}
 
 	public NPP getKey() {
@@ -41,13 +44,17 @@ public class Channel<T extends Number> {
 		return ((ParameterizedType)type).getActualTypeArguments()[0];
 	}
 	
-	public synchronized void append(T data) {
-		for (ChannelListener<T> listener : listeners) {
-			listener.onMessage(data);
+	public synchronized void append(short data) {
+		ChannelData channelData = new ChannelData(key, data);
+		for (Channelable listener : listeners) {
+			listener.execute(channelData);
 		}
 	}
 	
-	public synchronized void addListener(ChannelListener listener) {
-		this.listeners.add(listener);
+	public synchronized void addListener(Channelable listener) {
+		// Channel will be used only for progression extenson for now.
+		if (listener instanceof AbstractProgressionExtension) {
+			this.listeners.add(listener);
+		}
 	}
 }

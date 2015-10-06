@@ -31,4 +31,30 @@ public class NPP {
 			
 		return false;
 	}
+
+	public int getNid() {
+		return nid;
+	}
+
+	public void setNid(int nid) {
+		this.nid = nid;
+	}
+
+	public byte getPortId() {
+		return portId;
+	}
+
+	public void setPortId(byte portId) {
+		this.portId = portId;
+	}
+
+	public byte getPropertyId() {
+		return propertyId;
+	}
+
+	public void setPropertyId(byte propertyId) {
+		this.propertyId = propertyId;
+	}
+	
+	
 }

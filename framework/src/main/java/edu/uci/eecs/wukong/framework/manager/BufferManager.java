@@ -15,24 +15,15 @@ public class BufferManager {
 	// Map network port property to buffer
 	private Map<NPP, DoubleTimeIndexDataBuffer<?>> bufferMap;
 	// Map network port property to channel
-	private Map<NPP, Channel<?>> channelMap;
+	private Map<NPP, Channel> channelMap;
 	// Timer to set index for buffer
 	private Timer timer;
 
 	public BufferManager() {
 		this.bufferMap = new HashMap<NPP, DoubleTimeIndexDataBuffer<?>>();
-		this.channelMap = new HashMap<NPP, Channel<?>>();
+		this.channelMap = new HashMap<NPP, Channel>();
 	}
 	
-	private boolean createByteChannel(NPP key) {
-		if(channelMap.containsKey(key)) {
-			return false;
-		}
-		Channel<Byte> channel = new Channel<Byte>(key);
-		channelMap.put(key, channel);
-		
-		return true;
-	}
 	
 	private boolean createByteBuffer(NPP key,
 			int capacity, int timeUnits, int interval) {
@@ -66,7 +57,7 @@ public class BufferManager {
 			throw new IllegalArgumentException("Insert into a chanel don't exist:" + key);
 		}
 
-		Channel<Short> channel = (Channel<Short>)channelMap.get(key);
+		Channel channel = (Channel)channelMap.get(key);
 		channel.append(value);
 	}
 	

@@ -3,7 +3,7 @@ package edu.uci.eecs.wukong.plugin.dtdemo;
 import java.util.List;
 
 import weka.classifiers.trees.M5P;
-import edu.uci.eecs.wukong.framework.context.Context;
+import edu.uci.eecs.wukong.framework.context.BaseContext;
 import edu.uci.eecs.wukong.framework.context.ExecutionContext;
 import edu.uci.eecs.wukong.framework.entity.ConfigurationCommand;
 import edu.uci.eecs.wukong.framework.extension.ProgressionExtension;
@@ -28,7 +28,7 @@ public class DemoProgressionExtension extends ProgressionExtension<DemoFeatureEn
 		return null;
 	}
 
-	public List<ConfigurationCommand> execute(Context context) {
+	public List<ConfigurationCommand> execute(BaseContext context) {
 		throw new UnsupportedOperationException();
 	}
 

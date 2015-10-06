@@ -31,7 +31,6 @@ public abstract class Plugin {
 	private static byte id = 0;
 	private byte portId;
 	private String name;
-	private String appId;
 	private boolean online;
 	private boolean learning;
 	protected PropertyChangeSupport support;
@@ -64,10 +63,6 @@ public abstract class Plugin {
 	public void setLearning(boolean learning) {
 		this.learning = learning;
 	}
-
-	public String getAppId() {
-		return this.appId;
-	}
 	
 	public String getName() {
 		return this.name;
@@ -91,10 +86,6 @@ public abstract class Plugin {
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public void setAppId(String appId) {
-		this.appId = appId;
 	}
 
 	public byte getPortId() {

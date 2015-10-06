@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import edu.uci.eecs.wukong.framework.api.ContextExecutable;
-import edu.uci.eecs.wukong.framework.context.Context;
+import edu.uci.eecs.wukong.framework.context.BaseContext;
 import edu.uci.eecs.wukong.framework.context.UserContext;
 import edu.uci.eecs.wukong.framework.extension.AbstractProgressionExtension;
 import edu.uci.eecs.wukong.framework.plugin.Plugin;
@@ -24,7 +24,7 @@ public class SwitchProgressionExtension extends AbstractProgressionExtension
 		userThresholdMap.putAll((Map<String, Double>) model);
 	}
 	
-	public void execute(Context context) {
+	public void execute(BaseContext context) {
 		if (context instanceof UserContext) {
 			UserContext userContext = (UserContext)context;
 			Double threshold = userThresholdMap.get(userContext.getUid());

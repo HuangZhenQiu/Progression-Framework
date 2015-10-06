@@ -25,7 +25,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import edu.uci.eecs.wukong.framework.context.Context;
+import edu.uci.eecs.wukong.framework.context.BaseContext;
 import edu.uci.eecs.wukong.framework.context.DemoContext;
 import edu.uci.eecs.wukong.framework.context.ExecutionContext;
 import edu.uci.eecs.wukong.framework.entity.ConfigurationCommand;
@@ -61,7 +61,7 @@ public class DemoProgressionExtension extends ProgressionExtension<FeatureEntity
 	}
 	
 	// Triggered by context switch
-	public  List<ConfigurationCommand> execute(Context context) {
+	public  List<ConfigurationCommand> execute(BaseContext context) {
 		logger.info("DemoProgressionExtension received new context");
 		List<ConfigurationCommand> commands = new ArrayList<ConfigurationCommand>();
 		List<ConfigurationEntity> entities = new ArrayList<ConfigurationEntity>();

@@ -6,7 +6,7 @@ import edu.uci.eecs.wukong.framework.manager.ConfigurationManager;
 import edu.uci.eecs.wukong.framework.manager.ContextManager;
 import edu.uci.eecs.wukong.framework.plugin.Plugin;
 import edu.uci.eecs.wukong.framework.select.FeatureChoosers;
-import edu.uci.eecs.wukong.framework.context.Context;
+import edu.uci.eecs.wukong.framework.context.BaseContext;
 import edu.uci.eecs.wukong.framework.context.ContextListener;
 import edu.uci.eecs.wukong.framework.context.ExecutionContext;
 import edu.uci.eecs.wukong.framework.extension.AbstractProgressionExtension;
@@ -53,7 +53,7 @@ public class Pipeline implements ContextListener{
 	public ExecutionContext getCurrentContext(Plugin plugin) {
 		ExecutionContext context = new ExecutionContext();
 		for (String topicId : plugin.registerContext()) {
-			Context cont = executionContext.getContext(topicId);
+			BaseContext cont = executionContext.getContext(topicId);
 			if (cont != null) {
 				context.addContext(cont);
 			}
@@ -100,17 +100,17 @@ public class Pipeline implements ContextListener{
 		LOGGER.info("Progression Pipeline get started.");
 	}
 
-	public void onContextArrival(Context context) {
+	public void onContextArrival(BaseContext context) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	public void onContextExpired(Context context) {
+	public void onContextExpired(BaseContext context) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	public void onContextDeleted(Context context) {
+	public void onContextDeleted(BaseContext context) {
 		// TODO Auto-generated method stub
 		
 	}

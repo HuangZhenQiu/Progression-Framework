@@ -8,25 +8,25 @@ import com.google.common.collect.ImmutableMap;
 public class ExecutionContext {
 	private static String LOCATION = "Location";
 	private static String HUMAN_ACTION = "Action";
-	private Map<String, Context> contexts;
+	private Map<String, BaseContext> contexts;
 	
 	public ExecutionContext() {
-		contexts = new HashMap<String, Context>();
+		contexts = new HashMap<String, BaseContext>();
 	}
 	
-	public ExecutionContext(Map<String, Context> contexts) {
-		contexts = ImmutableMap.<String, Context>builder().putAll(contexts).build();
+	public ExecutionContext(Map<String, BaseContext> contexts) {
+		contexts = ImmutableMap.<String, BaseContext>builder().putAll(contexts).build();
 	}
 	
 	public LocationContext getLocationContext() {
 		return (LocationContext)contexts.get(LOCATION);
 	}
 	
-	public Context getContext(String key) {
+	public BaseContext getContext(String key) {
 		return contexts.get(key);
 	}
 	
-	public void addContext(Context context) {
+	public void addContext(BaseContext context) {
 		contexts.put(context.getTopicId(), context);
 	}
 }

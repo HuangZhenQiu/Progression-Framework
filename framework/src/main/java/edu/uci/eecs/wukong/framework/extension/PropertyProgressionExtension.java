@@ -4,7 +4,7 @@ import edu.uci.eecs.wukong.framework.api.Activatable;
 import edu.uci.eecs.wukong.framework.api.ContextExecutable;
 import edu.uci.eecs.wukong.framework.api.Executable;
 import edu.uci.eecs.wukong.framework.api.TimerExecutable;
-import edu.uci.eecs.wukong.framework.context.Context;
+import edu.uci.eecs.wukong.framework.context.BaseContext;
 import edu.uci.eecs.wukong.framework.context.ExecutionContext;
 import edu.uci.eecs.wukong.framework.entity.FeatureEntity;
 import edu.uci.eecs.wukong.framework.plugin.Plugin;
@@ -29,7 +29,7 @@ public abstract class PropertyProgressionExtension<T extends FeatureEntity> exte
 	}
 	
 	// Triggered by context switch
-	public void execute(Context context) {
+	public void execute(BaseContext context) {
 		
 	}
 	

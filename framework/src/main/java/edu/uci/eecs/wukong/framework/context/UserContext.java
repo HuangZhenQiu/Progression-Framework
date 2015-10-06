@@ -1,6 +1,6 @@
 package edu.uci.eecs.wukong.framework.context;
 
-public class UserContext extends Context {
+public class UserContext extends BaseContext {
 	private String uid;
 	
 	public UserContext(String uid) {

@@ -1,6 +1,6 @@
 package edu.uci.eecs.wukong.framework.context;
 
-public class DemoContext extends Context{
+public class DemoContext extends BaseContext{
 	public int ppnum1;
 	public int ppnum2;
 	public int ppnum3;

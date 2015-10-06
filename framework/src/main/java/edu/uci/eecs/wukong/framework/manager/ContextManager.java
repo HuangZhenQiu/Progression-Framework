@@ -3,7 +3,7 @@ package edu.uci.eecs.wukong.framework.manager;
 import com.google.gson.Gson;
 
 import edu.uci.eecs.wukong.framework.client.XMPPContextClient;
-import edu.uci.eecs.wukong.framework.context.Context;
+import edu.uci.eecs.wukong.framework.context.BaseContext;
 import edu.uci.eecs.wukong.framework.context.DemoContext;
 import edu.uci.eecs.wukong.framework.context.ExecutionContext;
 import edu.uci.eecs.wukong.framework.context.ContextListener;
@@ -26,7 +26,7 @@ public class ContextManager {
 	private static Logger logger = LoggerFactory.getLogger(ContextManager.class);
 	private static Gson gson = new Gson();
 	private Map<Plugin, List<String>> pluginContextMap;
-	private Map<String, Context> contexts;
+	private Map<String, BaseContext> contexts;
 	private XMPPContextClient contextClient;
 	private Set<String> topicFilterSet;
 	private ContextEventListenser contextListener;
@@ -34,14 +34,14 @@ public class ContextManager {
 	
 	public ContextManager() {
 		pluginContextMap = new HashMap<Plugin, List<String>>();
-		contexts = new ConcurrentHashMap<String, Context>();
+		contexts = new ConcurrentHashMap<String, BaseContext>();
 		contextClient = XMPPContextClient.getInstance();
 		topicFilterSet = new HashSet<String>();
 		contextListener = new ContextEventListenser();
 		listeners = new ArrayList<ContextListener>();
 	}
 	
-	private class ContextEventListenser implements ItemEventListener<PayloadItem<Context>> {
+	private class ContextEventListenser implements ItemEventListener<PayloadItem<BaseContext>> {
 		public void handlePublishedItems(ItemPublishEvent evt){
 			for (Object object :evt.getItems()) {
 				PayloadItem item = (PayloadItem)object;
@@ -82,7 +82,7 @@ public class ContextManager {
 	
 	public synchronized ExecutionContext getPluginExecutionContext(Plugin plugin) {
 		List<String> subscribedTopics = pluginContextMap.get(plugin);
-		Map<String, Context> pluginContext = new HashMap<String, Context>();
+		Map<String, BaseContext> pluginContext = new HashMap<String, BaseContext>();
 		for(String topic : subscribedTopics) {
 			pluginContext.put(topic, contexts.get(topic));
 		}

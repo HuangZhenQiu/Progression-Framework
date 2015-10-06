@@ -8,7 +8,7 @@ import java.util.concurrent.PriorityBlockingQueue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import edu.uci.eecs.wukong.framework.context.Context;
+import edu.uci.eecs.wukong.framework.context.BaseContext;
 import edu.uci.eecs.wukong.framework.context.ContextListener;
 import edu.uci.eecs.wukong.framework.context.ExecutionContext;
 import edu.uci.eecs.wukong.framework.event.Event;
@@ -78,17 +78,17 @@ public class LearningExtensionPoint extends ExtensionPoint<LearningExtension> im
 		}
 	}
 
-	public void onContextArrival(Context context) {
+	public void onContextArrival(BaseContext context) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	public void onContextExpired(Context context) {
+	public void onContextExpired(BaseContext context) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	public void onContextDeleted(Context context) {
+	public void onContextDeleted(BaseContext context) {
 		// TODO Auto-generated method stub
 		
 	}

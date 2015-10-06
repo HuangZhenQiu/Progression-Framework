@@ -1,6 +1,6 @@
 package edu.uci.eecs.wukong.framework.extension;
 
-import edu.uci.eecs.wukong.framework.context.Context;
+import edu.uci.eecs.wukong.framework.context.BaseContext;
 import edu.uci.eecs.wukong.framework.context.ExecutionContext;
 import edu.uci.eecs.wukong.framework.entity.ConfigurationCommand;
 import edu.uci.eecs.wukong.framework.entity.FeatureEntity;
@@ -28,7 +28,7 @@ public abstract class ProgressionExtension<T extends FeatureEntity> extends Abst
 	public abstract List<ConfigurationCommand> execute(List<T> data, ExecutionContext context);
 	
 	// Triggered by context switch
-	public abstract List<ConfigurationCommand> execute(Context context);
+	public abstract List<ConfigurationCommand> execute(BaseContext context);
 	
 	// Triggered by timer
 	public abstract List<ConfigurationCommand> execute();

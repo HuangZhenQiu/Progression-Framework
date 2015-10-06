@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 import edu.uci.eecs.wukong.framework.api.Activatable;
 import edu.uci.eecs.wukong.framework.api.ContextExecutable;
 import edu.uci.eecs.wukong.framework.api.TimerExecutable;
-import edu.uci.eecs.wukong.framework.context.Context;
+import edu.uci.eecs.wukong.framework.context.BaseContext;
 import edu.uci.eecs.wukong.framework.context.ContextListener;
 import edu.uci.eecs.wukong.framework.entity.ConfigurationCommand;
 import edu.uci.eecs.wukong.framework.entity.Entity;
@@ -34,13 +34,13 @@ public class ProgressionExtensionPoint extends ExtensionPoint<AbstractProgressio
 	private static Configuration configuration = Configuration.getInstance();
 	private ConfigurationManager configurationManager;
 	private Map<Plugin, TimerTask> pluginTaskMap;
-	private Queue<Context> contexts;
+	private Queue<BaseContext> contexts;
 	private Timer timer;
 	
 	public ProgressionExtensionPoint(ConfigurationManager configurationManager, Pipeline pipeline) {
 		super(pipeline);
 		this.configurationManager = configurationManager;
-		this.contexts = new ConcurrentLinkedQueue<Context>();
+		this.contexts = new ConcurrentLinkedQueue<BaseContext>();
 		this.pluginTaskMap = new HashMap<Plugin, TimerTask>();
 		this.timer = new Timer(true);
 	}
@@ -92,8 +92,8 @@ public class ProgressionExtensionPoint extends ExtensionPoint<AbstractProgressio
 	
 	private class ProgressionTask implements Runnable{
 		private ProgressionExtension<?> extension;
-		private Context currentContext;
-		public ProgressionTask(ProgressionExtension extension, Context context) {
+		private BaseContext currentContext;
+		public ProgressionTask(ProgressionExtension extension, BaseContext context) {
 			this.extension = extension;
 			this.currentContext = context;
 		}
@@ -136,7 +136,7 @@ public class ProgressionExtensionPoint extends ExtensionPoint<AbstractProgressio
 	
 	public void run() {
 		while(true) {
-			Context context = contexts.poll();
+			BaseContext context = contexts.poll();
 			if(context != null) {
 				logger.info("Progression Extension Point is polling new context:" + context.toString());
 				for(Map.Entry<Plugin, AbstractExtension> entry : this.extensionMap.entrySet()) {
@@ -151,15 +151,15 @@ public class ProgressionExtensionPoint extends ExtensionPoint<AbstractProgressio
 		}
 	}
 	
-	public void onContextArrival(Context context) {
+	public void onContextArrival(BaseContext context) {
 		contexts.add(context);
 	}
 	
-	public void onContextExpired(Context context) {
+	public void onContextExpired(BaseContext context) {
 		
 	}
 	
-	public void onContextDeleted(Context context) {
+	public void onContextDeleted(BaseContext context) {
 		
 	}
 }

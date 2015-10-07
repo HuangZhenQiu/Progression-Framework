@@ -65,4 +65,9 @@ public class Component {
 	public int hashCode() {
 		return wuclassId + endPoints.hashCode();
 	}
+	
+	@Override
+	public String toString() {
+		return "Component[WuClassId = " + wuclassId + ", EndPoints = " + endPoints.toString() + "]";
+	}
 }

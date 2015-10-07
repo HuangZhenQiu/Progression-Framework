@@ -84,7 +84,7 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 		List<Plugin> plugins = new ArrayList<Plugin> ();
 		
 		for (Entry<Byte, Short> entry : wuclassMap.entrySet()) {
-			plugins.add(portToWuObjectMap.get(entry.getKey()).getPlugin());
+			plugins.add(this.portToWuObjectMap.get(entry.getKey()).getPlugin());
 		}
 		
 		for (PluginInitListener listener : listeners) {
@@ -234,8 +234,8 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 		buffer.put((byte)portToWuObjectMap.size());
 		for (int i = WKPFUtil.DEFAULT_OBJECT_SIZE * messageNumber + 1; // Port starts from 1
 				i < WKPFUtil.DEFAULT_OBJECT_SIZE * (messageNumber + 1); i++) {
-			if (i <= portToWuObjectMap.size() && portToWuObjectMap.get(i) != null) {
-				WuObjectModel object = portToWuObjectMap.get(i);
+			if (i <= portToWuObjectMap.size() && portToWuObjectMap.get(new Byte((byte)i)) != null) {
+				WuObjectModel object = portToWuObjectMap.get(new Byte((byte)i));
 				buffer.put(object.getPort());
 				buffer.putShort(object.getType().getWuClassId());
 				buffer.put(WKPFUtil.PLUGIN_WUCLASS_TYPE);
@@ -262,7 +262,7 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 		byte type = message[7];
 		short value = message[8];
         if (type != 1) { // If it is not boolean
-            value = (short) ((value << 8) + message[9]);
+            value = (short) ((message[4] & 0xff) * 256 + message[9]);
         }
 		
 		WuObjectModel wuobject = portToWuObjectMap.get(Byte.valueOf(port));
@@ -329,17 +329,28 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 	
 	/**
 	 * Reset DJAData Cache to further write operation
+	 * Return message format
+	 * [0] WKPF_REPRG_OPEN_R
+	 * [1] sequence % 256
+	 * [2] sequence / 256
+	 * [3] WKPF_REPROG_OK | WKPF_REPRG_FAILED
+	 * [4] pagesize & 256
+	 * [5] pagesize /256
 	 */
 	public void onWKPFRemoteProgramOpen(byte[] message) {
-		ByteBuffer buffer = ByteBuffer.allocate(4);
+		ByteBuffer buffer = ByteBuffer.allocate(6);
 		buffer.put(WKPFUtil.WKPF_REPRG_OPEN_R);
 		buffer.put(message[1]);
 		buffer.put(message[2]);
-		if (djaData.open()) {
+		// java byte is signed
+		int totalSize = WKPFUtil.getUnsignedByteValue(message[4]) * 256 + WKPFUtil.getUnsignedByteValue(message[3]);
+		if (djaData.open(totalSize)) {
 			buffer.put(WKPFUtil.WKPF_REPROG_OK);
 		} else {
 			buffer.put(WKPFUtil.WKPF_REPROG_FAILED);
 		}
+		buffer.put((byte) (DJAData.DEFAULT_PAGE_SIZE % 256));
+		buffer.put((byte) (DJAData.DEFAULT_PAGE_SIZE / 256));
 		mptn.send(MPTNUtil.MPTN_MASTER_ID, buffer.array());
 	}
 	
@@ -347,10 +358,11 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 	 * Write append data into dja
 	 */
 	public void onWKPFRemoteProgramWrite(byte[] message) {
-		ByteBuffer buffer = ByteBuffer.allocate(4);
-		int position = message[4] << 8 + message[3];
+		ByteBuffer buffer = ByteBuffer.allocate(5);
+		// java byte is signed
+		int position = WKPFUtil.getUnsignedByteValue(message[4]) * 256 + WKPFUtil.getUnsignedByteValue(message[3]);
 		byte[] data = Arrays.copyOfRange(message, 5, message.length);
-		buffer.put(WKPFUtil.WKPF_REPRG_OPEN_R);
+		buffer.put(WKPFUtil.WKPF_REPRG_WRITE_R);
 		buffer.put(message[1]);
 		buffer.put(message[2]);
 		if (djaData.append(position, data)) {
@@ -365,16 +377,18 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 	 * Commit to close the write operation
 	 */
 	public void onWKPFRemoteProgramCommit(byte[] message) {
-		ByteBuffer buffer = ByteBuffer.allocate(4);
-		buffer.put(WKPFUtil.WKPF_REPRG_OPEN_R);
+		ByteBuffer buffer = ByteBuffer.allocate(5);
+		buffer.put(WKPFUtil.WKPF_REPRG_COMMIT_R);
 		buffer.put(message[1]);
 		buffer.put(message[2]);
+		
 		if (djaData.commit()) {
 			buffer.put(WKPFUtil.WKPF_REPROG_OK);
 		} else {
 			buffer.put(WKPFUtil.WKPF_REPROG_FAILED);
 		}
 		mptn.send(MPTNUtil.MPTN_MASTER_ID, buffer.array());
+		djaData.fireUpdateEvent();
 	}
 	
 	public int getNetworkId() {

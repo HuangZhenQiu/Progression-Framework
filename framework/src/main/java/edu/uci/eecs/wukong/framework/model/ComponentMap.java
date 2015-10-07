@@ -99,4 +99,8 @@ public class ComponentMap {
 		return this.components.hashCode();
 	}
 
+	@Override
+	public String toString() {
+		return components.toString();
+	}
 }

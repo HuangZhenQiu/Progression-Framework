@@ -1,4 +1,6 @@
-package edu.uci.eecs.wukong.framework.context;
+package edu.uci.eecs.wukong.plugin.icsdemo;
+
+import edu.uci.eecs.wukong.framework.context.BaseContext;
 
 public class ICSContext extends BaseContext {
     public static final String TOPIC = "ICSContext";

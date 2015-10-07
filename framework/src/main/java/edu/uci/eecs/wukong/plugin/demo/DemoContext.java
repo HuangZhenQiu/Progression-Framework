@@ -1,4 +1,6 @@
-package edu.uci.eecs.wukong.framework.context;
+package edu.uci.eecs.wukong.plugin.demo;
+
+import edu.uci.eecs.wukong.framework.context.BaseContext;
 
 public class DemoContext extends BaseContext{
 	public int ppnum1;

@@ -1,8 +1,8 @@
 package edu.uci.eecs.wukong.plugin.demo;
 
 import junit.framework.TestCase;
+
 import org.junit.Test;
-import edu.uci.eecs.wukong.framework.context.DemoContext;
 
 public class DemoProgressionExtensionTest extends TestCase {
 

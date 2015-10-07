@@ -4,10 +4,10 @@ import com.google.gson.Gson;
 
 import edu.uci.eecs.wukong.framework.client.XMPPContextClient;
 import edu.uci.eecs.wukong.framework.context.BaseContext;
-import edu.uci.eecs.wukong.framework.context.DemoContext;
 import edu.uci.eecs.wukong.framework.context.ExecutionContext;
 import edu.uci.eecs.wukong.framework.context.ContextListener;
 import edu.uci.eecs.wukong.framework.plugin.Plugin;
+import edu.uci.eecs.wukong.plugin.demo.DemoContext;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -35,7 +35,7 @@ public class ContextManager {
 	public ContextManager() {
 		pluginContextMap = new HashMap<Plugin, List<String>>();
 		contexts = new ConcurrentHashMap<String, BaseContext>();
-		contextClient = XMPPContextClient.getInstance();
+		// contextClient = XMPPContextClient.getInstance();
 		topicFilterSet = new HashSet<String>();
 		contextListener = new ContextEventListenser();
 		listeners = new ArrayList<ContextListener>();

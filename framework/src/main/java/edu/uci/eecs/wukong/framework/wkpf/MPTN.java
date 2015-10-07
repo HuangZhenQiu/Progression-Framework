@@ -146,7 +146,7 @@ public class MPTN implements MPTNMessageListener{
 	}
 	
 	public int getNodeId() {
-		return this.getNodeId();
+		return this.nodeId;
 	}
 	
 	/**

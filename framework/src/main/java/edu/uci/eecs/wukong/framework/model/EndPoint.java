@@ -36,4 +36,9 @@ public class EndPoint {
 		int base = 33;
 		return nodeId * base + portId;
 	}
+	
+	@Override
+	public String toString() {
+		return "EndPoint[NodeId = " + nodeId + ", PortId = " + portId + "]";
+	}
 }

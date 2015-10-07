@@ -74,4 +74,11 @@ public class Link {
 		code = code * base + destPid;
 		return code;
 	}
+	
+	@Override
+	public String toString() {
+		return "Link[SourceId = " + sourceId
+				+ ", SourcePid = " + sourcePid
+				+ ", DestId = " + destId + ", DestPid = " + destPid + "]";
+	}
 }

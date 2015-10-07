@@ -46,9 +46,7 @@ public class WKPFUtil {
 	 * @return the converted short
 	 */
 	public static short getLittleEndianShort(byte[] buffer, int start) {
-		int result = buffer[start];
-		int msb = buffer[start + 1];
-		return (short) (result + msb << 8);
+		return (short) (getUnsignedByteValue(buffer[start + 1]) * 256 + getUnsignedByteValue(buffer[start]));
 	}
 	
 	/**
@@ -63,5 +61,18 @@ public class WKPFUtil {
 		result += buffer[start + 3] << 24;
 		
 		return result;
+	}
+	
+	/**
+	 * Convert java signed byte to unsigned value
+	 * @param data signed java byte
+	 * @return unsigned byte
+	 */
+	public static int getUnsignedByteValue(byte data) {
+		if (data < 0) {
+			return 256 + data;
+		}
+		
+		return data;
 	}
 }

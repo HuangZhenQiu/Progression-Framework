@@ -30,7 +30,7 @@ public class LearningExtensionPoint extends ExtensionPoint<LearningExtension> im
 	}
 	
 	
-	public void dipatchModel(String appId, Object model) {
+	public void dipatchModel(byte portId, Object model) {
 		
 	}
 
@@ -51,7 +51,7 @@ public class LearningExtensionPoint extends ExtensionPoint<LearningExtension> im
 					// Remove from 
 					if (extension.isReady()) {
 						Object object= extension.train();
-						dipatchModel(extension.getPlugin().getAppId(), object);
+						dipatchModel(extension.getPlugin().getPortId(), object);
 					}
 				}
 				

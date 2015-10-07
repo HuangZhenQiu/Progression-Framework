@@ -43,4 +43,9 @@ public class LinkTable {
 		return links.hashCode();
 	}
 	
+	@Override
+	public String toString() {
+		return links.toString();
+	}
+	
 }

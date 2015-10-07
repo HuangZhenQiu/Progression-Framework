@@ -1,13 +1,11 @@
 package edu.uci.eecs.wukong.plugin.icsdemo;
 
 import edu.uci.eecs.wukong.framework.context.BaseContext;
-import edu.uci.eecs.wukong.framework.context.ICSContext;
 import edu.uci.eecs.wukong.framework.extension.AbstractProgressionExtension;
 import edu.uci.eecs.wukong.framework.api.ContextExecutable;
 import edu.uci.eecs.wukong.framework.api.Channelable;
 import edu.uci.eecs.wukong.framework.model.ChannelData;
 import edu.uci.eecs.wukong.framework.plugin.Plugin;
-
 import edu.uci.eecs.wukong.plugin.icsdemo.PreferenceTable;
 import edu.uci.eecs.wukong.plugin.icsdemo.ContextTable;
 

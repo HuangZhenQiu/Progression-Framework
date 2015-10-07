@@ -26,7 +26,7 @@ public abstract class AbstractExtension implements Extension {
 		this.plugin = plugin;
 	}
 	
-	public String getAppId() {
-		return plugin.getAppId();
+	public byte getPortId() {
+		return plugin.getPortId();
 	}
 }

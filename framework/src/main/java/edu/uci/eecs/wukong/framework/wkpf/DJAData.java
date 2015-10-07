@@ -46,8 +46,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
  *            1 byte port number
  */
 public class DJAData {
-	private final static Logger LOGGER = LoggerFactory.getLogger(MPTN.class);
-	private static final int DEFAULT_SIZE = 1024;
+	private final static Logger LOGGER = LoggerFactory.getLogger(DJAData.class);
+	public static final int DEFAULT_PAGE_SIZE = 1024;
 	private AtomicBoolean readable = new AtomicBoolean(false);
 	private byte[] buffer;
 	private int pos; // The next write position
@@ -55,10 +55,10 @@ public class DJAData {
 	private List<RemoteProgrammingListener> listeners;
 	
 	public DJAData() {
-		this.buffer = new byte[DEFAULT_SIZE];
+		this.buffer = new byte[DEFAULT_PAGE_SIZE * 10];
 		this.listeners = new ArrayList<RemoteProgrammingListener>();
 		this.pos = 0;
-		this.size = DEFAULT_SIZE;
+		this.size = DEFAULT_PAGE_SIZE *  10;
 	}
 	
 	/**
@@ -66,8 +66,11 @@ public class DJAData {
 	 * Therefore, we need to reset the buffer, at the mean time block
 	 * all the extract info operation.
 	 */
-	public synchronized boolean open() {
+	public synchronized boolean open(int totalSize) {
 		this.readable.set(false);
+		if (totalSize > size) {
+			expand();
+		}
 		this.pos = 0;
 		return true;
 	}
@@ -83,10 +86,9 @@ public class DJAData {
 	 */
 	public synchronized boolean commit() {
 		synchronized(readable) {
+			readable.set(true);;
 			readable.notifyAll();
 		}
-		// Notify the update of link table and component map
-		fireUpdateEvent();
 		return true;
 	}
 	
@@ -99,6 +101,7 @@ public class DJAData {
 	 * @return whether the operation is successful
 	 */
 	public synchronized boolean append(int start, byte[] data) {
+		LOGGER.info("Start to append data into DJAData at position " + start + " with data length " + data.length);
 		if (start < pos) {
 			LOGGER.error("Rewrite on a memory place with data");
 			return false;
@@ -106,13 +109,17 @@ public class DJAData {
 		
 		if (start > pos) {
 			LOGGER.error("Write to unexpected memory position");
+			return false;
 		}
 		
-		if (start + data.length >= size) {
+		if (start + data.length >= size - 1) {
 			expand();
 		}
 		
 		System.arraycopy(data, 0, buffer, start, data.length);
+		pos += data.length;
+		
+		LOGGER.error("Appended data into DJAData, next pos is " + pos);
 		return true;
 	}
 	
@@ -127,7 +134,7 @@ public class DJAData {
 	/**
 	 * Notify all of the listener about the new link table and component map.
 	 */
-	private void fireUpdateEvent() {
+	public void fireUpdateEvent() {
 		LinkTable table = extractLinkTable();
 		ComponentMap map = extractComponentMap();
 		for (RemoteProgrammingListener listener : listeners) {
@@ -149,14 +156,15 @@ public class DJAData {
 		LinkTable table = new LinkTable();
 		
 		// get the size of links
-		int size = WKPFUtil.getLittleEndianShort(buffer, index);
+		int size = WKPFUtil.getLittleEndianShort(buffer, index + 3);
 		// start index of the links
-		int start = index + 2;
+		int start = index + 5;
 		for (int i = 0; i < size; i++) {
 			Link link = extractLink(start + i * DJAConstants.LINK_TABLE_RECORD_SIZE);
 			table.addLink(link);
 		}
 		
+		LOGGER.info("Extracted link table information from DJAData: " + table.toString());
 		return table;
 	}
 	
@@ -170,10 +178,16 @@ public class DJAData {
 	 * 1 byte dest port number
 	 */
 	private Link extractLink(int start) {
-		int srcComponentId = WKPFUtil.getLittleEndianShort(buffer, start);
-		int destComponentId = WKPFUtil.getLittleEndianShort(buffer, start + 3);
+		try {
+			int srcComponentId = WKPFUtil.getLittleEndianShort(buffer, start);
+			int destComponentId = WKPFUtil.getLittleEndianShort(buffer, start + 3);
+			
+			Link link = new Link(srcComponentId, buffer[start + 2], destComponentId, buffer[start + 5]);
+		} catch (Exception e) {
+			LOGGER.error("Error Status : fail to extract link from DJAData");
+		}
 		
-		return new Link(srcComponentId, buffer[start + 2], destComponentId, buffer[start + 5]);
+		return null;
 	}
 	
 	/**
@@ -193,16 +207,21 @@ public class DJAData {
 		}
 		
 		ComponentMap componentMap = new ComponentMap();
+		// start of component map
+		int start = index + 3;
 		// Size of component
-		int size = WKPFUtil.getLittleEndianShort(buffer, index);
+		int size = WKPFUtil.getLittleEndianShort(buffer, start);
 		// start of component offset table;
-		int start = index + 2;
+		int offsetStart = index + 5;
+		LOGGER.info("Start index of component map : " + start);
 		for (int i = 0; i < size; i++) {
 			// the offset relative to the start of component map
-			int componentOffset = WKPFUtil.getLittleEndianShort(buffer, start + i * 2);
-			componentMap.addComponent(extractComponent(index + componentOffset));
+			int componentOffset = WKPFUtil.getLittleEndianShort(buffer, offsetStart + i * 2);
+			LOGGER.info("Start index of component " + i + " : " + componentOffset);
+			componentMap.addComponent(extractComponent(start + componentOffset));
 		}
 		
+		LOGGER.info("Extracted component map information from DJAData: " + componentMap.toString());
 		return componentMap;
 	}
 	
@@ -216,17 +235,22 @@ public class DJAData {
 	 *   EndPoint Table
 	 */
 	private Component extractComponent(int index) {
-		int endpointSize = buffer[index];
-		short wuclassId = (short) WKPFUtil.getLittleEndianShort(buffer, index + 1);
-	    
-		Component component = new Component(wuclassId);
-		// Start of end point table
-		int start = index + 3;
-		for (int i = 0; i < endpointSize; i++) {
-			component.addEndPoint(extractEndPoint(start + i * DJAConstants.COMPONENT_END_POINT_RECORD_SIZE));
-		}
-		
-		return component;
+		try {
+			int endpointSize = buffer[index];
+			short wuclassId = (short) WKPFUtil.getLittleEndianShort(buffer, index + 1);
+		    
+			Component component = new Component(wuclassId);
+			// Start of end point table
+			int start = index + 3;
+			for (int i = 0; i < endpointSize; i++) {
+				component.addEndPoint(extractEndPoint(start + i * DJAConstants.COMPONENT_END_POINT_RECORD_SIZE));
+			}
+			
+			return component;
+		} catch (Exception e) {
+			LOGGER.error("Error Status : fail to extract component from DJAData");
+		}		
+		return null;
 	}
 	
 	/**
@@ -260,10 +284,12 @@ public class DJAData {
 			byte fileType = this.buffer[start + DJAConstants.FILE_TYPE_OFFSET];
 			if (type != fileType) {
 				start += 3 + WKPFUtil.getLittleEndianShort(buffer, start);
+			} else {
+				return start;
 			}
 		}
 		
-		if (start == pos) {
+		if (start >= pos) {
 			start = -1;
 		}
 		
@@ -274,10 +300,12 @@ public class DJAData {
 	 * Expand the size of buffer, when the data to write exceed the size of buffer
 	 */
 	private void expand() {
+		LOGGER.info("Expand DJA buffer: Current buffer size is " + buffer.length);
 		byte[] newBuffer = new byte[size * 2];
-		System.arraycopy(buffer, 0, newBuffer, 0, buffer.length);
+		System.arraycopy(buffer, 0, newBuffer, 0, pos);
 		buffer = newBuffer;
 		size = size * 2;
+		LOGGER.info("After expand DJA buffer: Current buffer size is " + buffer.length);
 	}
 	
 	private void access() {

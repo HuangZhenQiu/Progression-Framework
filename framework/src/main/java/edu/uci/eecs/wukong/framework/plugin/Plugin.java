@@ -28,7 +28,8 @@ import edu.uci.eecs.wukong.framework.api.Extension;
  *
  */
 public abstract class Plugin {
-	private static byte id = 0;
+	/* Port starts from 1*/
+	private static byte id = 1; 
 	private byte portId;
 	private String name;
 	private boolean online;
@@ -44,6 +45,7 @@ public abstract class Plugin {
 	public Plugin(String name) {
 		this.online = false;
 		this.learning = false;
+		this.portId = id ++;
 		this.support = new PropertyChangeSupport(this);
 	}
 
@@ -91,4 +93,9 @@ public abstract class Plugin {
 	public byte getPortId() {
 		return portId;
 	}
+	
+    @Override
+	public String toString() {
+    	return "Plugin[name = " + name + ", portId = " + portId + "]";
+    }
 }

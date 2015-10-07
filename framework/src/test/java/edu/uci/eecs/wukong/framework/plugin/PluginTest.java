@@ -5,7 +5,7 @@ import java.beans.PropertyChangeListener;
 
 import org.junit.Test;
 
-import edu.uci.eecs.wukong.plugin.switcher.SwitchPlugin;
+import edu.uci.eecs.wukong.prclass.switcher.SwitchPrClass;
 import junit.framework.TestCase;
 
 public class PluginTest extends TestCase {
@@ -13,7 +13,7 @@ public class PluginTest extends TestCase {
 	
 	@Test
 	public void testPropertyUpdate() {
-		SwitchPlugin plugin = new SwitchPlugin();
+		SwitchPrClass plugin = new SwitchPrClass();
 		plugin.addPropertyChangeListener(TEST_PROPERTY, new PropertyChangeListener() {
 			 public void propertyChange(PropertyChangeEvent evt) {
 				 System.out.println(evt.getPropertyName());

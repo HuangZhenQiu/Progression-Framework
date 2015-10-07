@@ -1,6 +1,6 @@
 package edu.uci.eecs.wukong.framework.client;
 
-import edu.uci.eecs.wukong.framework.context.BaseContext;
+import edu.uci.eecs.wukong.framework.factor.BaseFactor;
 import edu.uci.eecs.wukong.framework.util.Configuration;
 
 import org.jivesoftware.smack.ConnectionConfiguration;
@@ -50,7 +50,7 @@ public class XMPPContextClient {
 		}
 	}
 	
-	public void subscribe(String nodeId, ItemEventListener<PayloadItem<BaseContext>> listener) {
+	public void subscribe(String nodeId, ItemEventListener<PayloadItem<BaseFactor>> listener) {
 		try {
 			Node  eventNode = manager.getNode(nodeId);
 			eventNode.addItemEventListener(listener);
@@ -61,14 +61,14 @@ public class XMPPContextClient {
 		} 
 	}
 	
-	public void publish(String id, BaseContext context) {
+	public void publish(String id, BaseFactor context) {
 		try {
 			LeafNode node = (LeafNode)manager.getNode(id);
 			if (node == null) {
 				node = createNode(id);
 			}
 			
-			PayloadItem<BaseContext> item = new PayloadItem<BaseContext>(context);
+			PayloadItem<BaseFactor> item = new PayloadItem<BaseFactor>(context);
 			node.publish(item);
 		} catch (Exception e) {
 			e.printStackTrace();

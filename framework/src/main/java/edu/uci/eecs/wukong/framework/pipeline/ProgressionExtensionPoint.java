@@ -14,8 +14,6 @@ import org.slf4j.LoggerFactory;
 import edu.uci.eecs.wukong.framework.api.Activatable;
 import edu.uci.eecs.wukong.framework.api.ContextExecutable;
 import edu.uci.eecs.wukong.framework.api.TimerExecutable;
-import edu.uci.eecs.wukong.framework.context.BaseContext;
-import edu.uci.eecs.wukong.framework.context.ContextListener;
 import edu.uci.eecs.wukong.framework.entity.ConfigurationCommand;
 import edu.uci.eecs.wukong.framework.entity.Entity;
 import edu.uci.eecs.wukong.framework.entity.HueEntity;
@@ -24,24 +22,26 @@ import edu.uci.eecs.wukong.framework.exception.ExtensionNotFoundException;
 import edu.uci.eecs.wukong.framework.extension.AbstractExtension;
 import edu.uci.eecs.wukong.framework.extension.AbstractProgressionExtension;
 import edu.uci.eecs.wukong.framework.extension.ProgressionExtension;
+import edu.uci.eecs.wukong.framework.factor.BaseFactor;
+import edu.uci.eecs.wukong.framework.factor.FactorListener;
 import edu.uci.eecs.wukong.framework.manager.ConfigurationManager;
-import edu.uci.eecs.wukong.framework.plugin.Plugin;
+import edu.uci.eecs.wukong.framework.prclass.PrClass;
 import edu.uci.eecs.wukong.framework.util.Configuration;
 
 public class ProgressionExtensionPoint extends ExtensionPoint<AbstractProgressionExtension>
-	implements ContextListener, Runnable {
+	implements FactorListener, Runnable {
 	private static Logger logger = LoggerFactory.getLogger(ProgressionExtensionPoint.class);
 	private static Configuration configuration = Configuration.getInstance();
 	private ConfigurationManager configurationManager;
-	private Map<Plugin, TimerTask> pluginTaskMap;
-	private Queue<BaseContext> contexts;
+	private Map<PrClass, TimerTask> pluginTaskMap;
+	private Queue<BaseFactor> contexts;
 	private Timer timer;
 	
 	public ProgressionExtensionPoint(ConfigurationManager configurationManager, Pipeline pipeline) {
 		super(pipeline);
 		this.configurationManager = configurationManager;
-		this.contexts = new ConcurrentLinkedQueue<BaseContext>();
-		this.pluginTaskMap = new HashMap<Plugin, TimerTask>();
+		this.contexts = new ConcurrentLinkedQueue<BaseFactor>();
+		this.pluginTaskMap = new HashMap<PrClass, TimerTask>();
 		this.timer = new Timer(true);
 	}
 	
@@ -53,6 +53,8 @@ public class ProgressionExtensionPoint extends ExtensionPoint<AbstractProgressio
 			timer.scheduleAtFixedRate(timerTask, 0, 10 * 1000);
 			pluginTaskMap.put(extension.getPlugin(), timerTask);
 		}
+		logger.info("Registered Progression extension for plugin "
+				+ extension.getPlugin().getName() + " of port " + extension.getPlugin().getPortId());
 	}
 	
 	@Override
@@ -60,6 +62,8 @@ public class ProgressionExtensionPoint extends ExtensionPoint<AbstractProgressio
 		super.unregister(extension);
 		// Cancel the timer taks for the plugin
 		pluginTaskMap.get(extension.getPlugin()).cancel();
+		logger.info("Unregistered Progression extension for plugin "
+				+ extension.getPlugin().getName() + " of port " + extension.getPlugin().getPortId());
 	}
 	
 	public void applyModel(String appId, Object model) throws Exception {
@@ -92,8 +96,8 @@ public class ProgressionExtensionPoint extends ExtensionPoint<AbstractProgressio
 	
 	private class ProgressionTask implements Runnable{
 		private ProgressionExtension<?> extension;
-		private BaseContext currentContext;
-		public ProgressionTask(ProgressionExtension extension, BaseContext context) {
+		private BaseFactor currentContext;
+		public ProgressionTask(ProgressionExtension extension, BaseFactor context) {
 			this.extension = extension;
 			this.currentContext = context;
 		}
@@ -136,10 +140,10 @@ public class ProgressionExtensionPoint extends ExtensionPoint<AbstractProgressio
 	
 	public void run() {
 		while(true) {
-			BaseContext context = contexts.poll();
+			BaseFactor context = contexts.poll();
 			if(context != null) {
 				logger.info("Progression Extension Point is polling new context:" + context.toString());
-				for(Map.Entry<Plugin, AbstractExtension> entry : this.extensionMap.entrySet()) {
+				for(Map.Entry<PrClass, AbstractExtension> entry : this.extensionMap.entrySet()) {
 					ProgressionExtension extension = (ProgressionExtension) entry.getValue();
 					if (extension instanceof ContextExecutable) {
 						if (extension.isSubcribedTopic(context.getTopicId())) {
@@ -151,15 +155,15 @@ public class ProgressionExtensionPoint extends ExtensionPoint<AbstractProgressio
 		}
 	}
 	
-	public void onContextArrival(BaseContext context) {
+	public void onContextArrival(BaseFactor context) {
 		contexts.add(context);
 	}
 	
-	public void onContextExpired(BaseContext context) {
+	public void onContextExpired(BaseFactor context) {
 		
 	}
 	
-	public void onContextDeleted(BaseContext context) {
+	public void onContextDeleted(BaseFactor context) {
 		
 	}
 }

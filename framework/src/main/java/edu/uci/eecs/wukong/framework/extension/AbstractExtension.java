@@ -1,12 +1,12 @@
 package edu.uci.eecs.wukong.framework.extension;
 
+import edu.uci.eecs.wukong.framework.api.ExecutionContext;
 import edu.uci.eecs.wukong.framework.api.Extension;
-import edu.uci.eecs.wukong.framework.context.ExecutionContext;
-import edu.uci.eecs.wukong.framework.plugin.Plugin;
+import edu.uci.eecs.wukong.framework.prclass.PrClass;
 
 public abstract class AbstractExtension implements Extension {
-	protected Plugin plugin;
-	public AbstractExtension(Plugin plugin) {
+	protected PrClass plugin;
+	public AbstractExtension(PrClass plugin) {
 		this.plugin = plugin;
 	}
 	
@@ -18,11 +18,11 @@ public abstract class AbstractExtension implements Extension {
 		
 	}
 
-	public Plugin getPlugin() {
+	public PrClass getPlugin() {
 		return plugin;
 	}
 
-	public void setPlugin(Plugin plugin) {
+	public void setPlugin(PrClass plugin) {
 		this.plugin = plugin;
 	}
 	

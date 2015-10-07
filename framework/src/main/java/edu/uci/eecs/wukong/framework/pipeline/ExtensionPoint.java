@@ -5,7 +5,7 @@ import java.util.concurrent.Executors;
 import java.util.HashMap;
 import java.util.Map;
 
-import edu.uci.eecs.wukong.framework.plugin.Plugin;
+import edu.uci.eecs.wukong.framework.prclass.PrClass;
 import edu.uci.eecs.wukong.framework.extension.AbstractExtension;
 
 /**
@@ -16,13 +16,13 @@ import edu.uci.eecs.wukong.framework.extension.AbstractExtension;
  * @param <E> Type extends AbstractExtension
  */
 public abstract class ExtensionPoint<E extends AbstractExtension> {
-	protected Map<Plugin, AbstractExtension> extensionMap;
+	protected Map<PrClass, AbstractExtension> extensionMap;
 	protected ExecutorService executor;
 	protected Pipeline pipeline;
 	
 	public ExtensionPoint(Pipeline pipeline) {
 		this.executor = Executors.newFixedThreadPool(5);
-		this.extensionMap = new HashMap<Plugin, AbstractExtension>();
+		this.extensionMap = new HashMap<PrClass, AbstractExtension>();
 		this.pipeline = pipeline;
 	}
 	

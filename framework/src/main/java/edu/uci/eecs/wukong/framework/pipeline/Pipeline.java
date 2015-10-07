@@ -1,17 +1,17 @@
 package edu.uci.eecs.wukong.framework.pipeline;
 
+import edu.uci.eecs.wukong.framework.api.ExecutionContext;
 import edu.uci.eecs.wukong.framework.api.Extension;
 import edu.uci.eecs.wukong.framework.manager.BufferManager;
 import edu.uci.eecs.wukong.framework.manager.ConfigurationManager;
 import edu.uci.eecs.wukong.framework.manager.ContextManager;
-import edu.uci.eecs.wukong.framework.plugin.Plugin;
+import edu.uci.eecs.wukong.framework.prclass.PrClass;
 import edu.uci.eecs.wukong.framework.select.FeatureChoosers;
-import edu.uci.eecs.wukong.framework.context.BaseContext;
-import edu.uci.eecs.wukong.framework.context.ContextListener;
-import edu.uci.eecs.wukong.framework.context.ExecutionContext;
 import edu.uci.eecs.wukong.framework.extension.AbstractProgressionExtension;
 import edu.uci.eecs.wukong.framework.extension.FeatureAbstractionExtension;
 import edu.uci.eecs.wukong.framework.extension.LearningExtension;
+import edu.uci.eecs.wukong.framework.factor.BaseFactor;
+import edu.uci.eecs.wukong.framework.factor.FactorListener;
 
 import java.util.List;
 import java.lang.Thread;
@@ -21,7 +21,7 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.annotations.VisibleForTesting;
 
-public class Pipeline implements ContextListener{
+public class Pipeline implements FactorListener{
 	private final static Logger LOGGER = LoggerFactory.getLogger(Pipeline.class);
 	private ContextManager contextManager;
 	private ConfigurationManager configurationManager;
@@ -50,10 +50,10 @@ public class Pipeline implements ContextListener{
 		this.executionContext = new ExecutionContext();
 	}
 	
-	public ExecutionContext getCurrentContext(Plugin plugin) {
+	public ExecutionContext getCurrentContext(PrClass plugin) {
 		ExecutionContext context = new ExecutionContext();
 		for (String topicId : plugin.registerContext()) {
-			BaseContext cont = executionContext.getContext(topicId);
+			BaseFactor cont = executionContext.getContext(topicId);
 			if (cont != null) {
 				context.addContext(cont);
 			}
@@ -100,17 +100,17 @@ public class Pipeline implements ContextListener{
 		LOGGER.info("Progression Pipeline get started.");
 	}
 
-	public void onContextArrival(BaseContext context) {
+	public void onContextArrival(BaseFactor context) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	public void onContextExpired(BaseContext context) {
+	public void onContextExpired(BaseFactor context) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	public void onContextDeleted(BaseContext context) {
+	public void onContextDeleted(BaseFactor context) {
 		// TODO Auto-generated method stub
 		
 	}

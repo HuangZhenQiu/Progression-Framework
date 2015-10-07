@@ -2,7 +2,7 @@ package edu.uci.eecs.wukong.framework.load;
 
 import java.lang.reflect.Constructor;
 
-import edu.uci.eecs.wukong.framework.plugin.Plugin;
+import edu.uci.eecs.wukong.framework.prclass.PrClass;
 
 public class ClassLoaderTest {
 	
@@ -16,7 +16,7 @@ public class ClassLoaderTest {
 		try {
 			Class c = test.loadClass("edu.uci.eecs.wukong.plugin.demo.DemoPlugin");
 			Constructor ctor = c.getConstructor();
-			Plugin object  = (Plugin)ctor.newInstance();
+			PrClass object  = (PrClass)ctor.newInstance();
 			System.out.println(object.registerContext());
 			
 			

@@ -22,8 +22,8 @@ import edu.uci.eecs.wukong.framework.model.WuClassModel;
 import edu.uci.eecs.wukong.framework.model.WuObjectModel;
 import edu.uci.eecs.wukong.framework.model.WuPropertyModel;
 import edu.uci.eecs.wukong.framework.manager.BufferManager;
-import edu.uci.eecs.wukong.framework.plugin.PluginInitListener;
-import edu.uci.eecs.wukong.framework.plugin.Plugin;
+import edu.uci.eecs.wukong.framework.prclass.PrClass;
+import edu.uci.eecs.wukong.framework.prclass.PrClassInitListener;
 
 public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 	private final static Logger LOGGER = LoggerFactory.getLogger(WKPF.class);
@@ -44,12 +44,12 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 	private ComponentMap componentMap = null;
 	private LinkTable linkTable = null;
 	private BufferManager bufferManager;
-	private List<PluginInitListener> listeners;
+	private List<PrClassInitListener> listeners;
 
 	public WKPF(BufferManager bufferManager) {
 		this.wuclasses = new ArrayList<WuClassModel> ();
 		this.portToWuObjectMap = new HashMap<Byte, WuObjectModel> ();
-		this.listeners = new ArrayList<PluginInitListener> ();
+		this.listeners = new ArrayList<PrClassInitListener> ();
 		this.mptn = new MPTN();
 		this.mptn.register(this);
 		this.djaData = new DJAData();
@@ -63,7 +63,7 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 		mptn.start();
 	}
 	
-	public void register(PluginInitListener listener) {
+	public void register(PrClassInitListener listener) {
 		this.listeners.add(listener);
 	}
 	
@@ -81,13 +81,13 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 	 */
 	private void bindWuObjects() {
 		Map<Byte, Short> wuclassMap = this.componentMap.getWuClassIdList(mptn.getNodeId());
-		List<Plugin> plugins = new ArrayList<Plugin> ();
+		List<PrClass> plugins = new ArrayList<PrClass> ();
 		
 		for (Entry<Byte, Short> entry : wuclassMap.entrySet()) {
 			plugins.add(this.portToWuObjectMap.get(entry.getKey()).getPlugin());
 		}
 		
-		for (PluginInitListener listener : listeners) {
+		for (PrClassInitListener listener : listeners) {
 			listener.bindPlugins(plugins);
 		}
 	}

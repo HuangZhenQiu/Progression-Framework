@@ -3,7 +3,7 @@ package edu.uci.eecs.wukong.framework.select;
 import edu.uci.eecs.wukong.framework.extension.FeatureAbstractionExtension;
 import edu.uci.eecs.wukong.framework.operator.Operator;
 import edu.uci.eecs.wukong.framework.manager.BufferManager;
-import edu.uci.eecs.wukong.framework.plugin.Plugin;
+import edu.uci.eecs.wukong.framework.prclass.PrClass;
 import edu.uci.eecs.wukong.framework.model.NPP;
 import edu.uci.eecs.wukong.framework.wkpf.WKPF;
 
@@ -20,17 +20,17 @@ public class FeatureChoosers {
 	// Network Id of progression server
 	private BufferManager bufferManager;
 	private WKPF wkpf;
-	private Map<Plugin, FeatureChooser> chooserMap;
+	private Map<PrClass, FeatureChooser> chooserMap;
 	
 	public FeatureChoosers(BufferManager bufferManager, WKPF wkpf) {
 		this.bufferManager = bufferManager;
 		this.wkpf = wkpf;
-		this.chooserMap = new HashMap<Plugin, FeatureChooser>();
+		this.chooserMap = new HashMap<PrClass, FeatureChooser>();
 	}
 	
 	@SuppressWarnings("rawtypes")
 	public void addFeatureExtractionExtenshion(FeatureAbstractionExtension extention) {
-		Plugin plugin = extention.getPlugin();
+		PrClass plugin = extention.getPlugin();
 		Map<Operator, Map<NPP, Integer>> bindMap = new HashMap<Operator, Map<NPP, Integer>> ();
 		for (Operator operator : extention.registerOperators()) {
 			Map<Integer, Integer>  portToInterval = operator.bind();
@@ -46,7 +46,7 @@ public class FeatureChoosers {
 		chooserMap.put(plugin, chooser);
 	}
 	
-	public List<Number> choose(Plugin plugin) throws Exception {
+	public List<Number> choose(PrClass plugin) throws Exception {
 		if (chooserMap.get(plugin) == null) {
 			logger.error("Fail to choose Feature Chooser for " + plugin.toString());
 			throw new Exception("Fail to choose Feature Chooser for " + plugin.toString());

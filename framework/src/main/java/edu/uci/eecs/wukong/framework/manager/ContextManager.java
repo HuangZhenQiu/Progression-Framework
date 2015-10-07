@@ -2,12 +2,12 @@ package edu.uci.eecs.wukong.framework.manager;
 
 import com.google.gson.Gson;
 
+import edu.uci.eecs.wukong.framework.api.ExecutionContext;
 import edu.uci.eecs.wukong.framework.client.XMPPContextClient;
-import edu.uci.eecs.wukong.framework.context.BaseContext;
-import edu.uci.eecs.wukong.framework.context.ExecutionContext;
-import edu.uci.eecs.wukong.framework.context.ContextListener;
-import edu.uci.eecs.wukong.framework.plugin.Plugin;
-import edu.uci.eecs.wukong.plugin.demo.DemoContext;
+import edu.uci.eecs.wukong.framework.factor.BaseFactor;
+import edu.uci.eecs.wukong.framework.factor.FactorListener;
+import edu.uci.eecs.wukong.framework.prclass.PrClass;
+import edu.uci.eecs.wukong.prclass.demo.DemoFactor;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -25,23 +25,23 @@ import org.slf4j.LoggerFactory;
 public class ContextManager {
 	private static Logger logger = LoggerFactory.getLogger(ContextManager.class);
 	private static Gson gson = new Gson();
-	private Map<Plugin, List<String>> pluginContextMap;
-	private Map<String, BaseContext> contexts;
+	private Map<PrClass, List<String>> pluginContextMap;
+	private Map<String, BaseFactor> contexts;
 	private XMPPContextClient contextClient;
 	private Set<String> topicFilterSet;
 	private ContextEventListenser contextListener;
-	private List<ContextListener> listeners;
+	private List<FactorListener> listeners;
 	
 	public ContextManager() {
-		pluginContextMap = new HashMap<Plugin, List<String>>();
-		contexts = new ConcurrentHashMap<String, BaseContext>();
+		pluginContextMap = new HashMap<PrClass, List<String>>();
+		contexts = new ConcurrentHashMap<String, BaseFactor>();
 		// contextClient = XMPPContextClient.getInstance();
 		topicFilterSet = new HashSet<String>();
 		contextListener = new ContextEventListenser();
-		listeners = new ArrayList<ContextListener>();
+		listeners = new ArrayList<FactorListener>();
 	}
 	
-	private class ContextEventListenser implements ItemEventListener<PayloadItem<BaseContext>> {
+	private class ContextEventListenser implements ItemEventListener<PayloadItem<BaseFactor>> {
 		public void handlePublishedItems(ItemPublishEvent evt){
 			for (Object object :evt.getItems()) {
 				PayloadItem item = (PayloadItem)object;
@@ -49,26 +49,26 @@ public class ContextManager {
 				logger.info(message);
 				int start = message.indexOf('{');
 				int end = message.indexOf('}');
-				DemoContext context = gson.fromJson(message.substring(start, end + 1), DemoContext.class);
+				DemoFactor context = gson.fromJson(message.substring(start, end + 1), DemoFactor.class);
 				contexts.put(context.getTopicId(), context);
-				for(ContextListener listener : listeners) {
+				for(FactorListener listener : listeners) {
 					listener.onContextArrival(context);
 				}
 			}
 		}
 	}
 	
-	public synchronized void subsribeContext(ContextListener listener) {
+	public synchronized void subsribeContext(FactorListener listener) {
 		this.listeners.add(listener);
 	}
 	
-	public synchronized void unsubsribeContext(ContextListener listener) {
+	public synchronized void unsubsribeContext(FactorListener listener) {
 		if (this.listeners.contains(listener)) {
 			this.listeners.remove(listener);
 		}
 	}
 	
-	public void subscribe(Plugin plugin, List<String> topics) {
+	public void subscribe(PrClass plugin, List<String> topics) {
 		for (String topic : topics) {
 			if(!topicFilterSet.contains(topic)) {
 				contextClient.subscribe(topic, contextListener);
@@ -77,12 +77,12 @@ public class ContextManager {
 		}
 		
 		pluginContextMap.put(plugin, topics);
-		logger.info("Finish register plugn " + plugin.getName() + " in context manager.");
+		logger.info("Finish subsribe topics " + topics + " for plugn " + plugin.getName() + " in context manager.");
 	}
 	
-	public synchronized ExecutionContext getPluginExecutionContext(Plugin plugin) {
+	public synchronized ExecutionContext getPluginExecutionContext(PrClass plugin) {
 		List<String> subscribedTopics = pluginContextMap.get(plugin);
-		Map<String, BaseContext> pluginContext = new HashMap<String, BaseContext>();
+		Map<String, BaseFactor> pluginContext = new HashMap<String, BaseFactor>();
 		for(String topic : subscribedTopics) {
 			pluginContext.put(topic, contexts.get(topic));
 		}

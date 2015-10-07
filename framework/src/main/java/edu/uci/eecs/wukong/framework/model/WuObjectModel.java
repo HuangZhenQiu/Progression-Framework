@@ -1,12 +1,12 @@
 package edu.uci.eecs.wukong.framework.model;
 
 import edu.uci.eecs.wukong.framework.model.WuClassModel;
-import edu.uci.eecs.wukong.framework.plugin.Plugin;
+import edu.uci.eecs.wukong.framework.prclass.PrClass;
 
 public class WuObjectModel {
 	private WuClassModel type;
-	private Plugin plugin;
-	public WuObjectModel(WuClassModel type, Plugin plugin) {
+	private PrClass plugin;
+	public WuObjectModel(WuClassModel type, PrClass plugin) {
 		this.plugin = plugin;
 		this.type = type;
 	}
@@ -19,7 +19,7 @@ public class WuObjectModel {
 		return -1;
 	}
 	
-	public Plugin getPlugin() {
+	public PrClass getPlugin() {
 		return this.plugin;
 	}
 	

@@ -8,16 +8,16 @@ import java.util.concurrent.PriorityBlockingQueue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import edu.uci.eecs.wukong.framework.context.BaseContext;
-import edu.uci.eecs.wukong.framework.context.ContextListener;
-import edu.uci.eecs.wukong.framework.context.ExecutionContext;
+import edu.uci.eecs.wukong.framework.api.ExecutionContext;
 import edu.uci.eecs.wukong.framework.event.Event;
 import edu.uci.eecs.wukong.framework.event.IEvent;
 import edu.uci.eecs.wukong.framework.extension.LearningExtension;
+import edu.uci.eecs.wukong.framework.factor.BaseFactor;
+import edu.uci.eecs.wukong.framework.factor.FactorListener;
 import edu.uci.eecs.wukong.framework.util.Configuration;
 
 @SuppressWarnings("rawtypes")
-public class LearningExtensionPoint extends ExtensionPoint<LearningExtension> implements ContextListener, Runnable{
+public class LearningExtensionPoint extends ExtensionPoint<LearningExtension> implements FactorListener, Runnable{
 	private static Logger logger = LoggerFactory.getLogger(LearningExtensionPoint.class);
 	private static Configuration configuration = Configuration.getInstance();
 	private Map<LearningExtension, Event> lastEvent;
@@ -78,17 +78,17 @@ public class LearningExtensionPoint extends ExtensionPoint<LearningExtension> im
 		}
 	}
 
-	public void onContextArrival(BaseContext context) {
+	public void onContextArrival(BaseFactor context) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	public void onContextExpired(BaseContext context) {
+	public void onContextExpired(BaseFactor context) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	public void onContextDeleted(BaseContext context) {
+	public void onContextDeleted(BaseFactor context) {
 		// TODO Auto-generated method stub
 		
 	}

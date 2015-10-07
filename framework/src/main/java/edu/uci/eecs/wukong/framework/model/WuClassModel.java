@@ -56,4 +56,9 @@ public class WuClassModel {
 	public int hashCode() {
 		return this.wuclassId + properties.hashCode();
 	}
+	
+	@Override
+	public String toString() {
+		return "WuClass[id = " + this.wuclassId + "]";
+	}
 }

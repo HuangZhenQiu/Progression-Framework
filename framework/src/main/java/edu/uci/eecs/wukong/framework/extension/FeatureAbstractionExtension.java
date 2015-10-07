@@ -5,7 +5,7 @@ import java.util.Map;
 
 import edu.uci.eecs.wukong.framework.ProgressionKey.LogicalKey;
 import edu.uci.eecs.wukong.framework.operator.Operator;
-import edu.uci.eecs.wukong.framework.plugin.Plugin;
+import edu.uci.eecs.wukong.framework.prclass.PrClass;
 
 /**
  * 
@@ -14,7 +14,7 @@ import edu.uci.eecs.wukong.framework.plugin.Plugin;
  */
 public abstract class FeatureAbstractionExtension extends AbstractExtension {
 	
-	public FeatureAbstractionExtension(Plugin plugin) {
+	public FeatureAbstractionExtension(PrClass plugin) {
 		super(plugin);
 		// TODO Auto-generated constructor stub
 	}

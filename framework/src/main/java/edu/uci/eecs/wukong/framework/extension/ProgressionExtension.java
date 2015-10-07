@@ -1,16 +1,16 @@
 package edu.uci.eecs.wukong.framework.extension;
 
-import edu.uci.eecs.wukong.framework.context.BaseContext;
-import edu.uci.eecs.wukong.framework.context.ExecutionContext;
+import edu.uci.eecs.wukong.framework.api.ExecutionContext;
 import edu.uci.eecs.wukong.framework.entity.ConfigurationCommand;
 import edu.uci.eecs.wukong.framework.entity.FeatureEntity;
-import edu.uci.eecs.wukong.framework.plugin.Plugin;
+import edu.uci.eecs.wukong.framework.factor.BaseFactor;
+import edu.uci.eecs.wukong.framework.prclass.PrClass;
 
 import java.util.List;
 public abstract class ProgressionExtension<T extends FeatureEntity> extends AbstractProgressionExtension {
 	private Object model;
 	
-	public ProgressionExtension(Plugin plugin) {
+	public ProgressionExtension(PrClass plugin) {
 		super(plugin);
 		// TODO Auto-generated constructor stub
 	}
@@ -28,7 +28,7 @@ public abstract class ProgressionExtension<T extends FeatureEntity> extends Abst
 	public abstract List<ConfigurationCommand> execute(List<T> data, ExecutionContext context);
 	
 	// Triggered by context switch
-	public abstract List<ConfigurationCommand> execute(BaseContext context);
+	public abstract List<ConfigurationCommand> execute(BaseFactor context);
 	
 	// Triggered by timer
 	public abstract List<ConfigurationCommand> execute();

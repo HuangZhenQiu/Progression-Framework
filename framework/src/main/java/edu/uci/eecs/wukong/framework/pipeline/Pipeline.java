@@ -14,6 +14,7 @@ import edu.uci.eecs.wukong.framework.factor.BaseFactor;
 import edu.uci.eecs.wukong.framework.factor.FactorListener;
 
 import java.util.List;
+import java.util.Map;
 import java.lang.Thread;
 
 import org.slf4j.Logger;
@@ -23,44 +24,34 @@ import com.google.common.annotations.VisibleForTesting;
 
 public class Pipeline implements FactorListener{
 	private final static Logger LOGGER = LoggerFactory.getLogger(Pipeline.class);
-	private SceneManager contextManager;
+	private SceneManager sceneManager;
 	private ConfigurationManager configurationManager;
 	private BufferManager bufferManager;
 	private FeatureChoosers featureChoosers;
 	private FeatureAbstractionExtensionPoint featureAbstractionPoint;
 	private ProgressionExtensionPoint progressionPoint;
 	private LearningExtensionPoint learningPoint;
-	private ExecutionContext executionContext;
 	
 	@VisibleForTesting
 	public Pipeline() {
 		
 	}
 	
-	public Pipeline(SceneManager contextManager,
+	public Pipeline(SceneManager sceneManager,
 			ConfigurationManager configuraionManager, FeatureChoosers featureChoosers) {
-		this.contextManager = contextManager;
+		this.sceneManager = sceneManager;
 		this.configurationManager = configuraionManager;
 		this.featureChoosers = featureChoosers;
 		this.progressionPoint = new ProgressionExtensionPoint(configuraionManager, this);
 		this.featureAbstractionPoint = new FeatureAbstractionExtensionPoint(featureChoosers, this);
 		this.learningPoint = new LearningExtensionPoint(this);
-		this.contextManager.subsribeFactor(learningPoint);
-		this.contextManager.subsribeFactor(progressionPoint);
-		this.contextManager.subsribeFactor(this);
-		this.executionContext = new ExecutionContext();
+		this.sceneManager.subsribeFactor(learningPoint);
+		this.sceneManager.subsribeFactor(progressionPoint);
+		this.sceneManager.subsribeFactor(this);
 	}
 	
-	public ExecutionContext getCurrentContext(PrClass plugin) {
-		ExecutionContext context = new ExecutionContext();
-		for (String topicId : plugin.registerContext()) {
-			BaseFactor cont = executionContext.getContext(topicId);
-			if (cont != null) {
-				context.addContext(cont);
-			}
-		}
-		
-		return context;
+	public ExecutionContext getCurrentContext(PrClass prClass) {
+		return sceneManager.getPluginExecutionContext(prClass);
 	}
 	
 	public void dipatchModel(String appId, Object model) throws Exception {

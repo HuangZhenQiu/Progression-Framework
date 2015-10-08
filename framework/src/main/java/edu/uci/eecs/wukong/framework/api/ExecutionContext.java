@@ -1,35 +1,33 @@
 package edu.uci.eecs.wukong.framework.api;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import com.google.common.collect.ImmutableMap;
 
+import edu.uci.eecs.wukong.framework.client.FactorClient;
 import edu.uci.eecs.wukong.framework.factor.BaseFactor;
 import edu.uci.eecs.wukong.framework.factor.LocationFactor;
 
 public class ExecutionContext {
 	private static String LOCATION = "Location";
 	private static String HUMAN_ACTION = "Action";
-	private Map<String, BaseFactor> contexts;
+	private final Map<String, BaseFactor> factors;
+	private final FactorClient client;
 	
-	public ExecutionContext() {
-		contexts = new HashMap<String, BaseFactor>();
-	}
-	
-	public ExecutionContext(Map<String, BaseFactor> contexts) {
-		contexts = ImmutableMap.<String, BaseFactor>builder().putAll(contexts).build();
+	public ExecutionContext(Map<String, BaseFactor> contexts, FactorClient client) {
+		this.client = client;
+		this.factors = ImmutableMap.<String, BaseFactor>builder().putAll(contexts).build();
 	}
 	
 	public LocationFactor getLocationContext() {
-		return (LocationFactor)contexts.get(LOCATION);
+		return (LocationFactor)factors.get(LOCATION);
 	}
 	
 	public BaseFactor getContext(String key) {
-		return contexts.get(key);
+		return factors.get(key);
 	}
 	
-	public void addContext(BaseFactor context) {
-		contexts.put(context.getTopicId(), context);
+	public void publish(String topic, BaseFactor factor) {
+		this.client.publish(topic, factor);
 	}
 }

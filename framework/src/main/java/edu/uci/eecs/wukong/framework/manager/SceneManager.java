@@ -71,10 +71,10 @@ public class SceneManager {
 	
 	public synchronized ExecutionContext getPluginExecutionContext(PrClass plugin) {
 		List<String> subscribedTopics = pluginContextMap.get(plugin);
-		Map<String, BaseFactor> pluginContext = new HashMap<String, BaseFactor>();
+		Map<String, BaseFactor> factorMap = new HashMap<String, BaseFactor>();
 		for(String topic : subscribedTopics) {
-			pluginContext.put(topic, factors.get(topic));
+			factorMap.put(topic, factors.get(topic));
 		}
-		return new ExecutionContext(pluginContext);
+		return new ExecutionContext(factorMap, factorClient);
 	}
 }

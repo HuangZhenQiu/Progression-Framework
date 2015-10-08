@@ -39,7 +39,8 @@ public class PrClassPropertyMonitor {
 		for (String name : names) {
 			if (!properties.contains(name)) {
 				plugin.addPropertyChangeListener(name, listener);
-				properties.add(name);
+				properties.add(name); 
+				logger.info("Add monitored output property " + name + " for PrClass " + plugin);
 			}
 		}
 	}

@@ -145,8 +145,20 @@ public class MPTN implements MPTNMessageListener{
 		return true;
 	}
 	
+	/**
+	 * The local network Id
+	 * @return
+	 */
 	public int getNodeId() {
 		return this.nodeId;
+	}
+	
+	/**
+	 * The global network Id address. Int value of four bytes address.
+	 * @return
+	 */
+	public int getLongAddress() {
+		return this.longAddress;
 	}
 	
 	/**

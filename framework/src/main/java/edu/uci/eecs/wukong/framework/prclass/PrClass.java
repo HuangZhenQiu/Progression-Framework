@@ -36,17 +36,17 @@ public abstract class PrClass {
 	private boolean learning;
 	protected PropertyChangeSupport support;
 	
-	public PrClass(String name, boolean online) {
+	public PrClass(String name, boolean online, boolean learning) {
 		this.name = name;
 		this.online = online;
 		this.portId = id ++;
+		this.online = online;
+		this.learning = learning;
+		this.support = new PropertyChangeSupport(this);
 	}
 
 	public PrClass(String name) {
-		this.online = false;
-		this.learning = false;
-		this.portId = id ++;
-		this.support = new PropertyChangeSupport(this);
+		this(name, false, false);
 	}
 
 	public abstract List<Extension> registerExtension();
@@ -96,6 +96,6 @@ public abstract class PrClass {
 	
     @Override
 	public String toString() {
-    	return "Plugin[name = " + name + ", portId = " + portId + "]";
+    	return "PrClass[name = " + name + ", portId = " + portId + "]";
     }
 }

@@ -80,7 +80,8 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 	 * Notify the plugin manager to create wuobjects on corresponding port 
 	 */
 	private void bindWuObjects() {
-		Map<Byte, Short> wuclassMap = this.componentMap.getWuClassIdList(mptn.getNodeId());
+		// TODO (Peter Huang) Update this, if end point use short address rather than long address
+		Map<Byte, Short> wuclassMap = this.componentMap.getWuClassIdList(mptn.getLongAddress());
 		List<PrClass> plugins = new ArrayList<PrClass> ();
 		
 		for (Entry<Byte, Short> entry : wuclassMap.entrySet()) {

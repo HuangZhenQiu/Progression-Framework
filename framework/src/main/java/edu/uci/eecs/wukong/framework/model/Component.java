@@ -42,7 +42,7 @@ public class Component {
 	
 	public EndPoint getPrimaryEndPoint() {
 		if (endPoints.size() > 0) {
-			endPoints.get(0);
+			return endPoints.get(0);
 		}
 		
 		return null;

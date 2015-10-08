@@ -10,6 +10,7 @@ import edu.uci.eecs.wukong.framework.prclass.PrClassPropertyMonitor;
 import edu.uci.eecs.wukong.framework.model.NPP;
 import edu.uci.eecs.wukong.framework.model.WuClassModel;
 import edu.uci.eecs.wukong.framework.model.WuObjectModel;
+import edu.uci.eecs.wukong.framework.model.PropertyType;
 import edu.uci.eecs.wukong.framework.wkpf.WKPF;
 
 import java.beans.PropertyChangeEvent;
@@ -26,7 +27,7 @@ import org.slf4j.LoggerFactory;
 
 public class PluginManager implements PrClassInitListener {
 	private final static Logger LOGGER = LoggerFactory.getLogger(PluginManager.class);
-	private final static String PLUGIN_PATH = "edu.uci.eecs.wukong.plugin";
+	private final static String PLUGIN_PATH = "edu.uci.eecs.wukong.prclass";
 	private ContextManager contextManager;
 	private PrClassPropertyMonitor propertyMonitor;
 	private Pipeline pipeline;
@@ -34,7 +35,7 @@ public class PluginManager implements PrClassInitListener {
 	/* WuclassId to WuClass model */
 	private Map<Short, WuClassModel> registedClasses;
 	private WKPF wkpf;
-	private String[] PLUGINS = {"switcher.SwitchPlugin"};
+	private String[] PLUGINS = {"switcher.SwitchPrClass"};
 	
 	public PluginManager(WKPF wkpf, ContextManager contextManager, Pipeline pipeline) {
 		this.contextManager = contextManager;
@@ -107,7 +108,7 @@ public class PluginManager implements PrClassInitListener {
 		contextManager.subscribe(plugin, plugin.registerContext());
 		pipeline.registerExtension(plugin.registerExtension());
 		bindPropertyUpdateEvent(plugin);
-		LOGGER.info("");
+		LOGGER.info("Finished bind plugin with context manager, pipeline and property monitor.");
 	}
 	
 	/**
@@ -158,7 +159,7 @@ public class PluginManager implements PrClassInitListener {
 			for (Annotation annotation : annotations) {
 				if (annotation.annotationType().equals(WuProperty.class)) {
 					WuProperty property = (WuProperty) annotation;
-					if (property.type().equals("Output")) {
+					if (property.type().equals(PropertyType.Output)) {
 						output.add(name);
 					}
 				}

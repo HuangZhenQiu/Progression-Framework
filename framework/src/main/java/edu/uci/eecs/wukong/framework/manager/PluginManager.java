@@ -28,7 +28,7 @@ import org.slf4j.LoggerFactory;
 public class PluginManager implements PrClassInitListener {
 	private final static Logger LOGGER = LoggerFactory.getLogger(PluginManager.class);
 	private final static String PLUGIN_PATH = "edu.uci.eecs.wukong.prclass";
-	private ContextManager contextManager;
+	private SceneManager contextManager;
 	private PrClassPropertyMonitor propertyMonitor;
 	private Pipeline pipeline;
 	private List<PrClass> plugins;
@@ -37,7 +37,7 @@ public class PluginManager implements PrClassInitListener {
 	private WKPF wkpf;
 	private String[] PLUGINS = {"switcher.SwitchPrClass"};
 	
-	public PluginManager(WKPF wkpf, ContextManager contextManager, Pipeline pipeline) {
+	public PluginManager(WKPF wkpf, SceneManager contextManager, Pipeline pipeline) {
 		this.contextManager = contextManager;
 		this.pipeline = pipeline;
 		this.propertyMonitor = new PrClassPropertyMonitor(this);

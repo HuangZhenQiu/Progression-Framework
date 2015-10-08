@@ -1,5 +1,7 @@
-package edu.uci.eecs.wukong.framework.client;
+package edu.uci.eecs.wukong.framework.xmpp;
 
+import edu.uci.eecs.wukong.framework.client.FactorClient;
+import edu.uci.eecs.wukong.framework.client.FactorClientListener;
 import edu.uci.eecs.wukong.framework.factor.BaseFactor;
 import edu.uci.eecs.wukong.framework.util.Configuration;
 
@@ -18,22 +20,22 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-public class XMPPContextClient {
-	private static Logger logger = LoggerFactory.getLogger(XMPPContextClient.class);
+public class XMPPFactorClient implements FactorClient {
+	private static Logger logger = LoggerFactory.getLogger(XMPPFactorClient.class);
 	private final static Configuration systemConfig= Configuration.getInstance(); 
-	private static XMPPContextClient client;
+	private static XMPPFactorClient client;
 	private ConnectionConfiguration connectionConfig;
 	private XMPPConnection connection;
 	private PubSubManager manager;
 	
-	public static synchronized XMPPContextClient getInstance() {
+	public static synchronized XMPPFactorClient getInstance() {
 		if (client == null) {
-			client = new XMPPContextClient();
+			client = new XMPPFactorClient();
 		}
 		return client;
 	}
 	
-	private XMPPContextClient(){
+	private XMPPFactorClient(){
 		connectionConfig = new ConnectionConfiguration(
 				systemConfig.getXMPPAddress(),
 				Integer.parseInt(systemConfig.getXMPPPort()), systemConfig.getXMPPServerName());
@@ -50,12 +52,19 @@ public class XMPPContextClient {
 		}
 	}
 	
-	public void subscribe(String nodeId, ItemEventListener<PayloadItem<BaseFactor>> listener) {
+	public void subscribe(String nodeId, FactorClientListener listener) {
 		try {
-			Node  eventNode = manager.getNode(nodeId);
-			eventNode.addItemEventListener(listener);
-			eventNode.subscribe(connection.getUser());
-			logger.info("XMPP client subcribe nodeId: " + nodeId);
+			if (listener instanceof ItemEventListener) {
+				ItemEventListener<PayloadItem<BaseFactor>> itemEventListener = 
+						(ItemEventListener<PayloadItem<BaseFactor>>) listener;
+				Node eventNode = manager.getNode(nodeId);
+				eventNode.addItemEventListener(itemEventListener);
+				eventNode.subscribe(connection.getUser());
+				logger.info("XMPP client subcribe nodeId: " + nodeId);
+			} else {
+				logger.info("Fail to subscribe a topic with a listener which is not type of ItemEventListener<PayloadItem<BaseFactor>>");
+			}
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		} 

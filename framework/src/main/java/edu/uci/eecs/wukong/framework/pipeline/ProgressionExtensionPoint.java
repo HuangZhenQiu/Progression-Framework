@@ -34,13 +34,13 @@ public class ProgressionExtensionPoint extends ExtensionPoint<AbstractProgressio
 	private static Configuration configuration = Configuration.getInstance();
 	private ConfigurationManager configurationManager;
 	private Map<PrClass, TimerTask> pluginTaskMap;
-	private Queue<BaseFactor> contexts;
+	private Queue<BaseFactor> factors;
 	private Timer timer;
 	
 	public ProgressionExtensionPoint(ConfigurationManager configurationManager, Pipeline pipeline) {
 		super(pipeline);
 		this.configurationManager = configurationManager;
-		this.contexts = new ConcurrentLinkedQueue<BaseFactor>();
+		this.factors = new ConcurrentLinkedQueue<BaseFactor>();
 		this.pluginTaskMap = new HashMap<PrClass, TimerTask>();
 		this.timer = new Timer(true);
 	}
@@ -140,14 +140,14 @@ public class ProgressionExtensionPoint extends ExtensionPoint<AbstractProgressio
 	
 	public void run() {
 		while(true) {
-			BaseFactor context = contexts.poll();
-			if(context != null) {
-				logger.info("Progression Extension Point is polling new context:" + context.toString());
+			BaseFactor factor = factors.poll();
+			if(factor != null) {
+				logger.info("Progression Extension Point is polling new context:" + factor.toString());
 				for(Map.Entry<PrClass, AbstractExtension> entry : this.extensionMap.entrySet()) {
 					ProgressionExtension extension = (ProgressionExtension) entry.getValue();
 					if (extension instanceof ContextExecutable) {
-						if (extension.isSubcribedTopic(context.getTopicId())) {
-							this.executor.execute(new ProgressionTask(extension, context));
+						if (extension.isSubcribedTopic(factor.getTopicId())) {
+							this.executor.execute(new ProgressionTask(extension, factor));
 						}
 					}
 				}
@@ -155,15 +155,15 @@ public class ProgressionExtensionPoint extends ExtensionPoint<AbstractProgressio
 		}
 	}
 	
-	public void onContextArrival(BaseFactor context) {
-		contexts.add(context);
+	public void onFactorArrival(BaseFactor factor) {
+		factors.add(factor);
 	}
 	
-	public void onContextExpired(BaseFactor context) {
+	public void onTopicExpired(BaseFactor factor) {
 		
 	}
 	
-	public void onContextDeleted(BaseFactor context) {
+	public void onTopicDeleted(BaseFactor factor) {
 		
 	}
 }

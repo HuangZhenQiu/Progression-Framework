@@ -78,17 +78,17 @@ public class LearningExtensionPoint extends ExtensionPoint<LearningExtension> im
 		}
 	}
 
-	public void onContextArrival(BaseFactor context) {
+	public void onFactorArrival(BaseFactor context) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	public void onContextExpired(BaseFactor context) {
+	public void onTopicExpired(BaseFactor context) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	public void onContextDeleted(BaseFactor context) {
+	public void onTopicDeleted(BaseFactor context) {
 		// TODO Auto-generated method stub
 		
 	}

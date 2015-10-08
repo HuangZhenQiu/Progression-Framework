@@ -4,7 +4,7 @@ import edu.uci.eecs.wukong.framework.api.ExecutionContext;
 import edu.uci.eecs.wukong.framework.api.Extension;
 import edu.uci.eecs.wukong.framework.manager.BufferManager;
 import edu.uci.eecs.wukong.framework.manager.ConfigurationManager;
-import edu.uci.eecs.wukong.framework.manager.ContextManager;
+import edu.uci.eecs.wukong.framework.manager.SceneManager;
 import edu.uci.eecs.wukong.framework.prclass.PrClass;
 import edu.uci.eecs.wukong.framework.select.FeatureChoosers;
 import edu.uci.eecs.wukong.framework.extension.AbstractProgressionExtension;
@@ -23,7 +23,7 @@ import com.google.common.annotations.VisibleForTesting;
 
 public class Pipeline implements FactorListener{
 	private final static Logger LOGGER = LoggerFactory.getLogger(Pipeline.class);
-	private ContextManager contextManager;
+	private SceneManager contextManager;
 	private ConfigurationManager configurationManager;
 	private BufferManager bufferManager;
 	private FeatureChoosers featureChoosers;
@@ -37,7 +37,7 @@ public class Pipeline implements FactorListener{
 		
 	}
 	
-	public Pipeline(ContextManager contextManager,
+	public Pipeline(SceneManager contextManager,
 			ConfigurationManager configuraionManager, FeatureChoosers featureChoosers) {
 		this.contextManager = contextManager;
 		this.configurationManager = configuraionManager;
@@ -45,8 +45,9 @@ public class Pipeline implements FactorListener{
 		this.progressionPoint = new ProgressionExtensionPoint(configuraionManager, this);
 		this.featureAbstractionPoint = new FeatureAbstractionExtensionPoint(featureChoosers, this);
 		this.learningPoint = new LearningExtensionPoint(this);
-		this.contextManager.subsribeContext(learningPoint);
-		this.contextManager.subsribeContext(this);
+		this.contextManager.subsribeFactor(learningPoint);
+		this.contextManager.subsribeFactor(progressionPoint);
+		this.contextManager.subsribeFactor(this);
 		this.executionContext = new ExecutionContext();
 	}
 	
@@ -100,17 +101,17 @@ public class Pipeline implements FactorListener{
 		LOGGER.info("Progression Pipeline get started.");
 	}
 
-	public void onContextArrival(BaseFactor context) {
+	public void onFactorArrival(BaseFactor context) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	public void onContextExpired(BaseFactor context) {
+	public void onTopicExpired(BaseFactor context) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	public void onContextDeleted(BaseFactor context) {
+	public void onTopicDeleted(BaseFactor context) {
 		// TODO Auto-generated method stub
 		
 	}

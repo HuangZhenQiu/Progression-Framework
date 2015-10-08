@@ -10,7 +10,7 @@ public class PluginManagerTest extends TestCase {
 	@Test
 	public void testInitilization() throws Exception {
 		BufferManager bufferManager = new BufferManager();
-		PluginManager manager = new PluginManager(new WKPF(bufferManager), new ContextManager(), new Pipeline());
+		PluginManager manager = new PluginManager(new WKPF(bufferManager), new SceneManager(), new Pipeline());
 		manager.init();
 	}
 	

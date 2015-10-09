@@ -3,14 +3,14 @@ package edu.uci.eecs.wukong.prclass.switcher;
 import java.util.HashMap;
 import java.util.Map;
 
-import edu.uci.eecs.wukong.framework.api.ContextExecutable;
+import edu.uci.eecs.wukong.framework.api.FactorExecutable;
 import edu.uci.eecs.wukong.framework.extension.AbstractProgressionExtension;
 import edu.uci.eecs.wukong.framework.factor.BaseFactor;
 import edu.uci.eecs.wukong.framework.factor.UserFactor;
 import edu.uci.eecs.wukong.framework.prclass.PrClass;
 
 public class SwitchProgressionExtension extends AbstractProgressionExtension
-	implements ContextExecutable {
+	implements FactorExecutable {
 	// User ID to threshold Map
 	private Map<String, Double> userThresholdMap;
 	

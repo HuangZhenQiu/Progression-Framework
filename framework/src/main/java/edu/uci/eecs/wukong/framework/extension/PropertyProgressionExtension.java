@@ -1,7 +1,7 @@
 package edu.uci.eecs.wukong.framework.extension;
 
 import edu.uci.eecs.wukong.framework.api.Activatable;
-import edu.uci.eecs.wukong.framework.api.ContextExecutable;
+import edu.uci.eecs.wukong.framework.api.FactorExecutable;
 import edu.uci.eecs.wukong.framework.api.Executable;
 import edu.uci.eecs.wukong.framework.api.ExecutionContext;
 import edu.uci.eecs.wukong.framework.api.TimerExecutable;
@@ -11,7 +11,7 @@ import edu.uci.eecs.wukong.framework.prclass.PrClass;
 
 import java.util.List;
 public abstract class PropertyProgressionExtension<T extends FeatureEntity> extends AbstractProgressionExtension<T> 
-	implements Activatable, Executable<T>, ContextExecutable, TimerExecutable{
+	implements Activatable, Executable<T>, FactorExecutable, TimerExecutable{
 	
 	public PropertyProgressionExtension(PrClass plugin) {
 		super(plugin);

@@ -12,7 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import edu.uci.eecs.wukong.framework.api.Activatable;
-import edu.uci.eecs.wukong.framework.api.ContextExecutable;
+import edu.uci.eecs.wukong.framework.api.FactorExecutable;
 import edu.uci.eecs.wukong.framework.api.TimerExecutable;
 import edu.uci.eecs.wukong.framework.entity.ConfigurationCommand;
 import edu.uci.eecs.wukong.framework.entity.Entity;
@@ -145,7 +145,7 @@ public class ProgressionExtensionPoint extends ExtensionPoint<AbstractProgressio
 				logger.info("Progression Extension Point is polling new context:" + factor.toString());
 				for(Map.Entry<PrClass, AbstractExtension> entry : this.extensionMap.entrySet()) {
 					ProgressionExtension extension = (ProgressionExtension) entry.getValue();
-					if (extension instanceof ContextExecutable) {
+					if (extension instanceof FactorExecutable) {
 						if (extension.isSubcribedTopic(factor.getTopicId())) {
 							this.executor.execute(new ProgressionTask(extension, factor));
 						}

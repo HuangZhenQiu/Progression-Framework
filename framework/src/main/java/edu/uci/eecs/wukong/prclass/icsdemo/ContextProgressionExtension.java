@@ -2,14 +2,14 @@ package edu.uci.eecs.wukong.prclass.icsdemo;
 
 import edu.uci.eecs.wukong.framework.extension.AbstractProgressionExtension;
 import edu.uci.eecs.wukong.framework.factor.BaseFactor;
-import edu.uci.eecs.wukong.framework.api.ContextExecutable;
+import edu.uci.eecs.wukong.framework.api.FactorExecutable;
 import edu.uci.eecs.wukong.framework.api.Channelable;
 import edu.uci.eecs.wukong.framework.model.ChannelData;
 import edu.uci.eecs.wukong.framework.prclass.PrClass;
 import edu.uci.eecs.wukong.prclass.icsdemo.ContextTable;
 import edu.uci.eecs.wukong.prclass.icsdemo.PreferenceTable;
 
-public class ContextProgressionExtension extends AbstractProgressionExtension implements ContextExecutable, Channelable {
+public class ContextProgressionExtension extends AbstractProgressionExtension implements FactorExecutable, Channelable {
 	private PreferenceTable preferenceTable = new PreferenceTable();
 	private ContextTable contextTable = new ContextTable();
 	private String currentContext = null;

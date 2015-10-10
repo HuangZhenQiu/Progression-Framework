@@ -4,6 +4,7 @@ import edu.uci.eecs.wukong.framework.wkpf.MPTNMessageListener;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
@@ -55,8 +56,16 @@ public class NIOUdpServer implements Runnable {
 						}
 						
 						// We only read from the channel;
-						if (key.isReadable()) {
-							executorService.execute(new EventHandleThread(key, listeners));
+						synchronized (key) { 
+							if (key.isReadable()) {
+								channel = (DatagramChannel) key.channel();
+								ChannelAttachment attachment = (ChannelAttachment)key.attachment();
+								attachment.setAddress(channel.receive(attachment.getBuffer()));
+								attachment.getBuffer().flip();
+								executorService.execute(
+										new EventHandleThread(deepCopy(attachment.getBuffer()), listeners));
+								attachment.getBuffer().clear();
+							}
 						}
 					}
 					
@@ -70,8 +79,14 @@ public class NIOUdpServer implements Runnable {
 		}
 	}
 	
-	private void read(SelectionKey key) throws IOException {
-		
+	private synchronized ByteBuffer deepCopy(ByteBuffer original) {
+		final ByteBuffer clone = (original.isDirect()) ?
+				ByteBuffer.allocateDirect(original.capacity()) : ByteBuffer.allocate(original.capacity());
+		clone.put(original);
+		clone.order(original.order());
+		clone.position(original.position());
+		clone.flip();
+		return clone;
 	}
 	
 	public static void main(String[] args) {

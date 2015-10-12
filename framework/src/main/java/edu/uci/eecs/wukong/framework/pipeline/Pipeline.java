@@ -1,7 +1,9 @@
 package edu.uci.eecs.wukong.framework.pipeline;
 
+import edu.uci.eecs.wukong.framework.api.Closable;
 import edu.uci.eecs.wukong.framework.api.ExecutionContext;
 import edu.uci.eecs.wukong.framework.api.Extension;
+import edu.uci.eecs.wukong.framework.api.Initiable;
 import edu.uci.eecs.wukong.framework.manager.BufferManager;
 import edu.uci.eecs.wukong.framework.manager.ConfigurationManager;
 import edu.uci.eecs.wukong.framework.manager.SceneManager;
@@ -14,7 +16,6 @@ import edu.uci.eecs.wukong.framework.factor.BaseFactor;
 import edu.uci.eecs.wukong.framework.factor.FactorListener;
 
 import java.util.List;
-import java.util.Map;
 import java.lang.Thread;
 
 import org.slf4j.Logger;
@@ -61,7 +62,18 @@ public class Pipeline implements FactorListener{
 	public void registerExtension(List<Extension> extensions) {
 		for (Extension extension : extensions) {
 			if (extension instanceof AbstractProgressionExtension) {
-				progressionPoint.register((AbstractProgressionExtension)extension);
+				AbstractProgressionExtension progressionExtension = (AbstractProgressionExtension) extension;
+				try {
+					// Call the initial function 
+					if (extension instanceof Initiable) {
+						Initiable initiable = (Initiable) extension;
+						initiable.init();
+					}
+					progressionPoint.register(progressionExtension);
+				} catch (Exception e) {
+					LOGGER.info("Fail to register progression extension for plugin "
+						+ progressionExtension.getPlugin() + ", base of exception: " + e.toString());
+				}
 			} else if (extension instanceof FeatureAbstractionExtension) {
 				featureAbstractionPoint.register((FeatureAbstractionExtension) extension);
 			} else if (extension instanceof LearningExtension) {
@@ -73,7 +85,19 @@ public class Pipeline implements FactorListener{
 	public void unregisterExtension(List<Extension> extensions) {
 		for (Extension extension : extensions) {
 			if (extension instanceof AbstractProgressionExtension) {
-				progressionPoint.unregister((AbstractProgressionExtension) extension);
+				AbstractProgressionExtension progressionExtension = (AbstractProgressionExtension) extension;
+				try {
+					// Call the initial function 
+					if (extension instanceof Closable) {
+						Closable initiable = (Closable) extension;
+						initiable.close();
+					}
+					progressionPoint.unregister((AbstractProgressionExtension) extension);
+				} catch (Exception e) {
+					LOGGER.info("Fail to register progression extension for plugin "
+						+ progressionExtension.getPlugin() + ", base of exception: " + e.toString());
+				}
+				
 			} else if (extension instanceof FeatureAbstractionExtension) {
 				featureAbstractionPoint.unregister((FeatureAbstractionExtension) extension);
 			} else if (extension instanceof LearningExtension) {

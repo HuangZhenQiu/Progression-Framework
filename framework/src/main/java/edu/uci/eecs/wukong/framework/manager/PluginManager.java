@@ -117,7 +117,6 @@ public class PluginManager implements PrClassInitListener {
 	 */
     public void unbindPlugin() {
     	for (PrClass plugin : plugins) {
-    		
     		pipeline.unregisterExtension(plugin.registerExtension());
     	}
     }

@@ -87,7 +87,7 @@ public class Pipeline implements FactorListener{
 			if (extension instanceof AbstractProgressionExtension) {
 				AbstractProgressionExtension progressionExtension = (AbstractProgressionExtension) extension;
 				try {
-					// Call the initial function 
+					// Call the close function 
 					if (extension instanceof Closable) {
 						Closable initiable = (Closable) extension;
 						initiable.close();

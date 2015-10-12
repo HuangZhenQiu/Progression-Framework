@@ -95,40 +95,18 @@ public class ProgressionExtensionPoint extends ExtensionPoint<AbstractProgressio
 	}
 	
 	private class ProgressionTask implements Runnable{
-		private ProgressionExtension<?> extension;
+		private AbstractProgressionExtension extension;
 		private BaseFactor currentContext;
-		public ProgressionTask(ProgressionExtension extension, BaseFactor context) {
+		public ProgressionTask(AbstractProgressionExtension extension, BaseFactor context) {
 			this.extension = extension;
 			this.currentContext = context;
 		}
 		
 		public void run() {
 			try {
-				List<ConfigurationCommand> commands = extension.execute(currentContext);
-				for (ConfigurationCommand command: commands) {
-					List<Entity> entities = command.getEntities();
-					if(!command.isDelayed()) {
-						if(command.getTarget().equals("Master")) {
-							configurationManager.sendMasterReport(command.getType(),
-									new ConfigurationReport(configuration.getDemoApplicationId() , entities));
-						} else {
-							for(Entity entity : command.getEntities()) {
-								configurationManager.sendHueConfiguration(command.getType(), (HueEntity)entity);
-							}
-						}
-					} else {
-						if(command.getTarget().equals("Master")) {
-							for (Entity entity : entities) {
-								configurationManager.sendMasterReport(command.getType(),
-										new ConfigurationReport(configuration.getDemoApplicationId() , entity));
-								Thread.sleep(command.getSeconds() * 1000);
-							}
-						} else {
-							for(Entity entity : entities) {
-								configurationManager.sendHueConfiguration(command.getType(), (HueEntity)entity);
-							}
-						}
-					}
+				if (extension instanceof FactorExecutable) {
+					FactorExecutable factorExecutable = (FactorExecutable) extension;
+					factorExecutable.execute(currentContext);
 				}
 			} catch (Exception e) {
 				e.printStackTrace();

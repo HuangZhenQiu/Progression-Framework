@@ -10,8 +10,8 @@ import edu.uci.eecs.wukong.framework.factor.BaseFactor;
 import edu.uci.eecs.wukong.framework.prclass.PrClass;
 
 import java.util.List;
-public abstract class PropertyProgressionExtension<T extends FeatureEntity> extends AbstractProgressionExtension<T> 
-	implements Activatable, Executable<T>, FactorExecutable, TimerExecutable{
+public abstract class PropertyProgressionExtension extends AbstractProgressionExtension 
+	implements Activatable, Executable, FactorExecutable, TimerExecutable{
 	
 	public PropertyProgressionExtension(PrClass plugin) {
 		super(plugin);
@@ -24,7 +24,7 @@ public abstract class PropertyProgressionExtension<T extends FeatureEntity> exte
 	}
 	
 	// Triggered by general data pipeline
-	public void execute(List<T> data, ExecutionContext context) {
+	public void execute(List data, ExecutionContext context) {
 		
 	}
 	

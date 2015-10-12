@@ -11,7 +11,7 @@ import edu.uci.eecs.wukong.framework.model.PropertyType;
 import edu.uci.eecs.wukong.framework.prclass.PrClass;
 import edu.uci.eecs.wukong.prclass.icsdemo.ContextProgressionExtension;
 
-@WuClass(id = 10002)
+@WuClass(id = 10001)
 public class ICSDemoPrClass extends PrClass {
 	
 	@WuProperty(name = "uid", id = 1, type = PropertyType.Input, dtype = DataType.Channel)

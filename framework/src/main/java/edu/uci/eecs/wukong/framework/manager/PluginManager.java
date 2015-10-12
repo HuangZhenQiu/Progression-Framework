@@ -35,7 +35,7 @@ public class PluginManager implements PrClassInitListener {
 	/* WuclassId to WuClass model */
 	private Map<Short, WuClassModel> registedClasses;
 	private WKPF wkpf;
-	private String[] PLUGINS = {"switcher.SwitchPrClass"};
+	private String[] PLUGINS = {"switcher.SwitchPrClass", "timertest.TimerPrClass"};
 	
 	public PluginManager(WKPF wkpf, SceneManager contextManager, Pipeline pipeline) {
 		this.contextManager = contextManager;
@@ -60,6 +60,11 @@ public class PluginManager implements PrClassInitListener {
 			ClassLoader loader = PluginManager.class.getClassLoader();
 			Class<?> c = loader.loadClass(path);
 			WuClass wuclass = c.getAnnotation(WuClass.class);
+			if (wuclass == null) {
+				LOGGER.info("Can't find WuClass annotation for PrClass " + path);
+				continue;
+			}
+				
 			WuClassModel wuClassModel =  new WuClassModel(wuclass.id());
 			for (Field field : c.getDeclaredFields()) {
 				String name = field.getName();

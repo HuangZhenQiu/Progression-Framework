@@ -72,7 +72,7 @@ public class Pipeline implements FactorListener{
 					progressionPoint.register(progressionExtension);
 				} catch (Exception e) {
 					LOGGER.info("Fail to register progression extension for plugin "
-						+ progressionExtension.getPlugin() + ", base of exception: " + e.toString());
+						+ progressionExtension.getPrClass() + ", base of exception: " + e.toString());
 				}
 			} else if (extension instanceof FeatureAbstractionExtension) {
 				featureAbstractionPoint.register((FeatureAbstractionExtension) extension);
@@ -95,7 +95,7 @@ public class Pipeline implements FactorListener{
 					progressionPoint.unregister((AbstractProgressionExtension) extension);
 				} catch (Exception e) {
 					LOGGER.info("Fail to register progression extension for plugin "
-						+ progressionExtension.getPlugin() + ", base of exception: " + e.toString());
+						+ progressionExtension.getPrClass() + ", base of exception: " + e.toString());
 				}
 				
 			} else if (extension instanceof FeatureAbstractionExtension) {

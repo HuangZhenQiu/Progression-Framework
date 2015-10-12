@@ -51,19 +51,19 @@ public class ProgressionExtensionPoint extends ExtensionPoint<AbstractProgressio
 		if (extension instanceof TimerExecutable) {
 			ProgressionTimerTask timerTask = new ProgressionTimerTask((TimerExecutable)extension);
 			timer.scheduleAtFixedRate(timerTask, 0, 10 * 1000);
-			pluginTaskMap.put(extension.getPlugin(), timerTask);
+			pluginTaskMap.put(extension.getPrClass(), timerTask);
 		}
 		logger.info("Registered Progression extension for plugin "
-				+ extension.getPlugin().getName() + " of port " + extension.getPlugin().getPortId());
+				+ extension.getPrClass().getName() + " of port " + extension.getPrClass().getPortId());
 	}
 	
 	@Override
 	public synchronized void unregister(AbstractProgressionExtension extension) {
 		super.unregister(extension);
 		// Cancel the timer taks for the plugin
-		pluginTaskMap.get(extension.getPlugin()).cancel();
+		pluginTaskMap.get(extension.getPrClass()).cancel();
 		logger.info("Unregistered Progression extension for plugin "
-				+ extension.getPlugin().getName() + " of port " + extension.getPlugin().getPortId());
+				+ extension.getPrClass().getName() + " of port " + extension.getPrClass().getPortId());
 	}
 	
 	public void applyModel(String appId, Object model) throws Exception {
@@ -72,7 +72,7 @@ public class ProgressionExtensionPoint extends ExtensionPoint<AbstractProgressio
 		if (extension instanceof Activatable) {
 			if (extension != null) {
 				((Activatable)extension).activate(model);
-				extension.getPlugin().setOnline(true);
+				extension.getPrClass().setOnline(true);
 			} else {
 				throw new ExtensionNotFoundException("Progression extension is not found for app :" + appId);
 			}	

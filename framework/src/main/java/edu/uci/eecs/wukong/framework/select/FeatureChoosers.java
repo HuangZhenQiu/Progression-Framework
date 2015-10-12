@@ -30,7 +30,7 @@ public class FeatureChoosers {
 	
 	@SuppressWarnings("rawtypes")
 	public void addFeatureExtractionExtenshion(FeatureAbstractionExtension extention) {
-		PrClass plugin = extention.getPlugin();
+		PrClass plugin = extention.getPrClass();
 		Map<Operator, Map<NPP, Integer>> bindMap = new HashMap<Operator, Map<NPP, Integer>> ();
 		for (Operator operator : extention.registerOperators()) {
 			Map<Integer, Integer>  portToInterval = operator.bind();

@@ -46,12 +46,12 @@ public class LearningExtensionPoint extends ExtensionPoint<LearningExtension> im
 		
 		public void run() {
 			try {
-				if (!extension.getPlugin().isOnline() && !extension.isReady()) {
+				if (!extension.getPrClass().isOnline() && !extension.isReady()) {
 					extension.apply(event.getData(), contexts);
 					// Remove from 
 					if (extension.isReady()) {
 						Object object= extension.train();
-						dipatchModel(extension.getPlugin().getPortId(), object);
+						dipatchModel(extension.getPrClass().getPortId(), object);
 					}
 				}
 				
@@ -70,7 +70,7 @@ public class LearningExtensionPoint extends ExtensionPoint<LearningExtension> im
 				LearningExtension extension = (LearningExtension) this.extensionMap.get(event.getAppId());
 				if (extension != null) {
 					this.executor.execute(new LearningTask(extension, event,
-							pipeline.getCurrentContext(extension.getPlugin())));
+							pipeline.getCurrentContext(extension.getPrClass())));
 				} else {
 					logger.error("Cant't find learning extension for the appId: " + event.getAppId());
 				}

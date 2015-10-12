@@ -21,7 +21,7 @@ public abstract class ProgressionExtension<T extends FeatureEntity> extends Abst
 	}
 	
 	public boolean isSubcribedTopic(String topic) {
-		return this.getPlugin().registerContext().contains(topic);
+		return this.getPrClass().registerContext().contains(topic);
 	}
 	
 	// Triggered by general data pipeline

@@ -18,9 +18,9 @@ public class TestPropertyProgressionExtension extends AbstractProgressionExtensi
 	}
 
 	public void execute() {
-		if(this.plugin instanceof TestPrClass) {
-			((TestPrClass) plugin).setTestProperty((short)UUID.randomUUID().getLeastSignificantBits());
-			logger.info("TestPropertyProgressionExtension updated proerpty: " + ((TestPrClass) plugin).getTestProperty());
+		if(this.prClass instanceof TestPrClass) {
+			((TestPrClass) prClass).setTestProperty((short)UUID.randomUUID().getLeastSignificantBits());
+			logger.info("TestPropertyProgressionExtension updated proerpty: " + ((TestPrClass) prClass).getTestProperty());
 		}
 	}
 

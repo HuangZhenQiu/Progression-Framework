@@ -29,7 +29,7 @@ public class SwitchProgressionExtension extends AbstractProgressionExtension
 			UserFactor userContext = (UserFactor)context;
 			Double threshold = userThresholdMap.get(userContext.getUid());
 			if(threshold != null) {	
-				SwitchPrClass plugin =  (SwitchPrClass)this.getPlugin();
+				SwitchPrClass plugin =  (SwitchPrClass)this.getPrClass();
 				plugin.setThreshold(threshold);
 			}
 		}

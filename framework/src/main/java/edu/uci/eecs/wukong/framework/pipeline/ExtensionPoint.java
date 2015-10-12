@@ -32,7 +32,7 @@ public abstract class ExtensionPoint<E extends AbstractExtension> {
 	 * @param extension
 	 */
 	public synchronized void register(E extension) {
-		extensionMap.put(extension.getPlugin(), extension);
+		extensionMap.put(extension.getPrClass(), extension);
 	}
 	
 	/**
@@ -41,8 +41,8 @@ public abstract class ExtensionPoint<E extends AbstractExtension> {
 	 * @param extension
 	 */
 	public synchronized void unregister(E extension) {
-		if (extensionMap.containsKey(extension.getPlugin())) {
-			extensionMap.remove(extension.getPlugin());
+		if (extensionMap.containsKey(extension.getPrClass())) {
+			extensionMap.remove(extension.getPrClass());
 		}
 	}
 }

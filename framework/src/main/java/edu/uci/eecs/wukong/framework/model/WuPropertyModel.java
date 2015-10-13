@@ -5,12 +5,12 @@ import edu.uci.eecs.wukong.framework.model.DataType;
 import edu.uci.eecs.wukong.framework.model.PropertyType;
 
 public class WuPropertyModel {
-	private int id;
+	private byte id;
 	private String name;
 	private PropertyType ptype;
 	private DataType dtype;
 	
-	public WuPropertyModel(int id, String name, PropertyType pType, DataType dType) {
+	public WuPropertyModel(byte id, String name, PropertyType pType, DataType dType) {
 		this.id = id;
 		this.name = name;
 		this.ptype = pType;
@@ -24,11 +24,11 @@ public class WuPropertyModel {
 		this.dtype = property.dtype();
 	}
 	
-	public int getId() {
+	public byte getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(byte id) {
 		this.id = id;
 	}
 

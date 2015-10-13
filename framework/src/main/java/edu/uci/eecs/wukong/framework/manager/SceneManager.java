@@ -58,15 +58,19 @@ public class SceneManager {
 	}
 	
 	public void subscribe(PrClass plugin, List<String> topics) {
-		for (String topic : topics) {
-			if(!topicFilterSet.contains(topic)) {
-				factorClient.subscribe(topic, factorClientListener);
-				topicFilterSet.add(topic);
+		if (topics != null) {
+			for (String topic : topics) {
+				if(!topicFilterSet.contains(topic)) {
+					// factorClient.subscribe(topic, factorClientListener);
+					topicFilterSet.add(topic);
+				}
 			}
+			
+			pluginContextMap.put(plugin, topics);
+			logger.info("Finish subsribe topics " + topics + " for PrClass " + plugin.getName() + " in Scene Manager.");
+		} else {
+			logger.info("There is no topic to subscribe for for PrClass " + plugin.getName() + " in Scene Manager.");
 		}
-		
-		pluginContextMap.put(plugin, topics);
-		logger.info("Finish subsribe topics " + topics + " for plugn " + plugin.getName() + " in context manager.");
 	}
 	
 	public synchronized ExecutionContext getPluginExecutionContext(PrClass plugin) {

@@ -23,6 +23,7 @@ public class EventHandleThread implements Runnable {
 			fireMPTNMessage(buffer);
 			buffer.clear();
 		} catch (Exception e) {
+			e.printStackTrace();
 			logger.error("Fail to handle event message: " + e.toString());
 		}
 	}

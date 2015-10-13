@@ -19,7 +19,7 @@ public class PrClassPropertyMonitor {
 	
 	private PropertyChangeListener listener = new PropertyChangeListener() {
 		 public void propertyChange(PropertyChangeEvent evt) {
-			 logger.info("Detected Property " + evt.getPropertyName() + "Updated.");
+			 logger.info("Detected Property " + evt.getPropertyName() + " Updated.");
 			 manager.updateProperty(evt);
 		 }
 	};

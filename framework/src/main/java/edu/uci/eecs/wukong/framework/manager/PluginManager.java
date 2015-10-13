@@ -181,6 +181,7 @@ public class PluginManager implements PrClassInitListener {
 		String name = event.getPropertyName();
 		Object value = event.getNewValue();
 		PrClass plugin = (PrClass)event.getSource();
+		LOGGER.info("Trigger send set property for " + name + " whose portId is " + plugin.getPortId() + " and value is " + value);
 		wkpf.sendSetProperty(plugin.getPortId(), name, value);
 	}
 }

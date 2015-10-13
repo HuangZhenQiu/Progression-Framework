@@ -13,7 +13,7 @@ public class WuObjectModel {
 	
 	public byte getPropertyId(String property) {
 		if (type != null) {
-			type.getPropertyId(property);
+			return type.getPropertyId(property);
 		}
 		
 		return -1;

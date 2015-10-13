@@ -22,7 +22,7 @@ import edu.uci.eecs.wukong.prclass.timertest.TimerTestProgressionExtension;
 @WuClass(id = 10002)
 public class TimerPrClass extends PrClass{
 	
-	@WuProperty(name = "light", id = 4, type = PropertyType.Output, dtype = DataType.Short)
+	@WuProperty(name = "output", id = 1, type = PropertyType.Output, dtype = DataType.Short)
 	private short output;
 	
 	public TimerPrClass() {
@@ -42,7 +42,8 @@ public class TimerPrClass extends PrClass{
 		return null;
 	}
 	
-	public void setOuput(short output) {
-		this.output = output;
+	public void setOutput(short newOutput) {
+		this.support.firePropertyChange("output", output, newOutput);
+		this.output = newOutput;
 	}
 }

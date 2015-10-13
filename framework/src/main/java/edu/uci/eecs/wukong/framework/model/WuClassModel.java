@@ -17,7 +17,7 @@ public class WuClassModel {
 		this.idToProperties = new HashMap<Byte, WuPropertyModel>();
 	}
 	
-	public int getPropertyId(String property) {
+	public byte getPropertyId(String property) {
 		if (properties.containsKey(property)) {
 			return properties.get(property).getId();
 		}

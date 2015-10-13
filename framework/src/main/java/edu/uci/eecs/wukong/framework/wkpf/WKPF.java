@@ -105,7 +105,7 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 			if (this.portToWuObjectMap.containsKey(portId)) {
 				WuObjectModel wuobject = this.portToWuObjectMap.get(portId);
 	
-				int componentId = componentMap.getComponentId(wuobject.getPort(), mptn.getNodeId());
+				int componentId = componentMap.getComponentId(wuobject.getPort(), mptn.getLongAddress());
 				byte propertyId = wuobject.getPropertyId(property);
 				if (componentId == -1) {
 					LOGGER.error("The plugin is not used in the application, can't propogate dirty message.");
@@ -221,7 +221,7 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 		}
 		
 		ByteBuffer buffer = null;
-		int leftSize = totalLength  - messageNumber * WKPFUtil.DEFAULT_OBJECT_SIZE;
+		int leftSize = portToWuObjectMap.size()  - messageNumber * WKPFUtil.DEFAULT_OBJECT_SIZE;
 		if (leftSize >= 4) {
 			buffer = ByteBuffer.allocate(6 + WKPFUtil.DEFAULT_OBJECT_SIZE * 4);
 		} else {

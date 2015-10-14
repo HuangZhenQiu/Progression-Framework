@@ -5,9 +5,9 @@ import edu.uci.eecs.wukong.framework.prclass.PrClass;
 
 public class WuObjectModel {
 	private WuClassModel type;
-	private PrClass plugin;
-	public WuObjectModel(WuClassModel type, PrClass plugin) {
-		this.plugin = plugin;
+	private PrClass prClass;
+	public WuObjectModel(WuClassModel type, PrClass prClass) {
+		this.prClass = prClass;
 		this.type = type;
 	}
 	
@@ -19,23 +19,27 @@ public class WuObjectModel {
 		return -1;
 	}
 	
-	public PrClass getPlugin() {
-		return this.plugin;
+	public PrClass getPrClass() {
+		return this.prClass;
 	}
 	
 	public byte getPort() {
-		return this.plugin.getPortId();
+		return this.prClass.getPortId();
 	}
 	
 	public WuClassModel getType() {
 		return this.type;
 	}
 	
+	public boolean isValid() {
+		return this.prClass != null && this.type != null;
+	}
+	
 	@Override
 	public boolean equals(Object object) {
 		if (object instanceof WuObjectModel) {
 			WuObjectModel model = (WuObjectModel) object;
-			if (model.plugin.getPortId() == this.plugin.getPortId()
+			if (model.prClass.getPortId() == this.prClass.getPortId()
 					&& model.type.equals(this.type)) {
 				return true;
 			}
@@ -47,7 +51,7 @@ public class WuObjectModel {
 	@Override
 	public int hashCode() {
 		int base = 33;
-		int code = plugin.getPortId();
+		int code = prClass.getPortId();
 		return code * base + type.hashCode();
 	}
 }

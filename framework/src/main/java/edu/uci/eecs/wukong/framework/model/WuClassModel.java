@@ -5,6 +5,7 @@ import java.util.Map;
 
 import edu.uci.eecs.wukong.framework.annotation.WuProperty;
 import edu.uci.eecs.wukong.framework.model.WuPropertyModel;
+import com.google.common.collect.ImmutableList;
 
 public class WuClassModel {
 	private short wuclassId;
@@ -23,6 +24,10 @@ public class WuClassModel {
 		}
 		
 		return -1;
+	}
+	
+	public ImmutableList<WuPropertyModel> getProperties() {
+		return ImmutableList.copyOf(properties.values());
 	}
 	
 	public WuPropertyModel getPropertyModel(byte propertyId) {

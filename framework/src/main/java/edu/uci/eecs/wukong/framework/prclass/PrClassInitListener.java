@@ -1,6 +1,7 @@
 package edu.uci.eecs.wukong.framework.prclass;
 
 import java.util.List;
+import edu.uci.eecs.wukong.framework.model.WuObjectModel;
 
 /**
  * The plugin initialization is splited into two stages:
@@ -15,5 +16,5 @@ import java.util.List;
  */
 public interface PrClassInitListener {
 	
-	public void bindPlugins(List<PrClass> plugins);
+	public void bindPlugins(List<WuObjectModel> plugins);
 }

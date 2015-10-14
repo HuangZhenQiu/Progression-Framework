@@ -6,24 +6,66 @@ import java.util.Map;
 import java.util.Timer;
 import java.lang.IllegalArgumentException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import edu.uci.eecs.wukong.framework.api.Channelable;
 import edu.uci.eecs.wukong.framework.buffer.DataPoint;
 import edu.uci.eecs.wukong.framework.buffer.DoubleTimeIndexDataBuffer;
 import edu.uci.eecs.wukong.framework.channel.Channel;
+import edu.uci.eecs.wukong.framework.model.DataType;
 import edu.uci.eecs.wukong.framework.model.NPP;
+import edu.uci.eecs.wukong.framework.model.PropertyType;
+import edu.uci.eecs.wukong.framework.model.WuClassModel;
+import edu.uci.eecs.wukong.framework.model.WuObjectModel;
+import edu.uci.eecs.wukong.framework.model.WuPropertyModel;
+import edu.uci.eecs.wukong.framework.wkpf.WKPF;
+
+import com.google.common.annotations.VisibleForTesting;
 
 public class BufferManager {
+	private final static Logger LOGGER = LoggerFactory.getLogger(BufferManager.class);
 	// Map network port property to buffer
 	private Map<NPP, DoubleTimeIndexDataBuffer<?>> bufferMap;
 	// Map network port property to channel
 	private Map<NPP, Channel> channelMap;
 	// Timer to set index for buffer
 	private Timer timer;
+	
+	private int nodeId;
 
 	public BufferManager() {
 		this.bufferMap = new HashMap<NPP, DoubleTimeIndexDataBuffer<?>>();
 		this.channelMap = new HashMap<NPP, Channel>();
 	}
 	
+	public void setNodeId(int nodeId) {
+		this.nodeId = nodeId;
+	}
+	
+	public void bind(WuObjectModel model) {
+		if (model.isValid()) {
+			WuClassModel classModel = model.getType();
+			for (WuPropertyModel property : classModel.getProperties()) {
+				if (property.getPtype().equals(PropertyType.Input)
+						&&property.getDtype().equals(DataType.Channel)) {
+					if (model.getPrClass() instanceof Channelable) {
+						NPP npp = new NPP(nodeId, model.getPort(), property.getId());
+						this.createShortChannel(npp);
+						Channelable channelable = (Channelable) model.getPrClass();
+						this.addChannelListener(npp, channelable);
+					} else {
+						LOGGER.error("PrClass define input property "
+								+ property.getName()
+								+ " with type channle, but didn't implement Channelable interface");
+					}
+					// We only enable channel in this release
+					// TODO (Peter Huang) add buffer registertion
+				}
+					
+			}
+		}
+	}
 	
 	private boolean createByteBuffer(NPP key,
 			int capacity, int timeUnits, int interval) {
@@ -48,6 +90,26 @@ public class BufferManager {
 		
 		bufferMap.put(key, buffer);
 		timer.scheduleAtFixedRate(buffer.getIndexer(), 1000, buffer.getInterval());
+		return true;
+	}
+	
+	private boolean createShortChannel(NPP key) {
+		if (channelMap.containsKey(key)) {
+			return false;
+		}
+		
+		Channel channel = new Channel(key);
+		channelMap.put(key, channel);
+		return true;
+	}
+	
+	public boolean addChannelListener(NPP key, Channelable listener) {
+		if (!channelMap.containsKey(key)) {
+			return false;
+		}
+		
+		Channel channel = channelMap.get(key);
+		channel.addListener(listener);
 		return true;
 	}
 	

@@ -14,6 +14,7 @@ import edu.uci.eecs.wukong.framework.model.PropertyType;
 import edu.uci.eecs.wukong.framework.wkpf.WKPF;
 
 import java.beans.PropertyChangeEvent;
+import java.lang.Exception;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,6 +29,7 @@ import org.slf4j.LoggerFactory;
 public class PluginManager implements PrClassInitListener {
 	private final static Logger LOGGER = LoggerFactory.getLogger(PluginManager.class);
 	private final static String PLUGIN_PATH = "edu.uci.eecs.wukong.prclass";
+	private BufferManager bufferManager;
 	private SceneManager contextManager;
 	private PrClassPropertyMonitor propertyMonitor;
 	private Pipeline pipeline;
@@ -37,7 +39,8 @@ public class PluginManager implements PrClassInitListener {
 	private WKPF wkpf;
 	private String[] PLUGINS = {"switcher.SwitchPrClass", "timertest.TimerPrClass"};
 	
-	public PluginManager(WKPF wkpf, SceneManager contextManager, Pipeline pipeline) {
+	public PluginManager(WKPF wkpf, SceneManager contextManager, Pipeline pipeline, BufferManager bufferManager) {
+		this.bufferManager = bufferManager;
 		this.contextManager = contextManager;
 		this.pipeline = pipeline;
 		this.propertyMonitor = new PrClassPropertyMonitor(this);
@@ -59,26 +62,8 @@ public class PluginManager implements PrClassInitListener {
 			String path = PLUGIN_PATH + '.' + PLUGINS[i];
 			ClassLoader loader = PluginManager.class.getClassLoader();
 			Class<?> c = loader.loadClass(path);
-			WuClass wuclass = c.getAnnotation(WuClass.class);
-			if (wuclass == null) {
-				LOGGER.info("Can't find WuClass annotation for PrClass " + path);
-				continue;
-			}
-				
-			WuClassModel wuClassModel =  new WuClassModel(wuclass.id());
-			for (Field field : c.getDeclaredFields()) {
-				String name = field.getName();
-				Annotation[] annotations = field.getDeclaredAnnotations();
-				for (Annotation annotation : annotations) {
-					if (annotation.annotationType().equals(WuProperty.class)) {
-						WuProperty property = (WuProperty)annotation;
-						wuClassModel.addProperty(name, property);
-					}
-				}
-			}
+			WuClassModel wuClassModel = createWuClassModel(path, c);
 			
-			registedClasses.put(wuclass.id(), wuClassModel);
-			wkpf.addWuClass(wuClassModel);
 			LOGGER.info("Initialized Wuclass in progression server : " + wuClassModel);
 			
 			// A temporary solution for easier mapping and deployment.
@@ -91,28 +76,55 @@ public class PluginManager implements PrClassInitListener {
 		}
 	}
 	
+	private WuClassModel createWuClassModel(String path, Class<?> c) throws ClassNotFoundException {
+		WuClass wuclass = c.getAnnotation(WuClass.class);
+		if (wuclass == null) {
+			LOGGER.info("Can't find WuClass annotation for PrClass " + path);
+			return null;
+		}
+			
+		WuClassModel wuClassModel =  new WuClassModel(wuclass.id());
+		for (Field field : c.getDeclaredFields()) {
+			String name = field.getName();
+			Annotation[] annotations = field.getDeclaredAnnotations();
+			for (Annotation annotation : annotations) {
+				if (annotation.annotationType().equals(WuProperty.class)) {
+					WuProperty property = (WuProperty)annotation;
+					wuClassModel.addProperty(name, property);
+				}
+			}
+		}
+		
+		registedClasses.put(wuclass.id(), wuClassModel);
+		wkpf.addWuClass(wuClassModel);
+		
+		return wuClassModel;
+	}
+	
 	/**
 	 * Bind wuobjects used in a FBP with meta data sent by remote programming
 	 * 
 	 * @param wuobjectMap map port to wuclassId
 	 */
-	public void bindPlugins(List<PrClass> plugins) {
-		for (PrClass plugin : plugins) {
-			bindPlugin(plugin);
+	public void bindPlugins(List<WuObjectModel> objects) {
+		for (WuObjectModel model : objects) {
+			bindPlugin(model);
 		}
 	}
 	
 	/**
 	 * Bind a plugin instance into progression pipeline runtime.
 	 * 
-	 * @param plugin  the plugin instance to bind
+	 * @param model  the Wuobject instance to bind
 	 * @param propertyMap  the map from property to physical key
 	 * @throws NoSuchFieldException
 	 */
-	public void bindPlugin(PrClass plugin) {
-		contextManager.subscribe(plugin, plugin.registerContext());
-		pipeline.registerExtension(plugin.registerExtension());
-		bindPropertyUpdateEvent(plugin);
+	public void bindPlugin(WuObjectModel model) {
+		PrClass prClass = model.getPrClass();
+		contextManager.subscribe(prClass, prClass.registerContext());
+		bufferManager.bind(model);
+		pipeline.registerExtension(prClass.registerExtension());
+		bindPropertyUpdateEvent(prClass);
 		LOGGER.info("Finished bind plugin with context manager, pipeline and property monitor.");
 	}
 	
@@ -150,8 +162,13 @@ public class PluginManager implements PrClassInitListener {
 		
 		ClassLoader loader = PluginManager.class.getClassLoader();
 		Class<?> c = loader.loadClass(path);
+		WuClassModel wuClassModel = createWuClassModel(path, c);
 		PrClass plugin = (PrClass)c.getConstructor(String.class, String.class).newInstance(name, appId);
-		bindPlugin(plugin);
+		
+		plugins.add(plugin);
+		WuObjectModel wuObjectModel = new WuObjectModel(wuClassModel, plugin);
+		wkpf.addWuObject(plugin.getPortId(), wuObjectModel);
+		bindPlugin(wuObjectModel);
 	}
 	
 	// bind the update event of out property for plugin.

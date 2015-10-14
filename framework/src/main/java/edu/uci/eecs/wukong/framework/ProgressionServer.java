@@ -40,7 +40,7 @@ public class ProgressionServer {
 		this.wkpf = new WKPF(bufferManager);
 		this.featureChoosers = new FeatureChoosers(bufferManager, wkpf);
 		this.pipeline = new Pipeline(contextManager, configurationManager, featureChoosers);	
-		this.pluginManager = new PluginManager(wkpf, contextManager, pipeline);
+		this.pluginManager = new PluginManager(wkpf, contextManager, pipeline, bufferManager);
 		this.wkpf.register(pluginManager);
 	}
 	
@@ -70,8 +70,8 @@ public class ProgressionServer {
 	//start the progression server
 	public void start() {
 		try {
-			this.pluginManager.init();
 			this.wkpf.start();
+			this.pluginManager.init();
 			this.server.start();
 			this.pipeline.start();
 			// this.registerTestPlugin();
@@ -85,7 +85,7 @@ public class ProgressionServer {
 	private void registerTestPlugin() {
 		TestPrClass plugin = new TestPrClass();
 		try {
-			pluginManager.bindPlugin(plugin);
+			//pluginManager.bindPlugin(plugin);
 		} catch (Exception e) {
 			logger.info(e.toString());
 		}

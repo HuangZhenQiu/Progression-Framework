@@ -61,6 +61,7 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 	
 	public void start() {
 		mptn.start();
+		bufferManager.setNodeId(mptn.getNodeId());
 	}
 	
 	public void register(PrClassInitListener listener) {
@@ -82,14 +83,14 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 	private void bindWuObjects() {
 		// TODO (Peter Huang) Update this, if end point use short address rather than long address
 		Map<Byte, Short> wuclassMap = this.componentMap.getWuClassIdList(mptn.getLongAddress());
-		List<PrClass> plugins = new ArrayList<PrClass> ();
+		List<WuObjectModel> objects = new ArrayList<WuObjectModel> ();
 		
 		for (Entry<Byte, Short> entry : wuclassMap.entrySet()) {
-			plugins.add(this.portToWuObjectMap.get(entry.getKey()).getPlugin());
+			objects.add(this.portToWuObjectMap.get(entry.getKey()));
 		}
 		
 		for (PrClassInitListener listener : listeners) {
-			listener.bindPlugins(plugins);
+			listener.bindPlugins(objects);
 		}
 	}
 	

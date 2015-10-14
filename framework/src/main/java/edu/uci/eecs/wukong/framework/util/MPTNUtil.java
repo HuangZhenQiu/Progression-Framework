@@ -21,9 +21,9 @@ public class MPTNUtil {
 	public final static byte MPTN_MSQTYPE_IDNAK = 4;	
 	public final static byte MPTN_MSATYPE_FWDREQ = 24;
 
-	public static void appendMPTNPacket(ByteBuffer buffer, int sourceId, int destId, byte type, byte[] payload) {
+	public static void appendMPTNPacket(ByteBuffer buffer, long longAddress, int destId, byte type, byte[] payload) {
 		appendReversedInt(buffer, destId);
-		appendReversedInt(buffer, sourceId);
+		appendReversedInt(buffer, (int) (longAddress & 0xffffffffL));
 		buffer.put(type);
 		buffer.put(payload);
 	}

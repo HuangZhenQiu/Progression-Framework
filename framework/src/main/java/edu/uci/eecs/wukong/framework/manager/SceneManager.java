@@ -1,6 +1,7 @@
 package edu.uci.eecs.wukong.framework.manager;
 
 import com.google.gson.Gson;
+
 import edu.uci.eecs.wukong.framework.api.ExecutionContext;
 import edu.uci.eecs.wukong.framework.client.FactorClient;
 import edu.uci.eecs.wukong.framework.client.FactorClientListener;
@@ -41,7 +42,7 @@ public class SceneManager {
 		pluginContextMap = new HashMap<PrClass, List<String>>();
 		factors = new ConcurrentHashMap<String, BaseFactor>();
 		listeners = new ArrayList<FactorListener>();
-		// factorClient = XMPPFactorClient.getInstance();
+		factorClient = XMPPFactorClient.getInstance();
 		topicFilterSet = new HashSet<String>();
 		factorClientListener = new XMPPFactorListener(factors, listeners);
 	}

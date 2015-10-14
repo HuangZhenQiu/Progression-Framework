@@ -23,7 +23,7 @@ public class MPTN implements MPTNMessageListener{
 	// Address for communication between IP device with gateway
 	private int nodeId = -1; 
 	// Address for communication between IP device in network
-	private int longAddress;
+	private long longAddress;
 	
 	private List<WKPFMessageListener> listeners;
 	private static int MPTN_HEADER_LENGTH = 9;
@@ -158,7 +158,7 @@ public class MPTN implements MPTNMessageListener{
 	 * @return
 	 */
 	public int getLongAddress() {
-		return this.longAddress;
+		return (int) (this.longAddress & 0xffffffffL);
 	}
 	
 	/**
@@ -169,7 +169,7 @@ public class MPTN implements MPTNMessageListener{
 	private void processInfoMessage(int nodeId) {
 		this.nodeId = nodeId;
 		this.hasNodeId = true;
-		LOGGER.debug("Recevied Node Id: " + nodeId);
+		LOGGER.info("Recevied Node Id: " + nodeId);
 	}
 	
 	
@@ -178,7 +178,7 @@ public class MPTN implements MPTNMessageListener{
 	 * 
 	 * @param message
 	 */
-	private void processIDMessage(int longAddress) {
+	private void processIDMessage(long longAddress) {
 		this.longAddress = longAddress;
 		LOGGER.info("Received Long Address from gateway: " + longAddress);
 	}
@@ -193,8 +193,8 @@ public class MPTN implements MPTNMessageListener{
 	private void processFWDMessage(ByteBuffer message, int length) {
 		if (length >= 9) {
 			// Need to be used to verify correctness of message
-			int destLongId = message.getInt();
-			int sourceLongId = message.getInt();
+			long destLongId = (long) message.getInt() & 0xffffffffL;
+			long sourceLongId = (long) message.getInt() & 0xffffffffL;
 			byte type = message.get();
 			if (type == MPTNUtil.MPTN_MSATYPE_FWDREQ) {
 				byte[] payload = new byte[message.remaining()];
@@ -229,6 +229,9 @@ public class MPTN implements MPTNMessageListener{
 						break;
 					case WKPFUtil.MONITORING:
 						fireWKPFMonitoredData(payload);
+						break;
+					case WKPFUtil.WKPF_REPRG_REBOOT:
+						LOGGER.info("I dont't want to reboot");
 						break;
 					default:
 						LOGGER.error("Received unpexcted WKPF message type " + payload[0]);

@@ -17,6 +17,7 @@ public class WKPFUtil {
 	public static final byte WKPF_REPRG_WRITE_R              = 0x13;
 	public static final byte WKPF_REPRG_COMMIT               = 0x14;
 	public static final byte WKPF_REPRG_COMMIT_R             = 0x15;
+	public static final byte WKPF_REPRG_REBOOT               = 0x16;
 	
 	public static final byte WKPF_REPROG_OK                  = 0x00;
 	public static final byte WKPF_REPROG_REQUEST_RETRANSIMIT = 0x01;

@@ -19,7 +19,6 @@ import org.jivesoftware.smackx.pubsub.AccessModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 public class XMPPFactorClient implements FactorClient {
 	private static Logger logger = LoggerFactory.getLogger(XMPPFactorClient.class);
 	private final static Configuration systemConfig= Configuration.getInstance(); 
@@ -102,4 +101,3 @@ public class XMPPFactorClient implements FactorClient {
 		return null;
 	}
 }
-	

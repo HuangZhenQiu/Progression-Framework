@@ -23,7 +23,7 @@ public class ComponentMap {
 	
 	public int getPrimaryEndPointNodeId(int componentId) {
 		if (componentId < components.size()) {
-			components.get(componentId).getPrimaryEndPoint().getNodeId();
+			return components.get(componentId).getPrimaryEndPoint().getNodeId();
 		}
 		
 		return -1;
@@ -31,7 +31,7 @@ public class ComponentMap {
 	
 	public byte getPrimaryEndPointPortId(int componentId) {
 		if (componentId < components.size())  {
-			components.get(componentId).getPrimaryEndPoint().getPortId();
+			return components.get(componentId).getPrimaryEndPoint().getPortId();
 		}
 		
 		return -1;
@@ -59,7 +59,7 @@ public class ComponentMap {
 	 */
 	public short getWuClassId(int componentId) {
 		if (componentId < components.size()) {
-			components.get(componentId).getWuClassId();
+			return components.get(componentId).getWuClassId();
 		}
 		
 		return -1;

@@ -1,7 +1,6 @@
 package edu.uci.eecs.wukong.framework.manager;
 
 import com.google.gson.Gson;
-
 import edu.uci.eecs.wukong.framework.api.ExecutionContext;
 import edu.uci.eecs.wukong.framework.client.FactorClient;
 import edu.uci.eecs.wukong.framework.client.FactorClientListener;

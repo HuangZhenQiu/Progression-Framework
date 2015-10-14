@@ -183,6 +183,7 @@ public class DJAData {
 			int destComponentId = WKPFUtil.getLittleEndianShort(buffer, start + 3);
 			
 			Link link = new Link(srcComponentId, buffer[start + 2], destComponentId, buffer[start + 5]);
+			return link;
 		} catch (Exception e) {
 			LOGGER.error("Error Status : fail to extract link from DJAData");
 		}

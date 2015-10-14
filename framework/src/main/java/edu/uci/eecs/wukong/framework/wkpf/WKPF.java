@@ -131,6 +131,8 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 					byte destPortId = componentMap.getPrimaryEndPointPortId(destComponentId);
 					
 					if (destWuClassId == -1 || destNodeId == -1 || destPortId == -1) {
+						LOGGER.error("Error in either link table or component map, can't find info for dest info for link " + link);
+					} else {
 						if (destNodeId == mptn.getNodeId()) {
 							// TODO Peter Huang connect two plugins in a progression server together
 						} else {
@@ -138,7 +140,11 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 							buffer.put(destPortId);
 							buffer.putShort(destWuClassId);
 							buffer.put(destPropertyId);
-							if (value instanceof Short) {
+							if (value instanceof Integer) {
+								Integer val = (Integer) value;
+								buffer.put(WKPFUtil.WKPF_PROPERTY_TYPE_SHORT);
+								buffer.putShort(val.shortValue());
+							} else if (value instanceof Short) {
 								buffer.put(WKPFUtil.WKPF_PROPERTY_TYPE_SHORT);
 								buffer.putShort((Short) value);
 							} else if (value instanceof Boolean) {
@@ -150,9 +156,9 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 								buffer.put((Byte)value);
 							}
 							mptn.send(destNodeId, buffer.array());
+							LOGGER.info("Send set property message to destination : " + destNodeId + " with data " + buffer.array());
+
 						}
-					} else {
-						LOGGER.error("Error in either link table or component map, can't find info for dest info for link " + link);
 					}
 				}
 			}

@@ -14,11 +14,11 @@ import edu.uci.eecs.wukong.framework.prclass.PrClass;
 @WuClass(id = 10001)
 public class SwitchPrClass extends PrClass {
 	
-	@WuProperty(id = 1, type = PropertyType.Input, dtype = DataType.Channel)
+	@WuProperty(id = 0, type = PropertyType.Input, dtype = DataType.Channel)
 	private Boolean switchInput;
-	@WuProperty(id = 2, type = PropertyType.Input, dtype = DataType.Buffer)
+	@WuProperty(id = 1, type = PropertyType.Input, dtype = DataType.Buffer)
 	private Double temparature;
-	@WuProperty(id = 3, type = PropertyType.Output, dtype = DataType.Short)
+	@WuProperty(id = 2, type = PropertyType.Output, dtype = DataType.Short)
 	private Double threshold;
 	
 	public SwitchPrClass() {

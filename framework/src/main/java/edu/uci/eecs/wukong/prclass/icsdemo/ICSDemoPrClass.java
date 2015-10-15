@@ -24,8 +24,8 @@ public class ICSDemoPrClass extends PrClass {
 	private short light;
 	
 
-	public ICSDemoPrClass(String name) {
-		super(name);
+	public ICSDemoPrClass() {
+		super("ICSDemoPrClass");
 		// TODO Auto-generated constructor stub
 	}
 

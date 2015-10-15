@@ -4,6 +4,7 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.List;
 
+import edu.uci.eecs.wukong.framework.extension.AbstractProgressionExtension;
 import edu.uci.eecs.wukong.framework.api.Extension;
 
 /**
@@ -56,6 +57,16 @@ public abstract class PrClass {
 	public final void addPropertyChangeListener(
 			String propertyName, PropertyChangeListener listener) {
 		support.addPropertyChangeListener(propertyName, listener);
+	}
+	
+	public AbstractProgressionExtension getProgressionExtension() {
+		for(Extension extension : registerExtension()) {
+			if (extension instanceof AbstractProgressionExtension) {
+				return (AbstractProgressionExtension) extension;
+			}
+		}
+		
+		return null;
 	}
 	
 	public boolean isLearning() {

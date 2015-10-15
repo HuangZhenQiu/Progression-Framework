@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import edu.uci.eecs.wukong.framework.api.Channelable;
+import edu.uci.eecs.wukong.framework.extension.AbstractProgressionExtension;
 import edu.uci.eecs.wukong.framework.buffer.DataPoint;
 import edu.uci.eecs.wukong.framework.buffer.DoubleTimeIndexDataBuffer;
 import edu.uci.eecs.wukong.framework.channel.Channel;
@@ -49,10 +50,11 @@ public class BufferManager {
 			for (WuPropertyModel property : classModel.getProperties()) {
 				if (property.getPtype().equals(PropertyType.Input)
 						&&property.getDtype().equals(DataType.Channel)) {
-					if (model.getPrClass() instanceof Channelable) {
+					AbstractProgressionExtension extension = model.getPrClass().getProgressionExtension(); 
+					if (extension != null && extension instanceof Channelable) {
 						NPP npp = new NPP(nodeId, model.getPort(), property.getId());
 						this.createShortChannel(npp);
-						Channelable channelable = (Channelable) model.getPrClass();
+						Channelable channelable = (Channelable)extension;
 						this.addChannelListener(npp, channelable);
 					} else {
 						LOGGER.error("PrClass define input property "

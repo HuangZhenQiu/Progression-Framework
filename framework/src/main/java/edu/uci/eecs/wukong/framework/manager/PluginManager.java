@@ -107,6 +107,7 @@ public class PluginManager implements PrClassInitListener {
 	 * @param wuobjectMap map port to wuclassId
 	 */
 	public void bindPlugins(List<WuObjectModel> objects) {
+		LOGGER.info("Start to bind plugins into plugin manager, the size of objects is" + objects.size());
 		for (WuObjectModel model : objects) {
 			bindPlugin(model);
 		}

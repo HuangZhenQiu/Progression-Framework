@@ -92,6 +92,8 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 		for (PrClassInitListener listener : listeners) {
 			listener.bindPlugins(objects);
 		}
+		
+		LOGGER.info("Finished bind plugins with " + objects.size() + " WuObjects");
 	}
 	
 	/**

@@ -64,6 +64,14 @@ public class WKPFUtil {
 		return (int) (result & 0xffffffffL);
 	}
 	
+	public static long getLittleEndianLong(byte[] buffer, int start) {
+		long result = (long)(buffer[start] & 0xff);
+		result += (long)(buffer[start + 1] & 0xff) << 8;
+		result += (long)(buffer[start + 2] & 0xff) << 16;
+		result += (long)(buffer[start + 3] & 0xff) << 24;
+		
+		return result;
+	}
 	/**
 	 * Convert java signed byte to unsigned value
 	 * @param data signed java byte

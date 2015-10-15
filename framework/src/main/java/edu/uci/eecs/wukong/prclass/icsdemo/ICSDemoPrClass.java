@@ -11,16 +11,16 @@ import edu.uci.eecs.wukong.framework.model.PropertyType;
 import edu.uci.eecs.wukong.framework.prclass.PrClass;
 import edu.uci.eecs.wukong.prclass.icsdemo.ContextProgressionExtension;
 
-@WuClass(id = 10001)
+@WuClass(id = 10003)
 public class ICSDemoPrClass extends PrClass {
 	
-	@WuProperty(name = "uid", id = 1, type = PropertyType.Input, dtype = DataType.Channel)
+	@WuProperty(name = "uid", id = 0, type = PropertyType.Input, dtype = DataType.Channel)
 	private short uid;
-	@WuProperty(name = "music", id = 2, type = PropertyType.Output)
+	@WuProperty(name = "music", id = 1, type = PropertyType.Output)
 	private short music;
-	@WuProperty(name = "fan", id = 3, type = PropertyType.Output)
+	@WuProperty(name = "fan", id = 2, type = PropertyType.Output)
 	private short fan;
-	@WuProperty(name = "light", id = 4, type = PropertyType.Output)
+	@WuProperty(name = "light", id = 3, type = PropertyType.Output)
 	private short light;
 	
 

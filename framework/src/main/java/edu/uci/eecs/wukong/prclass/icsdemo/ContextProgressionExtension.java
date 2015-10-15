@@ -4,14 +4,19 @@ import edu.uci.eecs.wukong.framework.extension.AbstractProgressionExtension;
 import edu.uci.eecs.wukong.framework.factor.BaseFactor;
 import edu.uci.eecs.wukong.framework.api.FactorExecutable;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import edu.uci.eecs.wukong.framework.api.Channelable;
 import edu.uci.eecs.wukong.framework.model.ChannelData;
 import edu.uci.eecs.wukong.framework.prclass.PrClass;
 import edu.uci.eecs.wukong.framework.xmpp.XMPPFactorClient;
+import edu.uci.eecs.wukong.prclass.demo.DemoProgressionExtension;
 import edu.uci.eecs.wukong.prclass.icsdemo.ContextTable;
 import edu.uci.eecs.wukong.prclass.icsdemo.PreferenceTable;
 
 public class ContextProgressionExtension extends AbstractProgressionExtension implements FactorExecutable, Channelable {
+	private static Logger logger = LoggerFactory.getLogger(ContextProgressionExtension.class);
 	private PreferenceTable preferenceTable = new PreferenceTable();
 	private ContextTable contextTable = new ContextTable();
 	private String currentContext = null;
@@ -36,6 +41,7 @@ public class ContextProgressionExtension extends AbstractProgressionExtension im
 	public void execute(ChannelData data) {
 		if (data.getNpp().getPropertyId() == 1) {
 			currentUser = data.getValue();
+			logger.info(""+currentUser);
 			icsDemoPlugin.setFan(preferenceTable.lookup());
 			icsDemoPlugin.setLight(preferenceTable.lookup());
 			icsDemoPlugin.setMusic(preferenceTable.lookup());

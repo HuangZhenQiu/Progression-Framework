@@ -2,15 +2,15 @@ package edu.uci.eecs.wukong.framework.model;
 
 public class EndPoint {
 	/* Network address */
-	private int nodeId;
+	private long nodeId;
 	private byte portId;
 	
-	public EndPoint(int nodeId, byte portId) {
+	public EndPoint(long nodeId, byte portId) {
 		this.nodeId = nodeId;
 		this.portId = portId;
 	}
 	
-	public int getNodeId() {
+	public long getNodeId() {
 		return nodeId;
 	}
 	
@@ -34,7 +34,7 @@ public class EndPoint {
 	@Override
 	public int hashCode() {
 		int base = 33;
-		return nodeId * base + portId;
+		return (int)nodeId * base + portId;
 	}
 	
 	@Override

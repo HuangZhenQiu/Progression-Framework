@@ -55,8 +55,8 @@ public class WKPFUtil {
 	 * @param start the index of the buffer
 	 * @return the converted int
 	 */
-	public static int getLittleEndianInteger(byte[] buffer, int start) {
-		int result = buffer[start];
+	public static long getLittleEndianInteger(byte[] buffer, int start) {
+		long result = buffer[start];
 		result += buffer[start + 1] << 8;
 		result += buffer[start + 2] << 16;
 		result += buffer[start + 3] << 24;

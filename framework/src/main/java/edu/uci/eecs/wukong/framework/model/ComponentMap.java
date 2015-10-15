@@ -21,7 +21,7 @@ public class ComponentMap {
 		this.components.add(component);
 	}
 	
-	public int getPrimaryEndPointNodeId(int componentId) {
+	public long getPrimaryEndPointNodeId(int componentId) {
 		if (componentId < components.size()) {
 			return components.get(componentId).getPrimaryEndPoint().getNodeId();
 		}

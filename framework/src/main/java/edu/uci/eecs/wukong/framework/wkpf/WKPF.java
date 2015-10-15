@@ -130,7 +130,7 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 					int destComponentId = link.getDestId();
 					byte destPropertyId = link.getDestPid();
 					short destWuClassId = componentMap.getWuClassId(destComponentId);
-					int destNodeId = componentMap.getPrimaryEndPointNodeId(destComponentId);
+					long destNodeId = componentMap.getPrimaryEndPointNodeId(destComponentId);
 					byte destPortId = componentMap.getPrimaryEndPointPortId(destComponentId);
 					
 					if (destWuClassId == -1 || destNodeId == -1 || destPortId == -1) {
@@ -158,7 +158,7 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 								buffer.put(WKPFUtil.WKPF_PROPERTY_TYPE_REFRESH_RATE);
 								buffer.put((Byte)value);
 							}
-							mptn.send(destNodeId, buffer.array());
+							mptn.send((int)destNodeId, buffer.array());
 							LOGGER.info("Send set property message to destination : " + destNodeId + " with data " + buffer.array());
 
 						}

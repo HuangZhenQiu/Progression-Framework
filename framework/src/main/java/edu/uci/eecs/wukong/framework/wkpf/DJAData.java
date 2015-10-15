@@ -264,7 +264,7 @@ public class DJAData {
 	 *     1 byte port number
 	 */
 	private EndPoint extractEndPoint(int index) {
-		long nodeId = WKPFUtil.getLittleEndianInteger(buffer, index);
+		int nodeId = WKPFUtil.getLittleEndianInteger(buffer, index);
 		return new EndPoint(nodeId, buffer[index + 4]);
 	}
 	

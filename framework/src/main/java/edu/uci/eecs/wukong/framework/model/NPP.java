@@ -56,5 +56,9 @@ public class NPP {
 		this.propertyId = propertyId;
 	}
 	
+	@Override
+	public String toString() {
+		return "NPP[nid=" + nid + ", portId=" + portId + ", propertyId" + propertyId + "]";
+	}
 	
 }

@@ -56,6 +56,7 @@ public class BufferManager {
 						this.createShortChannel(npp);
 						Channelable channelable = (Channelable)extension;
 						this.addChannelListener(npp, channelable);
+						LOGGER.info("Added channel for PrClass " + classModel.getWuClassId());
 					} else {
 						LOGGER.error("PrClass define input property "
 								+ property.getName()
@@ -102,6 +103,7 @@ public class BufferManager {
 		
 		Channel channel = new Channel(key);
 		channelMap.put(key, channel);
+		LOGGER.info("Created Short Channel with key : " + key);
 		return true;
 	}
 	

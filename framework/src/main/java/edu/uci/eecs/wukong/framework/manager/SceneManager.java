@@ -61,7 +61,7 @@ public class SceneManager {
 		if (topics != null) {
 			for (String topic : topics) {
 				if(!topicFilterSet.contains(topic)) {
-					// factorClient.subscribe(topic, factorClientListener);
+					factorClient.subscribe(topic, factorClientListener);
 					topicFilterSet.add(topic);
 				}
 			}

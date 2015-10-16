@@ -37,7 +37,11 @@ public class PluginManager implements PrClassInitListener {
 	/* WuclassId to WuClass model */
 	private Map<Short, WuClassModel> registedClasses;
 	private WKPF wkpf;
-	private String[] PLUGINS = {"switcher.SwitchPrClass", "timertest.TimerPrClass", "icsdemo.ICSDemoPrClass"};
+	private String[] PLUGINS = {"switcher.SwitchPrClass", "timertest.TimerPrClass", 
+			"icsdemo.ICSDemoHuePrClass", "icsdemo.ICSDemoFanPrClass", 
+			"icsdemo.ICSDemoAromaPrClass", "icsdemo.ICSDemoMusicPrClass", 
+			"icsdemo.ICSDemoTVPrClass", "icsdemo.ICSDemoQPrClass"
+		};
 	
 	public PluginManager(WKPF wkpf, SceneManager contextManager, Pipeline pipeline, BufferManager bufferManager) {
 		this.bufferManager = bufferManager;

@@ -21,20 +21,24 @@ public class ContextProgressionExtension extends AbstractProgressionExtension im
 	private ContextTable contextTable = new ContextTable();
 	private String currentContext = null;
 	private short currentUser = 0;
-	private ICSDemoPrClass icsDemoPlugin;
+	private PrClass icsDemoPlugin;
 	
 	public ContextProgressionExtension(PrClass plugin) {
 		super(plugin);
-		icsDemoPlugin = (ICSDemoPrClass) plugin;
+		icsDemoPlugin = plugin;
 	}
 
 	public void execute(BaseFactor context) {
 		if (context instanceof ICSContext) {
 			ICSContext icsContext = (ICSContext) context;
 			currentContext = icsContext.getContext();
-			icsDemoPlugin.setFan(preferenceTable.lookup());
-			icsDemoPlugin.setLight(preferenceTable.lookup());
-			icsDemoPlugin.setMusic(preferenceTable.lookup());
+			if (icsDemoPlugin instanceof ICSDemoHuePrClass){
+//				((ICSDemoHuePrClass)icsDemoPlugin).setLight(preferenceTable.lookup());
+			} else if (icsDemoPlugin instanceof ICSDemoHuePrClass){
+//				((ICSDemoFanPrClass)icsDemoPlugin).setFan(preferenceTable.lookup());
+			} else if (icsDemoPlugin instanceof ICSDemoHuePrClass){
+//				((ICSDemoMusicPrClass)icsDemoPlugin).setMusic(preferenceTable.lookup());
+			}
 		}
 	}
 
@@ -42,9 +46,6 @@ public class ContextProgressionExtension extends AbstractProgressionExtension im
 		if (data.getNpp().getPropertyId() == 1) {
 			currentUser = data.getValue();
 			logger.info(""+currentUser);
-			icsDemoPlugin.setFan(preferenceTable.lookup());
-			icsDemoPlugin.setLight(preferenceTable.lookup());
-			icsDemoPlugin.setMusic(preferenceTable.lookup());
 		}
 	}
 

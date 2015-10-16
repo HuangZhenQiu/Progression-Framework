@@ -308,7 +308,7 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 			return;
 		}
 		
-		NPP npp = new NPP(this.mptn.getNodeId(), port, propertyId);
+		NPP npp = new NPP(this.mptn.getLongAddress(), port, propertyId);
 		// Put data into write container
 		if (wuproperty.getDtype().equals(DataType.Buffer)) {
 			bufferManager.addData(npp, System.currentTimeMillis(), value);

@@ -40,6 +40,8 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 	private List<WuClassModel> wuclasses;
 	// Port number to WuObject
 	private Map<Byte, WuObjectModel> portToWuObjectMap;
+	// Message's sequence number
+	private short sequence = 0;
 	
 	private DJAData djaData;
 	private ComponentMap componentMap = null;
@@ -150,7 +152,15 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 							}
 						
 						} else {
-							ByteBuffer buffer = ByteBuffer.allocate(7);
+							this.sequence = sequence ++;
+							ByteBuffer buffer = ByteBuffer.allocate(10);
+							if (destNodeId == 1) {
+								buffer.put(WKPFUtil.MONITORING);
+							} else {
+								buffer.put(WKPFUtil.WKPF_WRITE_PROPERTY);
+							}
+							buffer.put((byte) (sequence % 256));
+							buffer.put((byte) (sequence / 256));
 							buffer.put(destPortId);
 							buffer.putShort(destWuClassId);
 							buffer.put(destPropertyId);

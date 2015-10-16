@@ -31,6 +31,13 @@ public class NPP {
 			
 		return false;
 	}
+	
+	@Override
+	public int hashCode() {
+		int base = 33;
+		int code = (int) (nid * base + portId);
+		return code * base + propertyId;
+	}
 
 	public long getNid() {
 		return nid;

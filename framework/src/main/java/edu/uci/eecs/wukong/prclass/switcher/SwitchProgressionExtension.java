@@ -13,11 +13,10 @@ import edu.uci.eecs.wukong.framework.factor.BaseFactor;
 import edu.uci.eecs.wukong.framework.factor.UserFactor;
 import edu.uci.eecs.wukong.framework.model.ChannelData;
 import edu.uci.eecs.wukong.framework.prclass.PrClass;
-import edu.uci.eecs.wukong.prclass.icsdemo.ContextProgressionExtension;
 
 public class SwitchProgressionExtension extends AbstractProgressionExtension
 	implements FactorExecutable, Channelable {
-	private static Logger logger = LoggerFactory.getLogger(ContextProgressionExtension.class);
+	private static Logger logger = LoggerFactory.getLogger(SwitchProgressionExtension.class);
 	// User ID to threshold Map
 	private Map<String, Double> userThresholdMap;
 	

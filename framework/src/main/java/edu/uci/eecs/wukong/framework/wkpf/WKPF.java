@@ -62,7 +62,7 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 	
 	public void start() {
 		mptn.start();
-		bufferManager.setNodeId(mptn.getLongAddress());
+		bufferManager.setMPTN(mptn);
 	}
 	
 	public void register(PrClassInitListener listener) {
@@ -144,7 +144,7 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 							WuPropertyModel destProperty = destObject.getType().getPropertyModel(new Byte(destPropertyId));
 							if (destProperty.getPtype().equals(PropertyType.Input) && destProperty.getDtype().equals(DataType.Channel)) {
 								NPP npp = new NPP(destNodeId, destPortId, destPropertyId);
-								bufferManager.addRealTimeData(npp, (short)value);
+								bufferManager.addRealTimeData(npp, ((Integer)value).shortValue());
 							} else {
 								LOGGER.error("We only handle with channel type input right now.");
 							}

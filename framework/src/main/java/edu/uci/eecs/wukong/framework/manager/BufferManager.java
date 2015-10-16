@@ -20,6 +20,7 @@ import edu.uci.eecs.wukong.framework.model.PropertyType;
 import edu.uci.eecs.wukong.framework.model.WuClassModel;
 import edu.uci.eecs.wukong.framework.model.WuObjectModel;
 import edu.uci.eecs.wukong.framework.model.WuPropertyModel;
+import edu.uci.eecs.wukong.framework.wkpf.MPTN;
 
 public class BufferManager {
 	private final static Logger LOGGER = LoggerFactory.getLogger(BufferManager.class);
@@ -30,15 +31,15 @@ public class BufferManager {
 	// Timer to set index for buffer
 	private Timer timer;
 	
-	private long longAddress;
+	private MPTN mptn;
 
 	public BufferManager() {
 		this.bufferMap = new HashMap<NPP, DoubleTimeIndexDataBuffer<?>>();
 		this.channelMap = new HashMap<NPP, Channel>();
 	}
 	
-	public void setNodeId(long longAddress) {
-		this.longAddress = longAddress;
+	public void setMPTN(MPTN mptn) {
+		this.mptn = mptn;
 	}
 	
 	public void bind(WuObjectModel model) {
@@ -49,7 +50,7 @@ public class BufferManager {
 						&&property.getDtype().equals(DataType.Channel)) {
 					AbstractProgressionExtension extension = model.getPrClass().getProgressionExtension(); 
 					if (extension != null && extension instanceof Channelable) {
-						NPP npp = new NPP(longAddress, model.getPort(), property.getId());
+						NPP npp = new NPP(mptn.getLongAddress(), model.getPort(), property.getId());
 						this.createShortChannel(npp);
 						Channelable channelable = (Channelable)extension;
 						this.addChannelListener(npp, channelable);

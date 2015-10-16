@@ -14,6 +14,8 @@ import edu.uci.eecs.wukong.framework.util.Configuration;
 import edu.uci.eecs.wukong.framework.util.MPTNUtil;
 import edu.uci.eecs.wukong.framework.util.WKPFUtil;
 
+import com.google.common.annotations.VisibleForTesting;
+
 public class MPTN implements MPTNMessageListener{
 	private final static Logger LOGGER = LoggerFactory.getLogger(MPTN.class);
 	private final static Configuration configuration = Configuration.getInstance();	
@@ -190,7 +192,8 @@ public class MPTN implements MPTNMessageListener{
 	 *	 bytes 3+    : payload
 	 * @param message WKPF Message
 	 */
-	private void processFWDMessage(ByteBuffer message, int length) {
+	@VisibleForTesting
+	public byte processFWDMessage(ByteBuffer message, int length) {
 		if (length >= 9) {
 			// Need to be used to verify correctness of message
 			long destLongId = (long) message.getInt() & 0xffffffffL;
@@ -202,37 +205,40 @@ public class MPTN implements MPTNMessageListener{
 				switch(payload[0]) {
 					case WKPFUtil.WKPF_REPRG_OPEN:
 						fireWKPFRemoteProgramOpen(payload);
-						break;
+						return WKPFUtil.WKPF_REPRG_OPEN;
 					case WKPFUtil.WKPF_REPRG_WRITE:
 						fireWKPFRemoteProgramWrite(payload);
-						break;
+						return WKPFUtil.WKPF_REPRG_WRITE;
 					case WKPFUtil.WKPF_REPRG_COMMIT:
 						fireWKPFRemoteProgramCommit(payload);
-						break;
+						return WKPFUtil.WKPF_REPRG_COMMIT;
 					case WKPFUtil.WKPF_GET_WUCLASS_LIST:
 						fireWKPFGetWuClassList(payload);
-						break;
+						return WKPFUtil.WKPF_GET_WUCLASS_LIST;
 					case WKPFUtil.WKPF_GET_WUOBJECT_LIST:
 						fireWKPFGetWuObjectList(payload);
-						break;
+						return WKPFUtil.WKPF_GET_WUOBJECT_LIST;
 					case WKPFUtil.WKPF_READ_PROPERTY:
 						fireWKPFReadProperty(payload);
-						break;
+						return WKPFUtil.WKPF_READ_PROPERTY;
 					case WKPFUtil.WKPF_WRITE_PROPERTY:
 						fireWKPFWriteProperty(payload);
-						break;
+						return WKPFUtil.WKPF_WRITE_PROPERTY;
+					case WKPFUtil.WKPF_REQUEST_PROPERTY_INIT:
+						fireWKPFRequestPropertyInit(payload);
+						return WKPFUtil.WKPF_REQUEST_PROPERTY_INIT;
 					case WKPFUtil.WKPF_GET_LOCATION:
 						fireWKPFGetLocation(payload);
-						break;
+						return WKPFUtil.WKPF_GET_LOCATION;
 					case WKPFUtil.WKPF_SET_LOCATION:
 						fireWKPFSetLocation(payload);
-						break;
+						return  WKPFUtil.WKPF_SET_LOCATION;
 					case WKPFUtil.MONITORING:
 						fireWKPFMonitoredData(payload);
-						break;
+						return WKPFUtil.MONITORING;
 					case WKPFUtil.WKPF_REPRG_REBOOT:
 						LOGGER.info("I dont't want to reboot");
-						break;
+						return WKPFUtil.WKPF_REPRG_REBOOT;
 					default:
 						LOGGER.error("Received unpexcted WKPF message type " + payload[0]);
 				}
@@ -242,75 +248,83 @@ public class MPTN implements MPTNMessageListener{
 		} else {
 			LOGGER.error("Received unpexcted WKPF message with length less than 9 bytes");
 		}
+		return WKPFUtil.WKPF_ERROR;
 	}
 	
-	private void fireWKPFRemoteProgramOpen(byte[] message) {
+	private void fireWKPFRemoteProgramOpen(long sourceId, byte[] message) {
 		LOGGER.debug("Received remote programming open message");
 		for (WKPFMessageListener listener : listeners) {
-			listener.onWKPFRemoteProgramOpen(message);
+			listener.onWKPFRemoteProgramOpen(sourceId, message);
 		}
 	}
 	
-	private void fireWKPFRemoteProgramWrite(byte[] message) {
+	private void fireWKPFRemoteProgramWrite(long sourceId, byte[] message) {
 		LOGGER.debug("Received remote programming write message");
 		for (WKPFMessageListener listener : listeners) {
-			listener.onWKPFRemoteProgramWrite(message);
+			listener.onWKPFRemoteProgramWrite(sourceId, message);
 		}
 	}
 	
-	private void fireWKPFRemoteProgramCommit(byte[] message) {
+	private void fireWKPFRemoteProgramCommit(long sourceId, byte[] message) {
 		LOGGER.debug("Received remote programming commit message");
 		for (WKPFMessageListener listener : listeners) {
-			listener.onWKPFRemoteProgramCommit(message);
+			listener.onWKPFRemoteProgramCommit(sourceId, message);
 		}
 	}
 	
-	private void fireWKPFGetWuClassList(byte[] message) {
+	private void fireWKPFGetWuClassList(long sourceId, byte[] message) {
 		LOGGER.info("Received get Wuclass List message");
 		for (WKPFMessageListener listener : listeners) {
-			listener.onWKPFGetWuClassList(message);
+			listener.onWKPFGetWuClassList(sourceId, message);
 		}
 	}
 	
-	private void fireWKPFGetWuObjectList(byte[] message) {
+	private void fireWKPFGetWuObjectList(long sourceId, byte[] message) {
 		LOGGER.debug("Received get WuObject List message");
 		for (WKPFMessageListener listener : listeners) {
-			listener.onWKPFGetWuObjectList(message);
+			listener.onWKPFGetWuObjectList(sourceId, message);
 		}
 	}
 	
-	private void fireWKPFReadProperty(byte[] message) {
+	private void fireWKPFReadProperty(long sourceId, byte[] message) {
 		LOGGER.debug("Received read Property message");
 		for (WKPFMessageListener listener : listeners) {
-			listener.onWKPFReadProperty(message);
+			listener.onWKPFReadProperty(sourceId, message);
 		}
 	}
 	
-	private void fireWKPFWriteProperty(byte[] message) {
+	private void fireWKPFWriteProperty(long sourceId, byte[] message) {
 		LOGGER.debug("Received write Property message");
 		for (WKPFMessageListener listener : listeners) {
-			listener.onWKPFWriteProperty(message);
+			listener.onWKPFWriteProperty(sourceId, message);
 		}
 	}
 	
-	private void fireWKPFMonitoredData(byte[] message) {
+	private void fireWKPFRequestPropertyInit(long sourceId, byte[] message) {
+		LOGGER.debug("Received Request Property init message");
+		for (WKPFMessageListener listener : listeners) {
+			listener.onWKPFRequestPropertyInit(sourceId, message);
+		}
+	}
+	
+	private void fireWKPFMonitoredData(long sourceId, byte[] message) {
 		LOGGER.debug("Received Monitored data message");
 		for (WKPFMessageListener listener : listeners) {
-			listener.onWKPFMonitoredData(message);
+			listener.onWKPFMonitoredData(sourceId, message);
 		}
 	}
 	
-	private void fireWKPFGetLocation(byte[] message) {
+	private void fireWKPFGetLocation(long sourceId, byte[] message) {
 		LOGGER.debug("Received get location message");
 		for (WKPFMessageListener listener : listeners) {
-			listener.onWKPFGetLocation(message);
+			listener.onWKPFGetLocation(sourceId, message);
 		}
 	}
 	
-	private void fireWKPFSetLocation(byte[] message) {
+	private void fireWKPFSetLocation(long sourceId, byte[] message) {
 		LOGGER.debug("Received set location message");
 		for (WKPFMessageListener listener : listeners) {
-			listener.onWKPFSetLocation(message);
+			listener.onWKPFSetLocation(sourceId, message);
 		}
 	}
 }

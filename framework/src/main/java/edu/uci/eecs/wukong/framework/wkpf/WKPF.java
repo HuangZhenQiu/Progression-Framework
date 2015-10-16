@@ -23,9 +23,14 @@ import edu.uci.eecs.wukong.framework.model.WuClassModel;
 import edu.uci.eecs.wukong.framework.model.WuObjectModel;
 import edu.uci.eecs.wukong.framework.model.WuPropertyModel;
 import edu.uci.eecs.wukong.framework.manager.BufferManager;
-import edu.uci.eecs.wukong.framework.prclass.PrClass;
 import edu.uci.eecs.wukong.framework.prclass.PrClassInitListener;
 
+/**
+ * 
+ * TODO (Peter Huang) use WKPFCOMM layer to simpley reply messageß
+ * 
+ *
+ */
 public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 	private final static Logger LOGGER = LoggerFactory.getLogger(WKPF.class);
 	// Multiple Protocol Transportation Network
@@ -219,7 +224,7 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 		this.portToWuObjectMap.clear();
 	}
 
-	public void onWKPFGetWuClassList(byte[] message) {
+	public void onWKPFGetWuClassList(int sourceId, byte[] message) {
 		// TODO Auto-generated method stub
 		if (message.length < 2) {
 			LOGGER.error("Received Corrupted Get Wuclass List request.");
@@ -251,7 +256,7 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 		mptn.send(MPTNUtil.MPTN_MASTER_ID, buffer.array());
 	}
 
-	public void onWKPFGetWuObjectList(byte[] message) {
+	public void onWKPFGetWuObjectList(int sourceId, byte[] message) {
 		if (message.length < 2) {
 			LOGGER.error("Received Corrupted Get WuObject List request.");
 		}
@@ -289,7 +294,7 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 		mptn.send(MPTNUtil.MPTN_MASTER_ID, buffer.array());
 	}
 
-	public void onWKPFReadProperty(byte[] message) {
+	public void onWKPFReadProperty(int sourceId, byte[] message) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -299,7 +304,7 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 	 * Buffer message, put it to write place either buffer or channel.
 	 * 
 	 */
-	public void onWKPFWriteProperty(byte[] message) {
+	public void onWKPFWriteProperty(int sourceId, byte[] message) {
 		byte port = message[3];
 		short wuclassId = WKPFUtil.getLittleEndianShort(message, 4);
 		byte propertyId = message[6];
@@ -329,14 +334,52 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 			bufferManager.addRealTimeData(npp, value);
 		}
 		
+		//TODO (Peter Huang) return error code, when problem happens
+		ByteBuffer buffer = ByteBuffer.allocate(7);
+		buffer.put(WKPFUtil.WKPF_REPRG_WRITE_R);
+		buffer.put(message[1]);
+		buffer.put(message[2]);
+		buffer.put(port);
+		buffer.put((byte) (wuclassId % 256));
+		buffer.put((byte) (wuclassId / 256));
+		buffer.put(propertyId);
+		
+		mptn.send(sourceId, buffer.array());
+	}
+	
+	public void onWKPFRequestPropertyInit(int sourceId, byte[] message) {
+		byte port = message[3];
+		byte propertyId = message[4];
+		
+		WuObjectModel wuobject = portToWuObjectMap.get(Byte.valueOf(port));
+		if (wuobject == null) {
+			LOGGER.error("Can't find WuObject with port " + port + " for write property command.");
+			return;
+		}
+		
+		WuPropertyModel wuproperty = wuobject.getType().getPropertyModel(propertyId);
+		if (wuproperty == null) {
+			LOGGER.error("Can't find WuPropety with propertyId " + propertyId + " for write property command.");
+			return;
+		}
+		
+		//TODO (Peter Huang) return error code, when problem happens
+		ByteBuffer buffer = ByteBuffer.allocate(7);
+		buffer.put(WKPFUtil.WKPF_REPRG_WRITE_R);
+		buffer.put(message[1]);
+		buffer.put(message[2]);
+		buffer.put(port);
+		buffer.put(propertyId);
+		
+		mptn.send(sourceId, buffer.array());
 	}
 
-	public void onWKPFMonitoredData(byte[] message) {
+	public void onWKPFMonitoredData(int sourceId, byte[] message) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	public void onWKPFSetLocation(byte[] message) {
+	public void onWKPFSetLocation(int sourceId, byte[] message) {
 		// First message, if offset is 0.
 		int chunkSize = 0;
 		if (message[1] == 0) {
@@ -361,7 +404,7 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 		mptn.send(MPTNUtil.MPTN_MASTER_ID, buffer.array());
 	}
 
-	public void onWKPFGetLocation(byte[] message) {
+	public void onWKPFGetLocation(int sourceId, byte[] message) {
 		ByteBuffer buffer = ByteBuffer.allocate(4 + this.location.getBytes().length);
 		buffer.put(WKPFUtil.WKPF_GET_LOCATION_R);
 		buffer.put(message[1]);
@@ -381,7 +424,7 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 	 * [4] pagesize & 256
 	 * [5] pagesize /256
 	 */
-	public void onWKPFRemoteProgramOpen(byte[] message) {
+	public void onWKPFRemoteProgramOpen(int sourceId, byte[] message) {
 		ByteBuffer buffer = ByteBuffer.allocate(6);
 		buffer.put(WKPFUtil.WKPF_REPRG_OPEN_R);
 		buffer.put(message[1]);
@@ -401,7 +444,7 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 	/**
 	 * Write append data into dja
 	 */
-	public void onWKPFRemoteProgramWrite(byte[] message) {
+	public void onWKPFRemoteProgramWrite(int sourceId, byte[] message) {
 		ByteBuffer buffer = ByteBuffer.allocate(5);
 		// java byte is signed
 		int position = WKPFUtil.getUnsignedByteValue(message[4]) * 256 + WKPFUtil.getUnsignedByteValue(message[3]);
@@ -420,7 +463,7 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 	/**
 	 * Commit to close the write operation
 	 */
-	public void onWKPFRemoteProgramCommit(byte[] message) {
+	public void onWKPFRemoteProgramCommit(int sourceId, byte[] message) {
 		ByteBuffer buffer = ByteBuffer.allocate(5);
 		buffer.put(WKPFUtil.WKPF_REPRG_COMMIT_R);
 		buffer.put(message[1]);

@@ -157,8 +157,8 @@ public class MPTN implements MPTNMessageListener{
 	 * The global network Id address. Int value of four bytes address.
 	 * @return
 	 */
-	public int getLongAddress() {
-		return (int) (this.longAddress & 0xffffffffL);
+	public long getLongAddress() {
+		return this.longAddress;
 	}
 	
 	/**

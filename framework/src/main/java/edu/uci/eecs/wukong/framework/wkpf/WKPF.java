@@ -18,6 +18,7 @@ import edu.uci.eecs.wukong.framework.model.DataType;
 import edu.uci.eecs.wukong.framework.model.Link;
 import edu.uci.eecs.wukong.framework.model.LinkTable;
 import edu.uci.eecs.wukong.framework.model.NPP;
+import edu.uci.eecs.wukong.framework.model.PropertyType;
 import edu.uci.eecs.wukong.framework.model.WuClassModel;
 import edu.uci.eecs.wukong.framework.model.WuObjectModel;
 import edu.uci.eecs.wukong.framework.model.WuPropertyModel;
@@ -61,7 +62,7 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 	
 	public void start() {
 		mptn.start();
-		bufferManager.setNodeId(mptn.getNodeId());
+		bufferManager.setNodeId(mptn.getLongAddress());
 	}
 	
 	public void register(PrClassInitListener listener) {
@@ -136,8 +137,18 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 					if (destWuClassId == -1 || destNodeId == -1 || destPortId == -1) {
 						LOGGER.error("Error in either link table or component map, can't find info for dest info for link " + link);
 					} else {
-						if (destNodeId == mptn.getNodeId()) {
+						if (destNodeId == mptn.getLongAddress()) {
 							// TODO Peter Huang connect two plugins in a progression server together
+							LOGGER.info("Propagate a dirty value to a Wuobject in local progression server");
+							WuObjectModel destObject = this.portToWuObjectMap.get(new Byte(destPortId));
+							WuPropertyModel destProperty = destObject.getType().getPropertyModel(new Byte(destPropertyId));
+							if (destProperty.getPtype().equals(PropertyType.Input) && destProperty.getDtype().equals(DataType.Channel)) {
+								NPP npp = new NPP(destNodeId, destPortId, destPropertyId);
+								bufferManager.addRealTimeData(npp, (short)value);
+							} else {
+								LOGGER.error("We only handle with channel type input right now.");
+							}
+						
 						} else {
 							ByteBuffer buffer = ByteBuffer.allocate(7);
 							buffer.put(destPortId);

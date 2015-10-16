@@ -30,15 +30,15 @@ public class BufferManager {
 	// Timer to set index for buffer
 	private Timer timer;
 	
-	private int nodeId;
+	private long longAddress;
 
 	public BufferManager() {
 		this.bufferMap = new HashMap<NPP, DoubleTimeIndexDataBuffer<?>>();
 		this.channelMap = new HashMap<NPP, Channel>();
 	}
 	
-	public void setNodeId(int nodeId) {
-		this.nodeId = nodeId;
+	public void setNodeId(long longAddress) {
+		this.longAddress = longAddress;
 	}
 	
 	public void bind(WuObjectModel model) {
@@ -49,7 +49,7 @@ public class BufferManager {
 						&&property.getDtype().equals(DataType.Channel)) {
 					AbstractProgressionExtension extension = model.getPrClass().getProgressionExtension(); 
 					if (extension != null && extension instanceof Channelable) {
-						NPP npp = new NPP(nodeId, model.getPort(), property.getId());
+						NPP npp = new NPP(longAddress, model.getPort(), property.getId());
 						this.createShortChannel(npp);
 						Channelable channelable = (Channelable)extension;
 						this.addChannelListener(npp, channelable);

@@ -41,7 +41,7 @@ public class ComponentMap {
 	 * Find the component id for the port
 	 * @return
 	 */
-	public int getComponentId(byte portId, int nodeId) {
+	public int getComponentId(byte portId, long nodeId) {
 		for (int i=0; i < components.size(); i++) {
 			for (int j=0; j < components.get(i).getEndPointSize(); j++) {
 				if (components.get(i).getEndPoint(j).getNodeId() == nodeId &&
@@ -70,7 +70,7 @@ public class ComponentMap {
 	 * @param nodeId
 	 * @return Map from port to wuclass Id
 	 */
-	public Map<Byte, Short> getWuClassIdList(Integer nodeId) {
+	public Map<Byte, Short> getWuClassIdList(long nodeId) {
 		Map<Byte, Short> wuclassMap = new HashMap<Byte, Short>();
 		for (Component component : components) {
 			EndPoint primary = component.getPrimaryEndPoint();

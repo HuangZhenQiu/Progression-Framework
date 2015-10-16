@@ -5,13 +5,13 @@ package edu.uci.eecs.wukong.framework.model;
  */
 public class NPP {
 	/* Network ID*/
-	private int nid;
+	private long nid;
 	/* Represent a particular WuObject in the server*/
 	private byte portId;
 	/* Represent a particular WuProperty of a WuClass*/
 	private byte propertyId;
 	
-	public NPP(int nid, byte portId, byte propertyId) {
+	public NPP(long nid, byte portId, byte propertyId) {
 		this.nid = nid;
 		this.portId = portId;
 		this.propertyId = propertyId;
@@ -32,11 +32,11 @@ public class NPP {
 		return false;
 	}
 
-	public int getNid() {
+	public long getNid() {
 		return nid;
 	}
 
-	public void setNid(int nid) {
+	public void setNid(long nid) {
 		this.nid = nid;
 	}
 

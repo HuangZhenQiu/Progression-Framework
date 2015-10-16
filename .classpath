@@ -4,7 +4,6 @@
 	<classpathentry kind="src" path="framework/src/main/config"/>
 	<classpathentry kind="src" path="framework/src/main/java"/>
 	<classpathentry kind="var" path="M2_REPO"/>
-	<classpathentry kind="var" path="ECLIPSE_HOME"/>
 	<classpathentry kind="var" path="M2_REPO/com/google/guava/guava/18.0/guava-18.0.jar"/>
 	<classpathentry kind="var" path="M2_REPO/com/google/protobuf/protobuf-java/2.5.0/protobuf-java-2.5.0.jar"/>
 	<classpathentry kind="var" path="M2_REPO/com/googlecode/protobuf-rpc-pro/protobuf-rpc-pro-duplex/3.2.2/protobuf-rpc-pro-duplex-3.2.2.jar"/>
@@ -23,14 +22,15 @@
 	<classpathentry kind="var" path="M2_REPO/junit/junit/4.11/junit-4.11.jar"/>
 	<classpathentry kind="var" path="M2_REPO/commons-lang/commons-lang/2.6/commons-lang-2.6.jar"/>
 	<classpathentry kind="var" path="M2_REPO/nz/ac/waikato/cms/weka/weka-dev/3.7.5/weka-dev-3.7.5.jar"/>
-	<classpathentry kind="var" path="M2_REPO/org/igniterealtime/smack/smack/3.2.1/smack-3.2.1.jar"/>
-	<classpathentry kind="var" path="M2_REPO/org/igniterealtime/smack/smackx/3.2.1/smackx-3.2.1.jar"/>
 	<classpathentry kind="var" path="M2_REPO/mockit/jmockit/0.998/jmockit-0.998.jar"/>
 	<classpathentry kind="var" path="M2_REPO/io/dropwizard/metrics/metrics-core/3.1.2/metrics-core-3.1.2.jar"/>
 	<classpathentry kind="var" path="M2_REPO/io/dropwizard/metrics/metrics-graphite/3.1.2/metrics-graphite-3.1.2.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/igniterealtime/smack/smack-tcp/4.0.6/smack-tcp-4.0.6.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.launching.macosx.MacOSXType/Java SE 8 [1.8.0_20]"/>
+	<classpathentry kind="var" path="M2_REPO/org/igniterealtime/smack/smackx/3.2.1/smackx-3.2.1.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/igniterealtime/smack/smack/3.2.1/smack-3.2.1.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/igniterealtime/smack/smack-core/4.1.4/smack-core-4.1.4.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jdk1.6.0_32"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jre"/>
+	<classpathentry kind="var" path="M2_REPO/org/jxmpp/jxmpp-core/0.4.2/jxmpp-core-0.4.2.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/jxmpp/jxmpp-util-cache/0.4.2/jxmpp-util-cache-0.4.2.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

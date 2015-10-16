@@ -152,15 +152,15 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 							}
 						
 						} else {
-							this.sequence = sequence ++;
+							this.sequence++;
 							ByteBuffer buffer = ByteBuffer.allocate(10);
 							if (destNodeId == 1) {
 								buffer.put(WKPFUtil.MONITORING);
 							} else {
 								buffer.put(WKPFUtil.WKPF_WRITE_PROPERTY);
 							}
-							buffer.put((byte) (sequence % 256));
-							buffer.put((byte) (sequence / 256));
+							buffer.put((byte) (this.sequence % 256));
+							buffer.put((byte) (this.sequence / 256));
 							buffer.put(destPortId);
 							buffer.putShort(destWuClassId);
 							buffer.put(destPropertyId);
@@ -180,7 +180,7 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 								buffer.put((Byte)value);
 							}
 							mptn.send((int)destNodeId, buffer.array());
-							LOGGER.info("Send set property message to destination : " + destNodeId + " with data " + buffer.array());
+							LOGGER.info("Send set property message to destination : " + destNodeId + " with data " + toHexString(buffer.array()));
 
 						}
 					}
@@ -189,6 +189,20 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 		} catch (Exception e) {
 			LOGGER.error(e.toString());
 		}
+	}
+	
+	private static final char[] HEX_CHARS = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A',
+		      'B', 'C', 'D', 'E', 'F' };
+	
+	public static String toHexString(byte[] bytes) {
+	    char[] hexChars = new char[bytes.length * 2];
+	    int v;
+	    for (int j = 0; j < bytes.length; j++) {
+	      v = bytes[j] & 0xFF;
+	      hexChars[j * 2] = HEX_CHARS[v >>> 4];
+	      hexChars[j * 2 + 1] = HEX_CHARS[v & 0x0F];
+	    }
+	    return new String(hexChars);
 	}
 	
 	public void addWuClass(WuClassModel wuClass) {

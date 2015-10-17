@@ -3,7 +3,6 @@ package edu.uci.eecs.wukong.framework.wkpf;
 import java.nio.ByteBuffer;
 
 import org.junit.Test;
-import org.junit.Before;
 
 import edu.uci.eecs.wukong.framework.util.MPTNUtil;
 import edu.uci.eecs.wukong.framework.util.WKPFUtil;
@@ -21,7 +20,7 @@ public class MPTNTest extends TestCase {
 		buffer.putInt(DEST_IP);
 		buffer.put(MPTNUtil.MPTN_MSATYPE_FWDREQ);
 		buffer.put(WKPFUtil.WKPF_WRITE_PROPERTY);
-		System.out.println(WKPFUtil.WKPF_COMM_CMD_REQUEST_PROPERTY_INIT);
+		System.out.println(WKPFUtil.WKPF_REQUEST_PROPERTY_INIT);
 		buffer.flip();
 		assertEquals(WKPFUtil.WKPF_WRITE_PROPERTY, mptn.processFWDMessage(buffer, 10));
 	}

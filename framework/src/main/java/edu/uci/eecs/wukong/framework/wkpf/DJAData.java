@@ -179,8 +179,8 @@ public class DJAData {
 	 */
 	private Link extractLink(int start) {
 		try {
-			int srcComponentId = WKPFUtil.getLittleEndianShort(buffer, start);
-			int destComponentId = WKPFUtil.getLittleEndianShort(buffer, start + 3);
+			short srcComponentId = WKPFUtil.getLittleEndianShort(buffer, start);
+			short destComponentId = WKPFUtil.getLittleEndianShort(buffer, start + 3);
 			
 			Link link = new Link(srcComponentId, buffer[start + 2], destComponentId, buffer[start + 5]);
 			return link;

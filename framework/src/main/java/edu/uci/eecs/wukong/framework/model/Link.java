@@ -2,15 +2,15 @@ package edu.uci.eecs.wukong.framework.model;
 
 public class Link {
 	/* Component Id */
-	private int sourceId;
+	private short sourceId;
 	/* Property Id */
 	private byte sourcePid;
 	/* Component Id */
-	private int destId;
+	private short destId;
 	/* Property Id */
 	private byte destPid;
 	
-	public Link(int sourceId, byte sourcePid, int destId, byte destPid) {
+	public Link(short sourceId, byte sourcePid, short destId, byte destPid) {
 		this.sourceId = sourceId;
 		this.sourcePid = sourcePid;
 		this.destId = destId;
@@ -21,7 +21,7 @@ public class Link {
 		return sourceId;
 	}
 
-	public void setSourceId(int sourceId) {
+	public void setSourceId(short sourceId) {
 		this.sourceId = sourceId;
 	}
 
@@ -37,7 +37,7 @@ public class Link {
 		return destId;
 	}
 
-	public void setDestId(int destId) {
+	public void setDestId(short destId) {
 		this.destId = destId;
 	}
 

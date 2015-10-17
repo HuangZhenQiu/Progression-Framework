@@ -204,37 +204,37 @@ public class MPTN implements MPTNMessageListener{
 				message.get(payload);
 				switch(payload[0]) {
 					case WKPFUtil.WKPF_REPRG_OPEN:
-						fireWKPFRemoteProgramOpen(payload);
+						fireWKPFRemoteProgramOpen(sourceLongId, payload);
 						return WKPFUtil.WKPF_REPRG_OPEN;
 					case WKPFUtil.WKPF_REPRG_WRITE:
-						fireWKPFRemoteProgramWrite(payload);
+						fireWKPFRemoteProgramWrite(sourceLongId, payload);
 						return WKPFUtil.WKPF_REPRG_WRITE;
 					case WKPFUtil.WKPF_REPRG_COMMIT:
-						fireWKPFRemoteProgramCommit(payload);
+						fireWKPFRemoteProgramCommit(sourceLongId, payload);
 						return WKPFUtil.WKPF_REPRG_COMMIT;
 					case WKPFUtil.WKPF_GET_WUCLASS_LIST:
-						fireWKPFGetWuClassList(payload);
+						fireWKPFGetWuClassList(sourceLongId, payload);
 						return WKPFUtil.WKPF_GET_WUCLASS_LIST;
 					case WKPFUtil.WKPF_GET_WUOBJECT_LIST:
-						fireWKPFGetWuObjectList(payload);
+						fireWKPFGetWuObjectList(sourceLongId, payload);
 						return WKPFUtil.WKPF_GET_WUOBJECT_LIST;
 					case WKPFUtil.WKPF_READ_PROPERTY:
-						fireWKPFReadProperty(payload);
+						fireWKPFReadProperty(sourceLongId, payload);
 						return WKPFUtil.WKPF_READ_PROPERTY;
 					case WKPFUtil.WKPF_WRITE_PROPERTY:
-						fireWKPFWriteProperty(payload);
+						fireWKPFWriteProperty(sourceLongId, payload);
 						return WKPFUtil.WKPF_WRITE_PROPERTY;
 					case WKPFUtil.WKPF_REQUEST_PROPERTY_INIT:
-						fireWKPFRequestPropertyInit(payload);
+						fireWKPFRequestPropertyInit(sourceLongId, payload);
 						return WKPFUtil.WKPF_REQUEST_PROPERTY_INIT;
 					case WKPFUtil.WKPF_GET_LOCATION:
-						fireWKPFGetLocation(payload);
+						fireWKPFGetLocation(sourceLongId, payload);
 						return WKPFUtil.WKPF_GET_LOCATION;
 					case WKPFUtil.WKPF_SET_LOCATION:
-						fireWKPFSetLocation(payload);
+						fireWKPFSetLocation(sourceLongId, payload);
 						return  WKPFUtil.WKPF_SET_LOCATION;
 					case WKPFUtil.MONITORING:
-						fireWKPFMonitoredData(payload);
+						fireWKPFMonitoredData(sourceLongId, payload);
 						return WKPFUtil.MONITORING;
 					case WKPFUtil.WKPF_REPRG_REBOOT:
 						LOGGER.info("I dont't want to reboot");

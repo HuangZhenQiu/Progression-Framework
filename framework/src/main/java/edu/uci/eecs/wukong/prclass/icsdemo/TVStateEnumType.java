@@ -4,7 +4,7 @@ public enum TVStateEnumType {
 	Q(-1, "?"),
 	ON(1, "On"),
 	OFF(2, "Off"),
-	MUTE(2, "Mute");
+	MUTE(3, "Mute");
 	 
 	private int id;
     private String name;

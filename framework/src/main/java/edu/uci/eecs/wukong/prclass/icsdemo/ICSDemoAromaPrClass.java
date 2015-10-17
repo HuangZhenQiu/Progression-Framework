@@ -36,8 +36,8 @@ public class ICSDemoAromaPrClass extends PrClass {
 		return aroma_onoff;
 	}
 
-	public void setAromaOnOff(short aroma_onoff) {
-		this.aroma_onoff = aroma_onoff;
+	public void setAromaOnOff(String aroma_onoff) {
+//		this.aroma_onoff = aroma_onoff;
 	}
 
 }

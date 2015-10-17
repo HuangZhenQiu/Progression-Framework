@@ -10,14 +10,11 @@ import edu.uci.eecs.wukong.framework.prclass.PrClass;
 
 public class ICSDemoTVPrClass extends PrClass {
 
-	@WuProperty(name = "tv_onoff", id = 1, type = PropertyType.Output)
+	@WuProperty(name = "tv_onoff", id = 0, type = PropertyType.Output)
 	private short tv_onoff;
 	
-	@WuProperty(name = "tv_mute", id = 2, type = PropertyType.Output)
+	@WuProperty(name = "tv_mute", id = 1, type = PropertyType.Output)
 	private short tv_mute;
-	
-	@WuProperty(name = "tv_unmute", id = 3, type = PropertyType.Output)
-	private short tv_unmute;
 	
 	public ICSDemoTVPrClass() {
 		super("ICSDemoTVPrClass");
@@ -38,28 +35,11 @@ public class ICSDemoTVPrClass extends PrClass {
 		return topics;
 	}
 
-	public short getTVOnOff() {
+	public short setTVStatus() {
 		return tv_onoff;
 	}
 
-	public void setTVOnOff(short tv_onoff) {
-		this.tv_onoff = tv_onoff;
+	public void setTVState(String tv_onoff) {
+//		this.tv_onoff = tv_onoff;
 	}
-
-	public short getTVMute() {
-		return tv_mute;
-	}
-
-	public void setTVMute(short tv_mute) {
-		this.tv_mute = tv_mute;
-	}
-
-	public short getTVUnmute() {
-		return tv_unmute;
-	}
-
-	public void setTVUnmute(short tv_unmute) {
-		this.tv_unmute = tv_unmute;
-	}
-
 }

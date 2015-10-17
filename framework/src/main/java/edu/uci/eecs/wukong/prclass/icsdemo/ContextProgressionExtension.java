@@ -31,14 +31,31 @@ public class ContextProgressionExtension extends AbstractProgressionExtension im
 	public void execute(BaseFactor context) {
 		if (context instanceof ICSContext) {
 			ICSContext icsContext = (ICSContext) context;
+//			preferenceTable.lookup();
 			currentContext = icsContext.getContext();
 			if (icsDemoPlugin instanceof ICSDemoHuePrClass){
-//				((ICSDemoHuePrClass)icsDemoPlugin).setLight(preferenceTable.lookup());
-			} else if (icsDemoPlugin instanceof ICSDemoHuePrClass){
-//				((ICSDemoFanPrClass)icsDemoPlugin).setFan(preferenceTable.lookup());
-			} else if (icsDemoPlugin instanceof ICSDemoHuePrClass){
-//				((ICSDemoMusicPrClass)icsDemoPlugin).setMusic(preferenceTable.lookup());
-			}
+				if (icsDemoPlugin instanceof ICSDemoFloorlampPrClass){
+					((ICSDemoHuePrClass)icsDemoPlugin).setColorFromRGB(icsContext.Floorlamp_R, icsContext.Floorlamp_G, icsContext.Floorlamp_B);
+				} else if (icsDemoPlugin instanceof ICSDemoGoPrClass){
+					((ICSDemoHuePrClass)icsDemoPlugin).setColorFromRGB(icsContext.Go_R, icsContext.Go_G, icsContext.Go_B);
+				} else if (icsDemoPlugin instanceof ICSDemoBloomPrClass){
+					((ICSDemoHuePrClass)icsDemoPlugin).setColorFromRGB(icsContext.Bloom_R, icsContext.Bloom_G, icsContext.Bloom_B);
+				} else if (icsDemoPlugin instanceof ICSDemoStripPrClass){
+					((ICSDemoHuePrClass)icsDemoPlugin).setColorFromRGB(icsContext.Strip_R, icsContext.Strip_G, icsContext.Strip_B);
+				}
+			} else if (icsDemoPlugin instanceof ICSDemoFanPrClass){
+				((ICSDemoFanPrClass)icsDemoPlugin).setFanSpeed(icsContext.Fan_Speed);
+				((ICSDemoFanPrClass)icsDemoPlugin).setFanRotation(icsContext.Fan_Rotate);
+			} else if (icsDemoPlugin instanceof ICSDemoMusicPrClass){
+				((ICSDemoMusicPrClass)icsDemoPlugin).setMusicGenre(icsContext.Music_Type);
+				((ICSDemoMusicPrClass)icsDemoPlugin).setSpeakerVolume(icsContext.Music_Vol);
+			} else if (icsDemoPlugin instanceof ICSDemoAromaPrClass){
+				((ICSDemoAromaPrClass)icsDemoPlugin).setAromaOnOff(icsContext.Mist);
+			} else if (icsDemoPlugin instanceof ICSDemoTVPrClass){
+				((ICSDemoTVPrClass)icsDemoPlugin).setTVState(icsContext.TV);
+			} else if (icsDemoPlugin instanceof ICSDemoQPrClass){
+				((ICSDemoQPrClass)icsDemoPlugin).setQuestion(icsContext.Context);
+			} 
 		}
 	}
 

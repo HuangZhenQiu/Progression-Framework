@@ -42,8 +42,8 @@ public class ICSDemoMusicPrClass extends PrClass {
 		return music_genre;
 	}
 
-	public void setMusicGenre(short music_genre) {
-		this.music_genre = music_genre;
+	public void setMusicGenre(String music_genre) {
+//		this.music_genre = music_genre;
 	}
 
 	public short getSpeakerVolume() {

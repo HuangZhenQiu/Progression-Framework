@@ -10,8 +10,8 @@ import edu.uci.eecs.wukong.framework.prclass.PrClass;
 
 public class ICSDemoQPrClass extends PrClass {
 
-	@WuProperty(name = "question", id = 1, type = PropertyType.Output)
-	private short question;
+	@WuProperty(name = "question", id = 0, type = PropertyType.Output)
+	private boolean question;
 	
 	public ICSDemoQPrClass() {
 		super("ICSDemoQPrClass");
@@ -32,12 +32,12 @@ public class ICSDemoQPrClass extends PrClass {
 		return topics;
 	}
 
-	public short getQuestion() {
+	public boolean getQuestion() {
 		return question;
 	}
 
-	public void setQuestion(short question) {
-		this.question = question;
+	public void setQuestion(String question) {
+//		this.question = question;
 	}
 
 }

@@ -48,8 +48,8 @@ public class ICSDemoFanPrClass extends PrClass {
 		return fan_rotation;
 	}
 
-	public void setFanRotation(short fan_rotation) {
-		this.fan_rotation = fan_rotation;
+	public void setFanRotation(String fan_rotation) {
+//		this.fan_rotation = fan_rotation;
 	}
 
 }

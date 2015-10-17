@@ -269,16 +269,18 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 		}
 		
 		byte messageNumber = message[3];
-		int totalLength = portToWuObjectMap.size() / 4 +  portToWuObjectMap.size() % 4 == 0 ? 0 : 1;
+		int totalLength = portToWuObjectMap.size() / WKPFUtil.DEFAULT_OBJECT_NUMBER +  (portToWuObjectMap.size() % WKPFUtil.DEFAULT_OBJECT_NUMBER == 0 ? 0 : 1);
 		
 		if (messageNumber > totalLength) {
 			LOGGER.error("Message number larger than expected.");
+		} else {
+			LOGGER.info("Message number is: " + messageNumber);
 		}
 		
 		ByteBuffer buffer = null;
 		int leftSize = portToWuObjectMap.size()  - messageNumber * WKPFUtil.DEFAULT_OBJECT_SIZE;
-		if (leftSize >= 4) {
-			buffer = ByteBuffer.allocate(6 + WKPFUtil.DEFAULT_OBJECT_SIZE * 4);
+		if (leftSize >= WKPFUtil.DEFAULT_OBJECT_NUMBER) {
+			buffer = ByteBuffer.allocate(6 + WKPFUtil.DEFAULT_OBJECT_SIZE * WKPFUtil.DEFAULT_OBJECT_NUMBER);
 		} else {
 			buffer = ByteBuffer.allocate(6 + leftSize * 4);
 		}
@@ -289,12 +291,14 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 		buffer.put((byte)totalLength);
 		buffer.put((byte)portToWuObjectMap.size());
 		for (int i = WKPFUtil.DEFAULT_OBJECT_SIZE * messageNumber + 1; // Port starts from 1
-				i < WKPFUtil.DEFAULT_OBJECT_SIZE * (messageNumber + 1); i++) {
+				i <= WKPFUtil.DEFAULT_OBJECT_SIZE * (messageNumber + 1); i++) {
 			if (i <= portToWuObjectMap.size() && portToWuObjectMap.get(new Byte((byte)i)) != null) {
 				WuObjectModel object = portToWuObjectMap.get(new Byte((byte)i));
-				buffer.put(object.getPort());
-				buffer.putShort(object.getType().getWuClassId());
-				buffer.put(WKPFUtil.PLUGIN_WUCLASS_TYPE);
+				if (object.getType() !=null) {
+					buffer.put(object.getPort());
+					buffer.putShort(object.getType().getWuClassId());
+					buffer.put(WKPFUtil.PLUGIN_WUCLASS_TYPE);
+				}
 			}
 		}
 		

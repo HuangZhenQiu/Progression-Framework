@@ -199,8 +199,7 @@ public class ICSDemoHuePrClass extends PrClass {
 		//https://en.wikipedia.org/wiki/HSL_and_HSV#Converting_to_RGB
 		double[] da = new double[] {red, green, blue};
         List b = Arrays.asList(ArrayUtils.toObject(da));
-        //double min = Collections.min(b), max = Collections.max(b);
-        double min = 0, max = 255;
+        double min = (double)Collections.min(b), max = (double)Collections.max(b);
         double delta = max - min;
         this.brightness = ((short)(max*255));
         if (max != 0.0){

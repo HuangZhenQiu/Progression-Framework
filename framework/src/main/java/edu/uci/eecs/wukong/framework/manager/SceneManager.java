@@ -42,7 +42,7 @@ public class SceneManager {
 		pluginContextMap = new HashMap<PrClass, List<String>>();
 		factors = new ConcurrentHashMap<String, BaseFactor>();
 		listeners = new ArrayList<FactorListener>();
-		//factorClient = XMPPFactorClient.getInstance();
+		factorClient = XMPPFactorClient.getInstance();
 		topicFilterSet = new HashSet<String>();
 		factorClientListener = new XMPPFactorListener(factors, listeners);
 	}
@@ -61,7 +61,7 @@ public class SceneManager {
 		if (topics != null) {
 			for (String topic : topics) {
 				if(!topicFilterSet.contains(topic)) {
-					// factorClient.subscribe(topic, factorClientListener);
+					factorClient.subscribe(topic, factorClientListener);
 					topicFilterSet.add(topic);
 				}
 			}

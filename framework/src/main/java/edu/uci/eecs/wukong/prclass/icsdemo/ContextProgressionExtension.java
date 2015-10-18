@@ -29,6 +29,7 @@ public class ContextProgressionExtension extends AbstractProgressionExtension im
 	}
 
 	public void execute(BaseFactor context) {
+		logger.info("get context!!");
 		if (context instanceof ICSContext) {
 			ICSContext icsContext = (ICSContext) context;
 //			preferenceTable.lookup();

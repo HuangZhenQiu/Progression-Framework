@@ -6,14 +6,17 @@ import java.util.concurrent.ConcurrentMap;
 import org.jivesoftware.smackx.pubsub.ItemPublishEvent;
 import org.jivesoftware.smackx.pubsub.PayloadItem;
 import org.jivesoftware.smackx.pubsub.listener.ItemEventListener;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import edu.uci.eecs.wukong.framework.client.FactorClientListener;
 import edu.uci.eecs.wukong.framework.factor.BaseFactor;
 import edu.uci.eecs.wukong.framework.factor.FactorListener;
 import edu.uci.eecs.wukong.prclass.demo.DemoFactor;
+import edu.uci.eecs.wukong.prclass.icsdemo.ICSContext;
 
 public class XMPPFactorListener extends FactorClientListener implements ItemEventListener<PayloadItem<BaseFactor>> {
-	
+	private static Logger logger = LoggerFactory.getLogger(XMPPFactorListener.class);
 	public XMPPFactorListener(ConcurrentMap<String, BaseFactor> factors, List<FactorListener> factorListeners) {
 		super(factors, factorListeners);
 	}
@@ -24,7 +27,9 @@ public class XMPPFactorListener extends FactorClientListener implements ItemEven
 			String message = item.getPayload().toString();
 			int start = message.indexOf('{');
 			int end = message.indexOf('}');
-			DemoFactor factor = gson.fromJson(message.substring(start, end + 1), DemoFactor.class);
+			logger.info(message);
+			ICSContext factor = gson.fromJson(message.substring(start, end + 1), ICSContext.class);
+			logger.info(factor.getTopicId());
 			factors.put(factor.getTopicId(), factor);
 			for(FactorListener listener : this.factorListeners) {
 				listener.onFactorArrival(factor);

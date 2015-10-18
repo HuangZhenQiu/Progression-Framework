@@ -21,8 +21,8 @@ public class TimerTestProgressionExtension extends AbstractProgressionExtension
 	public void execute() {
 		if (prClass instanceof TimerPrClass) {
 			TimerPrClass timerPrClass = (TimerPrClass) prClass;
-			timerPrClass.setOutput(number ++);
 			logger.info("Update output to value " + number);
+			timerPrClass.setOutput(number ++);
 		}
 	}
 

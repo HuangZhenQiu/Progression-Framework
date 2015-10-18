@@ -38,6 +38,8 @@ public class XMPPFactorClient implements FactorClient {
 		connectionConfig = new ConnectionConfiguration(
 				systemConfig.getXMPPAddress(),
 				Integer.parseInt(systemConfig.getXMPPPort()), systemConfig.getXMPPServerName());
+
+		logger.info(systemConfig.getXMPPServerName());
 		connectionConfig.setSecurityMode(ConnectionConfiguration.SecurityMode.disabled);
 		connection = new XMPPConnection(connectionConfig);
 		try {

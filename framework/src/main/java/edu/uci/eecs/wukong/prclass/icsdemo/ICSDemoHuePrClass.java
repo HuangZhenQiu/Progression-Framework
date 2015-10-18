@@ -49,7 +49,7 @@ public class ICSDemoHuePrClass extends PrClass {
 	}
 
 	public ICSDemoHuePrClass(String name, String modelID) {
-		super(name);
+		super(name);/*
 		switch(modelID){
 			case "LCT001":
 			case "LCT002":
@@ -72,7 +72,7 @@ public class ICSDemoHuePrClass extends PrClass {
 				break;
 			default:
 				break;
-		}
+		}*/
 		// TODO Auto-generated constructor stub
 	}
 
@@ -199,7 +199,8 @@ public class ICSDemoHuePrClass extends PrClass {
 		//https://en.wikipedia.org/wiki/HSL_and_HSV#Converting_to_RGB
 		double[] da = new double[] {red, green, blue};
         List b = Arrays.asList(ArrayUtils.toObject(da));
-        double min = Collections.min(b), max = Collections.max(b);
+        //double min = Collections.min(b), max = Collections.max(b);
+        double min = 0, max = 255;
         double delta = max - min;
         this.brightness = ((short)(max*255));
         if (max != 0.0){

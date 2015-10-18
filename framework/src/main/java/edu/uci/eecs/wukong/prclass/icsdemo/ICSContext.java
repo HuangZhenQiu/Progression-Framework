@@ -3,7 +3,7 @@ package edu.uci.eecs.wukong.prclass.icsdemo;
 import edu.uci.eecs.wukong.framework.factor.BaseFactor;
 
 public class ICSContext extends BaseFactor {
-    public static final String TOPIC = "ICSContext";
+    public static final String TOPIC = "nooneknow";
 
     public String Context;
     public short UserA, UserB, UserG;
@@ -22,6 +22,12 @@ public class ICSContext extends BaseFactor {
 	public ICSContext(String topicId) {
 		super(topicId);
 		// TODO Auto-generated constructor stub
+	}
+	
+	public ICSContext(short Floorlamp_R, short Floorlamp_G) {
+		super("nooneknow");
+		this.Floorlamp_R = Floorlamp_R;
+		this.Floorlamp_G = Floorlamp_G;
 	}
 	
 	public String getContext() {

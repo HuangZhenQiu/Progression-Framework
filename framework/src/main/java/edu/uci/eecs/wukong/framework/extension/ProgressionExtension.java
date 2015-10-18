@@ -20,10 +20,6 @@ public abstract class ProgressionExtension<T extends FeatureEntity> extends Abst
 		this.model = model;
 	}
 	
-	public boolean isSubcribedTopic(String topic) {
-		return this.getPrClass().registerContext().contains(topic);
-	}
-	
 	// Triggered by general data pipeline
 	public abstract List<ConfigurationCommand> execute(List<T> data, ExecutionContext context);
 	

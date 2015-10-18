@@ -122,7 +122,7 @@ public class ProgressionExtensionPoint extends ExtensionPoint<AbstractProgressio
 			if(factor != null) {
 				logger.info("Progression Extension Point is polling new context:" + factor.toString());
 				for(Map.Entry<PrClass, AbstractExtension> entry : this.extensionMap.entrySet()) {
-					ProgressionExtension extension = (ProgressionExtension) entry.getValue();
+					AbstractProgressionExtension extension = (AbstractProgressionExtension) entry.getValue();
 					if (extension instanceof FactorExecutable) {
 						if (extension.isSubcribedTopic(factor.getTopicId())) {
 							this.executor.execute(new ProgressionTask(extension, factor));

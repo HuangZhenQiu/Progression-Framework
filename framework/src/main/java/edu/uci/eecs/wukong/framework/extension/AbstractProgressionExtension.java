@@ -8,4 +8,8 @@ public abstract class AbstractProgressionExtension
 	public AbstractProgressionExtension(PrClass plugin) {
 		super(plugin);
 	}
+	
+	public boolean isSubcribedTopic(String topic) {
+		return this.getPrClass().registerContext().contains(topic);
+	}
 }

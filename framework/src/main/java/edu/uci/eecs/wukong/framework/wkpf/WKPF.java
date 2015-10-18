@@ -282,7 +282,7 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 		if (leftSize >= WKPFUtil.DEFAULT_OBJECT_NUMBER) {
 			buffer = ByteBuffer.allocate(6 + WKPFUtil.DEFAULT_OBJECT_SIZE * WKPFUtil.DEFAULT_OBJECT_NUMBER);
 		} else {
-			buffer = ByteBuffer.allocate(6 + leftSize * 4);
+			buffer = ByteBuffer.allocate(6 + leftSize * WKPFUtil.DEFAULT_OBJECT_SIZE);
 		}
 		buffer.put(WKPFUtil.WKPF_GET_WUOBJECT_LIST_R);
 		buffer.put(message[1]);

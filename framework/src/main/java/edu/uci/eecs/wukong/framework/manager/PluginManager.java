@@ -38,7 +38,8 @@ public class PluginManager implements PrClassInitListener {
 	private Map<Short, WuClassModel> registedClasses;
 	private WKPF wkpf;
 	private String[] PLUGINS = {"switcher.SwitchPrClass", "timertest.TimerPrClass", 
-			"icsdemo.ICSDemoHuePrClass", "icsdemo.ICSDemoFanPrClass", 
+			"icsdemo.ICSDemoFloorlampPrClass", "icsdemo.ICSDemoBloomPrClass", "icsdemo.ICSDemoGoPrClass", "icsdemo.ICSDemoStripPrClass",
+			"icsdemo.ICSDemoFanPrClass", 
 			"icsdemo.ICSDemoAromaPrClass", "icsdemo.ICSDemoMusicPrClass", 
 			"icsdemo.ICSDemoTVPrClass", "icsdemo.ICSDemoQPrClass"
 		};

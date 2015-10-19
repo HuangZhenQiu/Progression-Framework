@@ -17,7 +17,7 @@ import edu.uci.eecs.wukong.framework.model.PropertyType;
 import edu.uci.eecs.wukong.framework.prclass.PrClass;
 import edu.uci.eecs.wukong.prclass.icsdemo.ContextProgressionExtension;
 
-
+@WuClass(id = 9010)
 public class ICSDemoHuePrClass extends PrClass {
 	
 	@WuProperty(name = "hue", id = 0, type = PropertyType.Output, dtype = DataType.Short)

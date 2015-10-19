@@ -29,9 +29,11 @@ public class ContextProgressionExtension extends AbstractProgressionExtension im
 	public void execute(BaseFactor context) {
 		if (context instanceof ICSContext) {
 			ICSContext icsContext = (ICSContext) context;
-			logger.info(icsContext.getContext());
-			icsContext = preferenceTable.lookup(icsContext);
 			currentContext = icsContext.getContext();
+			logger.info("Before lookup"+currentContext);
+			icsContext = preferenceTable.lookup(icsContext);
+			logger.info("After lookup"+icsContext.getContext());
+
 			if (icsDemoPlugin instanceof ICSDemoHuePrClass){
 				if (icsDemoPlugin instanceof ICSDemoFloorlampPrClass){
 					if(icsContext.Floorlamp == 1){
@@ -42,19 +44,19 @@ public class ContextProgressionExtension extends AbstractProgressionExtension im
 				} else if (icsDemoPlugin instanceof ICSDemoGoPrClass){
 					if(icsContext.Go == 1){
 						((ICSDemoGoPrClass)icsDemoPlugin).setColorFromRGB(icsContext.Go_R, icsContext.Go_G, icsContext.Go_B);
-						((ICSDemoFloorlampPrClass)icsDemoPlugin).setBrightness(icsContext.Go_Lux);
+						((ICSDemoGoPrClass)icsDemoPlugin).setBrightness(icsContext.Go_Lux);
 					}
 					((ICSDemoGoPrClass)icsDemoPlugin).setOnOff(icsContext.Go);
 				} else if (icsDemoPlugin instanceof ICSDemoBloomPrClass){
 					if(icsContext.Bloom == 1){
 						((ICSDemoBloomPrClass)icsDemoPlugin).setColorFromRGB(icsContext.Bloom_R, icsContext.Bloom_G, icsContext.Bloom_B);
-						((ICSDemoFloorlampPrClass)icsDemoPlugin).setBrightness(icsContext.Bloom_Lux);
+						((ICSDemoBloomPrClass)icsDemoPlugin).setBrightness(icsContext.Bloom_Lux);
 					}
 					((ICSDemoBloomPrClass)icsDemoPlugin).setOnOff(icsContext.Bloom);
 				} else if (icsDemoPlugin instanceof ICSDemoStripPrClass){
 					if(icsContext.Strip == 1){
 						((ICSDemoStripPrClass)icsDemoPlugin).setColorFromRGB(icsContext.Strip_R, icsContext.Strip_G, icsContext.Strip_B);
-						((ICSDemoFloorlampPrClass)icsDemoPlugin).setBrightness(icsContext.Strip_Lux);
+						((ICSDemoStripPrClass)icsDemoPlugin).setBrightness(icsContext.Strip_Lux);
 					}
 					((ICSDemoStripPrClass)icsDemoPlugin).setOnOff(icsContext.Strip);
 				}

@@ -36,8 +36,9 @@ public class ICSDemoQPrClass extends PrClass {
 		return question;
 	}
 
-	public void setQuestion(String question) {
-//		this.question = question;
+	public void setQuestion(boolean question) {
+		this.support.firePropertyChange("question", this.question, question);
+		this.question = question;
 	}
 
 }

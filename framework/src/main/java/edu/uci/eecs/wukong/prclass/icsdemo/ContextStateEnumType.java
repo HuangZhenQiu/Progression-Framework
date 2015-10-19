@@ -1,14 +1,16 @@
 package edu.uci.eecs.wukong.prclass.icsdemo;
 
 public enum ContextStateEnumType {
-	INIT(1, "INIT"), 
-	RELAX(2, "RELAX"),
-	TV(3, "TV"),
-	PHONE(4, "PHONE"),
-	TVPHONE(5, "TV+PHONE");
-	 
+	INIT(0, "INIT"), 
+	RELAX(1, "RELAX"),
+	TV(2, "TV"),
+	PHONE(3, "PHONE"),
+	TVPHONE(4, "TV+PHONE");
+	
+	private static final int size = ContextStateEnumType.values().length;
     private int id;
     private String name;
+    
  
     private ContextStateEnumType(final Integer id, final String name) {
         this.id = id;
@@ -21,6 +23,10 @@ public enum ContextStateEnumType {
     
     public String getName(){
     	return this.name;
+    }
+    
+    public static int getLength(){
+    	return size;
     }
     
     public static ContextStateEnumType fromString(String text) {

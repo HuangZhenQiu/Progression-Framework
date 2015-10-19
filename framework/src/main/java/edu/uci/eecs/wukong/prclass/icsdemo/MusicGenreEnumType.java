@@ -2,11 +2,12 @@ package edu.uci.eecs.wukong.prclass.icsdemo;
 
 public enum MusicGenreEnumType {
 	Q(-1, "?"),
-	CLASSICAL(1, "Classical"), 
-	JAZZ(2, "Jazz"),
-	POP(3, "Pop"),
-	WARMING(4, "Warming"),
-	FIVETH(5, "Fiveth");
+	CLASSICAL(5, "Classical"), 
+	JAZZ(3, "Jazz"),
+	POP(1, "Pop"),
+	NEWAGE(4, "New Age"),
+	SOUNDTRACK(2, "Soundtrack")
+	;
 	 
 	private int id;
     private String name;
@@ -32,7 +33,27 @@ public enum MusicGenreEnumType {
                 }
             }
         }
-        return null;
+        return Q;
+    }
+    
+    public static MusicGenreEnumType fromID(int id) {
+        for (MusicGenreEnumType b : MusicGenreEnumType.values()) {
+            if (id == (b.getID())) {
+            	return b;
+            }
+        }
+        return Q;
+    }
+    
+    public static int getIDfromString(String text) {
+        if (text != null) {
+            for (MusicGenreEnumType b : MusicGenreEnumType.values()) {
+                if (text.equalsIgnoreCase(b.getName())) {
+                  return b.getID();
+                }
+            }
+        }
+        return Q.getID();
     }
  
     // standard getters and setters

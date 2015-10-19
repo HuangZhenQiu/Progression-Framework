@@ -31,6 +31,8 @@ public class ICSDemoHuePrClass extends PrClass {
 	@WuProperty(name = "y", id = 4, type = PropertyType.Output, dtype = DataType.Short)
 	private short y;
 	
+	private short on_off;
+	
 //    http://www.developers.meethue.com/documentation/supported-lights
 // 	  1st dimension: 0: gamutA, 1: gamutB, 2: gamutC
 //    2nd & 3rd dimension: 00:Red x, 01: Red y, 10: Green x, 11: Green y, 20: Blue x, 21: Blue y
@@ -49,7 +51,7 @@ public class ICSDemoHuePrClass extends PrClass {
 	}
 
 	public ICSDemoHuePrClass(String name, String modelID) {
-		super(name);/*
+		super(name);
 		switch(modelID){
 			case "LCT001":
 			case "LCT002":
@@ -72,7 +74,7 @@ public class ICSDemoHuePrClass extends PrClass {
 				break;
 			default:
 				break;
-		}*/
+		}
 		// TODO Auto-generated constructor stub
 	}
 
@@ -126,8 +128,8 @@ public class ICSDemoHuePrClass extends PrClass {
             cx = xy.x;
             cy = xy.y;
         }
-    	this.x = (short)(cx * 10000);
-    	this.y = (short)(cy * 10000);
+    	this.setX((short)(cx * 10000));
+    	this.setY((short)(cy * 10000));
 	}
 	
 	private double gammaCorrection(double rgb)
@@ -198,32 +200,35 @@ public class ICSDemoHuePrClass extends PrClass {
 		//https://www.cs.rit.edu/~ncs/color/t_convert.html
 		//https://en.wikipedia.org/wiki/HSL_and_HSV#Converting_to_RGB
 		double[] da = new double[] {red, green, blue};
-        List b = Arrays.asList(ArrayUtils.toObject(da));
-        double min = (double)Collections.min(b), max = (double)Collections.max(b);
+        List<Double> b = Arrays.asList(ArrayUtils.toObject(da));
+		double min = (double)Collections.min(b), max = (double)Collections.max(b);
         double delta = max - min;
-        this.brightness = ((short)(max*255));
+//        this.setBrightness((short)(max*255));
         if (max != 0.0){
-        	this.saturation = ((short)((delta / max)*255));
+        	this.setSaturation((short)((delta / max)*255));
         } else {
-        	this.saturation = 0;
-        	this.hue = -1;
+        	this.setSaturation((short)0);
+        	this.setHue((short)0);
         	return;
         }
+        double hue;
         if (red == max){
-        	this.hue = (short)((green - blue) / delta);
+        	hue = ((green - blue) / delta);
         } else if (green == max) {
-        	this.hue = (short)(2 + (blue - red) / delta);
+        	hue = (short)(2 + (blue - red) / delta);
         } else {
-        	this.hue = (short)(4 + (red - green) / delta);
+        	hue = (short)(4 + (red - green) / delta);
         }
-        this.hue *= 60;
-        if (this.hue < 0){
-        	this.hue += 360;
+        hue *= 60;
+        if (hue < 0){
+        	hue += 360;
         }
+        this.setHue((short)(hue/360.0*255.0));
 	}
 	
 	public void setColorFromRGB(short red, short green, short blue)
 	{
+		if(red > 255 || red < 0 || green > 255 || green < 0 || blue > 255 || blue < 0) return;
 		double r = red/255.0, g = green/255.0, b = blue/255.0;
 		this.setXYFromRGB(r, g, b);
 		this.setHSBFromRGB(r, g, b);
@@ -234,6 +239,7 @@ public class ICSDemoHuePrClass extends PrClass {
 	}
 	
 	public void setX(short x){
+		this.support.firePropertyChange("x", this.x, x);
 		this.x = x;
 	}
 	
@@ -242,6 +248,7 @@ public class ICSDemoHuePrClass extends PrClass {
 	}
 	
 	public void setY(short y){
+		this.support.firePropertyChange("y", this.y, y);
 		this.y = y;
 	}
 
@@ -250,6 +257,8 @@ public class ICSDemoHuePrClass extends PrClass {
 	}
 
 	public void setHue(short hue) {
+		if(hue > 255 || hue < 0) return;
+		this.support.firePropertyChange("hue", this.hue, hue);
 		this.hue = hue;
 	}
 
@@ -258,6 +267,8 @@ public class ICSDemoHuePrClass extends PrClass {
 	}
 
 	public void setSaturation(short saturation) {
+		if(saturation > 255 || saturation < 0) return;
+		this.support.firePropertyChange("saturation", this.saturation, saturation);
 		this.saturation = saturation;
 	}
 
@@ -266,6 +277,17 @@ public class ICSDemoHuePrClass extends PrClass {
 	}
 
 	public void setBrightness(short brightness) {
+		if(brightness > 255 || brightness < 0) return;
+		this.support.firePropertyChange("brightness", this.brightness, brightness);
 		this.brightness = brightness;
+	}
+	
+	public short getOnOff(){
+		return on_off;
+	}
+	public void setOnOff(short on_off){
+		if(on_off > 1 || on_off < 0) return;
+		this.support.firePropertyChange("on_off", this.on_off, on_off);
+		this.on_off = on_off;
 	}
 }

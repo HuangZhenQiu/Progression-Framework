@@ -239,6 +239,7 @@ public class ICSDemoHuePrClass extends PrClass {
 	}
 	
 	public void setX(short x){
+		if(x > 10000 || x < 0) return;
 		this.support.firePropertyChange("x", this.x, x);
 		this.x = x;
 	}
@@ -248,6 +249,7 @@ public class ICSDemoHuePrClass extends PrClass {
 	}
 	
 	public void setY(short y){
+		if(y > 10000 || y < 0) return;
 		this.support.firePropertyChange("y", this.y, y);
 		this.y = y;
 	}

@@ -1,6 +1,5 @@
 package edu.uci.eecs.wukong.prclass.icsdemo;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -9,29 +8,14 @@ import org.apache.commons.lang.ArrayUtils;
 
 import java.awt.geom.Point2D;
 
-import edu.uci.eecs.wukong.framework.annotation.WuClass;
-import edu.uci.eecs.wukong.framework.annotation.WuProperty;
-import edu.uci.eecs.wukong.framework.api.Extension;
-import edu.uci.eecs.wukong.framework.model.DataType;
-import edu.uci.eecs.wukong.framework.model.PropertyType;
-import edu.uci.eecs.wukong.framework.prclass.PrClass;
-import edu.uci.eecs.wukong.prclass.icsdemo.ContextProgressionExtension;
-
-@WuClass(id = 9010)
-public class ICSDemoHuePrClass extends PrClass {
+public class ICSDemoHuePrClass {
 	
-	@WuProperty(name = "hue", id = 0, type = PropertyType.Output, dtype = DataType.Short)
-	protected short hue;
-	@WuProperty(name = "saturation", id = 1, type = PropertyType.Output, dtype = DataType.Short)
-	protected short saturation;
-	@WuProperty(name = "brightness", id = 2, type = PropertyType.Output, dtype = DataType.Short)
-	protected short brightness;
-	@WuProperty(name = "x", id = 3, type = PropertyType.Output, dtype = DataType.Short)
-	protected short x;
-	@WuProperty(name = "y", id = 4, type = PropertyType.Output, dtype = DataType.Short)
-	protected short y;
-	@WuProperty(name = "on_off", id = 5, type = PropertyType.Output, dtype = DataType.Short)
-	protected short on_off;
+	private short hue;
+	private short saturation;
+	private short brightness;
+	private short x;
+	private short y;
+	private short on_off;
 	
 //    http://www.developers.meethue.com/documentation/supported-lights
 // 	  1st dimension: 0: gamutA, 1: gamutB, 2: gamutC
@@ -46,12 +30,12 @@ public class ICSDemoHuePrClass extends PrClass {
 
 	
 	public ICSDemoHuePrClass() {
-		super("ICSDemoHuePrClass");
+//		super("ICSDemoHuePrClass");
 		// TODO Auto-generated constructor stub
 	}
 
 	public ICSDemoHuePrClass(String name, String modelID) {
-		super(name);
+//		super(name);
 		switch(modelID){
 			case "LCT001":
 			case "LCT002":
@@ -76,20 +60,6 @@ public class ICSDemoHuePrClass extends PrClass {
 				break;
 		}
 		// TODO Auto-generated constructor stub
-	}
-
-	@Override
-	public List<Extension> registerExtension() {
-		List<Extension> extensions = new ArrayList<Extension>();
-		extensions.add(new ContextProgressionExtension(this));
-		return extensions;
-	}
-
-	@Override
-	public List<String> registerContext() {
-		List<String> topics = new ArrayList<String> ();
-		topics.add(ICSContext.TOPIC);
-		return topics;
 	}
 	
 	//https://github.com/benknight/hue-python-rgb-converter/blob/master/rgb_cie.py
@@ -240,7 +210,6 @@ public class ICSDemoHuePrClass extends PrClass {
 	
 	public void setX(short x){
 		if(x > 10000 || x < 0) return;
-		this.support.firePropertyChange("x", this.x, x);
 		this.x = x;
 	}
 	
@@ -250,7 +219,6 @@ public class ICSDemoHuePrClass extends PrClass {
 	
 	public void setY(short y){
 		if(y > 10000 || y < 0) return;
-		this.support.firePropertyChange("y", this.y, y);
 		this.y = y;
 	}
 
@@ -260,7 +228,6 @@ public class ICSDemoHuePrClass extends PrClass {
 
 	public void setHue(short hue) {
 		if(hue > 255 || hue < 0) return;
-		this.support.firePropertyChange("hue", this.hue, hue);
 		this.hue = hue;
 	}
 
@@ -270,7 +237,6 @@ public class ICSDemoHuePrClass extends PrClass {
 
 	public void setSaturation(short saturation) {
 		if(saturation > 255 || saturation < 0) return;
-		this.support.firePropertyChange("saturation", this.saturation, saturation);
 		this.saturation = saturation;
 	}
 
@@ -280,7 +246,6 @@ public class ICSDemoHuePrClass extends PrClass {
 
 	public void setBrightness(short brightness) {
 		if(brightness > 255 || brightness < 0) return;
-		this.support.firePropertyChange("brightness", this.brightness, brightness);
 		this.brightness = brightness;
 	}
 	
@@ -289,7 +254,6 @@ public class ICSDemoHuePrClass extends PrClass {
 	}
 	public void setOnOff(short on_off){
 		if(on_off > 1 || on_off < 0) return;
-		this.support.firePropertyChange("on_off", this.on_off, on_off);
 		this.on_off = on_off;
 	}
 }

@@ -75,16 +75,16 @@ public class ICSContext extends BaseFactor {
 	}
 	
 	public String getContext() {
-		return "ICSContext:%n"
-				+"Floorlamp(On,R,G,B,Lux)=("+Floorlamp+","+Floorlamp_R+","+Floorlamp_G+","+Floorlamp_B+","+Floorlamp_Lux+")%n"
-				+"Bloom(On,R,G,B,Lux)=("+Bloom+","+Bloom_R+","+Bloom_G+","+Bloom_B+","+Bloom_Lux+")%n"
-				+"Go(On,R,G,B,Lux)=("+Go+","+Go_R+","+Go_G+","+Go_B+","+Go_Lux+")%n"
-				+"Strip(On,R,G,B,Lux)=("+Strip+","+Strip_R+","+Strip_G+","+Strip_B+","+Strip_Lux+")%n"
-				+"Fan(On,Speed,Rotate)=("+Fan+","+Fan_Speed+","+Fan_Rotate+")%n"
-				+"Mist(On)=("+Mist+")%n"
-				+"Music(On,Type,Volume)=("+Music+","+Music_Type+","+Music_Vol+")%n"
+		return "ICSContext:\n\t"
+				+"Floorlamp(On,R,G,B,Lux)=("+Floorlamp+","+Floorlamp_R+","+Floorlamp_G+","+Floorlamp_B+","+Floorlamp_Lux+")\n\t"
+				+"Bloom(On,R,G,B,Lux)=("+Bloom+","+Bloom_R+","+Bloom_G+","+Bloom_B+","+Bloom_Lux+")\n\t"
+				+"Go(On,R,G,B,Lux)=("+Go+","+Go_R+","+Go_G+","+Go_B+","+Go_Lux+")\n\t"
+				+"Strip(On,R,G,B,Lux)=("+Strip+","+Strip_R+","+Strip_G+","+Strip_B+","+Strip_Lux+")\n\t"
+				+"Fan(On,Speed,Rotate)=("+Fan+","+Fan_Speed+","+Fan_Rotate+")\n\t"
+				+"Mist(On)=("+Mist+")\n\t"
+				+"Music(On,Type,Volume)=("+Music+","+Music_Type+","+Music_Vol+")\n\t"
 				
-				+"TV(On,Mute)=("+TV+","+TV_Mute+")%n"
+				+"TV(On,Mute)=("+TV+","+TV_Mute+")\n\t"
 				+"PHONE(On)=("+PHONE+")"
 				;
 	}

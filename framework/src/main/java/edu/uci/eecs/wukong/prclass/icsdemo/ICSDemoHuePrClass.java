@@ -30,7 +30,7 @@ public class ICSDemoHuePrClass extends PrClass {
 	private short x;
 	@WuProperty(name = "y", id = 4, type = PropertyType.Output, dtype = DataType.Short)
 	private short y;
-	
+	@WuProperty(name = "on_off", id = 5, type = PropertyType.Output, dtype = DataType.Short)
 	private short on_off;
 	
 //    http://www.developers.meethue.com/documentation/supported-lights

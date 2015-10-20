@@ -21,17 +21,17 @@ import edu.uci.eecs.wukong.prclass.icsdemo.ContextProgressionExtension;
 public class ICSDemoHuePrClass extends PrClass {
 	
 	@WuProperty(name = "hue", id = 0, type = PropertyType.Output, dtype = DataType.Short)
-	private short hue;
+	protected short hue;
 	@WuProperty(name = "saturation", id = 1, type = PropertyType.Output, dtype = DataType.Short)
-	private short saturation;
+	protected short saturation;
 	@WuProperty(name = "brightness", id = 2, type = PropertyType.Output, dtype = DataType.Short)
-	private short brightness;
+	protected short brightness;
 	@WuProperty(name = "x", id = 3, type = PropertyType.Output, dtype = DataType.Short)
-	private short x;
+	protected short x;
 	@WuProperty(name = "y", id = 4, type = PropertyType.Output, dtype = DataType.Short)
-	private short y;
+	protected short y;
 	@WuProperty(name = "on_off", id = 5, type = PropertyType.Output, dtype = DataType.Short)
-	private short on_off;
+	protected short on_off;
 	
 //    http://www.developers.meethue.com/documentation/supported-lights
 // 	  1st dimension: 0: gamutA, 1: gamutB, 2: gamutC

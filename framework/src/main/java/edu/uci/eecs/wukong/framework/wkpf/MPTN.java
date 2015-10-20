@@ -239,6 +239,8 @@ public class MPTN implements MPTNMessageListener{
 					case WKPFUtil.WKPF_REPRG_REBOOT:
 						LOGGER.info("I dont't want to reboot");
 						return WKPFUtil.WKPF_REPRG_REBOOT;
+					case WKPFUtil.WKPF_WRITE_PROPERTY_R:
+						return WKPFUtil.WKPF_WRITE_PROPERTY_R;
 					default:
 						LOGGER.error("Received unpexcted WKPF message type " + payload[0]);
 				}

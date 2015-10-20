@@ -27,9 +27,7 @@ public class XMPPFactorListener extends FactorClientListener implements ItemEven
 			String message = item.getPayload().toString();
 			int start = message.indexOf('{');
 			int end = message.indexOf('}');
-			logger.info(message);
 			ICSContext factor = gson.fromJson(message.substring(start, end + 1), ICSContext.class);
-			logger.info(factor.getTopicId());
 			factors.put(factor.getTopicId(), factor);
 			for(FactorListener listener : this.factorListeners) {
 				listener.onFactorArrival(factor);

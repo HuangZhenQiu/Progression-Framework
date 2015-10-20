@@ -3,11 +3,13 @@ package edu.uci.eecs.wukong.prclass.icsdemo;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.uci.eecs.wukong.framework.annotation.WuClass;
 import edu.uci.eecs.wukong.framework.annotation.WuProperty;
 import edu.uci.eecs.wukong.framework.api.Extension;
 import edu.uci.eecs.wukong.framework.model.PropertyType;
 import edu.uci.eecs.wukong.framework.prclass.PrClass;
 
+@WuClass(id = 9009)
 public class ICSDemoQPrClass extends PrClass {
 
 	@WuProperty(name = "question", id = 0, type = PropertyType.Output)

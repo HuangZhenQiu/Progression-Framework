@@ -492,4 +492,8 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 	public int getNetworkId() {
 		return this.mptn.getNodeId();
 	}
+	
+	public long getLongAddress() {
+		return this.mptn.getLongAddress();
+	}
 }

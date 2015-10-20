@@ -118,6 +118,11 @@ public class PluginManager implements PrClassInitListener {
 		}
 	}
 	
+	public void unbindPlugins(List<WuObjectModel> objects) {
+
+		
+	}
+	
 	/**
 	 * Bind a plugin instance into progression pipeline runtime.
 	 * 
@@ -138,7 +143,7 @@ public class PluginManager implements PrClassInitListener {
 	 * When master do the remote programming, we need to deallocate binds from physical key to buffer
 	 * for plugins, and also unregister the extensions in pipeline. 
 	 */
-    public void unbindPlugin() {
+    public void unbindPlugin(WuObjectModel model) {
     	for (PrClass plugin : plugins) {
     		pipeline.unregisterExtension(plugin.registerExtension());
     	}

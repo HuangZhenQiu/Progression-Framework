@@ -7,6 +7,7 @@ import edu.uci.eecs.wukong.framework.client.FactorClient;
 import edu.uci.eecs.wukong.framework.client.FactorClientListener;
 import edu.uci.eecs.wukong.framework.factor.BaseFactor;
 import edu.uci.eecs.wukong.framework.factor.FactorListener;
+import edu.uci.eecs.wukong.framework.model.WuObjectModel;
 import edu.uci.eecs.wukong.framework.prclass.PrClass;
 import edu.uci.eecs.wukong.framework.xmpp.XMPPFactorClient;
 import edu.uci.eecs.wukong.framework.xmpp.XMPPFactorListener;
@@ -70,6 +71,12 @@ public class SceneManager {
 			logger.info("Finish subsribe topics " + topics + " for PrClass " + plugin.getName() + " in Scene Manager.");
 		} else {
 			logger.info("There is no topic to subscribe for for PrClass " + plugin.getName() + " in Scene Manager.");
+		}
+	}
+	
+	public void unsubscribe(PrClass plugin) {
+		if (pluginContextMap.containsKey(plugin)) {
+			pluginContextMap.remove(plugin);
 		}
 	}
 	

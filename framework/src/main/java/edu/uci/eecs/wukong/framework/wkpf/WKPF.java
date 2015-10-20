@@ -366,7 +366,7 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 		
 		//TODO (Peter Huang) return error code, when problem happens
 		ByteBuffer buffer = ByteBuffer.allocate(7);
-		buffer.put(WKPFUtil.WKPF_REPRG_WRITE_R);
+		buffer.put(WKPFUtil.WKPF_WRITE_PROPERTY);
 		buffer.put(message[1]);
 		buffer.put(message[2]);
 		buffer.put(port);
@@ -395,7 +395,7 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 		
 		//TODO (Peter Huang) return error code, when problem happens
 		ByteBuffer buffer = ByteBuffer.allocate(7);
-		buffer.put(WKPFUtil.WKPF_REPRG_WRITE_R);
+		buffer.put(WKPFUtil.WKPF_REQUEST_PROPERTY_INIT);
 		buffer.put(message[1]);
 		buffer.put(message[2]);
 		buffer.put(port);

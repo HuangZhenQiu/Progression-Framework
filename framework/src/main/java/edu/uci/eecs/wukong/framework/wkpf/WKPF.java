@@ -290,8 +290,8 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 		buffer.put(messageNumber);
 		buffer.put((byte)totalLength);
 		buffer.put((byte)portToWuObjectMap.size());
-		for (int i = WKPFUtil.DEFAULT_OBJECT_SIZE * messageNumber + 1; // Port starts from 1
-				i <= WKPFUtil.DEFAULT_OBJECT_SIZE * (messageNumber + 1); i++) {
+		for (int i = WKPFUtil.DEFAULT_OBJECT_NUMBER * messageNumber + 1; // Port starts from 1
+				i <= WKPFUtil.DEFAULT_OBJECT_NUMBER * (messageNumber + 1); i++) {
 			if (i <= portToWuObjectMap.size() && portToWuObjectMap.get(new Byte((byte)i)) != null) {
 				WuObjectModel object = portToWuObjectMap.get(new Byte((byte)i));
 				if (object.getType() !=null) {

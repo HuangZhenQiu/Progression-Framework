@@ -34,32 +34,30 @@ public class ContextProgressionExtension extends AbstractProgressionExtension im
 			icsContext = preferenceTable.lookup(icsContext);
 			logger.info("After lookup"+icsContext.getContext());
 
-			if (icsDemoPlugin instanceof ICSDemoHuePrClass){
-				if (icsDemoPlugin instanceof ICSDemoFloorlampPrClass){
-					if(icsContext.Floorlamp == 1){
-						((ICSDemoFloorlampPrClass)icsDemoPlugin).setColorFromRGB(icsContext.Floorlamp_R, icsContext.Floorlamp_G, icsContext.Floorlamp_B);
-						((ICSDemoFloorlampPrClass)icsDemoPlugin).setBrightness(icsContext.Floorlamp_Lux);
-					}
-					((ICSDemoFloorlampPrClass)icsDemoPlugin).setOnOff(icsContext.Floorlamp);
-				} else if (icsDemoPlugin instanceof ICSDemoGoPrClass){
-					if(icsContext.Go == 1){
-						((ICSDemoGoPrClass)icsDemoPlugin).setColorFromRGB(icsContext.Go_R, icsContext.Go_G, icsContext.Go_B);
-						((ICSDemoGoPrClass)icsDemoPlugin).setBrightness(icsContext.Go_Lux);
-					}
-					((ICSDemoGoPrClass)icsDemoPlugin).setOnOff(icsContext.Go);
-				} else if (icsDemoPlugin instanceof ICSDemoBloomPrClass){
-					if(icsContext.Bloom == 1){
-						((ICSDemoBloomPrClass)icsDemoPlugin).setColorFromRGB(icsContext.Bloom_R, icsContext.Bloom_G, icsContext.Bloom_B);
-						((ICSDemoBloomPrClass)icsDemoPlugin).setBrightness(icsContext.Bloom_Lux);
-					}
-					((ICSDemoBloomPrClass)icsDemoPlugin).setOnOff(icsContext.Bloom);
-				} else if (icsDemoPlugin instanceof ICSDemoStripPrClass){
-					if(icsContext.Strip == 1){
-						((ICSDemoStripPrClass)icsDemoPlugin).setColorFromRGB(icsContext.Strip_R, icsContext.Strip_G, icsContext.Strip_B);
-						((ICSDemoStripPrClass)icsDemoPlugin).setBrightness(icsContext.Strip_Lux);
-					}
-					((ICSDemoStripPrClass)icsDemoPlugin).setOnOff(icsContext.Strip);
+			if (icsDemoPlugin instanceof ICSDemoFloorlampPrClass){
+				if(icsContext.Floorlamp == 1){
+					((ICSDemoFloorlampPrClass)icsDemoPlugin).setColorFromRGB(icsContext.Floorlamp_R, icsContext.Floorlamp_G, icsContext.Floorlamp_B);
+					((ICSDemoFloorlampPrClass)icsDemoPlugin).setBrightness(icsContext.Floorlamp_Lux);
 				}
+				((ICSDemoFloorlampPrClass)icsDemoPlugin).setOnOff(icsContext.Floorlamp);
+			} else if (icsDemoPlugin instanceof ICSDemoGoPrClass){
+				if(icsContext.Go == 1){
+					((ICSDemoGoPrClass)icsDemoPlugin).setColorFromRGB(icsContext.Go_R, icsContext.Go_G, icsContext.Go_B);
+					((ICSDemoGoPrClass)icsDemoPlugin).setBrightness(icsContext.Go_Lux);
+				}
+				((ICSDemoGoPrClass)icsDemoPlugin).setOnOff(icsContext.Go);
+			} else if (icsDemoPlugin instanceof ICSDemoBloomPrClass){
+				if(icsContext.Bloom == 1){
+					((ICSDemoBloomPrClass)icsDemoPlugin).setColorFromRGB(icsContext.Bloom_R, icsContext.Bloom_G, icsContext.Bloom_B);
+					((ICSDemoBloomPrClass)icsDemoPlugin).setBrightness(icsContext.Bloom_Lux);
+				}
+				((ICSDemoBloomPrClass)icsDemoPlugin).setOnOff(icsContext.Bloom);
+			} else if (icsDemoPlugin instanceof ICSDemoStripPrClass){
+				if(icsContext.Strip == 1){
+					((ICSDemoStripPrClass)icsDemoPlugin).setColorFromRGB(icsContext.Strip_R, icsContext.Strip_G, icsContext.Strip_B);
+					((ICSDemoStripPrClass)icsDemoPlugin).setBrightness(icsContext.Strip_Lux);
+				}
+				((ICSDemoStripPrClass)icsDemoPlugin).setOnOff(icsContext.Strip);
 			} else if (icsDemoPlugin instanceof ICSDemoFanPrClass){
 				if(icsContext.Fan == 1){
 					((ICSDemoFanPrClass)icsDemoPlugin).setFanSpeed(icsContext.Fan_Speed);

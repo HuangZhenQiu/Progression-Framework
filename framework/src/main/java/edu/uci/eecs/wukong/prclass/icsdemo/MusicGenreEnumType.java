@@ -2,11 +2,11 @@ package edu.uci.eecs.wukong.prclass.icsdemo;
 
 public enum MusicGenreEnumType {
 	Q(-1, "?"),
-	CLASSICAL(5, "Classical"), 
-	JAZZ(3, "Jazz"),
 	POP(1, "Pop"),
+	SOUNDTRACK(2, "Soundtrack"),
+	JAZZ(3, "Jazz"),
 	NEWAGE(4, "New Age"),
-	SOUNDTRACK(2, "Soundtrack")
+	CLASSICAL(5, "Classical")
 	;
 	 
 	private int id;

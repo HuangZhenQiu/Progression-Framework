@@ -1,6 +1,7 @@
 package edu.uci.eecs.wukong.framework.wkpf;
 
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -102,6 +103,7 @@ public class MPTN implements MPTNMessageListener{
 		appendMPTNHeader(buffer, nodeId, HEADER_TYPE_1, (byte)(payload.length + 9));
 		MPTNUtil.appendMPTNPacket(buffer, longAddress, destId,
 				MPTNUtil.MPTN_MSATYPE_FWDREQ, payload);
+		LOGGER.info(WKPF.toHexString(buffer.array()));
 		gatewayClient.send(buffer.array());
 	}
 	
@@ -239,6 +241,8 @@ public class MPTN implements MPTNMessageListener{
 					case WKPFUtil.WKPF_REPRG_REBOOT:
 						LOGGER.info("I dont't want to reboot");
 						return WKPFUtil.WKPF_REPRG_REBOOT;
+					case WKPFUtil.WKPF_WRITE_PROPERTY_R:
+						return WKPFUtil.WKPF_WRITE_PROPERTY_R;
 					default:
 						LOGGER.error("Received unpexcted WKPF message type " + payload[0]);
 				}

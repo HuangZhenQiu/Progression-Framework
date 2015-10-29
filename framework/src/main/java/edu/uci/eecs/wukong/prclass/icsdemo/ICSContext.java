@@ -8,7 +8,7 @@ public class ICSContext extends BaseFactor {
 
     public short Command_Mode;
     public String Context;
-    public short UserA, UserB, UserG;
+    public short UserA, UserB, UserC, UserD, UserG;
     public short Floorlamp, Floorlamp_R, Floorlamp_G, Floorlamp_B, Floorlamp_Lux;
     public short Bloom, Bloom_R, Bloom_G, Bloom_B, Bloom_Lux;
     public short Go, Go_R, Go_G, Go_B, Go_Lux;
@@ -27,7 +27,7 @@ public class ICSContext extends BaseFactor {
 	}
 	
 	public ICSContext(short Command_Mode, String Context, 
-			short UserA, short UserB, short UserG,
+			short UserA, short UserB, short UserC, short UserD, short UserG,
 			short Floorlamp, short Floorlamp_R, short Floorlamp_G, short Floorlamp_B, short Floorlamp_Lux,
 			short Bloom, short Bloom_R, short Bloom_G, short Bloom_B, short Bloom_Lux,
 			short Go, short Go_R, short Go_G, short Go_B, short Go_Lux,
@@ -41,6 +41,8 @@ public class ICSContext extends BaseFactor {
 		this.Context = Context;
 		this.UserA = UserA;
 		this.UserB = UserB;
+		this.UserC = UserC;
+		this.UserD = UserD;
 		this.UserG = UserG;
 		this.Floorlamp = Floorlamp;
 		this.Floorlamp_R = Floorlamp_R;
@@ -76,6 +78,9 @@ public class ICSContext extends BaseFactor {
 	
 	public String getContext() {
 		return "ICSContext:\n\t"
+				+"CmdMode="+Command_Mode+"\n\t"
+				+"ContextState="+Context+"\n\t"
+				+"User(A,B,C,D,G)=("+UserA+","+UserB+","+UserC+","+UserD+","+UserG+")\n\t"
 				+"Floorlamp(On,R,G,B,Lux)=("+Floorlamp+","+Floorlamp_R+","+Floorlamp_G+","+Floorlamp_B+","+Floorlamp_Lux+")\n\t"
 				+"Bloom(On,R,G,B,Lux)=("+Bloom+","+Bloom_R+","+Bloom_G+","+Bloom_B+","+Bloom_Lux+")\n\t"
 				+"Go(On,R,G,B,Lux)=("+Go+","+Go_R+","+Go_G+","+Go_B+","+Go_Lux+")\n\t"
@@ -83,7 +88,6 @@ public class ICSContext extends BaseFactor {
 				+"Fan(On,Speed,Rotate)=("+Fan+","+Fan_Speed+","+Fan_Rotate+")\n\t"
 				+"Mist(On)=("+Mist+")\n\t"
 				+"Music(On,Type,Volume)=("+Music+","+Music_Type+","+Music_Vol+")\n\t"
-				
 				+"TV(On,Mute)=("+TV+","+TV_Mute+")\n\t"
 				+"PHONE(On)=("+PHONE+")"
 				;

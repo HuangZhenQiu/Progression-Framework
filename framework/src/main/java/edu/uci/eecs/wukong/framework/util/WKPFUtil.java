@@ -3,7 +3,8 @@ package edu.uci.eecs.wukong.framework.util;
 public class WKPFUtil {
 	public static final byte DEFAULT_OBJECT_SIZE = 4;
 	public static final byte DEFAULT_CLASS_SIZE = 3;
-	public static final byte DEFAULT_OBJECT_NUMBER = 9;
+	public static final byte DEFAULT_WKCOMM_MESSAGE_PAYLOAD_SIZE = 40;
+	public static final byte DEFAULT_OBJECT_NUMBER = ((DEFAULT_WKCOMM_MESSAGE_PAYLOAD_SIZE-3)/DEFAULT_OBJECT_SIZE);
 	
 	/* Virtual and Can create Instance, It should be 3 in the end. Temporarily, we treat it as  */
 	public static final byte PLUGIN_WUCLASS_TYPE = 0; // Need to confirm with Niels

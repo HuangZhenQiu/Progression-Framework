@@ -2,11 +2,13 @@ package edu.uci.eecs.wukong.framework.wkpf;
 
 import java.nio.ByteBuffer;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.TreeMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -268,40 +270,54 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 			LOGGER.error("Received Corrupted Get WuObject List request.");
 		}
 		
-		byte messageNumber = message[3];
-		int totalLength = portToWuObjectMap.size() / WKPFUtil.DEFAULT_OBJECT_NUMBER +  (portToWuObjectMap.size() % WKPFUtil.DEFAULT_OBJECT_NUMBER == 0 ? 0 : 1);
+		byte messageNumber = message[3]; // payload[0]
+		int wuobjectNumber = portToWuObjectMap.size(); // number_of_wuobject_messages
+		int totalLength = (wuobjectNumber - 1) / WKPFUtil.DEFAULT_OBJECT_NUMBER + 1;
 		
 		if (messageNumber > totalLength) {
 			LOGGER.error("Message number larger than expected.");
 		} else {
 			LOGGER.info("Message number is: " + messageNumber);
 		}
-		
+
+		int startAtWuobjectIndex = messageNumber * WKPFUtil.DEFAULT_OBJECT_NUMBER;
 		ByteBuffer buffer = null;
-		int leftSize = portToWuObjectMap.size()  - messageNumber * WKPFUtil.DEFAULT_OBJECT_SIZE;
+		int leftSize = wuobjectNumber  - startAtWuobjectIndex;
 		if (leftSize >= WKPFUtil.DEFAULT_OBJECT_NUMBER) {
-			buffer = ByteBuffer.allocate(6 + WKPFUtil.DEFAULT_OBJECT_SIZE * WKPFUtil.DEFAULT_OBJECT_NUMBER);
-		} else {
-			buffer = ByteBuffer.allocate(6 + leftSize * WKPFUtil.DEFAULT_OBJECT_SIZE);
+			leftSize = WKPFUtil.DEFAULT_OBJECT_NUMBER;
 		}
+		buffer = ByteBuffer.allocate(3 + 3 + leftSize * WKPFUtil.DEFAULT_OBJECT_SIZE);
+
 		buffer.put(WKPFUtil.WKPF_GET_WUOBJECT_LIST_R);
 		buffer.put(message[1]);
 		buffer.put(message[2]);
+
 		buffer.put(messageNumber);
 		buffer.put((byte)totalLength);
-		buffer.put((byte)portToWuObjectMap.size());
-		int start = WKPFUtil.DEFAULT_OBJECT_NUMBER * messageNumber + 1;
-		int end = leftSize >= WKPFUtil.DEFAULT_OBJECT_NUMBER ?
-				WKPFUtil.DEFAULT_OBJECT_NUMBER * (messageNumber + 1) : start + leftSize;
-		for (int i = start; // Port starts from 1
-				i <= end; i++) {
-			if (i <= portToWuObjectMap.size() && portToWuObjectMap.get(new Byte((byte)i)) != null) {
-				WuObjectModel object = portToWuObjectMap.get(new Byte((byte)i));
-				if (object.getType() !=null) {
-					buffer.put(object.getPort());
-					buffer.putShort(object.getType().getWuClassId());
-					buffer.put(WKPFUtil.PLUGIN_WUCLASS_TYPE);
-				}
+		buffer.put((byte)wuobjectNumber);
+
+//		int start = WKPFUtil.DEFAULT_OBJECT_NUMBER * messageNumber + 1;
+//		int end = leftSize >= WKPFUtil.DEFAULT_OBJECT_NUMBER ?
+//				WKPFUtil.DEFAULT_OBJECT_NUMBER * (messageNumber + 1) : start + leftSize;
+//		for (int i = start; // Port starts from 1
+//				i <= end; i++) {
+//			if (i <= portToWuObjectMap.size() && portToWuObjectMap.get(new Byte((byte)i)) != null) {
+//				WuObjectModel object = portToWuObjectMap.get(new Byte((byte)i));
+//				if (object.getType() !=null) {
+//					buffer.put(object.getPort());
+//					buffer.putShort(object.getType().getWuClassId());
+//					buffer.put(WKPFUtil.PLUGIN_WUCLASS_TYPE);
+//				}
+//			}
+//		}
+		
+		List<WuObjectModel> portToWuObjectList = new ArrayList<WuObjectModel>((new TreeMap<Byte, WuObjectModel>( portToWuObjectMap )).values());
+		for (int i = 0; i < leftSize; ++i) {
+			WuObjectModel object = portToWuObjectList.get(startAtWuobjectIndex + i);
+			if (object.getType() !=null) {
+				buffer.put(object.getPort());
+				buffer.putShort(object.getType().getWuClassId());
+				buffer.put(WKPFUtil.PLUGIN_WUCLASS_TYPE);
 			}
 		}
 		
@@ -350,7 +366,7 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 		
 		//TODO (Peter Huang) return error code, when problem happens
 		ByteBuffer buffer = ByteBuffer.allocate(7);
-		buffer.put(WKPFUtil.WKPF_REPRG_WRITE_R);
+		buffer.put(WKPFUtil.WKPF_WRITE_PROPERTY_R);
 		buffer.put(message[1]);
 		buffer.put(message[2]);
 		buffer.put(port);
@@ -379,7 +395,7 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 		
 		//TODO (Peter Huang) return error code, when problem happens
 		ByteBuffer buffer = ByteBuffer.allocate(7);
-		buffer.put(WKPFUtil.WKPF_REPRG_WRITE_R);
+		buffer.put(WKPFUtil.WKPF_REQUEST_PROPERTY_INIT_R);
 		buffer.put(message[1]);
 		buffer.put(message[2]);
 		buffer.put(port);

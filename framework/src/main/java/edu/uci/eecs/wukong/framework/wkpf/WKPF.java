@@ -499,4 +499,12 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 	public long getLongAddress() {
 		return this.mptn.getLongAddress();
 	}
+	
+	public LinkTable getLinkTable() {
+		return this.linkTable;
+	}
+	
+	public ComponentMap getComponentMap() {
+		return this.componentMap;
+	}
 }

@@ -44,7 +44,7 @@ public class XMPPFactorClient implements FactorClient {
 		connection = new XMPPConnection(connectionConfig);
 		try {
 			//SASLAuthentication.supportSASLMechanism("PLAIN", 0);
-		 	connection.connect();
+		 	//connection.connect();
 			connection.login(systemConfig.getXMPPUserName(), systemConfig.getXMPPPassword());
 			manager = new PubSubManager(connection);
 			logger.info("XMPP client is initialized!");

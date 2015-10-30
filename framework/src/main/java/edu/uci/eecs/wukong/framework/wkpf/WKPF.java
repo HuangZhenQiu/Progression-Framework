@@ -160,7 +160,7 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 						
 						} else {
 							this.sequence++;
-							ByteBuffer buffer = ByteBuffer.allocate(14);
+							ByteBuffer buffer = ByteBuffer.allocate(14+1); // include dummy piggyback count 0
 							if (destNodeId == 1) {
 								buffer.put(WKPFUtil.MONITORING);
 							} else {
@@ -183,15 +183,17 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 								byte val = (Boolean)value == true ? (byte)1 : (byte)0;
 								buffer.put(val);
 							} else if (value instanceof Byte) {
+								// Problems: where is value? Refresh_rate should be SHORT which is the same instanceof WKPF_PROPERTY_TYPE_SHORT
 								buffer.put(WKPFUtil.WKPF_PROPERTY_TYPE_REFRESH_RATE);
-								buffer.put((Byte)value);
+								buffer.putShort((Short)value);
 							}
 							
 							//TODO (Peter Huang) add token mechanism designed by sen.
-							buffer.put((byte) (link.getSourceId() % 256));
 							buffer.put((byte) (link.getSourceId() / 256));
-							buffer.put((byte) (link.getDestId() % 256));
+							buffer.put((byte) (link.getSourceId() % 256));
 							buffer.put((byte) (link.getDestId() / 256));
+							buffer.put((byte) (link.getDestId() % 256));
+							buffer.put((byte) 0);
 							
 							mptn.send((int)destNodeId, buffer.array());
 							LOGGER.info("Send set property message to destination : " + destNodeId + " with data " + toHexString(buffer.array()));
@@ -341,7 +343,7 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 		byte type = message[7];
 		short value = message[8];
         if (type != 1) { // If it is not boolean
-            value = (short) ((message[4] & 0xff) * 256 + message[9]);
+            value = (short) ((int)(message[8] & 0xff) << 8 + message[9]);
         }
 		
 		WuObjectModel wuobject = portToWuObjectMap.get(Byte.valueOf(port));

@@ -22,6 +22,8 @@ public class NIOUdpServer implements Runnable {
 	public static int BUFFER_SIZE = 1024;
 	private static int THREAD_POOL_SIZE = 10;
 	private int port;
+	private Selector selector;
+	private DatagramChannel channel;
 	private List<MPTNMessageListener> listeners;
 	private ExecutorService executorService = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
 	
@@ -36,8 +38,8 @@ public class NIOUdpServer implements Runnable {
 	
 	public void run() {
 		try {
-			Selector selector = Selector.open();
-			DatagramChannel channel = DatagramChannel.open();
+			selector = Selector.open();
+			channel = DatagramChannel.open();
 			InetSocketAddress address = new InetSocketAddress(port);
 			channel.socket().bind(address);
 			channel.configureBlocking(false);
@@ -75,6 +77,16 @@ public class NIOUdpServer implements Runnable {
 			}
 		} catch (IOException e) { 
 			e.printStackTrace();
+			logger.error(e.toString());
+		}
+	}
+	
+	public void shutdown() {
+		try {
+			channel.close();
+			selector.close();
+			executorService.shutdown();
+		} catch (IOException e) {
 			logger.error(e.toString());
 		}
 	}

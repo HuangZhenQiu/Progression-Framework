@@ -2,21 +2,19 @@ package edu.uci.eecs.wukong.framework.manager;
 
 import edu.uci.eecs.wukong.framework.pipeline.Pipeline;
 import edu.uci.eecs.wukong.framework.wkpf.WKPF;
+import edu.uci.eecs.wukong.prclass.test.TestPrClass;
+
 import org.junit.Test;
+import org.junit.Before;
+
 import junit.framework.TestCase;
 
 public class PluginManagerTest extends TestCase {
+	private PluginManager manager;
 	
-	@Test
-	public void testInitilization() throws Exception {
+	@Before
+	public void setup() {
 		BufferManager bufferManager = new BufferManager();
-		PluginManager manager = new PluginManager(new WKPF(bufferManager), new SceneManager(), new Pipeline(), bufferManager);
-		manager.init();
+		manager = new PluginManager(new WKPF(bufferManager), new SceneManager(), new Pipeline(), bufferManager);
 	}
-	
-	@Test
-	public void testRegisterPlugin() throws Exception {
-		
-	}
-	
 }

@@ -64,6 +64,11 @@ public class MPTN implements MPTNMessageListener{
 		}
 	}
 	
+	public void shutdown() {
+		gatewayClient.shutdown();
+		server.shutdown();
+	}
+	
 	public void register(WKPFMessageListener listener) {
 		this.listeners.add(listener);
 	}

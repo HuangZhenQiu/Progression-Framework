@@ -26,8 +26,6 @@ import org.slf4j.LoggerFactory;
 /**
  * Scene manager is used for delegate PrClass connecting with external factor resources,
  * such as pub/sub model resource XMPP, MQTT.
- * 
- *
  */
 public class SceneManager {
 	private static Logger logger = LoggerFactory.getLogger(SceneManager.class);

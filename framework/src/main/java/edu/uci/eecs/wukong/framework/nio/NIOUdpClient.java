@@ -46,8 +46,13 @@ public class NIOUdpClient {
 		}
 	}
 	
-	public void close() throws Exception {
-		this.channel.close();
+	public void shutdown() {
+		try {
+			this.channel.close();
+		}  catch (Exception e) {
+			e.printStackTrace();
+			logger.error(e.toString());
+		}
 	}
 	
 	public static void main(String[] args) {
@@ -57,7 +62,7 @@ public class NIOUdpClient {
 			ByteBuffer buffer = ByteBuffer.allocate(10);
 			MPTNUtil.appendMPTNHeader(buffer, MPTNUtil.IPToInteger("127.0.0.1"), (short)9000, 0, (byte)2, (byte)0);
 			client.send(buffer.array());
-			client.close();
+			client.shutdown();
 		} catch (Exception e) {
 			System.out.println(e.toString());
 		}

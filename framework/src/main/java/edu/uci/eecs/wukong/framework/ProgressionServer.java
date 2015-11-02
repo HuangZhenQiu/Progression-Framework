@@ -8,24 +8,25 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import edu.uci.eecs.wukong.framework.manager.BufferManager;
-import edu.uci.eecs.wukong.framework.manager.SceneManager;
 import edu.uci.eecs.wukong.framework.manager.ConfigurationManager;
 import edu.uci.eecs.wukong.framework.manager.PluginManager;
+import edu.uci.eecs.wukong.framework.manager.SceneManager;
+import edu.uci.eecs.wukong.framework.manager.StateManager;
+import edu.uci.eecs.wukong.framework.model.StateModel;
 import edu.uci.eecs.wukong.framework.pipeline.Pipeline;
 import edu.uci.eecs.wukong.framework.select.FeatureChoosers;
 import edu.uci.eecs.wukong.framework.wkpf.WKPF;
-import edu.uci.eecs.wukong.prclass.test.TestPrClass;
 import edu.uci.eecs.wukong.rpc.netty.CommunicationServer;
 import edu.uci.eecs.wukong.rpc.netty.service.DataService;
 import edu.uci.eecs.wukong.rpc.netty.service.ProgressionDataServiceFactory;
 
 public class ProgressionServer {
 	private static Logger logger = LoggerFactory.getLogger(ProgressionServer.class);
-	
 	private CommunicationServer server;
 	private SceneManager contextManager;
 	private BufferManager bufferManager;
 	private PluginManager pluginManager;
+	private StateManager stateManager;
 	private FeatureChoosers featureChoosers;
 	private Pipeline pipeline;
 	private WKPF wkpf;
@@ -41,12 +42,15 @@ public class ProgressionServer {
 		this.featureChoosers = new FeatureChoosers(bufferManager, wkpf);
 		this.pipeline = new Pipeline(contextManager, configurationManager, featureChoosers);	
 		this.pluginManager = new PluginManager(wkpf, contextManager, pipeline, bufferManager);
+		this.stateManager = new StateManager(wkpf, pluginManager);
 		this.wkpf.register(pluginManager);
 	}
 	
 	/**
-	 *  Read the configuration from config files, build connections with
-	 *  all the agents listed and collect the information about virtual machines.
+	 *  Server side of proto based RPC. It is not in used right, but will be used
+	 *  for dynamic loading PrClass from app store or master repository. It is also
+	 *  good channel to implement the streaming layer resource manager protocol that
+	 *  go beyond the capability of current version WKPF.
 	 */	
 	private void init(PeerInfo peerInfo) {
 
@@ -70,37 +74,36 @@ public class ProgressionServer {
 	//start the progression server
 	public void start() {
 		try {
+			StateModel model = this.stateManager.recover();
 			this.wkpf.start();
 			this.pluginManager.init();
 			this.server.start();
 			this.pipeline.start();
-			// this.registerTestPlugin();
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error("Fail to start progression server.");
 		}
 	}
 	
-	// Only for testing purpose
-	private void registerTestPlugin() {
-		TestPrClass plugin = new TestPrClass();
-		try {
-			//pluginManager.bindPlugin(plugin);
-		} catch (Exception e) {
-			logger.info(e.toString());
-		}
-	}
-	
 	public void shutdown() {
-		
 		this.server.shutdown();
+		this.wkpf.shutdown();
 	}
 	
+	public void attachShutDownHook() {
+		Runtime runtime = Runtime.getRuntime();
+		runtime.addShutdownHook(new Thread() {
+			public void run() {
+				shutdown();
+			}
+		});
+	}
 	
 	public static void main(String[] args) {
 		PeerInfo peerInfo = new PeerInfo("localhost", 10000);
 		ProgressionServer server = new ProgressionServer(peerInfo);
 		server.start();
+		server.attachShutDownHook();
 	}
 
 }

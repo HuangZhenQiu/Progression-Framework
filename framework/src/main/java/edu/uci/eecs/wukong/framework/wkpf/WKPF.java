@@ -74,6 +74,10 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 		bufferManager.setMPTN(mptn);
 	}
 	
+	public void shutdown() {
+		mptn.shutdown();
+	}
+	
 	public void register(PrClassInitListener listener) {
 		this.listeners.add(listener);
 	}

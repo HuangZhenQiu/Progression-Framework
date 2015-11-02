@@ -58,7 +58,7 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 
 	public WKPF(BufferManager bufferManager) {
 		this.wuclasses = new ArrayList<WuClassModel> ();
-		this.portToWuObjectMap = new HashMap<Byte, WuObjectModel> ();
+		this.portToWuObjectMap = new TreeMap<Byte, WuObjectModel> ();
 		this.listeners = new ArrayList<PrClassInitListener> ();
 		this.mptn = new MPTN();
 		this.mptn.register(this);
@@ -297,23 +297,8 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 		buffer.put(messageNumber);
 		buffer.put((byte)totalLength);
 		buffer.put((byte)wuobjectNumber);
-
-//		int start = WKPFUtil.DEFAULT_OBJECT_NUMBER * messageNumber + 1;
-//		int end = leftSize >= WKPFUtil.DEFAULT_OBJECT_NUMBER ?
-//				WKPFUtil.DEFAULT_OBJECT_NUMBER * (messageNumber + 1) : start + leftSize;
-//		for (int i = start; // Port starts from 1
-//				i <= end; i++) {
-//			if (i <= portToWuObjectMap.size() && portToWuObjectMap.get(new Byte((byte)i)) != null) {
-//				WuObjectModel object = portToWuObjectMap.get(new Byte((byte)i));
-//				if (object.getType() !=null) {
-//					buffer.put(object.getPort());
-//					buffer.putShort(object.getType().getWuClassId());
-//					buffer.put(WKPFUtil.PLUGIN_WUCLASS_TYPE);
-//				}
-//			}
-//		}
 		
-		List<WuObjectModel> portToWuObjectList = new ArrayList<WuObjectModel>((new TreeMap<Byte, WuObjectModel>( portToWuObjectMap )).values());
+		List<WuObjectModel> portToWuObjectList = new ArrayList<WuObjectModel>(portToWuObjectMap.values());
 		for (int i = 0; i < leftSize; ++i) {
 			WuObjectModel object = portToWuObjectList.get(startAtWuobjectIndex + i);
 			if (object.getType() !=null) {
@@ -524,5 +509,9 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 	
 	public ComponentMap getComponentMap() {
 		return this.componentMap;
+	}
+	
+	public String getLocation() {
+		return this.location;
 	}
 }

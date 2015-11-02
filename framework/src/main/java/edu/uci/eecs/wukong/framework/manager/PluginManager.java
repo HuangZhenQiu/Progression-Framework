@@ -36,6 +36,8 @@ public class PluginManager implements PrClassInitListener {
 	private List<PrClass> plugins;
 	/* WuclassId to WuClass model */
 	private Map<Short, WuClassModel> registedClasses;
+	/* Binded WuObjects */
+	private List<WuObjectModel> bindedWuObjects;
 	private WKPF wkpf;
 	private String[] PLUGINS = {"switcher.SwitchPrClass", "timertest.TimerPrClass", 
 			"icsdemo.ICSDemoFloorlampPrClass", "icsdemo.ICSDemoBloomPrClass", "icsdemo.ICSDemoGoPrClass", "icsdemo.ICSDemoStripPrClass",
@@ -51,6 +53,7 @@ public class PluginManager implements PrClassInitListener {
 		this.propertyMonitor = new PrClassPropertyMonitor(this);
 		this.registedClasses = new HashMap<Short, WuClassModel>();
 		this.plugins = new ArrayList<PrClass>();
+		this.bindedWuObjects = new ArrayList<WuObjectModel>();
 		this.wkpf = wkpf;
 	}
 	
@@ -107,20 +110,28 @@ public class PluginManager implements PrClassInitListener {
 	}
 	
 	/**
-	 * Bind wuobjects used in a FBP with meta data sent by remote programming
+	 * Bind wuobjects used in a FBP with meta data sent by remote programming. It can also be used by
+	 * state manager to recovery the state of plugin manager
 	 * 
 	 * @param wuobjectMap map port to wuclassId
 	 */
 	public void bindPlugins(List<WuObjectModel> objects) {
 		LOGGER.info("Start to bind plugins into plugin manager, the size of objects is" + objects.size());
+		bindedWuObjects.clear();
 		for (WuObjectModel model : objects) {
 			bindPlugin(model);
+			bindedWuObjects.add(model);
 		}
 	}
 	
-	public void unbindPlugins(List<WuObjectModel> objects) {
-
-		
+	/**
+	 * When master do the remote programming, we need to deallocate binds from physical key to buffer
+	 * for plugins, and also unregister the extensions in pipeline. 
+	 */
+	public void unbindPlugins() {
+    	for (PrClass plugin : plugins) {
+    		pipeline.unregisterExtension(plugin.registerExtension());
+    	}
 	}
 	
 	/**
@@ -138,16 +149,6 @@ public class PluginManager implements PrClassInitListener {
 		bindPropertyUpdateEvent(prClass);
 		LOGGER.info("Finished bind plugin with context manager, pipeline and property monitor.");
 	}
-	
-	/**
-	 * When master do the remote programming, we need to deallocate binds from physical key to buffer
-	 * for plugins, and also unregister the extensions in pipeline. 
-	 */
-    public void unbindPlugin(WuObjectModel model) {
-    	for (PrClass plugin : plugins) {
-    		pipeline.unregisterExtension(plugin.registerExtension());
-    	}
-    }
 	
 	/**
 	 * It is a function for dynamic load a plugin within class path.
@@ -211,5 +212,10 @@ public class PluginManager implements PrClassInitListener {
 		PrClass plugin = (PrClass)event.getSource();
 		LOGGER.info("Trigger send set property for " + name + " whose portId is " + plugin.getPortId() + " and value is " + value);
 		wkpf.sendSetProperty(plugin.getPortId(), name, value);
+	}
+	
+	
+	public List<WuObjectModel> getBindedWuObjects() {
+		return this.bindedWuObjects;
 	}
 }

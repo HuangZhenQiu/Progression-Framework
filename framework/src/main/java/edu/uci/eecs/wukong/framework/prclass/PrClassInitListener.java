@@ -18,5 +18,5 @@ public interface PrClassInitListener {
 	
 	public void bindPlugins(List<WuObjectModel> plugins);
 	
-	public void unbindPlugins(List<WuObjectModel> plugins);
+	public void unbindPlugins();
 }

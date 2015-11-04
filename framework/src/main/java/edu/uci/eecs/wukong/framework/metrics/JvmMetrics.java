@@ -33,7 +33,8 @@ public class JvmMetrics extends MetricsHelper implements Runnable {
 	private List<GarbageCollectorMXBean> gcBeans = ManagementFactory.getGarbageCollectorMXBeans();
 	private ThreadMXBean threadBean = ManagementFactory.getThreadMXBean();
 	private ClassLoadingMXBean classLoadingMXBean = ManagementFactory.getClassLoadingMXBean();
-	private Map<String, Counter> gcBeenCounters = new HashMap<String, Counter>();
+	private Map<String, Counter> gcBeanTimesCounters = new HashMap<String, Counter>();
+	private Map<String, Counter> gcBeanMillsCounters = new HashMap<String, Counter>();
 	private ScheduledExecutorService executor = Executors.newScheduledThreadPool(1, new DaemanThreadFactory(JVM_METRICS));
 	
 	private Gauge gMemNonHeapUsedM = newGauge("mem-non-heap-used-mb", 0.0F);
@@ -49,7 +50,7 @@ public class JvmMetrics extends MetricsHelper implements Runnable {
 	private Gauge gThreadsTimedWaiting = newGauge("threads-timed-waiting", 0L);
 	private Gauge gThreadsTerminated = newGauge("threads-terminated", 0L);
 	private Counter cGcCount = newCounter("gc-count");
-	private Counter cGcTimeMills = newCounter("gc-time-millis");
+	private Counter cGcTimeMillis = newCounter("gc-time-millis");
 	
 
 	public JvmMetrics(MetricsRegistry registry) {
@@ -85,7 +86,39 @@ public class JvmMetrics extends MetricsHelper implements Runnable {
 	}
 
 	private void updateGcUsage() {
+		long count = 0;
+		long timeMillis = 0;
+		for (GarbageCollectorMXBean bean : gcBeans) {
+			long c = bean.getCollectionCount();
+			long t = bean.getCollectionTime();
+			Counter timeCounter = getGcTimeCounter(bean.getName());
+			Counter milliCounter = getGcMilliCounter(bean.getName());
+			timeCounter.inc(c - timeCounter.get());
+			milliCounter.inc(t - milliCounter.get());
+			count += c;
+			timeMillis += t;
+		}
 		
+		cGcCount.inc(count - cGcCount.get());
+		cGcTimeMillis.inc(timeMillis - cGcTimeMillis.get());
+	}
+	
+	private Counter getGcTimeCounter(String name) {
+		if (!this.gcBeanTimesCounters.containsKey(name)) {
+			Counter timeCounter = newCounter(name + "-gc-count");
+			gcBeanTimesCounters.put(name, timeCounter);
+		}
+		
+		return gcBeanTimesCounters.get(name);
+	}
+	
+	private Counter getGcMilliCounter(String name) {
+		if (!this.gcBeanMillsCounters.containsKey(name)) {
+			Counter timeCounter = newCounter(name + "-gc-time-millis");
+			gcBeanMillsCounters.put(name, timeCounter);
+		}
+		
+		return gcBeanTimesCounters.get(name);
 	}
 	
 	private void updateThreadUsage() {

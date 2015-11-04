@@ -19,7 +19,7 @@ public class Counter implements Metrics {
 		return inc(1);
 	}
 	
-	public long inc(int n) {
+	public long inc(long n) {
 		return count.addAndGet(n);
 	}
 	

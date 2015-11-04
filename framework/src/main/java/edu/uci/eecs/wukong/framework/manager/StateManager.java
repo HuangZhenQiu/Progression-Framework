@@ -35,15 +35,15 @@ public class StateManager {
 	private static Gson gson = new Gson();
 	private WKPF wkpf;
 	private PluginManager pluginManager;
-	private URI path;
+	private String path;
 	
 	@VisibleForTesting
 	public StateManager(String path) {
 		try {
-			this.path = new URI(System.getProperty("user.dir") + File.pathSeparator + path);
+			this.path = System.getProperty("user.dir") + File.separatorChar + path;
 			System.out.println(path);
 		} catch (Exception e) {
-			logger.info("Can't file with path: " + System.getProperty("user.dir") + File.pathSeparator + path);
+			logger.info("Can't file with path: " + System.getProperty("user.dir") + File.separatorChar + path);
 		}
 	}
 	
@@ -52,9 +52,10 @@ public class StateManager {
 		try {
 			this.wkpf = wkpf;
 			this.pluginManager = pluginManager;
-			fileName = System.getProperty("user.dir") + File.pathSeparator + configuration.getStateFilePath();
-			this.path = new URI(fileName);
+			fileName = System.getProperty("user.dir") + File.separatorChar + configuration.getStateFilePath();
+			this.path = fileName;
 		} catch (Exception e) {
+			e.printStackTrace();
 			logger.info("Can't file with path: " + fileName);
 			File file = new File(fileName);
 			

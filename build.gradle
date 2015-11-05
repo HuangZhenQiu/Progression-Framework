@@ -1,0 +1,46 @@
+buildscript {
+  repositories {
+    mavenCentral()
+  }
+
+  apply from: file('gradle/buildscript.gradle'), to: buildscript
+}
+
+allprojects {
+  repositories {
+    mavenCentral()
+    mavenLocal()
+ }
+}
+
+apply from: file("gradle/dependency-versions.gradle")
+
+allprojects {
+  apply plugin: 'eclipse'
+}
+
+project(':framework') {
+  apply plugin: 'java'
+  apply plugin: 'checkstyle'
+  
+dependencies {
+     compile "io.dropwizard.metrics:metrics-core:$dropwizardMetricsVersion"
+     compile "io.dropwizard.metrics:metrics-graphite:$dropwizardMetricsVersion"
+     compile "junit:junit:$junitVersion"
+     compile "io.netty:netty-all:$nettyVersion"
+     compile "com.google.protobuf:protobuf-java:protobufVersion"
+     compile "com.google.code.gson:gson:gsonVersion"
+     compile "org.apache.httpcomponents:httpclient:httpClientVersion"
+     compile "commons-httpclient:commons-httpclient:commonsClientVersion"
+     compile "com.google.guava:guava:guavaVersion"
+     compile "org.slf4j:sjf4j-api:slf4jVersion"
+     compile "org.igniterealtime.smack:smack:smackVersion"
+     compile "org.igniterealtime.smack:smackx:smackxVersion"
+     compile "org.igniterealtime.smack:smack-core:smackCoreVersion"
+     compile "org.igniterealtime.smack:smack-extensions:smackExtensionsVersion"
+     compile "com.googlecode.protobuf-rpc-pro:protobuf-rpc-pro-duplex:protobufRpcVersion"
+     compile "commons-lang:commons-lang:commonsLangVersion"
+     compile "nz.ac.waikato.cms.weka:weka-dev:wekaVersion"
+     compile "mockit:jmockit:mockitVersion"
+  }
+}

@@ -87,29 +87,6 @@
             <version>${slf4jVersion}</version>
         </dependency>
         <dependency>
-            <!-- any library that uses commons-logging will be directed to slf4j -->
-            <groupId>org.slf4j</groupId>
-            <artifactId>jcl-over-slf4j</artifactId>
-            <version>${slf4jVersion}</version>
-        </dependency>
-        <dependency>
-            <!-- any library that uses slf4j will be directed to java.util.logging -->
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-jdk14</artifactId>
-            <version>${slf4jVersion}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
-            <version>${slf4jVersion}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-            <version>${slf4jVersion}</version>
-        </dependency>
-        <dependency>
             <groupId>org.igniterealtime.smack</groupId>
             <artifactId>smack</artifactId>
             <version>3.2.1</version>
@@ -133,16 +110,6 @@
             <groupId>org.igniterealtime.smack</groupId>
             <artifactId>smack-tcp</artifactId>
             <version>4.0.6</version>
-        </dependency>
-        <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-all</artifactId>
-            <version>4.0.24.Final</version>
-        </dependency>
-        <dependency>
-            <groupId>com.google.protobuf</groupId>
-            <artifactId>protobuf-java</artifactId>
-            <version>2.5.0</version>
         </dependency>
         <dependency>
             <groupId>com.googlecode.protobuf-rpc-pro</groupId>
@@ -190,7 +157,9 @@
                 </executions>
             </plugin>
             <plugin>
-                <artifactId>maven-compiler-plugin</artifactId>
+            	<groupId>org.apache.maven.plugins</groupId>
+            	<artifactId>maven-compiler-plugin</artifactId>
+            	<version>3.2</version>
                 <configuration>
                     <source>1.7</source>
                     <target>1.7</target>

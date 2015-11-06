@@ -8,7 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import edu.uci.eecs.wukong.framework.manager.BufferManager;
-import edu.uci.eecs.wukong.framework.manager.ConfigurationManager;
 import edu.uci.eecs.wukong.framework.manager.PluginManager;
 import edu.uci.eecs.wukong.framework.manager.SceneManager;
 import edu.uci.eecs.wukong.framework.manager.StateManager;
@@ -30,17 +29,15 @@ public class ProgressionServer {
 	private FeatureChoosers featureChoosers;
 	private Pipeline pipeline;
 	private WKPF wkpf;
-	private ConfigurationManager configurationManager;
 	
 	public ProgressionServer(PeerInfo peerInfo) {
 		
 		init(peerInfo);
 		this.bufferManager = new BufferManager();
 		this.contextManager = new SceneManager();
-		this.configurationManager = new ConfigurationManager();
 		this.wkpf = new WKPF(bufferManager);
 		this.featureChoosers = new FeatureChoosers(bufferManager, wkpf);
-		this.pipeline = new Pipeline(contextManager, configurationManager, featureChoosers);	
+		this.pipeline = new Pipeline(contextManager, featureChoosers);	
 		this.pluginManager = new PluginManager(wkpf, contextManager, pipeline, bufferManager);
 		this.stateManager = new StateManager(wkpf, pluginManager);
 		this.wkpf.register(pluginManager);

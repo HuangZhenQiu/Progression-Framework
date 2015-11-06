@@ -38,12 +38,11 @@ public class Pipeline implements FactorListener{
 		
 	}
 	
-	public Pipeline(SceneManager sceneManager,
-			ConfigurationManager configuraionManager, FeatureChoosers featureChoosers) {
+	public Pipeline(SceneManager sceneManager, FeatureChoosers featureChoosers) {
 		this.sceneManager = sceneManager;
-		this.configurationManager = configuraionManager;
+		this.configurationManager = ConfigurationManager.getInstance();
 		this.featureChoosers = featureChoosers;
-		this.progressionPoint = new ProgressionExtensionPoint(configuraionManager, this);
+		this.progressionPoint = new ProgressionExtensionPoint(this);
 		this.featureAbstractionPoint = new FeatureAbstractionExtensionPoint(featureChoosers, this);
 		this.learningPoint = new LearningExtensionPoint(this);
 		this.sceneManager.subsribeFactor(learningPoint);

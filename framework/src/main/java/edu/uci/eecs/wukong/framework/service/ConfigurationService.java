@@ -1,4 +1,4 @@
-package edu.uci.eecs.wukong.framework.client;
+package edu.uci.eecs.wukong.framework.service;
 
 import edu.uci.eecs.wukong.framework.manager.ConfigurationManager.ConfigurationType;
 
@@ -34,8 +34,8 @@ import org.apache.http.protocol.HttpContext;
 
 import com.google.gson.Gson;
 
-public class ConfigurationClient {
-	private final static Logger LOGGER = LoggerFactory.getLogger(ConfigurationClient.class);
+public class ConfigurationService {
+	private final static Logger LOGGER = LoggerFactory.getLogger(ConfigurationService.class);
 	private final static String CONTENT_TYPE_VALUE = "application/json";
 	private String name;
 	private String ip;
@@ -81,7 +81,7 @@ public class ConfigurationClient {
 	    }
 	};
 
-	public ConfigurationClient(String name, String ip, String port, String method) {
+	public ConfigurationService(String name, String ip, String port, String method) {
 		// Use default connection parameters setting, 20 connections 2 routs per
 		// connection.
 		this.name = name;

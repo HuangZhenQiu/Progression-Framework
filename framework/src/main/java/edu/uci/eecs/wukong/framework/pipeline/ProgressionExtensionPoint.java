@@ -14,14 +14,10 @@ import org.slf4j.LoggerFactory;
 import edu.uci.eecs.wukong.framework.api.Activatable;
 import edu.uci.eecs.wukong.framework.api.FactorExecutable;
 import edu.uci.eecs.wukong.framework.api.TimerExecutable;
-import edu.uci.eecs.wukong.framework.entity.ConfigurationCommand;
-import edu.uci.eecs.wukong.framework.entity.Entity;
-import edu.uci.eecs.wukong.framework.entity.HueEntity;
-import edu.uci.eecs.wukong.framework.entity.ConfigurationReport;
+
 import edu.uci.eecs.wukong.framework.exception.ExtensionNotFoundException;
 import edu.uci.eecs.wukong.framework.extension.AbstractExtension;
 import edu.uci.eecs.wukong.framework.extension.AbstractProgressionExtension;
-import edu.uci.eecs.wukong.framework.extension.ProgressionExtension;
 import edu.uci.eecs.wukong.framework.factor.BaseFactor;
 import edu.uci.eecs.wukong.framework.factor.FactorListener;
 import edu.uci.eecs.wukong.framework.manager.ConfigurationManager;
@@ -32,14 +28,12 @@ public class ProgressionExtensionPoint extends ExtensionPoint<AbstractProgressio
 	implements FactorListener, Runnable {
 	private static Logger logger = LoggerFactory.getLogger(ProgressionExtensionPoint.class);
 	private static Configuration configuration = Configuration.getInstance();
-	private ConfigurationManager configurationManager;
 	private Map<PrClass, TimerTask> pluginTaskMap;
 	private Queue<BaseFactor> factors;
 	private Timer timer;
 	
-	public ProgressionExtensionPoint(ConfigurationManager configurationManager, Pipeline pipeline) {
+	public ProgressionExtensionPoint(Pipeline pipeline) {
 		super(pipeline);
-		this.configurationManager = configurationManager;
 		this.factors = new ConcurrentLinkedQueue<BaseFactor>();
 		this.pluginTaskMap = new HashMap<PrClass, TimerTask>();
 		this.timer = new Timer(true);

@@ -1,10 +1,11 @@
-package edu.uci.eecs.wukong.framework.pipeline;
+package edu.uci.eecs.wukong.framework.graph;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.HashMap;
 import java.util.Map;
 
+import edu.uci.eecs.wukong.framework.pipeline.Pipeline;
 import edu.uci.eecs.wukong.framework.prclass.PrClass;
 import edu.uci.eecs.wukong.framework.extension.AbstractExtension;
 

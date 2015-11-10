@@ -5,6 +5,12 @@ import java.util.List;
 import edu.uci.eecs.wukong.framework.api.Extension;
 import edu.uci.eecs.wukong.framework.prclass.SystemPrClass;
 
+
+/**
+ * Fault tolerant PrClass is to handle with failure of nodes. The Prclass will be responsible for 
+ * send update link table messages to related nodes to repair the FBP with backup links. In the end
+ * send master a report to tell master the latest FBP setting.
+ */
 public class FaultTolerantPolicyPrClass extends SystemPrClass {
 
 	public FaultTolerantPolicyPrClass(String name) {

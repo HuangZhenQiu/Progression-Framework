@@ -1,5 +1,5 @@
 ext {
-  idropwizardMetricsVersion = "3.1.0"
+  dropwizardMetricsVersion = "3.1.0"
   junitVersion = "4.11"
   nettyVersion = "4.0.24.Final"
   protobufVersion = "2.5.0"
@@ -7,7 +7,7 @@ ext {
   httpClientVersion = "4.4"
   commonsClientVersion = "3.1"
   guavaVersion = "18.0"
-  sjf4jVersion = "1.7.9"
+  slf4jVersion = "1.7.9"
   smackVersion = "3.2.1"
   smackxVersion = "3.2.1"
   smackCoreVersion = "4.1.4"

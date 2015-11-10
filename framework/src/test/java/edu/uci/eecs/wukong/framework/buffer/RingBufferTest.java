@@ -9,15 +9,15 @@ public class RingBufferTest extends TestCase{
 		short a = 0;
 		short b = 1;
 		short c = 1;
-		buffer.put(a);
-		buffer.put(b);
-		buffer.put(c);
+		buffer.appendShort(a);
+		buffer.appendShort(b);
+		buffer.appendShort(c);
 		byte[] buf = new byte[4];
 		byte[] result = new byte[4];
-		result[0] = 1;
-		result[1] = 0;
-		result[2] = 1;
-		result[3] = 0;
+		result[0] = 0;
+		result[1] = 1;
+		result[2] = 0;
+		result[3] = 1;
 		buffer.get(buf, 0, 4);
 		assertArrayEquals(buf, result);
 	}

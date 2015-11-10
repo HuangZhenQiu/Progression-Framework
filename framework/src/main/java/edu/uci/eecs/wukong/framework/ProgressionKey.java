@@ -15,7 +15,7 @@ package edu.uci.eecs.wukong.framework;
  *
  */
 public class ProgressionKey {
-	public static class PhysicalKey {
+    public static class PhysicalKey {
 		private Short deviceId;   // 0 - 255
 		private Short portId;     // 0 - 255
 		public PhysicalKey(Short deviceId, Short portId) {

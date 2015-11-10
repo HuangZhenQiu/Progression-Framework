@@ -21,7 +21,6 @@ allprojects {
 
 project(':framework') {
   apply plugin: 'java'
-  apply plugin: 'checkstyle'
   
   dependencies {
      compile "io.dropwizard.metrics:metrics-core:$dropwizardMetricsVersion"
@@ -42,9 +41,5 @@ project(':framework') {
      compile "commons-lang:commons-lang:$commonsLangVersion"
      compile "nz.ac.waikato.cms.weka:weka-dev:$wekaVersion"
      compile "mockit:jmockit:$mockitVersion"
-  }
-  
-  checkstyle {
-    configFile = new File(rootDir, "checkstyle/checkstyle.xml")
   }
 }

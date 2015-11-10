@@ -21,7 +21,7 @@ import edu.uci.eecs.wukong.rpc.netty.service.ProgressionDataServiceFactory;
 
 public class ProgressionServer {
 	private static Logger logger = LoggerFactory.getLogger(ProgressionServer.class);
-	private CommunicationServer server;
+    private CommunicationServer server;
 	private SceneManager contextManager;
 	private BufferManager bufferManager;
 	private PluginManager pluginManager;

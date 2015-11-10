@@ -24,9 +24,9 @@
   <module name="FileTabCharacter"/>
   
   <!-- header: use one star only -->
-  <module name="RegexpHeader">
+  <!-- <module name="RegexpHeader">
     <property name="header" value="/\*\nLicensed to the Apache.*"/>
-  </module>
+  </module> -->
   
   <module name="TreeWalker">
     
@@ -77,9 +77,9 @@
     </module>
     <!-- set indentation with 2 spaces to be consistent with Scala -->
     <module name="Indentation">
-      <property name="basicOffset" value="2"/>
-      <property name="caseIndent" value="2"/>
-      <property name="throwsIndent" value="2"/>
+      <property name="basicOffset" value="4"/>
+      <property name="caseIndent" value="4"/>
+      <property name="throwsIndent" value="4"/>
     </module>
     <module name="MethodParamPad"/>
     <module name="ParenPad"/>

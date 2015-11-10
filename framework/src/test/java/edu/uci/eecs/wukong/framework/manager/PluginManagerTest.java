@@ -17,4 +17,9 @@ public class PluginManagerTest extends TestCase {
 		BufferManager bufferManager = new BufferManager();
 		manager = new PluginManager(new WKPF(bufferManager), new SceneManager(), new Pipeline(), bufferManager);
 	}
+	
+	@Test
+	public void test() {
+		
+	}
 }

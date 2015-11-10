@@ -28,7 +28,7 @@ public final class DataRingBuffer<T extends Object> extends RingBuffer {
 		}
 		
 		// Add time deviation
-		this.appendLong(time - last);
+		this.appendInt((int)(time - last));
 		
 		if (value instanceof Byte) {
 			this.appendByte((Byte) value);

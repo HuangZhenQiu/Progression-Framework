@@ -7,7 +7,6 @@ import edu.uci.eecs.wukong.framework.client.FactorClient;
 import edu.uci.eecs.wukong.framework.client.FactorClientListener;
 import edu.uci.eecs.wukong.framework.factor.BaseFactor;
 import edu.uci.eecs.wukong.framework.factor.FactorListener;
-import edu.uci.eecs.wukong.framework.model.WuObjectModel;
 import edu.uci.eecs.wukong.framework.prclass.PrClass;
 import edu.uci.eecs.wukong.framework.xmpp.XMPPFactorClient;
 import edu.uci.eecs.wukong.framework.xmpp.XMPPFactorListener;

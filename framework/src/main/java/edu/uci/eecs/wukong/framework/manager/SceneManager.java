@@ -3,9 +3,9 @@ package edu.uci.eecs.wukong.framework.manager;
 import com.google.gson.Gson;
 
 import edu.uci.eecs.wukong.framework.api.ExecutionContext;
-import edu.uci.eecs.wukong.framework.client.FactorClient;
-import edu.uci.eecs.wukong.framework.client.FactorClientListener;
 import edu.uci.eecs.wukong.framework.factor.BaseFactor;
+import edu.uci.eecs.wukong.framework.factor.FactorClient;
+import edu.uci.eecs.wukong.framework.factor.FactorClientListener;
 import edu.uci.eecs.wukong.framework.factor.FactorListener;
 import edu.uci.eecs.wukong.framework.prclass.PrClass;
 import edu.uci.eecs.wukong.framework.xmpp.XMPPFactorClient;

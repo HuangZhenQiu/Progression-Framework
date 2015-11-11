@@ -4,7 +4,8 @@ package edu.uci.eecs.wukong.framework.checkpoint;
 import java.util.Map;
 import java.util.HashMap;
 
-import edu.uci.eecs.wukong.framework.client.FactorClient;
+import edu.uci.eecs.wukong.framework.factor.FactorClient;
+import edu.uci.eecs.wukong.framework.factor.FactorClientFactory;
 
 /**
  * To make the models learn within Progression server fault tolerant. PrClass developer can define
@@ -18,5 +19,6 @@ public class CheckPointManager {
 	
 	public CheckPointManager() {
 		modelMap = new HashMap<String, CheckpointableModel<?>>();
+		factorClient = FactorClientFactory.getFactorClient();
 	}
 }

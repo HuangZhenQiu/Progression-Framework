@@ -1,8 +1,8 @@
 package edu.uci.eecs.wukong.framework.xmpp;
 
-import edu.uci.eecs.wukong.framework.client.FactorClient;
-import edu.uci.eecs.wukong.framework.client.FactorClientListener;
 import edu.uci.eecs.wukong.framework.factor.BaseFactor;
+import edu.uci.eecs.wukong.framework.factor.FactorClient;
+import edu.uci.eecs.wukong.framework.factor.FactorClientListener;
 import edu.uci.eecs.wukong.framework.util.Configuration;
 
 import org.jivesoftware.smack.ConnectionConfiguration;

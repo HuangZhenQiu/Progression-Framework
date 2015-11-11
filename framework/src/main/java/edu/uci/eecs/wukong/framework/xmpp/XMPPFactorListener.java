@@ -9,8 +9,8 @@ import org.jivesoftware.smackx.pubsub.listener.ItemEventListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import edu.uci.eecs.wukong.framework.client.FactorClientListener;
 import edu.uci.eecs.wukong.framework.factor.BaseFactor;
+import edu.uci.eecs.wukong.framework.factor.FactorClientListener;
 import edu.uci.eecs.wukong.framework.factor.FactorListener;
 import edu.uci.eecs.wukong.prclass.demo.DemoFactor;
 import edu.uci.eecs.wukong.prclass.icsdemo.ICSContext;

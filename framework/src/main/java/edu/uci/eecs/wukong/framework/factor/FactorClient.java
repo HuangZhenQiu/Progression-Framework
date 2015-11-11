@@ -1,7 +1,5 @@
-package edu.uci.eecs.wukong.framework.client;
+package edu.uci.eecs.wukong.framework.factor;
 
-import edu.uci.eecs.wukong.framework.factor.BaseFactor;
-import edu.uci.eecs.wukong.framework.client.FactorClientListener;
 
 /**
  * Interface for integrating with pub/sub system for receiving factor updates

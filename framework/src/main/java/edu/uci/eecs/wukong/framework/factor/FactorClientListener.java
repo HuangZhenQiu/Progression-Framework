@@ -1,12 +1,9 @@
-package edu.uci.eecs.wukong.framework.client;
+package edu.uci.eecs.wukong.framework.factor;
 
 import java.util.List;
 import java.util.concurrent.ConcurrentMap;
 
 import com.google.gson.Gson;
-
-import edu.uci.eecs.wukong.framework.factor.BaseFactor;
-import edu.uci.eecs.wukong.framework.factor.FactorListener;
 
 /**
  * FactorClientListener is base class for integrating listeners of every type of pub/sub system.

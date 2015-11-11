@@ -9,22 +9,27 @@ import com.google.gson.Gson;
 
 import edu.uci.eecs.wukong.framework.entity.ConfigurationReport;
 import edu.uci.eecs.wukong.framework.entity.HueEntity;
+import edu.uci.eecs.wukong.framework.factor.BaseFactor;
+import edu.uci.eecs.wukong.framework.factor.FactorClient;
+import edu.uci.eecs.wukong.framework.factor.FactorClientFactory;
 import edu.uci.eecs.wukong.framework.service.ConfigurationService;
+import edu.uci.eecs.wukong.framework.service.MappingService;
 import edu.uci.eecs.wukong.framework.util.Configuration;
 
 
 /**
- * Configuration Manager is designed for delegate PrClass to talk with master. It is composed of several servies
+ * Configuration Manager is designed for delegate PrClass to talk with master. It is composed of several services
  * that are designed for exchange information for reconfigure or re-mappiung an application.
- * 
- *
  */
 public class ConfigurationManager{
 	private final static Configuration configuration = Configuration.getInstance();
 	private static Logger logger = LoggerFactory.getLogger(ConfigurationManager.class);
-	private Map<String, ConfigurationService> clients;
 	private static ConfigurationManager manager;
 	private static Gson gson = new Gson();
+	private ConfigurationService masterConfig;
+	private ConfigurationService HueService;
+	private MappingService mappingService;
+	private FactorClient factorClient;
 	
 	public enum ConfigurationType {
 		PUT,
@@ -32,13 +37,13 @@ public class ConfigurationManager{
 	}
 	
 	private ConfigurationManager() {
-		clients = new HashMap<String, ConfigurationService>();
 		ConfigurationService masterClient = new ConfigurationService(
 				"Master", configuration.getMasterAddress(), configuration.getMasterPort(), "configuration");
 		ConfigurationService hueClient = new ConfigurationService(
 				"Hue", configuration.getHueAddress(), configuration.getHuePort(), "api/newdeveloper/lights/1/state" /** temporary **/);
-		clients.put(masterClient.getName(), masterClient);
-		clients.put(hueClient.getName(), hueClient);
+		MappingService mappingService = new  MappingService(
+				"Map", configuration.getMasterAddress(), configuration.getMasterPort(), "map");
+		this.factorClient = FactorClientFactory.getFactorClient();
 	}
 	
 	public synchronized static ConfigurationManager getInstance() {
@@ -49,10 +54,22 @@ public class ConfigurationManager{
 		return manager;
 	}
 	
+	public void publish(String topic, BaseFactor factor) {
+		factorClient.publish(topic, factor);
+	}
+	
+	public void remapping(String appId) {
+		try {
+			mappingService.sendMappingMessage(appId);
+		} catch (Exception e) {
+			logger.error("Fail to send reconfiguration message to master");
+			logger.error(e.toString());
+		}
+	}
+	
 	public void sendMasterReport(ConfigurationType type,  ConfigurationReport report) {
 		try {
-			ConfigurationService client = clients.get("Master");
-			client.sendConfigurationMessage(type, gson.toJson(report));
+			masterConfig.sendConfigurationMessage(type, gson.toJson(report));
 		} catch (Exception e) {
 			logger.error("Fail to send reconfiguration message to master");
 			logger.error(e.toString());
@@ -61,8 +78,7 @@ public class ConfigurationManager{
 	
 	public void sendHueConfiguration(ConfigurationType type, HueEntity entity) {
 		try {
-			ConfigurationService client = clients.get("Hue");
-			client.sendConfigurationMessage(type, gson.toJson(entity.getContent()));
+			HueService.sendConfigurationMessage(type, gson.toJson(entity.getContent()));
 		} catch (Exception e) {
 			logger.error("Fail to send reconfiguration message to Hue");
 			logger.error(e.toString());

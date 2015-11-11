@@ -4,8 +4,10 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.List;
 
-import edu.uci.eecs.wukong.framework.extension.AbstractProgressionExtension;
 import edu.uci.eecs.wukong.framework.api.Extension;
+import edu.uci.eecs.wukong.framework.extension.AbstractProgressionExtension;
+import edu.uci.eecs.wukong.framework.factor.BaseFactor;
+import edu.uci.eecs.wukong.framework.manager.ConfigurationManager;
 
 /**
  * Since we assume there is only one application running at any time,
@@ -36,6 +38,7 @@ public abstract class PrClass {
 	private boolean online;
 	private boolean learning;
 	protected PropertyChangeSupport support;
+	private ConfigurationManager configManager;
 	
 	public PrClass(String name, boolean online, boolean learning) {
 		this.name = name;
@@ -44,6 +47,7 @@ public abstract class PrClass {
 		this.online = online;
 		this.learning = learning;
 		this.support = new PropertyChangeSupport(this);
+		configManager =  ConfigurationManager.getInstance();
 	}
 
 	public PrClass(String name) {
@@ -53,6 +57,22 @@ public abstract class PrClass {
 	public abstract List<Extension> registerExtension();
 	
 	public abstract List<String> registerContext();
+	
+	public ConfigurationManager getConfigurationManager() {
+		return configManager;
+	}
+	
+	public void publish(String topic, BaseFactor value) {
+		configManager.publish(topic, value);
+	}
+	
+	public void remap() throws UnsupportedOperationException {
+		if (this instanceof SystemPrClass) {
+			configManager.remapping("");
+		} else {
+			throw new UnsupportedOperationException("Remap can't be used by PrClass directly");
+		}
+	}
 	
 	public final void addPropertyChangeListener(
 			String propertyName, PropertyChangeListener listener) {

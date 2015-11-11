@@ -2,7 +2,6 @@ package edu.uci.eecs.wukong.framework.manager;
 
 import edu.uci.eecs.wukong.framework.pipeline.Pipeline;
 import edu.uci.eecs.wukong.framework.wkpf.WKPF;
-import edu.uci.eecs.wukong.prclass.test.TestPrClass;
 
 import org.junit.Test;
 import org.junit.Before;

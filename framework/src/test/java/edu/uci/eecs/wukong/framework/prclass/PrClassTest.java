@@ -13,12 +13,5 @@ public class PrClassTest extends TestCase {
 	
 	@Test
 	public void testPropertyUpdate() {
-		SwitchPrClass plugin = new SwitchPrClass();
-		plugin.addPropertyChangeListener(TEST_PROPERTY, new PropertyChangeListener() {
-			 public void propertyChange(PropertyChangeEvent evt) {
-				 System.out.println(evt.getPropertyName());
-			 }
-		});
-		plugin.setThreshold(0.2);
 	}
 }

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="framework/src/test/java"/>
-	<classpathentry kind="src" path="framework/src/main/config"/>
 	<classpathentry kind="src" path="framework/src/main/java"/>
 	<classpathentry kind="var" path="M2_REPO"/>
 	<classpathentry kind="var" path="M2_REPO/com/google/guava/guava/18.0/guava-18.0.jar"/>

@@ -20,4 +20,8 @@ public class Node<T extends ExtensionPoint<?>> {
 	protected void append(Node<?> node) {
 		subsequentNodes.add(node);
 	}
+	
+	public ExtensionPoint getExtensionPoint() {
+		return this.extensionPoint;
+	}
 }

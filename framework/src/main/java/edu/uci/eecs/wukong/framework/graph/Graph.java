@@ -7,20 +7,19 @@ import java.util.Map;
 
 public abstract class Graph {
 	private Set<Node<?>> nodes;
-	private Map<ExtensionPoint, Node> nodeMap;
+	private Map<ExtensionPoint, Node<?>> nodeMap;
 
 	public Graph() {
 		nodes = new HashSet<Node<?>> ();
-		nodeMap = new HashMap<ExtensionPoint, Node> (); 
+		nodeMap = new HashMap<ExtensionPoint, Node<?>> (); 
 	}
 	
-	public <T extends ExtensionPoint> Node<T> createNode(T point) {
-		Node<T> node = new Node(point);
+	public void addNode(Node<?> node) {
 		nodes.add(node);
-		return node;
+		nodeMap.put(node.getExtensionPoint(), node);
 	}
 	
-	public void createLink(Node<?> start, Node<?> end) {
+	public void addLink(Node<?> start, Node<?> end) {
 		start.append(end);
 	}
 }

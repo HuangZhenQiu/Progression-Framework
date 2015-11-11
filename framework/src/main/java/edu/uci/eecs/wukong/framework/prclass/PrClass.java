@@ -47,7 +47,7 @@ public abstract class PrClass {
 		this.online = online;
 		this.learning = learning;
 		this.support = new PropertyChangeSupport(this);
-		configManager =  ConfigurationManager.getInstance();
+		this.configManager =  ConfigurationManager.getInstance();
 	}
 
 	public PrClass(String name) {

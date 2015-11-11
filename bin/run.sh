@@ -1,2 +1,2 @@
-java -classpath .:framework-0.0.1-jar-with-dependencies.jar edu.uci.eecs.wukong.framework.ProgressionServer
+java -classpath .:framework.jar edu.uci.eecs.wukong.framework.ProgressionServer
 

@@ -1,6 +1,5 @@
 package edu.uci.eecs.wukong.framework.pipeline;
 
-import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Queue;
@@ -20,7 +19,6 @@ import edu.uci.eecs.wukong.framework.extension.AbstractProgressionExtension;
 import edu.uci.eecs.wukong.framework.factor.BaseFactor;
 import edu.uci.eecs.wukong.framework.factor.FactorListener;
 import edu.uci.eecs.wukong.framework.graph.ExtensionPoint;
-import edu.uci.eecs.wukong.framework.manager.ConfigurationManager;
 import edu.uci.eecs.wukong.framework.prclass.PrClass;
 import edu.uci.eecs.wukong.framework.util.Configuration;
 

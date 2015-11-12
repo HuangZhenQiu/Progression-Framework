@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import edu.uci.eecs.wukong.framework.factor.BaseFactor;
 import edu.uci.eecs.wukong.framework.factor.FactorClientListener;
 import edu.uci.eecs.wukong.framework.factor.FactorListener;
-import edu.uci.eecs.wukong.prclass.demo.DemoFactor;
 import edu.uci.eecs.wukong.prclass.icsdemo.ICSContext;
 
 public class XMPPFactorListener extends FactorClientListener implements ItemEventListener<PayloadItem<BaseFactor>> {

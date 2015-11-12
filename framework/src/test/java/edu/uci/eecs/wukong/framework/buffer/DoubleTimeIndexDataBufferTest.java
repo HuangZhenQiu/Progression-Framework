@@ -1,7 +1,6 @@
 package edu.uci.eecs.wukong.framework.buffer;
 
 import junit.framework.TestCase;
-import static org.junit.Assert.*;
 
 import java.util.List;
 

@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory;
 public class JvmMetrics extends MetricsHelper implements Runnable {
 	private final static Logger LOGGER = LoggerFactory.getLogger(JvmMetrics.class);
 	private final static String JVM_METRICS = "JVM-METRICS";
-	private final static int M = 1024 * 1024;
+	private final static float M = 1024 * 1024;
 	
 	private MemoryMXBean memoryBean = ManagementFactory.getMemoryMXBean();
 	private List<GarbageCollectorMXBean> gcBeans = ManagementFactory.getGarbageCollectorMXBeans();
@@ -37,18 +37,18 @@ public class JvmMetrics extends MetricsHelper implements Runnable {
 	private Map<String, Counter> gcBeanMillsCounters = new HashMap<String, Counter>();
 	private ScheduledExecutorService executor = Executors.newScheduledThreadPool(1, new DaemanThreadFactory(JVM_METRICS));
 	
-	private Gauge gMemNonHeapUsedM = newGauge("mem-non-heap-used-mb", 0.0F);
-	private Gauge gMemNonHeapCommittedM = newGauge("mem-non-heap-committed-mb", 0.0F);
-	private Gauge gMemNonHeapMaxM = newGauge("mem-non-heap-max-mb", 0.0F);
-	private Gauge gMemHeapUsedM = newGauge("mem-heap-used-mb", 0.0F);
-	private Gauge gMemHeapCommittedM = newGauge("mem-heap-committed-mb", 0.0F);
-	private Gauge gMemHeapMaxM = newGauge("mem-heap-max-mb", 0.0F);
-	private Gauge gThreadsNew = newGauge("threads-new", 0L);
-	private Gauge gThreadsRunnable = newGauge("threads-runnable", 0L);
-	private Gauge gThreadsBlocked = newGauge("treads-blocked", 0L);
-	private Gauge gThreadsWaiting = newGauge("threads-waiting", 0L);
-	private Gauge gThreadsTimedWaiting = newGauge("threads-timed-waiting", 0L);
-	private Gauge gThreadsTerminated = newGauge("threads-terminated", 0L);
+	private Gauge<Float> gMemNonHeapUsedM = newGauge("mem-non-heap-used-mb", 0.0F);
+	private Gauge<Float> gMemNonHeapCommittedM = newGauge("mem-non-heap-committed-mb", 0.0F);
+	private Gauge<Float> gMemNonHeapMaxM = newGauge("mem-non-heap-max-mb", 0.0F);
+	private Gauge<Float> gMemHeapUsedM = newGauge("mem-heap-used-mb", 0.0F);
+	private Gauge<Float> gMemHeapCommittedM = newGauge("mem-heap-committed-mb", 0.0F);
+	private Gauge<Float> gMemHeapMaxM = newGauge("mem-heap-max-mb", 0.0F);
+	private Gauge<Long> gThreadsNew = newGauge("threads-new", 0L);
+	private Gauge<Long> gThreadsRunnable = newGauge("threads-runnable", 0L);
+	private Gauge<Long> gThreadsBlocked = newGauge("treads-blocked", 0L);
+	private Gauge<Long> gThreadsWaiting = newGauge("threads-waiting", 0L);
+	private Gauge<Long> gThreadsTimedWaiting = newGauge("threads-timed-waiting", 0L);
+	private Gauge<Long> gThreadsTerminated = newGauge("threads-terminated", 0L);
 	private Counter cGcCount = newCounter("gc-count");
 	private Counter cGcTimeMillis = newCounter("gc-time-millis");
 	
@@ -155,11 +155,11 @@ public class JvmMetrics extends MetricsHelper implements Runnable {
 			}
 		}
 		
-		gThreadsNew.set(threadsNew);
-		gThreadsRunnable.set(threadsRunnable);
-		gThreadsBlocked.set(threadsBlocked);
-		gThreadsWaiting.set(threadsWaiting);
-		gThreadsTimedWaiting.set(threadsTimedWaiting);
-		gThreadsTerminated.set(threadsTerminated);
+		gThreadsNew.set((long)threadsNew);
+		gThreadsRunnable.set((long)threadsRunnable);
+		gThreadsBlocked.set((long)threadsBlocked);
+		gThreadsWaiting.set((long)threadsWaiting);
+		gThreadsTimedWaiting.set((long)threadsTimedWaiting);
+		gThreadsTerminated.set((long)threadsTerminated);
 	}
 }

@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 
 import edu.uci.eecs.wukong.framework.api.TimerExecutable;
 import edu.uci.eecs.wukong.framework.extension.AbstractProgressionExtension;
-import edu.uci.eecs.wukong.framework.manager.ConfigurationManager;
 import edu.uci.eecs.wukong.framework.prclass.PrClass;
 import edu.uci.eecs.wukong.prclass.timertest.TimerPrClass;
 

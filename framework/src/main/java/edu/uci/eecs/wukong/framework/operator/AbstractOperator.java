@@ -3,8 +3,6 @@ package edu.uci.eecs.wukong.framework.operator;
 import java.util.Map;
 import java.util.HashMap;
 
-import edu.uci.eecs.wukong.framework.ProgressionKey.LogicalKey;
-
 public abstract class AbstractOperator<T> implements Operator<T> {
 	private Map<Integer, Integer> sourceKeys;
 	

@@ -2,8 +2,6 @@ package edu.uci.eecs.wukong.framework.operator;
 
 import java.util.Map;
 
-import edu.uci.eecs.wukong.framework.ProgressionKey.LogicalKey;
-
 /**
  * It is the interface for a progression plugin to define a feature extractor.
  * 

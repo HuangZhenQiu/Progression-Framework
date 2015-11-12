@@ -2,11 +2,11 @@ Progression-Framework
 =====================
 
 Internet of things bring several challenges in computer science community. It includes:
-1. Connectivity
-2. Interoperability
-3. Energy Efficiency
-4. Fault Tolerant
-5. Intelligence
+* Connectivity
+* Interoperability
+* Energy Efficiency
+* Fault Tolerant
+* Intelligence
 
 In our former works, service oriented methodology is applied in Wukong to abstract capability of  various sensors and actuators as WuClass. Wukong profiling framework implemented in Darjeeling virtual machine is designed for cross platform device discovery, identify capabilities (WuClasses) on devices, and reprogramming. To create a Wukong application, these WuClass modules can be composed into a flow base program, mapped, deployed onto WuDevice through zwave. Multiple Network transportation protocol in Wukong gateway is designed to tackle with the problem of diversity of low power wireless communication (Zwave, Xbee, Low Power wifi).
 

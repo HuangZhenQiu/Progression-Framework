@@ -8,6 +8,8 @@ import edu.uci.eecs.wukong.framework.xmpp.XMPPFactorClient;
 public class FactorClientFactory {
 
 	public static FactorClient getFactorClient() {
-		return XMPPFactorClient.getInstance();
+		//return XMPPFactorClient.getInstance();
+		
+		return null;
 	}
 }

@@ -68,8 +68,10 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 	}
 	
 	public void start() {
+		LOGGER.info("Start to initilize WPKF");
 		mptn.start();
 		bufferManager.setMPTN(mptn);
+		LOGGER.info("Finished initilize WPKF");
 	}
 	
 	public void shutdown() {

@@ -47,13 +47,13 @@ In this release, we provide a programming paradigm to design PrClass, which is a
 
 
 ### Code Convention
-If you want to create a PrClass in progression server, you need to create a sub package in `edu.uci.eecs.wukong.prclass`. For example, you are going to build a smart switch, you should create the package `edu.uci.eecs.wukong.prclass.switch`.    Any new PrClass should extends from PrClass.
+If you want to create a PrClass in progression server, you need to create a sub package in `edu.uci.eecs.wukong.prclass`. For example, you are going to build a smart switch, you should create the package `edu.uci.eecs.wukong.prclass.switch`. Any new PrClass should extends from PrClass. A PrClass is the place to define I/O of the smart component, including input/output properties, topics that want to subscribe, and the extensions that implement the processing logic. In this release, we only support the `ProgressionExtension`. For any features of release I, you can put them in a subclass of `ProgressionExtension`
 
 ### Hello World PrClass
 
     @WuClass(id = 2001)
     Class SmartSwitch extends PrClass {
-        @WuProperty(name = 'input', id = 0, type= PropertyType.Input, dtype =DataType.Channel)
+        @WuProperty(name = 'input', id = 1, type = PropertyType.Input, dtype = DataType.Channel)
         Public SmartSwitch() {
             super("SmartSwitch");
         }
@@ -75,6 +75,26 @@ If you want to create a PrClass in progression server, you need to create a sub 
 	        }
 	    }
     }
+
+To make the hello world PrClass usable in composing a FBP, the SmartSwitch need to be defined consistently in `standardlibarary.xml`. In the example above, the smart switch's WuClass ID is 2001. It has an input property whose data will be put in channel once progression server receive a wkpf message for that property. The PrClass will register an extension which is called `ContextProgressionExtension`. Every channel data will forward to the extension, thus the execute will be called immediately to print `Hello World!` in console.
+
+
+### Advance Features of Release I
+In the release, you can achieve any combination of three features below through implements particular interface and motify a little bit of the example above. 
+
+* Control Other WuObjects
+* Integrate External Services
+* Remapping
+
+#### Control Other WuObjects
+
+#### Integrate External Services
+
+#### Reconfiguration and Remapping
+
+
+
+
 
 
   

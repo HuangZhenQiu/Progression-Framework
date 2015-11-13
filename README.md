@@ -23,13 +23,13 @@ In the coming release II of Progression Framework, we will enable the feature of
 Progression Server is built by Gradle. Please install gradle 2.4 in advance. After that, just simple git clone the project into your local file system. There are several simple steps to start the server.
 
 ### Configuration
-The structure of project confirms to gradle standards. For now, the whole project only contains one sub project which called framework. For now, the config files for server and log4j are located in the path of '/framework/src/main/resource'. You may update the setting of xmpp, gateway and wukong server in the config.properties. 
+The structure of project confirms to gradle standards. For now, the whole project only contains one sub project which called framework. For now, the config files for server and log4j are located in the path of `framework/src/main/resource`. You may update the setting of xmpp, gateway and wukong server in the `config.properties`. 
 
 
 ### Build Project
 After config the server to your Wukong Ecosystem setting. You may run the command below to build the project.
 
-gradle buildServer
+    gradle buildServer
 
 This command will build and pack the frameowork with all of its dependencies into framework-all.jar, and copy it into
 bin folder.
@@ -38,13 +38,43 @@ bin folder.
 ### Run Server 
 To start the server, you just simply go to the bin folder, and run the command below.
 
-sh run.sh
+    sh run.sh
 
 
 ## Programming in Server
-In this release, we provide a programming paradigm to design PrClass, which is an extension of WuClass. In the server, we provide an abstraction for PrClass to integrate and control WuObjects, call external service or exchange information through pub/sub, and trigger remapping. Below, we provide some examples to show you how to magic make FBP more powerful.
+In this release, we provide a programming paradigm to design PrClass, which is an extension of WuClass. In the server, we provide an abstraction for PrClass to integrate and control WuObjects, call external service or exchange information through pub/sub, and trigger remapping. Below, we provide some examples to show you how to magically make FBP more powerful.
 
 
+
+### Code Convention
+If you want to create a PrClass in progression server, you need to create a sub package in `edu.uci.eecs.wukong.prclass`. For example, you are going to build a smart switch, you should create the package `edu.uci.eecs.wukong.prclass.switch`.    Any new PrClass should extends from PrClass.
+
+### Hello World PrClass
+
+    @WuClass(id = 2001)
+    Class SmartSwitch extends PrClass {
+        @WuProperty(name = 'input', id = 0, type= PropertyType.Input, dtype =DataType.Channel)
+        Public SmartSwitch() {
+            super("SmartSwitch");
+        }
+        @Override
+        public list<Extension> registerExtension() {
+            List<Extension> extensions = new ArrayList<Extension>();
+            extensions.add(new ContextProgressionExtension(this));
+            return extensions;
+        }
+    }
+    
+    public class ContextProgressionExtension extends AbstractProgressionExtension implements Channelable  {
+      	public ContextProgressionExtension(PrClass plugin) {
+		    super(plugin);
+	    }
+        public void execute(ChannelData data) {
+            if (data.getNpp().getPropertyId() == 1) {
+                System.out.println("Hello Word!");
+	        }
+	    }
+    }
 
 
   

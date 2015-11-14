@@ -1,8 +1,8 @@
 package edu.uci.eecs.wukong.framework.factor;
 
-import org.jivesoftware.smack.packet.PacketExtension;
+import org.jivesoftware.smack.packet.ExtensionElement;
 
-public abstract class BaseFactor implements PacketExtension {
+public abstract class BaseFactor implements ExtensionElement {
 	private String topicId;
 	private String publisher;
 	private long timestamp;

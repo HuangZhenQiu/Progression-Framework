@@ -20,6 +20,8 @@ import org.jivesoftware.smackx.pubsub.listener.ItemEventListener;
 import org.jivesoftware.smackx.pubsub.AccessModel;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
+import org.jxmpp.jid.DomainBareJid;
+import org.jxmpp.jid.impl.JidCreate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,20 +42,18 @@ public class XMPPFactorClient implements FactorClient {
 	
 	private XMPPFactorClient(){
 		try {
+			DomainBareJid serviceName = JidCreate.domainBareFrom(systemConfig.getXMPPServerName());
 			connectionConfig = XMPPTCPConnectionConfiguration.builder()
 				.setUsernameAndPassword(systemConfig.getXMPPUserName(), systemConfig.getXMPPPassword())
-				.setServiceName(systemConfig.getXMPPServerName())
-				.setHost(systemConfig.getXMPPAddress())
 				.setSecurityMode(ConnectionConfiguration.SecurityMode.disabled)
+				.setHost(systemConfig.getXMPPAddress())
+				.setXmppDomain(serviceName)
 				.setPort(Integer.parseInt(systemConfig.getXMPPPort())).build();
 			
 			logger.info(systemConfig.getXMPPServerName());
 			tcpConnection = new XMPPTCPConnection(connectionConfig);
-		
-		    // SASLAuthentication.supportSASLMechanism("PLAIN", 0);
 		 	AbstractXMPPConnection connection = tcpConnection.connect();
-		 	XMPPConnection xmppConnection = (XMPPConnection) connection;
-			manager = new PubSubManager(xmppConnection);
+			manager = PubSubManager.getInstance(connection);
 			logger.info("Successfully connected with XMPP server:" + systemConfig.getXMPPServerName());
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -69,7 +69,7 @@ public class XMPPFactorClient implements FactorClient {
 						(ItemEventListener<PayloadItem<BaseFactor>>) listener;
 				Node eventNode = manager.getNode(nodeId);
 				eventNode.addItemEventListener(itemEventListener);
-				eventNode.subscribe(tcpConnection.getUser());
+				eventNode.subscribe(tcpConnection.getUser().asEntityBareJidString());
 				logger.info("XMPP client subcribe nodeId: " + nodeId);
 			} else {
 				logger.info("Fail to subscribe a topic with a listener which is not type of ItemEventListener<PayloadItem<BaseFactor>>");

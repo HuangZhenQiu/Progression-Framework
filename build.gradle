@@ -15,8 +15,14 @@ allprojects {
 
 apply from: file("gradle/dependency-versions.gradle")
 
-allprojects {
+subprojects {
   apply plugin: 'eclipse'
+  
+  eclipse {
+  	classpath {
+  		containers 'org.springsource.ide.eclipse.gradle.classpathcontainer'
+  	}
+  }
 }
 
 project(':framework') {
@@ -52,6 +58,7 @@ project(':framework') {
      compile "org.igniterealtime.smack:smackx:$smackxVersion"
      compile "org.igniterealtime.smack:smack-core:$smackCoreVersion"
      compile "org.igniterealtime.smack:smack-extensions:$smackExtensionVersion"
+     compile "org.igniterealtime.smack:smack-tcp:$smackTcpVersion"
      compile "com.googlecode.protobuf-rpc-pro:protobuf-rpc-pro-duplex:$protobufRpcVersion"
      compile "commons-lang:commons-lang:$commonsLangVersion"
      compile "nz.ac.waikato.cms.weka:weka-dev:$wekaVersion"

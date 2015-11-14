@@ -52,7 +52,7 @@ If you want to create a PrClass in progression server, you need to create a sub 
 ### Hello World PrClass
 
     @WuClass(id = 2001)
-    Class SmartSwitch extends PrClass {
+    public Class SmartSwitch extends PrClass {
         @WuProperty(name = 'input', id = 1, type = PropertyType.Input, dtype = DataType.Channel)
         Public SmartSwitch() {
             super("SmartSwitch");

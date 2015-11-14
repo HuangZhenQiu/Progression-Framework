@@ -5,10 +5,12 @@ import edu.uci.eecs.wukong.framework.factor.FactorClient;
 import edu.uci.eecs.wukong.framework.factor.FactorClientListener;
 import edu.uci.eecs.wukong.framework.util.Configuration;
 
-import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.XMPPConnection;
+import org.jivesoftware.smack.SASLAuthentication;
+import org.jivesoftware.smack.ConnectionConfiguration;
+import org.jivesoftware.smack.AbstractXMPPConnection;
 import org.jivesoftware.smackx.pubsub.ConfigureForm;
-import org.jivesoftware.smackx.pubsub.FormType;
+import org.jivesoftware.smackx.xdata.packet.DataForm;
 import org.jivesoftware.smackx.pubsub.Node;
 import org.jivesoftware.smackx.pubsub.LeafNode;
 import org.jivesoftware.smackx.pubsub.PayloadItem;
@@ -16,6 +18,8 @@ import org.jivesoftware.smackx.pubsub.PubSubManager;
 import org.jivesoftware.smackx.pubsub.PublishModel;
 import org.jivesoftware.smackx.pubsub.listener.ItemEventListener;
 import org.jivesoftware.smackx.pubsub.AccessModel;
+import org.jivesoftware.smack.tcp.XMPPTCPConnection;
+import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,8 +27,8 @@ public class XMPPFactorClient implements FactorClient {
 	private static Logger logger = LoggerFactory.getLogger(XMPPFactorClient.class);
 	private final static Configuration systemConfig= Configuration.getInstance(); 
 	private static XMPPFactorClient client;
-	private ConnectionConfiguration connectionConfig;
-	private XMPPConnection connection;
+	private XMPPTCPConnectionConfiguration connectionConfig;
+	private XMPPTCPConnection tcpConnection;
 	private PubSubManager manager;
 	
 	public static synchronized XMPPFactorClient getInstance() {
@@ -35,20 +39,24 @@ public class XMPPFactorClient implements FactorClient {
 	}
 	
 	private XMPPFactorClient(){
-		connectionConfig = new ConnectionConfiguration(
-				systemConfig.getXMPPAddress(),
-				Integer.parseInt(systemConfig.getXMPPPort()), systemConfig.getXMPPServerName());
-
-		logger.info(systemConfig.getXMPPServerName());
-		connectionConfig.setSecurityMode(ConnectionConfiguration.SecurityMode.disabled);
-		connection = new XMPPConnection(connectionConfig);
 		try {
-			//SASLAuthentication.supportSASLMechanism("PLAIN", 0);
-		 	//connection.connect();
-			connection.login(systemConfig.getXMPPUserName(), systemConfig.getXMPPPassword());
-			manager = new PubSubManager(connection);
-			logger.info("XMPP client is initialized!");
+			connectionConfig = XMPPTCPConnectionConfiguration.builder()
+				.setUsernameAndPassword(systemConfig.getXMPPUserName(), systemConfig.getXMPPPassword())
+				.setServiceName(systemConfig.getXMPPServerName())
+				.setHost(systemConfig.getXMPPAddress())
+				.setSecurityMode(ConnectionConfiguration.SecurityMode.disabled)
+				.setPort(Integer.parseInt(systemConfig.getXMPPPort())).build();
+			
+			logger.info(systemConfig.getXMPPServerName());
+			tcpConnection = new XMPPTCPConnection(connectionConfig);
+		
+		    // SASLAuthentication.supportSASLMechanism("PLAIN", 0);
+		 	AbstractXMPPConnection connection = tcpConnection.connect();
+		 	XMPPConnection xmppConnection = (XMPPConnection) connection;
+			manager = new PubSubManager(xmppConnection);
+			logger.info("Successfully connected with XMPP server:" + systemConfig.getXMPPServerName());
 		} catch(Exception e) {
+			e.printStackTrace();
 			System.out.println("Catch Exception");
 			logger.error("Fail to create XMPP Client, please check username and password in config");
 		}
@@ -61,7 +69,7 @@ public class XMPPFactorClient implements FactorClient {
 						(ItemEventListener<PayloadItem<BaseFactor>>) listener;
 				Node eventNode = manager.getNode(nodeId);
 				eventNode.addItemEventListener(itemEventListener);
-				eventNode.subscribe(connection.getUser());
+				eventNode.subscribe(tcpConnection.getUser());
 				logger.info("XMPP client subcribe nodeId: " + nodeId);
 			} else {
 				logger.info("Fail to subscribe a topic with a listener which is not type of ItemEventListener<PayloadItem<BaseFactor>>");
@@ -89,7 +97,7 @@ public class XMPPFactorClient implements FactorClient {
 	private LeafNode createNode(String nodeId) {
 		try {
 			LeafNode node = manager.createNode(nodeId);
-			ConfigureForm form = new ConfigureForm(FormType.submit);
+			ConfigureForm form = new ConfigureForm(DataForm.Type.submit);
 			form.setAccessModel(AccessModel.open);
 			form.setDeliverPayloads(true);
 			form.setPersistentItems(true);

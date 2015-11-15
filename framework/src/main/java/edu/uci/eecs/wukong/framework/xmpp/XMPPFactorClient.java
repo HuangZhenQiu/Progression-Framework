@@ -5,10 +5,8 @@ import edu.uci.eecs.wukong.framework.factor.FactorClient;
 import edu.uci.eecs.wukong.framework.factor.FactorClientListener;
 import edu.uci.eecs.wukong.framework.util.Configuration;
 
-import org.jivesoftware.smack.XMPPConnection;
-import org.jivesoftware.smack.SASLAuthentication;
 import org.jivesoftware.smack.ConnectionConfiguration;
-import org.jivesoftware.smack.AbstractXMPPConnection;
+import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smackx.pubsub.ConfigureForm;
 import org.jivesoftware.smackx.xdata.packet.DataForm;
 import org.jivesoftware.smackx.pubsub.Node;
@@ -52,8 +50,12 @@ public class XMPPFactorClient implements FactorClient {
 			
 			logger.info(systemConfig.getXMPPServerName());
 			tcpConnection = new XMPPTCPConnection(connectionConfig);
-		 	AbstractXMPPConnection connection = tcpConnection.connect();
-			manager = PubSubManager.getInstance(connection);
+			tcpConnection.setPacketReplyTimeout(10000);
+		 	tcpConnection.connect();
+		 	tcpConnection.login();
+		 	Roster roster = Roster.getInstanceFor(tcpConnection);
+		 	roster.setRosterLoadedAtLogin(false);
+			manager = PubSubManager.getInstance(tcpConnection);
 			logger.info("Successfully connected with XMPP server:" + systemConfig.getXMPPServerName());
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -67,10 +69,14 @@ public class XMPPFactorClient implements FactorClient {
 			if (listener instanceof ItemEventListener) {
 				ItemEventListener<PayloadItem<BaseFactor>> itemEventListener = 
 						(ItemEventListener<PayloadItem<BaseFactor>>) listener;
-				Node eventNode = manager.getNode(nodeId);
-				eventNode.addItemEventListener(itemEventListener);
-				eventNode.subscribe(tcpConnection.getUser().asEntityBareJidString());
-				logger.info("XMPP client subcribe nodeId: " + nodeId);
+				Node eventNode = getOrCreateNode (nodeId);
+				if (eventNode != null) {
+					eventNode.addItemEventListener(itemEventListener);
+					eventNode.subscribe(tcpConnection.getUser().asEntityBareJidString());
+					logger.info("XMPP client subcribe nodeId: " + nodeId);
+				} else {
+					logger.info("XMPP client fail to subscribe nodeId: " + nodeId);
+				}
 			} else {
 				logger.info("Fail to subscribe a topic with a listener which is not type of ItemEventListener<PayloadItem<BaseFactor>>");
 			}
@@ -80,15 +86,26 @@ public class XMPPFactorClient implements FactorClient {
 		} 
 	}
 	
-	public void publish(String id, BaseFactor context) {
+	public LeafNode getOrCreateNode (String id) {
 		try {
 			LeafNode node = (LeafNode)manager.getNode(id);
-			if (node == null) {
-				node = createNode(id);
+			return node;
+		} catch (Exception e) {
+			logger.info("The node " + id + " is not found in server");
+		} 
+		return createNode(id);
+	}
+	
+	public void publish(String id, BaseFactor context) {
+		try {
+			LeafNode node = getOrCreateNode(id);
+			if (node != null) {
+				PayloadItem<BaseFactor> item = new PayloadItem<BaseFactor>(context);
+				node.publish(item);
+				logger.info("Published message " + context + " to node " + id);
+			} else {
+				logger.info("Stop to publish message because not able to create node " + id + " in server");
 			}
-			
-			PayloadItem<BaseFactor> item = new PayloadItem<BaseFactor>(context);
-			node.publish(item);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -103,10 +120,11 @@ public class XMPPFactorClient implements FactorClient {
 			form.setPersistentItems(true);
 			form.setPublishModel(PublishModel.open);
 			node.sendConfigurationForm(form);
+			logger.error("Created a new node: " + nodeId);
 			return node;
 		} catch (Exception e) {
-			e.printStackTrace();
 			logger.error(e.toString());
+			logger.error("Fail to create node: " + nodeId);
 		}
 		
 		return null;

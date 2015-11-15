@@ -7,8 +7,8 @@ import edu.uci.eecs.wukong.framework.factor.BaseFactor;
 import edu.uci.eecs.wukong.framework.factor.FactorClient;
 import edu.uci.eecs.wukong.framework.factor.FactorClientListener;
 import edu.uci.eecs.wukong.framework.factor.FactorListener;
+import edu.uci.eecs.wukong.framework.factor.FactorClientFactory;
 import edu.uci.eecs.wukong.framework.prclass.PrClass;
-import edu.uci.eecs.wukong.framework.xmpp.XMPPFactorClient;
 import edu.uci.eecs.wukong.framework.xmpp.XMPPFactorListener;
 
 import java.util.ArrayList;
@@ -29,6 +29,7 @@ import org.slf4j.LoggerFactory;
 public class SceneManager {
 	private static Logger logger = LoggerFactory.getLogger(SceneManager.class);
 	private static Gson gson = new Gson();
+	private static String TEST_FACTOR = "test";
 	private Map<PrClass, List<String>> pluginContextMap;
 	private ConcurrentMap<String, BaseFactor> factors;
 	private FactorClient factorClient;
@@ -40,9 +41,10 @@ public class SceneManager {
 		pluginContextMap = new HashMap<PrClass, List<String>>();
 		factors = new ConcurrentHashMap<String, BaseFactor>();
 		listeners = new ArrayList<FactorListener>();
-		// factorClient = XMPPFactorClient.getInstance();
+		factorClient = FactorClientFactory.getFactorClient();
 		topicFilterSet = new HashSet<String>();
 		factorClientListener = new XMPPFactorListener(factors, listeners);
+		subscribeTestFactor();
 	}
 	
 	public synchronized void subsribeFactor(FactorListener listener) {
@@ -53,6 +55,10 @@ public class SceneManager {
 		if (this.listeners.contains(listener)) {
 			this.listeners.remove(listener);
 		}
+	}
+	
+	public void subscribeTestFactor() {
+		factorClient.subscribe(TEST_FACTOR, factorClientListener);
 	}
 	
 	public void subscribe(PrClass plugin, List<String> topics) {

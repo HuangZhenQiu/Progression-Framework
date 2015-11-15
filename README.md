@@ -22,8 +22,20 @@ In the coming release II of Progression Framework, we will enable the feature of
 ## Setup
 Progression Server is built by Gradle. Please install gradle 2.4 in advance. After that, just simple git clone the project into your local file system. There are several simple steps to start the server.
 
+### Download
+
+    git clone https://github.com/HuangZhenQiu/Progression-Framework.git
+
+### Setup Development Environment
+
+Gradle provide an plugin for eclipse project and classpath generation, you just need to run the command below to setup an eclipse project.
+
+    gradle eclipse
+
+After run this command, you can simply import the project into eclipse.
+
 ### Configuration
-The structure of project confirms to gradle standards. For now, the whole project only contains one sub project which called framework. For now, the config files for server and log4j are located in the path of `framework/src/main/resource`. You may update the setting of xmpp, gateway and wukong server in the `config.properties`. 
+The structure of project confirms to gradle standards. For now, the whole project only contains one sub project which called framework. For now, the config files for server and log4j are located in the path of `framework/src/main/resource`. You may update the setting of xmpp, gateway and wukong server in the `config.properties`.
 
 
 ### Build Project
@@ -35,7 +47,7 @@ This command will build and pack the frameowork with all of its dependencies int
 bin folder.
 
 
-### Run Server 
+### Run Server
 To start the server, you just simply go to the bin folder, and run the command below.
 
     sh run.sh
@@ -53,7 +65,8 @@ If you want to create a PrClass in progression server, you need to create a sub 
 
     @WuClass(id = 2001)
     public Class SmartSwitch extends PrClass {
-        @WuProperty(name = 'input', id = 1, type = PropertyType.Input, dtype = DataType.Channel)
+        @WuProperty(name = "input", id = 1, type = PropertyType.Input, dtype = DataType.Channel)
+        private short input;
         Public SmartSwitch() {
             super("SmartSwitch");
         }
@@ -64,7 +77,7 @@ If you want to create a PrClass in progression server, you need to create a sub 
             return extensions;
         }
     }
-    
+
     public class ContextProgressionExtension extends AbstractProgressionExtension implements Channelable  {
       	public ContextProgressionExtension(PrClass plugin) {
 		    super(plugin);
@@ -80,7 +93,7 @@ To make the hello world PrClass usable in composing a FBP, the SmartSwitch need 
 
 
 ### Advance Features of Release I
-In the release, you can achieve any combination of three features below through implements particular interface and motify a little bit of the example above. 
+In the release, you can achieve any combination of three features below through implements particular interface and motify a little bit of the example above.
 
 * Control Other WuObjects
 * Integrate External Services
@@ -88,22 +101,95 @@ In the release, you can achieve any combination of three features below through 
 
 #### Control Other WuObjects
 
+    @WuClass(id = 2001)
+    public Class SmartSwitch extends PrClass {
+        @WuProperty(name = "input", id = 1, type = PropertyType.Input, dtype = DataType.Channel)
+        private short input;
+        @WuProperty(name = "output", id = 2, type = PropertyType.Output)
+        private short output;
+
+        Public SmartSwitch() {
+            super("SmartSwitch");
+        }
+        @Override
+        public list<Extension> registerExtension() {
+            List<Extension> extensions = new ArrayList<Extension>();
+            extensions.add(new ContextProgressionExtension(this));
+            return extensions;
+        }
+
+        public void setOutput(short output) {
+		        this.support.firePropertyChange("output", this.output, output);
+		        this.output = output;
+	      }
+    }
+
+    public class ContextProgressionExtension extends AbstractProgressionExtension implements Channelable  {
+      	public ContextProgressionExtension(PrClass plugin) {
+		        super(plugin);
+	      }
+        public void execute(ChannelData data) {
+            if (data.getNpp().getPropertyId() == 1) {
+                if (this.plugin instanceof SmartSwitch) {
+                    SmartSwitch switch = (SmartSwitch) this.plugin;
+                    switch.setOutput(data.getValue());
+                }
+	          }
+	      }
+    }
+
+
 #### Integrate External Services
+There are two ways to integrate with external services. One is to use rpc or client to talk to external information resource.
+We define two interfaces to initialize and release the connection.
+
+    public class ContextProgressionExtension extends AbstractProgressionExtension implements Initable, Closable {
+        private RPCService service;
+        public ContextProgressionExtension(PrClass plugin) {
+            super(plugin);
+        }
+
+        public void init() {
+            service.connect();
+        }
+
+        public void execute(ChannelData data) {
+            if (data.getNpp().getPropertyId() == 1) {
+                serice.doSomthing();
+            }
+        }
+
+        public void close() {
+            service.disconnect();
+        }
+    }
+
+The other way is to receive subscribe and publish publications from and to XMPP.
+
+    public class ContextProgressionExtension extends AbstractProgressionExtension implements Factorable {
+        public ContextProgressionExtension(PrClass plugin) {
+            super(plugin);
+        }
+
+        public void execute(BaseFactor factor) {
+            publish("topic", factor);
+        }
+    }
+
+In the example above, extension implements Factorable interface. If there is any publication published for its interested topic,
+framework will call the execute function once framework received the new publication from XMPP server. At the mean time, publish
+is a native function in PrClass to publish a Factor to a particular topic.
 
 #### Reconfiguration and Remapping
+Remapping is implemented through a RPC call to master. PrClass provide a native method to achieve the goal. The real parameter
+appId is hinden in the link table, so PrClass don't need to care about which application is actually using it.
 
+    public class ContextProgressionExtension extends AbstractProgressionExtension implements Factorable {
+        public ContextProgressionExtension(PrClass plugin) {
+            super(plugin);
+        }
 
-
-
-
-
-  
-
-
-
-
-
-
-
-
-
+        public void execute(BaseFactor factor) {
+            remap();
+        }
+    }

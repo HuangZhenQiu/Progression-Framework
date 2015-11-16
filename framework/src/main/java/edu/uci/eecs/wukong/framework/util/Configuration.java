@@ -25,7 +25,7 @@ public class Configuration {
 	private static final String GATEWAY_PORT = "GATEWAY.PORT";
 	private static final String PROGRESSION_SERVER_IP = "PROGRESSION.SERVER.IP";
 	private static final String PROGRESSION_SERVER_PORT = "PROGRESSION.SERVER.PORT";
-	private static final String STATE_FILE_PATH = "STATE.FILE.PATH";
+	private static final String STATE_FILE_PATH = "STATE.PATH";
 	
 	private static Configuration configuration;
 
@@ -38,6 +38,7 @@ public class Configuration {
 			properties.load(inputStream);
 		} catch (Exception e) {
 			System.out.println("Property File '" + CONFIG_PATH + "' not found in the classpath");
+			System.exit(-1);
 		}
 		
 	}
@@ -62,7 +63,7 @@ public class Configuration {
 	}
 	
 	public String getStateFilePath() {
-		return properties.getProperty(STATE_FILE_PATH, "local\\state.json");
+		return properties.getProperty(STATE_FILE_PATH, "local/state.json");
 	}
 	
 	public Short getGatewayPort() {

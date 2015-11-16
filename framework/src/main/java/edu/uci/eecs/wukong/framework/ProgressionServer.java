@@ -10,10 +10,10 @@ import org.slf4j.LoggerFactory;
 import edu.uci.eecs.wukong.framework.manager.BufferManager;
 import edu.uci.eecs.wukong.framework.manager.PluginManager;
 import edu.uci.eecs.wukong.framework.manager.SceneManager;
-import edu.uci.eecs.wukong.framework.manager.StateManager;
 import edu.uci.eecs.wukong.framework.model.StateModel;
 import edu.uci.eecs.wukong.framework.pipeline.Pipeline;
 import edu.uci.eecs.wukong.framework.select.FeatureChoosers;
+import edu.uci.eecs.wukong.framework.state.StateManager;
 import edu.uci.eecs.wukong.framework.wkpf.WKPF;
 import edu.uci.eecs.wukong.rpc.netty.CommunicationServer;
 import edu.uci.eecs.wukong.rpc.netty.service.DataService;
@@ -72,8 +72,8 @@ public class ProgressionServer {
 	public void start() {
 		try {
 			StateModel model = this.stateManager.recover();
-			this.wkpf.start();
-			this.pluginManager.init();
+			this.wkpf.start(model);
+			this.pluginManager.init(model);
 			this.server.start();
 			this.pipeline.start();
 		} catch (Exception e) {

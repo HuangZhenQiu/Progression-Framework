@@ -11,9 +11,14 @@ import edu.uci.eecs.wukong.framework.model.NPP;
 import edu.uci.eecs.wukong.framework.model.WuClassModel;
 import edu.uci.eecs.wukong.framework.model.WuObjectModel;
 import edu.uci.eecs.wukong.framework.model.PropertyType;
+import edu.uci.eecs.wukong.framework.model.StateModel;
 import edu.uci.eecs.wukong.framework.wkpf.WKPF;
+import edu.uci.eecs.wukong.framework.state.StateUpdatelistener;
 
 import java.beans.PropertyChangeEvent;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.BufferedReader;
 import java.lang.Exception;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,6 +33,7 @@ import org.slf4j.LoggerFactory;
 
 public class PluginManager implements PrClassInitListener {
 	private final static Logger LOGGER = LoggerFactory.getLogger(PluginManager.class);
+	private static final String PLUGIN_DEFINATION_PATH = "plugins.txt";
 	private final static String PLUGIN_PATH = "edu.uci.eecs.wukong.prclass";
 	private BufferManager bufferManager;
 	private SceneManager contextManager;
@@ -39,12 +45,8 @@ public class PluginManager implements PrClassInitListener {
 	/* Binded WuObjects */
 	private List<WuObjectModel> bindedWuObjects;
 	private WKPF wkpf;
-	private String[] PLUGINS = {"switcher.SwitchPrClass", "timertest.TimerPrClass", 
-			"icsdemo.ICSDemoFloorlampPrClass", "icsdemo.ICSDemoBloomPrClass", "icsdemo.ICSDemoGoPrClass", "icsdemo.ICSDemoStripPrClass",
-			"icsdemo.ICSDemoFanPrClass", 
-			"icsdemo.ICSDemoAromaPrClass", "icsdemo.ICSDemoMusicPrClass", 
-			"icsdemo.ICSDemoTVPrClass", "icsdemo.ICSDemoQPrClass"
-		};
+	private List<String> pluginNames;
+	private List<StateUpdatelistener> listeners;
 	
 	public PluginManager(WKPF wkpf, SceneManager contextManager, Pipeline pipeline, BufferManager bufferManager) {
 		this.bufferManager = bufferManager;
@@ -55,6 +57,37 @@ public class PluginManager implements PrClassInitListener {
 		this.plugins = new ArrayList<PrClass>();
 		this.bindedWuObjects = new ArrayList<WuObjectModel>();
 		this.wkpf = wkpf;
+		this.pluginNames =  new ArrayList<String> ();
+		this.listeners = new ArrayList<StateUpdatelistener> ();
+		this.loadPrClassDefinition();
+	}
+
+	public void register(StateUpdatelistener listener) {
+		this.listeners.add(listener);
+	}
+	
+	private void fireUpdateEvent() {
+		for (StateUpdatelistener listener : listeners) {
+			listener.update();
+		}
+ 	}
+	
+	private void loadPrClassDefinition() {
+		try {
+			InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(PLUGIN_DEFINATION_PATH);
+			InputStreamReader streamReader = new InputStreamReader(inputStream);
+			BufferedReader reader = new BufferedReader(streamReader);
+			String line = null;
+			while ((line = reader.readLine()) != null) {
+				line = line.trim();
+				if (line != "") {
+					pluginNames.add(line);
+				}
+			}
+		} catch (Exception e) {
+			System.out.println("Plugin Definition File '" + PLUGIN_DEFINATION_PATH + "' not found in the classpath");
+			System.exit(-1);
+		}
 	}
 	
 	/**
@@ -65,9 +98,9 @@ public class PluginManager implements PrClassInitListener {
 	 * 
 	 * @throws Exception
 	 */
-	public void init() throws Exception {
-		for (int i = 0; i < PLUGINS.length; i++) {
-			String path = PLUGIN_PATH + '.' + PLUGINS[i];
+	public void init(StateModel model) throws Exception {
+		for (String pluginName : pluginNames) {
+			String path = PLUGIN_PATH + '.' + pluginName;
 			ClassLoader loader = PluginManager.class.getClassLoader();
 			Class<?> c = loader.loadClass(path);
 			WuClassModel wuClassModel = createWuClassModel(path, c);
@@ -81,6 +114,10 @@ public class PluginManager implements PrClassInitListener {
 			plugins.add(plugin);
 			WuObjectModel wuObjectModel = new WuObjectModel(wuClassModel, plugin);
 			wkpf.addWuObject(plugin.getPortId(), wuObjectModel);
+		}
+		
+		if (model != null && model.getBindedWuObject() != null) {
+			bindPlugins(model.getBindedWuObject());
 		}
 	}
 	
@@ -122,6 +159,9 @@ public class PluginManager implements PrClassInitListener {
 			bindPlugin(model);
 			bindedWuObjects.add(model);
 		}
+		
+		// Update wuobject information
+		fireUpdateEvent();
 	}
 	
 	/**

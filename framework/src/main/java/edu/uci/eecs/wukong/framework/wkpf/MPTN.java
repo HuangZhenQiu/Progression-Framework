@@ -8,6 +8,7 @@ import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import edu.uci.eecs.wukong.framework.model.StateModel;
 import edu.uci.eecs.wukong.framework.nio.NIOUdpClient;
 import edu.uci.eecs.wukong.framework.nio.NIOUdpServer;
 import edu.uci.eecs.wukong.framework.util.Configuration;
@@ -47,16 +48,22 @@ public class MPTN implements MPTNMessageListener{
 		}
 	}
 	
-	public void start() {
+	public void start(StateModel model) {
 		try {
 			Thread serverThread = new Thread(server);
 			serverThread.start();
 			Thread.sleep(1000);
-			info();
-			while (!hasNodeId) {
-				Thread.sleep(1000);
+			if (model == null) {
+				info();
+				while (!hasNodeId) {
+					Thread.sleep(1000);
+				}
+				acquireID();
+			} else {
+				this.nodeId = model.getNodeId();
+				this.longAddress = model.getLongAddress();
+				this.hasNodeId = true;
 			}
-			acquireID();
 		} catch (Exception e) {
 			e.printStackTrace();
 			LOGGER.error("Fail to start MPTN");

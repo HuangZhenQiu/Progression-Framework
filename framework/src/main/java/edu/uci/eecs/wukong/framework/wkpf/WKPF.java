@@ -22,12 +22,14 @@ import edu.uci.eecs.wukong.framework.model.PropertyType;
 import edu.uci.eecs.wukong.framework.model.WuClassModel;
 import edu.uci.eecs.wukong.framework.model.WuObjectModel;
 import edu.uci.eecs.wukong.framework.model.WuPropertyModel;
+import edu.uci.eecs.wukong.framework.model.StateModel;
 import edu.uci.eecs.wukong.framework.manager.BufferManager;
 import edu.uci.eecs.wukong.framework.prclass.PrClassInitListener;
+import edu.uci.eecs.wukong.framework.state.StateUpdatelistener;
 
 /**
  * 
- * TODO (Peter Huang) use WKPFCOMM layer to simpley reply messageß
+ * TODO (Peter Huang) use WKPFCOMM layer to simply reply messageß
  * 
  *
  */
@@ -53,6 +55,7 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 	private LinkTable linkTable = null;
 	private BufferManager bufferManager;
 	private List<PrClassInitListener> listeners;
+	private List<StateUpdatelistener> stateListeners;
 
 	public WKPF(BufferManager bufferManager) {
 		this.wuclasses = new ArrayList<WuClassModel> ();
@@ -62,16 +65,26 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 		this.mptn.register(this);
 		this.djaData = new DJAData();
 		this.djaData.register(this);
+		this.stateListeners = new ArrayList<StateUpdatelistener> ();
 		this.bufferManager = bufferManager;
 		// Intial default location
 		this.location = "/WuKong";
 	}
 	
-	public void start() {
+	public void start(StateModel model) {
 		LOGGER.info("Start to initilize WPKF");
-		mptn.start();
+		mptn.start(model);
 		bufferManager.setMPTN(mptn);
 		LOGGER.info("Finished initilize WPKF");
+		
+		// Update the network information
+		if (model == null) {
+			fireUpdateEvent();
+		} else {
+			this.componentMap = model.getComponentMap();
+			this.linkTable = model.getLinkTable();
+			this.location = model.getLocation();
+		}
 	}
 	
 	public void shutdown() {
@@ -81,6 +94,16 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 	public void register(PrClassInitListener listener) {
 		this.listeners.add(listener);
 	}
+	
+	public void registerStateListener(StateUpdatelistener listener) {
+		this.stateListeners.add(listener);
+	}
+	
+	private void fireUpdateEvent() {
+		for (StateUpdatelistener listener : stateListeners) {
+			listener.update();
+		}
+ 	}
 	
 	/**
 	 * Called by DJAData after remote programmed by master

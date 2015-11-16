@@ -1,4 +1,4 @@
-package edu.uci.eecs.wukong.framework.manager;
+package edu.uci.eecs.wukong.framework.state;
 
 import edu.uci.eecs.wukong.framework.util.Configuration;
 import edu.uci.eecs.wukong.framework.wkpf.WKPF;
@@ -12,6 +12,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +30,7 @@ import com.google.gson.Gson;
  * Later it will be also used for check pointing models generated within progression server.
  *
  */
-public class StateManager {
+public class StateManager implements StateUpdatelistener {
 	private static Logger logger = LoggerFactory.getLogger(StateManager.class);
 	private Configuration configuration = Configuration.getInstance();
 	private static Gson gson = new Gson();
@@ -36,37 +38,26 @@ public class StateManager {
 	private PluginManager pluginManager;
 	private String path;
 	
-	@VisibleForTesting
-	public StateManager(String path) {
-		try {
-			this.path = System.getProperty("user.dir") + File.separatorChar + path;
-			System.out.println(path);
-		} catch (Exception e) {
-			logger.info("Can't file with path: " + System.getProperty("user.dir") + File.separatorChar + path);
-		}
-	}
-	
 	public StateManager(WKPF wkpf, PluginManager pluginManager) {
-		String fileName = null;
 		try {
 			this.wkpf = wkpf;
 			this.pluginManager = pluginManager;
-			fileName = System.getProperty("user.dir") + File.separatorChar + configuration.getStateFilePath();
-			this.path = fileName;
+			this.path = configuration.getStateFilePath();
+			logger.info(path);
+			File file = new File(path);
+			if (!file.exists()) {
+				file.createNewFile();
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.info("Can't file with path: " + fileName);
-			File file = new File(fileName);
-			
-			try {
-				file.createNewFile();
-			} catch (IOException err) {
-				logger.info("Fail to create state file with path: " + fileName);
-				System.exit(1);
-			}
-			
-			logger.info("Created new state file with path: " + fileName);
 		}
+	}
+	
+	/**
+	 * Function triggered by state update components
+	 */
+	public void update() {
+		persist();
 	}
 	
 	/**
@@ -113,7 +104,7 @@ public class StateManager {
 			
 			bufferedReader.close();
 		} catch (FileNotFoundException ex) {
-			logger.error("Can't state file in the path of :" + path);
+			logger.error("Can't find file in the path of :" + path);
 		} catch (IOException ex) {
 			logger.error("Fail to read state information for the path of :" + path);
 		}
@@ -125,6 +116,6 @@ public class StateManager {
 	}
 	
 	public static void main(String[] args) {
-		StateManager manager = new StateManager("local/test.json");
+		//StateManager manager = new StateManager();
 	}
 }

@@ -1,0 +1,11 @@
+switcher.SwitchPrClass
+timertest.TimerPrClass 
+icsdemo.ICSDemoFloorlampPrClass
+icsdemo.ICSDemoBloomPrClass
+icsdemo.ICSDemoGoPrClass
+icsdemo.ICSDemoStripPrClass
+icsdemo.ICSDemoFanPrClass
+icsdemo.ICSDemoAromaPrClass
+icsdemo.ICSDemoMusicPrClass
+icsdemo.ICSDemoTVPrClass
+icsdemo.ICSDemoQPrClass

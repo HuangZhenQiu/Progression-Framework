@@ -193,3 +193,16 @@ appId is hinden in the link table, so PrClass don't need to care about which app
             remap();
         }
     }
+
+## Development
+To development in Progression Framework, you need to fellow the first step to create eclipse project by using gradle eclipse plugin.
+There are two types of development. One is to add new PrClass in the server, the other is to extend the framework layer.
+
+### Create PrClass
+To add the PrClasses, you need to do two things. One is to create a sub package in `edu.uci.eecs.wukong.prclass`, and define your PrClass
+and Extension inside. Then, you need to go the `framework/src/main/resources` folder, and add your PrClass name into `plugins.txt`.
+When progression server starts, it will read from the text to figure out which PrClass to load.
+
+### Add New Functionality
+The Framework layer code structure will keep on evolving by decomposing into several sub-projects. You can propose your development idea, and
+send it to wukong team.

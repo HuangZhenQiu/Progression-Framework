@@ -3,9 +3,11 @@ package edu.uci.eecs.wukong.framework.xmpp;
 import edu.uci.eecs.wukong.framework.factor.BaseFactor;
 import edu.uci.eecs.wukong.framework.factor.FactorClient;
 import edu.uci.eecs.wukong.framework.factor.FactorClientListener;
+import edu.uci.eecs.wukong.framework.xmpp.FactorExtensionElementProvider;
 import edu.uci.eecs.wukong.framework.util.Configuration;
 
 import org.jivesoftware.smack.ConnectionConfiguration;
+import org.jivesoftware.smack.provider.ProviderManager;
 import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smackx.pubsub.ConfigureForm;
 import org.jivesoftware.smackx.xdata.packet.DataForm;
@@ -56,12 +58,19 @@ public class XMPPFactorClient implements FactorClient {
 		 	Roster roster = Roster.getInstanceFor(tcpConnection);
 		 	roster.setRosterLoadedAtLogin(false);
 			manager = PubSubManager.getInstance(tcpConnection);
+			addCustomizedProvider();
 			logger.info("Successfully connected with XMPP server:" + systemConfig.getXMPPServerName());
 		} catch(Exception e) {
 			e.printStackTrace();
 			System.out.println("Catch Exception");
 			logger.error("Fail to create XMPP Client, please check username and password in config");
 		}
+	}
+	
+	private void addCustomizedProvider() {
+		// add the wukong progression factor provider to parse factor message
+		ProviderManager.addExtensionProvider(
+				FactorExtensionElement.ELEMENT, FactorExtensionElement.NAMESPACE, new FactorExtensionElementProvider());
 	}
 	
 	public void subscribe(String nodeId, FactorClientListener listener) {

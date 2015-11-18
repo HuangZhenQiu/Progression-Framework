@@ -42,6 +42,8 @@ public class StateManager implements StateUpdatelistener {
 		try {
 			this.wkpf = wkpf;
 			this.pluginManager = pluginManager;
+			this.wkpf.registerStateListener(this);
+			this.pluginManager.register(this);
 			this.path = configuration.getStateFilePath();
 			logger.info(path);
 			File file = new File(path);

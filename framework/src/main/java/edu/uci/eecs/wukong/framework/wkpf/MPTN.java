@@ -27,6 +27,8 @@ public class MPTN implements MPTNMessageListener{
 	private int nodeId = -1; 
 	// Address for communication between IP device in network
 	private long longAddress;
+	// UUID for node id acquire
+	private byte[] uuid;
 	
 	private List<WKPFMessageListener> listeners;
 	private static int MPTN_HEADER_LENGTH = 9;
@@ -53,7 +55,8 @@ public class MPTN implements MPTNMessageListener{
 			Thread serverThread = new Thread(server);
 			serverThread.start();
 			Thread.sleep(1000);
-			if (model == null) {
+			if (model == null || model.getNodeId() == null
+					|| model.getLongAddress() == null || model.getUuid() == null) {
 				info();
 				while (!hasNodeId) {
 					Thread.sleep(1000);
@@ -62,8 +65,9 @@ public class MPTN implements MPTNMessageListener{
 			} else {
 				this.nodeId = model.getNodeId();
 				this.longAddress = model.getLongAddress();
-				this.hasNodeId = true;
+				this.uuid = model.getUuid().getBytes();
 			}
+			this.hasNodeId = true;
 		} catch (Exception e) {
 			e.printStackTrace();
 			LOGGER.error("Fail to start MPTN");
@@ -86,11 +90,13 @@ public class MPTN implements MPTNMessageListener{
 	}
 	
 	public synchronized void acquireID() {
-		
 		ByteBuffer buffer = ByteBuffer.allocate(36 /* 11 + 9 + 16*/);
 		appendMPTNHeader(buffer, nodeId, HEADER_TYPE_1, (byte)25);
+		if (this.uuid == null) {
+			this.uuid = generateUUID();
+		}
 		MPTNUtil.appendMPTNPacket(buffer, MPTNUtil.MPTN_MAX_ID.intValue(), MPTNUtil.MPTN_MASTER_ID,
-				MPTNUtil.MPTN_MSQTYPE_IDREQ, generateUUID());
+				MPTNUtil.MPTN_MSQTYPE_IDREQ, this.uuid);
 		gatewayClient.send(buffer.array());
 	}
 	
@@ -341,5 +347,29 @@ public class MPTN implements MPTNMessageListener{
 		for (WKPFMessageListener listener : listeners) {
 			listener.onWKPFSetLocation(sourceId, message);
 		}
+	}
+
+	public boolean isHasNodeId() {
+		return hasNodeId;
+	}
+
+	public void setHasNodeId(boolean hasNodeId) {
+		this.hasNodeId = hasNodeId;
+	}
+
+	public byte[] getUuid() {
+		return uuid;
+	}
+
+	public void setUuid(byte[] uuid) {
+		this.uuid = uuid;
+	}
+
+	public void setNodeId(int nodeId) {
+		this.nodeId = nodeId;
+	}
+
+	public void setLongAddress(long longAddress) {
+		this.longAddress = longAddress;
 	}
 }

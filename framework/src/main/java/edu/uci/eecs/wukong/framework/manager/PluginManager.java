@@ -116,7 +116,7 @@ public class PluginManager implements PrClassInitListener {
 			wkpf.addWuObject(plugin.getPortId(), wuObjectModel);
 		}
 		
-		if (model != null && model.getBindedWuObject() != null) {
+		if (model != null && model.getBindedWuObject() != null && model.getBindedWuObject().size() > 0) {
 			bindPlugins(model.getBindedWuObject());
 		}
 	}

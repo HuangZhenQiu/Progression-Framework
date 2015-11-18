@@ -73,18 +73,16 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 	
 	public void start(StateModel model) {
 		LOGGER.info("Start to initilize WPKF");
+		// Update the network information
 		mptn.start(model);
 		bufferManager.setMPTN(mptn);
-		LOGGER.info("Finished initilize WPKF");
-		
-		// Update the network information
-		if (model == null) {
-			fireUpdateEvent();
-		} else {
+		if (model != null) {
 			this.componentMap = model.getComponentMap();
 			this.linkTable = model.getLinkTable();
 			this.location = model.getLocation();
 		}
+		fireUpdateEvent();
+		LOGGER.info("Finished initilize WPKF");
 	}
 	
 	public void shutdown() {
@@ -528,6 +526,13 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 	
 	public long getLongAddress() {
 		return this.mptn.getLongAddress();
+	}
+	
+	public String getUUID() {
+		if (this.mptn.getUuid() != null) {
+			return new String(this.mptn.getUuid());
+		}
+		return "";
 	}
 	
 	public LinkTable getLinkTable() {

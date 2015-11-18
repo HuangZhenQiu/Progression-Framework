@@ -6,8 +6,9 @@ import edu.uci.eecs.wukong.framework.wkpf.WKPF;
 import java.util.List;
 
 public class StateModel {
-	private int nodeId;
-	private long longAddress;
+	private Integer nodeId;
+	private Long longAddress;
+	private String uuid;
 	private String location;
 	private LinkTable linkTable;
 	private ComponentMap componentMap;
@@ -16,13 +17,24 @@ public class StateModel {
 	public StateModel(WKPF wkpf, PluginManager manager) {
 		this.nodeId = wkpf.getNetworkId();
 		this.longAddress = wkpf.getLongAddress();
+		if (wkpf.getUUID() != null) {
+			this.uuid = new String(wkpf.getUUID());
+		}
 		this.location = wkpf.getLocation();
 		this.linkTable = wkpf.getLinkTable();
 		this.componentMap = wkpf.getComponentMap();
 		this.bindedWuObject = manager.getBindedWuObjects();
 	}
+	
+	public String getUuid() {
+		return uuid;
+	}
 
-	public int getNodeId() {
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
+	}
+
+	public Integer getNodeId() {
 		return nodeId;
 	}
 
@@ -30,7 +42,7 @@ public class StateModel {
 		this.nodeId = nodeId;
 	}
 
-	public long getLongAddress() {
+	public Long getLongAddress() {
 		return longAddress;
 	}
 

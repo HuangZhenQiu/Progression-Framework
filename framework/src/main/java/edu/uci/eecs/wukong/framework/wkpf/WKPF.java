@@ -23,9 +23,11 @@ import edu.uci.eecs.wukong.framework.model.WuClassModel;
 import edu.uci.eecs.wukong.framework.model.WuObjectModel;
 import edu.uci.eecs.wukong.framework.model.WuPropertyModel;
 import edu.uci.eecs.wukong.framework.model.StateModel;
+import edu.uci.eecs.wukong.framework.model.MonitorDataModel;
 import edu.uci.eecs.wukong.framework.manager.BufferManager;
 import edu.uci.eecs.wukong.framework.prclass.PrClassInitListener;
-import edu.uci.eecs.wukong.framework.state.StateUpdatelistener;
+import edu.uci.eecs.wukong.framework.state.StateUpdateListener;
+import edu.uci.eecs.wukong.framework.monitor.MonitorListener;
 
 /**
  * 
@@ -55,7 +57,8 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 	private LinkTable linkTable = null;
 	private BufferManager bufferManager;
 	private List<PrClassInitListener> listeners;
-	private List<StateUpdatelistener> stateListeners;
+	private List<StateUpdateListener> stateListeners;
+	private List<MonitorListener> monitorListeners;
 
 	public WKPF(BufferManager bufferManager) {
 		this.wuclasses = new ArrayList<WuClassModel> ();
@@ -65,7 +68,8 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 		this.mptn.register(this);
 		this.djaData = new DJAData();
 		this.djaData.register(this);
-		this.stateListeners = new ArrayList<StateUpdatelistener> ();
+		this.stateListeners = new ArrayList<StateUpdateListener> ();
+		this.monitorListeners = new ArrayList<MonitorListener> ();
 		this.bufferManager = bufferManager;
 		// Intial default location
 		this.location = "/WuKong";
@@ -93,15 +97,25 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 		this.listeners.add(listener);
 	}
 	
-	public void registerStateListener(StateUpdatelistener listener) {
+	public void registerStateListener(StateUpdateListener listener) {
 		this.stateListeners.add(listener);
 	}
 	
+	public void registerMonitorListener(MonitorListener listener) {
+		this.monitorListeners.add(listener);
+	}
+	
 	private void fireUpdateEvent() {
-		for (StateUpdatelistener listener : stateListeners) {
+		for (StateUpdateListener listener : stateListeners) {
 			listener.update();
 		}
  	}
+	
+	private void fireMonitorEvent(MonitorDataModel model) {
+		for (MonitorListener listener : monitorListeners) {
+			listener.onMonitorMessage(model);
+		}
+	}
 	
 	/**
 	 * Called by DJAData after remote programmed by master
@@ -419,6 +433,7 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 	public void onWKPFMonitoredData(long sourceId, byte[] message) {
 		// TODO Auto-generated method stub
 		
+		//this.fireMonitorEvent();
 	}
 
 	public void onWKPFSetLocation(long sourceId, byte[] message) {

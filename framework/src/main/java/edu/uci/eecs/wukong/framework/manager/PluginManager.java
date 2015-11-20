@@ -13,7 +13,7 @@ import edu.uci.eecs.wukong.framework.model.WuObjectModel;
 import edu.uci.eecs.wukong.framework.model.PropertyType;
 import edu.uci.eecs.wukong.framework.model.StateModel;
 import edu.uci.eecs.wukong.framework.wkpf.WKPF;
-import edu.uci.eecs.wukong.framework.state.StateUpdatelistener;
+import edu.uci.eecs.wukong.framework.state.StateUpdateListener;
 
 import java.beans.PropertyChangeEvent;
 import java.io.InputStream;
@@ -46,7 +46,7 @@ public class PluginManager implements PrClassInitListener {
 	private List<WuObjectModel> bindedWuObjects;
 	private WKPF wkpf;
 	private List<String> pluginNames;
-	private List<StateUpdatelistener> listeners;
+	private List<StateUpdateListener> listeners;
 	
 	public PluginManager(WKPF wkpf, SceneManager contextManager, Pipeline pipeline, BufferManager bufferManager) {
 		this.bufferManager = bufferManager;
@@ -58,16 +58,16 @@ public class PluginManager implements PrClassInitListener {
 		this.bindedWuObjects = new ArrayList<WuObjectModel>();
 		this.wkpf = wkpf;
 		this.pluginNames =  new ArrayList<String> ();
-		this.listeners = new ArrayList<StateUpdatelistener> ();
+		this.listeners = new ArrayList<StateUpdateListener> ();
 		this.loadPrClassDefinition();
 	}
 
-	public void register(StateUpdatelistener listener) {
+	public void register(StateUpdateListener listener) {
 		this.listeners.add(listener);
 	}
 	
 	private void fireUpdateEvent() {
-		for (StateUpdatelistener listener : listeners) {
+		for (StateUpdateListener listener : listeners) {
 			listener.update();
 		}
  	}

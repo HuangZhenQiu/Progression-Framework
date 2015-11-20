@@ -12,6 +12,14 @@ public class Configuration {
 	private static final String XMPP_PASSWORD = "XMPP.PASSWORD";
 	private static final String MASTER_ADDRESS = "MASTER.ADDRESS";
 	private static final String MASTER_PORT = "MASTER.PORT";
+	private static final String GATEWAY_IP = "GATEWAY.IP";
+	private static final String GATEWAY_PORT = "GATEWAY.PORT";
+	private static final String PROGRESSION_SERVER_IP = "PROGRESSION.SERVER.IP";
+	private static final String PROGRESSION_SERVER_PORT = "PROGRESSION.SERVER.PORT";
+	private static final String STATE_FILE_PATH = "STATE.PATH";
+	private static final String MONITOR_BACKEND = "MONITOR.BACKEND";
+	private static final String MONITOR_MONGO_URL = "MONITOR.MONGO.URL";
+	private static final String MONITOR_XMPP_TOPIC = "MONITOR.XMPP.TOPIC";
 	private static final String HUE_ADDRESS = "HUE.ADDRESS";
 	private static final String HUE_POST = "HUE.PORT";
 	private static final String DEMO_KICHEN_SECONDS = "DEMO.KICHEN.SECONDS";
@@ -21,11 +29,6 @@ public class Configuration {
 	private static final String DEMO_TABLE_SLIDER_ID = "DEMO.TABLE.SLIDER.ID";
 	private static final String DEMO_OUTER_SLIDER_ID = "DEMO.OUTER.SLIDER.ID";
 	private static final String DEMO_WALL_SLIDER_ID = "DEMO.WALL.SLIDER.ID";
-	private static final String GATEWAY_IP = "GATEWAY.IP";
-	private static final String GATEWAY_PORT = "GATEWAY.PORT";
-	private static final String PROGRESSION_SERVER_IP = "PROGRESSION.SERVER.IP";
-	private static final String PROGRESSION_SERVER_PORT = "PROGRESSION.SERVER.PORT";
-	private static final String STATE_FILE_PATH = "STATE.PATH";
 	
 	private static Configuration configuration;
 
@@ -64,6 +67,18 @@ public class Configuration {
 	
 	public String getStateFilePath() {
 		return properties.getProperty(STATE_FILE_PATH, "local/state.json");
+	}
+	
+	public String getMonitorBackend() {
+		return properties.getProperty(MONITOR_BACKEND, "mongoDB");
+	}
+	
+	public String getMonitorXMPPTOPIC() {
+		return properties.getProperty(MONITOR_XMPP_TOPIC);
+	}
+	
+	public String getMonitorMONGOURL() {
+		return properties.getProperty(MONITOR_MONGO_URL);
 	}
 	
 	public Short getGatewayPort() {

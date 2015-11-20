@@ -30,7 +30,7 @@ import com.google.gson.Gson;
  * Later it will be also used for check pointing models generated within progression server.
  *
  */
-public class StateManager implements StateUpdatelistener {
+public class StateManager implements StateUpdateListener {
 	private static Logger logger = LoggerFactory.getLogger(StateManager.class);
 	private Configuration configuration = Configuration.getInstance();
 	private static Gson gson = new Gson();

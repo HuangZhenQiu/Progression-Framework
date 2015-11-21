@@ -351,8 +351,6 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 	}
 
 	public void onWKPFReadProperty(long sourceId, byte[] message) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	/**
@@ -431,9 +429,24 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 	}
 
 	public void onWKPFMonitoredData(long sourceId, byte[] message) {
-		// TODO Auto-generated method stub
-		
-		//this.fireMonitorEvent();
+		if (message.length >= 7) {
+			short wuCLassId = WKPFUtil.getLittleEndianShort(message, 2);
+			byte port = message[4];
+			byte propertyNum = message[5];
+			byte type = message[6];
+			short value = 0;
+			if (type == 1) { // Boolean
+				value = message[7];
+			} else {
+				value = WKPFUtil.getLittleEndianShort(message, 7);
+			}
+			
+			MonitorDataModel model = new MonitorDataModel(
+					sourceId, wuCLassId, port, propertyNum, type, value, System.currentTimeMillis());
+			this.fireMonitorEvent(model);
+		} else {
+			LOGGER.error("Recevied Broken Monitoring message data = " + message);
+		}
 	}
 
 	public void onWKPFSetLocation(long sourceId, byte[] message) {

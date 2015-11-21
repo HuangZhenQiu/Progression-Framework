@@ -19,6 +19,8 @@ public class Configuration {
 	private static final String STATE_FILE_PATH = "STATE.PATH";
 	private static final String MONITOR_BACKEND = "MONITOR.BACKEND";
 	private static final String MONITOR_MONGO_URL = "MONITOR.MONGO.URL";
+	private static final String MONITOR_MONGO_DATABASE = "MONITOR.MONGO.DATABASE";
+	private static final String MONITOR_MONGO_COLLECTION = "MONITOR.MONGO.COLLECTION";
 	private static final String MONITOR_XMPP_TOPIC = "MONITOR.XMPP.TOPIC";
 	private static final String HUE_ADDRESS = "HUE.ADDRESS";
 	private static final String HUE_POST = "HUE.PORT";
@@ -77,8 +79,16 @@ public class Configuration {
 		return properties.getProperty(MONITOR_XMPP_TOPIC);
 	}
 	
-	public String getMonitorMONGOURL() {
+	public String getMonitorMongoURL() {
 		return properties.getProperty(MONITOR_MONGO_URL);
+	}
+	
+	public String getMonitorMongoDataBase() {
+		return properties.getProperty(MONITOR_MONGO_DATABASE);
+	}
+	
+	public String getMonitorMongoCollection() {
+		return properties.getProperty(MONITOR_MONGO_COLLECTION);
 	}
 	
 	public Short getGatewayPort() {

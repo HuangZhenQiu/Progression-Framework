@@ -17,6 +17,7 @@ public class MonitorManager implements MonitorListener {
 		try { 
 			service = MonitorServiceFactory.createMonitorService();
 			wkpf.registerMonitorListener(this);
+			service.init();
 		} catch (ServiceInitilizationException e) {
 			logger.error("Fail to initialize monitor manager: " + e.toString());
 		}

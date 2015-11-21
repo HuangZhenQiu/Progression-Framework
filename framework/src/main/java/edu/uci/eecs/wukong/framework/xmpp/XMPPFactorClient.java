@@ -62,8 +62,8 @@ public class XMPPFactorClient implements FactorClient {
 			logger.info("Successfully connected with XMPP server:" + systemConfig.getXMPPServerName());
 		} catch(Exception e) {
 			e.printStackTrace();
-			System.out.println("Catch Exception");
 			logger.error("Fail to create XMPP Client, please check username and password in config");
+			System.exit(-1);
 		}
 	}
 	

@@ -1,53 +1,63 @@
 package edu.uci.eecs.wukong.framework.model;
 
 public class MonitorDataModel {
-	private int nodeId;
-	private int wuClassId;
-	private short port;
-	private short propertyNumber;
+	private long nodeId;
+	private short wuClassId;
+	private byte port;
+	private byte propertyNumber;
+	private byte type;
 	private short value;
 	private double timestamp;
 	
-	public MonitorDataModel(int nodeId, int wuClassId, short port, short propertyNumber,
+	public MonitorDataModel(long nodeId, short wuClassId, byte port, byte propertyNumber, byte type,
 			short value, double timestamp) {
 		this.nodeId = nodeId;
 		this.wuClassId = wuClassId;
 		this.port = port;
 		this.propertyNumber = propertyNumber;
+		this.type = type;
 		this.value = value;
 		this.timestamp = timestamp;
 	}
 
-	public int getNodeId() {
+	public long getNodeId() {
 		return nodeId;
 	}
 
-	public void setNodeId(int nodeId) {
+	public void setNodeId(long nodeId) {
 		this.nodeId = nodeId;
 	}
 
-	public int getWuClassId() {
+	public short getWuClassId() {
 		return wuClassId;
 	}
 
-	public void setWuClassId(int wuClassId) {
+	public void setWuClassId(short wuClassId) {
 		this.wuClassId = wuClassId;
 	}
 
-	public short getPort() {
+	public byte getPort() {
 		return port;
 	}
 
-	public void setPort(short port) {
+	public void setPort(byte port) {
 		this.port = port;
 	}
 
-	public short getPropertyNumber() {
+	public byte getPropertyNumber() {
 		return propertyNumber;
 	}
 
-	public void setPropertyNumber(short propertyNumber) {
+	public void setPropertyNumber(byte propertyNumber) {
 		this.propertyNumber = propertyNumber;
+	}
+
+	public byte getType() {
+		return type;
+	}
+
+	public void setType(byte type) {
+		this.type = type;
 	}
 
 	public short getValue() {

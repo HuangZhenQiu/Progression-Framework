@@ -1,10 +1,13 @@
 package edu.uci.eecs.wukong.framework.entity;
 
-public class ConfigurationEntity implements Entity{
+import edu.uci.eecs.wukong.framework.prclass.PrClass;
+
+public class ConfigurationEntity extends Entity{
 	private String componentId;
 	private int value;
 	
-	public ConfigurationEntity(String componentId, int value) {
+	public ConfigurationEntity(PrClass prClass, String componentId, int value) {
+		super(prClass);
 		this.componentId = componentId;
 		this.value = value;
 	}

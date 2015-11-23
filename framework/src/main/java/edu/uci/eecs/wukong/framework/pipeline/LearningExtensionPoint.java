@@ -9,8 +9,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import edu.uci.eecs.wukong.framework.api.ExecutionContext;
+import edu.uci.eecs.wukong.framework.entity.FeatureEntity;
 import edu.uci.eecs.wukong.framework.event.Event;
-import edu.uci.eecs.wukong.framework.event.IEvent;
 import edu.uci.eecs.wukong.framework.extension.LearningExtension;
 import edu.uci.eecs.wukong.framework.factor.BaseFactor;
 import edu.uci.eecs.wukong.framework.factor.FactorListener;
@@ -21,13 +21,11 @@ import edu.uci.eecs.wukong.framework.util.Configuration;
 public class LearningExtensionPoint extends ExtensionPoint<LearningExtension> implements FactorListener, Runnable{
 	private static Logger logger = LoggerFactory.getLogger(LearningExtensionPoint.class);
 	private static Configuration configuration = Configuration.getInstance();
-	private Map<LearningExtension, Event> lastEvent;
 	private Queue<Event> events;
 	
 	public LearningExtensionPoint(Pipeline pipeline) {
 		super(pipeline);
 		this.events = new PriorityBlockingQueue<Event>();
-		this.lastEvent = new HashMap<LearningExtension, Event>();
 	}
 	
 	
@@ -37,9 +35,9 @@ public class LearningExtensionPoint extends ExtensionPoint<LearningExtension> im
 
 	private class LearningTask implements Runnable{
 		private LearningExtension<?> extension;
-		private IEvent event;
+		private Event event;
 		private ExecutionContext contexts;
-		public LearningTask(LearningExtension extension, IEvent event, ExecutionContext context) {
+		public LearningTask(LearningExtension extension, Event event, ExecutionContext context) {
 			this.extension = extension;
 			this.event = event;
 			this.contexts = context;
@@ -48,11 +46,14 @@ public class LearningExtensionPoint extends ExtensionPoint<LearningExtension> im
 		public void run() {
 			try {
 				if (!extension.getPrClass().isOnline() && !extension.isReady()) {
-					extension.apply(event.getData(), contexts);
-					// Remove from 
-					if (extension.isReady()) {
-						Object object= extension.train();
-						dipatchModel(extension.getPrClass().getPortId(), object);
+					if (event.getType().equals(Event.EventType.ENTITY)) {
+						FeatureEntity entity = (FeatureEntity) event.getData();
+						extension.apply(entity.getFeatures(), contexts);
+						// Remove from 
+						if (extension.isReady()) {
+							Object object= extension.train();
+							dipatchModel(extension.getPrClass().getPortId(), object);
+						}
 					}
 				}
 				
@@ -68,12 +69,12 @@ public class LearningExtensionPoint extends ExtensionPoint<LearningExtension> im
 		while(true) {
 			Event event = events.poll();
 			if (event != null) {
-				LearningExtension extension = (LearningExtension) this.extensionMap.get(event.getAppId());
+				LearningExtension extension = (LearningExtension) this.extensionMap.get(event.getPrClass());
 				if (extension != null) {
 					this.executor.execute(new LearningTask(extension, event,
 							pipeline.getCurrentContext(extension.getPrClass())));
 				} else {
-					logger.error("Cant't find learning extension for the appId: " + event.getAppId());
+					logger.error("Cant't find learning extension for the PrClass instance: " + event.getPrClass());
 				}
 			}
 		}

@@ -157,49 +157,49 @@ public class DemoProgressionExtension extends ProgressionExtension<FeatureEntity
 	
 	private ConfigurationCommand generateEnterRoomCommand(List<ConfigurationEntity> entities) {
 		ConfigurationCommand command = new ConfigurationCommand("Master", ConfigurationType.POST);
-		command.addEntity(new ConfigurationEntity(KICHEN_SLIDER_COMPONENT_ID, LEVEL_TWO));
-		command.addEntity(new ConfigurationEntity(TABLE_SLIDER_COMPONENT_ID, LEVEL_ONE));
-		command.addEntity(new ConfigurationEntity(OUTER_SLIDER_COMPONENT_ID, LEVEL_ONE));
-		command.addEntity(new ConfigurationEntity(WALL_LIGHT_SLIDER_COMPONENT_ID, LEVEL_ONE));
+		command.addEntity(new ConfigurationEntity(this.prClass, KICHEN_SLIDER_COMPONENT_ID, LEVEL_TWO));
+		command.addEntity(new ConfigurationEntity(this.prClass, TABLE_SLIDER_COMPONENT_ID, LEVEL_ONE));
+		command.addEntity(new ConfigurationEntity(this.prClass, OUTER_SLIDER_COMPONENT_ID, LEVEL_ONE));
+		command.addEntity(new ConfigurationEntity(this.prClass, WALL_LIGHT_SLIDER_COMPONENT_ID, LEVEL_ONE));
 		return command;
 	}
 	
 	private ConfigurationCommand generateInKichenCommand(List<ConfigurationEntity> entities) {
 		ConfigurationCommand command = new ConfigurationCommand("Master", ConfigurationType.POST);
-		command.addEntity(new ConfigurationEntity(KICHEN_SLIDER_COMPONENT_ID, LEVEL_THREE));
-		command.addEntity(new ConfigurationEntity(TABLE_SLIDER_COMPONENT_ID, LEVEL_THREE));
-		command.addEntity(new ConfigurationEntity(OUTER_SLIDER_COMPONENT_ID, LEVEL_ONE));
-		command.addEntity(new ConfigurationEntity(WALL_LIGHT_SLIDER_COMPONENT_ID, LEVEL_ONE));
+		command.addEntity(new ConfigurationEntity(this.prClass, KICHEN_SLIDER_COMPONENT_ID, LEVEL_THREE));
+		command.addEntity(new ConfigurationEntity(this.prClass, TABLE_SLIDER_COMPONENT_ID, LEVEL_THREE));
+		command.addEntity(new ConfigurationEntity(this.prClass, OUTER_SLIDER_COMPONENT_ID, LEVEL_ONE));
+		command.addEntity(new ConfigurationEntity(this.prClass, WALL_LIGHT_SLIDER_COMPONENT_ID, LEVEL_ONE));
 		return command;
 	}
 	
 	private ConfigurationCommand generateInTableConversation(List<ConfigurationEntity> entities) {
 		ConfigurationCommand command = new ConfigurationCommand("Master", ConfigurationType.POST);
-		command.addEntity(new ConfigurationEntity(KICHEN_SLIDER_COMPONENT_ID, LEVEL_TWO));
-		command.addEntity(new ConfigurationEntity(TABLE_SLIDER_COMPONENT_ID, LEVEL_TWO));
-		command.addEntity(new ConfigurationEntity(OUTER_SLIDER_COMPONENT_ID, LEVEL_THREE));
-		command.addEntity(new ConfigurationEntity(WALL_LIGHT_SLIDER_COMPONENT_ID, LEVEL_THREE));
+		command.addEntity(new ConfigurationEntity(this.prClass, KICHEN_SLIDER_COMPONENT_ID, LEVEL_TWO));
+		command.addEntity(new ConfigurationEntity(this.prClass, TABLE_SLIDER_COMPONENT_ID, LEVEL_TWO));
+		command.addEntity(new ConfigurationEntity(this.prClass, OUTER_SLIDER_COMPONENT_ID, LEVEL_THREE));
+		command.addEntity(new ConfigurationEntity(this.prClass, WALL_LIGHT_SLIDER_COMPONENT_ID, LEVEL_THREE));
 		return command;
 	}
 	
 	private ConfigurationCommand generateTurnOffCommand(List<ConfigurationEntity> entities) {
 		ConfigurationCommand command = new ConfigurationCommand("Master", ConfigurationType.POST, 2);
-		command.addEntity(new ConfigurationEntity(KICHEN_SLIDER_COMPONENT_ID, LEVEL_ONE));
-		command.addEntity(new ConfigurationEntity(TABLE_SLIDER_COMPONENT_ID, LEVEL_ONE));
-		command.addEntity(new ConfigurationEntity(OUTER_SLIDER_COMPONENT_ID, LEVEL_ONE));
-		command.addEntity(new ConfigurationEntity(WALL_LIGHT_SLIDER_COMPONENT_ID, LEVEL_ONE));
+		command.addEntity(new ConfigurationEntity(this.prClass, KICHEN_SLIDER_COMPONENT_ID, LEVEL_ONE));
+		command.addEntity(new ConfigurationEntity(this.prClass, TABLE_SLIDER_COMPONENT_ID, LEVEL_ONE));
+		command.addEntity(new ConfigurationEntity(this.prClass, OUTER_SLIDER_COMPONENT_ID, LEVEL_ONE));
+		command.addEntity(new ConfigurationEntity(this.prClass, WALL_LIGHT_SLIDER_COMPONENT_ID, LEVEL_ONE));
 		return command;
 	}
 	
 	private ConfigurationCommand generateCloseHueCommand() {
 		ConfigurationCommand command = new ConfigurationCommand("Hue", ConfigurationType.PUT);
-		command.addEntity(new HueEntity());
+		command.addEntity(new HueEntity(this.prClass));
 		return command;
 	}
 	
 	private ConfigurationCommand generateOpenHueCommand() {
 		ConfigurationCommand command = new ConfigurationCommand("Hue", ConfigurationType.PUT);
-		command.addEntity(new HueEntity(255, 100, 18000));
+		command.addEntity(new HueEntity(this.prClass, 255, 100, 18000));
 		return command;
 	}
 	

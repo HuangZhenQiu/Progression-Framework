@@ -30,7 +30,7 @@ public class Pipeline extends Graph implements FactorListener{
 	private ConfigurationManager configurationManager;
 	private BufferManager bufferManager;
 	private FeatureChoosers featureChoosers;
-	private FeatureAbstractionExtensionPoint featureAbstractionPoint;
+	private FeatureExtractionExtensionPoint featureAbstractionPoint;
 	private ProgressionExtensionPoint progressionPoint;
 	private LearningExtensionPoint learningPoint;
 	
@@ -44,7 +44,7 @@ public class Pipeline extends Graph implements FactorListener{
 		this.configurationManager = ConfigurationManager.getInstance();
 		this.featureChoosers = featureChoosers;
 		this.progressionPoint = new ProgressionExtensionPoint(this);
-		this.featureAbstractionPoint = new FeatureAbstractionExtensionPoint(featureChoosers, this);
+		this.featureAbstractionPoint = new FeatureExtractionExtensionPoint(featureChoosers, this);
 		this.learningPoint = new LearningExtensionPoint(this);
 		this.sceneManager.subsribeFactor(learningPoint);
 		this.sceneManager.subsribeFactor(progressionPoint);

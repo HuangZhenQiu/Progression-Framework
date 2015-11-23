@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import edu.uci.eecs.wukong.framework.entity.Entity;
+import edu.uci.eecs.wukong.framework.event.Event;
 
 /**
  * Abstract class for building up Pipeline. It is responsible for routing entities between extend points.

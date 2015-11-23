@@ -1,16 +1,17 @@
 package edu.uci.eecs.wukong.framework.graph;
 
-import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.HashMap;
 import java.util.Map;
 
+import edu.uci.eecs.wukong.framework.event.Event;
+import edu.uci.eecs.wukong.framework.event.Event.EventType;
+import edu.uci.eecs.wukong.framework.entity.Entity;
 import edu.uci.eecs.wukong.framework.pipeline.Pipeline;
 import edu.uci.eecs.wukong.framework.prclass.PrClass;
 import edu.uci.eecs.wukong.framework.extension.AbstractExtension;
-
-import edu.uci.eecs.wukong.framework.entity.Entity;
 
 /**
  * A extension point is a stage of data processing pipeline. It contains 
@@ -21,14 +22,14 @@ import edu.uci.eecs.wukong.framework.entity.Entity;
  */
 public abstract class ExtensionPoint<E extends AbstractExtension> extends Node {
 	protected Map<PrClass, AbstractExtension> extensionMap;
-	protected ConcurrentLinkedQueue<Entity> entityQueue;
+	protected PriorityBlockingQueue<Event<?>> eventQueue;
 	protected ExecutorService executor;
 	protected Pipeline pipeline;
 	
 	public ExtensionPoint(Pipeline pipeline) {
 		super(pipeline);
 		this.executor = Executors.newFixedThreadPool(5);
-		this.entityQueue = new ConcurrentLinkedQueue<Entity>();
+		this.eventQueue = new PriorityBlockingQueue<Event<?>>();
 		this.extensionMap = new HashMap<PrClass, AbstractExtension>();
 		this.pipeline = pipeline;
 	}
@@ -53,7 +54,8 @@ public abstract class ExtensionPoint<E extends AbstractExtension> extends Node {
 		}
 	}
 	
-	public void append(Entity entity) {
-		
+	public final void append(Entity entity) {
+		Event<Entity> event = new Event<Entity> (entity.getPrClass(), entity, EventType.ENTITY, 1 /* Temporary Solution*/);
+		eventQueue.add(event);
 	}
 }

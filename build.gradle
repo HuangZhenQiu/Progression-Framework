@@ -58,6 +58,7 @@ project(':framework') {
      compile "org.igniterealtime.smack:smack-core:$smackCoreVersion"
      compile "org.igniterealtime.smack:smack-extensions:$smackExtensionVersion"
      compile "org.igniterealtime.smack:smack-tcp:$smackTcpVersion"
+     compile "org.mongodb:mongo-java-driver:$mongoDriverVersion"
      compile "com.googlecode.protobuf-rpc-pro:protobuf-rpc-pro-duplex:$protobufRpcVersion"
      compile "commons-lang:commons-lang:$commonsLangVersion"
      compile "nz.ac.waikato.cms.weka:weka-dev:$wekaVersion"

@@ -14,6 +14,7 @@ import edu.uci.eecs.wukong.framework.extension.FeatureAbstractionExtension;
 import edu.uci.eecs.wukong.framework.extension.LearningExtension;
 import edu.uci.eecs.wukong.framework.factor.BaseFactor;
 import edu.uci.eecs.wukong.framework.factor.FactorListener;
+import edu.uci.eecs.wukong.framework.graph.Graph;
 
 import java.util.List;
 import java.lang.Thread;
@@ -23,7 +24,7 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.annotations.VisibleForTesting;
 
-public class Pipeline implements FactorListener{
+public class Pipeline extends Graph implements FactorListener{
 	private final static Logger LOGGER = LoggerFactory.getLogger(Pipeline.class);
 	private SceneManager sceneManager;
 	private ConfigurationManager configurationManager;

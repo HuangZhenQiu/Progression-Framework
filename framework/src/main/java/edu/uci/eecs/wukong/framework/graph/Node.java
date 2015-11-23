@@ -1,27 +1,22 @@
 package edu.uci.eecs.wukong.framework.graph;
 
-import java.util.List;
-import java.util.ArrayList;
+import edu.uci.eecs.wukong.framework.entity.Entity;
 
 /**
  * The data processing flow is represented as a Directed Acyclic Graph (DAG). On a DAG, 
  * a node represents a process stage. It contains an specific extension point that really
  * handle with the callback logic in the extension of a PrClass
  */
-public class Node<T extends ExtensionPoint<?>> {
-	private T extensionPoint;
-	private List<Node<?>> subsequentNodes;
+public abstract class Node {
+	private Graph graph;
 	
-	public Node(T point) {
-		extensionPoint = point;
-		subsequentNodes = new ArrayList<Node<?>> ();
+	public Node(Graph graph) {
+		this.graph = graph;
 	}
 	
-	protected void append(Node<?> node) {
-		subsequentNodes.add(node);
+	public void send(Entity entity) {
+		graph.send(this, entity);
 	}
 	
-	public ExtensionPoint getExtensionPoint() {
-		return this.extensionPoint;
-	}
+	public abstract void append(Entity entity);
 }

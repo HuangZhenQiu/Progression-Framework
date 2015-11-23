@@ -12,6 +12,7 @@ ext {
   smackCoreVersion = "4.1.4"
   smackExtensionVersion = "4.2.0-alpha2"
   smackTcpVersion = "4.2.0-alpha2"
+  mongoDriverVersion = "3.2.0-rc0"
   protobufRpcVersion = "3.2.2"
   commonsLangVersion = "2.6"
   wekaVersion = "3.7.5"

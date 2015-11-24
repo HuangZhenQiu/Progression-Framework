@@ -14,10 +14,13 @@ import org.apache.http.HttpRequest;
 import org.apache.http.StatusLine;
 import org.apache.http.client.HttpRequestRetryHandler;
 import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
+import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.entity.ContentType;
+import org.apache.http.HttpEntity;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.util.EntityUtils;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
@@ -87,18 +90,25 @@ public abstract class AbstractHttpService {
 				.setConnectionManager(connectionManager).build();
 	}
 	
-	protected void send(HttpEntityEnclosingRequestBase method, String content) {
+	protected String send(HttpRequestBase method, String content) {
 		method.setHeader(HTTP.CONTENT_TYPE, CONTENT_TYPE_VALUE);
-		StringEntity se = new StringEntity(content, ContentType.create(CONTENT_TYPE_VALUE, Consts.UTF_8));
-		method.setEntity(se);
+		if (content != null) {
+			if (method instanceof HttpPost) {
+				HttpPost post = (HttpPost) method;
+				StringEntity se = new StringEntity(content, ContentType.create(CONTENT_TYPE_VALUE, Consts.UTF_8));
+				post.setEntity(se);
+			}
+		}
 		CloseableHttpResponse response = null;
 		try {
 			response = client.execute(method);
+			HttpEntity entity = response.getEntity();
 			StatusLine statusLine = response.getStatusLine();
 			int statusCode = response.getStatusLine().getStatusCode();
-			if (statusCode != HttpStatus.SC_OK) {
-				LOGGER.error("Master is not accessible.");
+			if (statusCode == HttpStatus.SC_OK) {
+				return EntityUtils.toString(entity, "UTF-8");
 			}
+			LOGGER.error("Master is not accessible.");
 		} catch (Exception e) {
 			LOGGER.error("Can't open configuration client " + name);
 		} finally {
@@ -108,6 +118,8 @@ public abstract class AbstractHttpService {
 				LOGGER.error("Can't close response");
 			}
 		}
+		
+		return null;
 	}
 	
 	public String getName() {

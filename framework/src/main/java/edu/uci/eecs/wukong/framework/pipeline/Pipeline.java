@@ -9,12 +9,15 @@ import edu.uci.eecs.wukong.framework.manager.ConfigurationManager;
 import edu.uci.eecs.wukong.framework.manager.SceneManager;
 import edu.uci.eecs.wukong.framework.prclass.PrClass;
 import edu.uci.eecs.wukong.framework.select.FeatureChoosers;
+import edu.uci.eecs.wukong.framework.entity.FeatureEntity;
+import edu.uci.eecs.wukong.framework.entity.ModelEntity;
 import edu.uci.eecs.wukong.framework.extension.AbstractProgressionExtension;
 import edu.uci.eecs.wukong.framework.extension.FeatureAbstractionExtension;
 import edu.uci.eecs.wukong.framework.extension.LearningExtension;
 import edu.uci.eecs.wukong.framework.factor.BaseFactor;
 import edu.uci.eecs.wukong.framework.factor.FactorListener;
 import edu.uci.eecs.wukong.framework.graph.Graph;
+import edu.uci.eecs.wukong.framework.graph.Link;
 
 import java.util.List;
 import java.lang.Thread;
@@ -30,7 +33,7 @@ public class Pipeline extends Graph implements FactorListener{
 	private ConfigurationManager configurationManager;
 	private BufferManager bufferManager;
 	private FeatureChoosers featureChoosers;
-	private FeatureExtractionExtensionPoint featureAbstractionPoint;
+	private FeatureExtractionExtensionPoint featureExtractionPoint;
 	private ProgressionExtensionPoint progressionPoint;
 	private LearningExtensionPoint learningPoint;
 	
@@ -44,8 +47,18 @@ public class Pipeline extends Graph implements FactorListener{
 		this.configurationManager = ConfigurationManager.getInstance();
 		this.featureChoosers = featureChoosers;
 		this.progressionPoint = new ProgressionExtensionPoint(this);
-		this.featureAbstractionPoint = new FeatureExtractionExtensionPoint(featureChoosers, this);
+		this.featureExtractionPoint = new FeatureExtractionExtensionPoint(featureChoosers, this);
 		this.learningPoint = new LearningExtensionPoint(this);
+		
+		// Build up the trigger graph for messaging routing
+		this.addNode(featureExtractionPoint);
+		this.addNode(learningPoint);
+		this.addNode(progressionPoint);
+		this.addLink(new Link(featureExtractionPoint, learningPoint, FeatureEntity.class));
+		this.addLink(new Link(featureExtractionPoint, progressionPoint, FeatureEntity.class));
+		this.addLink(new Link(learningPoint, progressionPoint, ModelEntity.class));
+		
+		// Subscribe factors
 		this.sceneManager.subsribeFactor(learningPoint);
 		this.sceneManager.subsribeFactor(progressionPoint);
 		this.sceneManager.subsribeFactor(this);
@@ -53,10 +66,6 @@ public class Pipeline extends Graph implements FactorListener{
 	
 	public ExecutionContext getCurrentContext(PrClass prClass) {
 		return sceneManager.getPluginExecutionContext(prClass);
-	}
-	
-	public void dipatchModel(String appId, Object model) throws Exception {
-		progressionPoint.applyModel(appId, model);
 	}
 	
 	public void registerExtension(List<Extension> extensions) {
@@ -75,7 +84,7 @@ public class Pipeline extends Graph implements FactorListener{
 						+ progressionExtension.getPrClass() + ", base of exception: " + e.toString());
 				}
 			} else if (extension instanceof FeatureAbstractionExtension) {
-				featureAbstractionPoint.register((FeatureAbstractionExtension) extension);
+				featureExtractionPoint.register((FeatureAbstractionExtension) extension);
 			} else if (extension instanceof LearningExtension) {
 				learningPoint.register((LearningExtension) extension);
 			}
@@ -99,7 +108,7 @@ public class Pipeline extends Graph implements FactorListener{
 				}
 				
 			} else if (extension instanceof FeatureAbstractionExtension) {
-				featureAbstractionPoint.unregister((FeatureAbstractionExtension) extension);
+				featureExtractionPoint.unregister((FeatureAbstractionExtension) extension);
 			} else if (extension instanceof LearningExtension) {
 				learningPoint.unregister((LearningExtension) extension);
 			}
@@ -107,7 +116,7 @@ public class Pipeline extends Graph implements FactorListener{
 	}
 	
 	public void start() {
-		Thread featureAbstraction = new Thread(featureAbstractionPoint);
+		Thread featureAbstraction = new Thread(featureExtractionPoint);
 		Thread learning = new Thread(learningPoint);
 		Thread progression = new Thread(progressionPoint);
 		featureAbstraction.start();

@@ -55,7 +55,7 @@ public abstract class ExtensionPoint<E extends AbstractExtension> extends Node {
 	}
 	
 	public final void append(Entity entity) {
-		Event<Entity> event = new Event<Entity> (entity.getPrClass(), entity, EventType.ENTITY, 1 /* Temporary Solution*/);
+		Event<Entity> event = new Event<Entity> (entity.getPrClass(), entity, EventType.FEATURE, 1 /* Temporary Solution*/);
 		eventQueue.add(event);
 	}
 }

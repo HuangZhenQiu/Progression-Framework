@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import edu.uci.eecs.wukong.framework.api.ExecutionContext;
 import edu.uci.eecs.wukong.framework.entity.FeatureEntity;
+import edu.uci.eecs.wukong.framework.entity.ModelEntity;
 import edu.uci.eecs.wukong.framework.event.Event;
 import edu.uci.eecs.wukong.framework.extension.LearningExtension;
 import edu.uci.eecs.wukong.framework.factor.BaseFactor;
@@ -21,16 +22,9 @@ import edu.uci.eecs.wukong.framework.util.Configuration;
 public class LearningExtensionPoint extends ExtensionPoint<LearningExtension> implements FactorListener, Runnable{
 	private static Logger logger = LoggerFactory.getLogger(LearningExtensionPoint.class);
 	private static Configuration configuration = Configuration.getInstance();
-	private Queue<Event> events;
 	
 	public LearningExtensionPoint(Pipeline pipeline) {
 		super(pipeline);
-		this.events = new PriorityBlockingQueue<Event>();
-	}
-	
-	
-	public void dipatchModel(byte portId, Object model) {
-		
 	}
 
 	private class LearningTask implements Runnable{
@@ -46,13 +40,13 @@ public class LearningExtensionPoint extends ExtensionPoint<LearningExtension> im
 		public void run() {
 			try {
 				if (!extension.getPrClass().isOnline() && !extension.isReady()) {
-					if (event.getType().equals(Event.EventType.ENTITY)) {
+					if (event.getType().equals(Event.EventType.FEATURE)) {
 						FeatureEntity entity = (FeatureEntity) event.getData();
 						extension.apply(entity.getFeatures(), contexts);
 						// Remove from 
 						if (extension.isReady()) {
 							Object object= extension.train();
-							dipatchModel(extension.getPrClass().getPortId(), object);
+							send(new ModelEntity(extension.getPrClass(), object));
 						}
 					}
 				}
@@ -67,7 +61,7 @@ public class LearningExtensionPoint extends ExtensionPoint<LearningExtension> im
 
 	public void run() {
 		while(true) {
-			Event event = events.poll();
+			Event event = eventQueue.poll();
 			if (event != null) {
 				LearningExtension extension = (LearningExtension) this.extensionMap.get(event.getPrClass());
 				if (extension != null) {

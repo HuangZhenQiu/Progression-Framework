@@ -9,3 +9,4 @@ icsdemo.ICSDemoAromaPrClass
 icsdemo.ICSDemoMusicPrClass
 icsdemo.ICSDemoTVPrClass
 icsdemo.ICSDemoQPrClass
+weather.WeatherPrClass

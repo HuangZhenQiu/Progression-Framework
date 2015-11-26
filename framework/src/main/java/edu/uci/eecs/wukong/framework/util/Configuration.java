@@ -17,6 +17,7 @@ public class Configuration {
 	private static final String PROGRESSION_SERVER_IP = "PROGRESSION.SERVER.IP";
 	private static final String PROGRESSION_SERVER_PORT = "PROGRESSION.SERVER.PORT";
 	private static final String STATE_FILE_PATH = "STATE.PATH";
+	private static final String MONITOR_ENABLED = "MONITOR.ENABLED";
 	private static final String MONITOR_BACKEND = "MONITOR.BACKEND";
 	private static final String MONITOR_MONGO_URL = "MONITOR.MONGO.URL";
 	private static final String MONITOR_MONGO_DATABASE = "MONITOR.MONGO.DATABASE";
@@ -69,6 +70,14 @@ public class Configuration {
 	
 	public String getStateFilePath() {
 		return properties.getProperty(STATE_FILE_PATH, "local/state.json");
+	}
+	
+	public boolean isMonitorEnabled() {
+		return getMonitorEnabled().equals("true");
+	}
+	
+	public String getMonitorEnabled() {
+		return properties.getProperty(MONITOR_ENABLED, "false");
 	}
 	
 	public String getMonitorBackend() {

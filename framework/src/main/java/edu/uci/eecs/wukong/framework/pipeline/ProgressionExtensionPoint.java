@@ -98,27 +98,29 @@ public class ProgressionExtensionPoint extends ExtensionPoint<AbstractProgressio
 	public void run() {
 		while(true) {
 			Event event = eventQueue.poll();
-			if (event.getType().equals(Event.EventType.FACTOR)) {
-				BaseFactor factor = (BaseFactor)event.getData();
-				if(factor != null) {
-					logger.info("Progression Extension Point is polling new context:" + factor.toString());
-					for(Map.Entry<PrClass, AbstractExtension> entry : this.extensionMap.entrySet()) {
-						AbstractProgressionExtension extension = (AbstractProgressionExtension) entry.getValue();
-						if (extension instanceof FactorExecutable) {
-							if (extension.isSubcribedTopic(factor.getTopicId())) {
-								this.executor.execute(new FactorTask(extension, factor));
+			if (event != null) {
+				if (event.getType().equals(Event.EventType.FACTOR)) {
+					BaseFactor factor = (BaseFactor)event.getData();
+					if(factor != null) {
+						logger.info("Progression Extension Point is polling new context:" + factor.toString());
+						for(Map.Entry<PrClass, AbstractExtension> entry : this.extensionMap.entrySet()) {
+							AbstractProgressionExtension extension = (AbstractProgressionExtension) entry.getValue();
+							if (extension instanceof FactorExecutable) {
+								if (extension.isSubcribedTopic(factor.getTopicId())) {
+									this.executor.execute(new FactorTask(extension, factor));
+								}
 							}
 						}
 					}
-				}
-			} else if (event.getType().equals(Event.EventType.MODEL)) {
-				ModelEntity modelEntity = (ModelEntity) event.getData();
-				AbstractProgressionExtension extension = (AbstractProgressionExtension) this.extensionMap.get(modelEntity.getPrClass());
-				if (extension != null && extension instanceof Activatable) {
-					((Activatable)extension).activate(modelEntity.getModel());
-					extension.getPrClass().setOnline(true);
-				} else {
-					logger.error("Progression extension is not found for prClass :" + modelEntity.getPrClass());
+				} else if (event.getType().equals(Event.EventType.MODEL)) {
+					ModelEntity modelEntity = (ModelEntity) event.getData();
+					AbstractProgressionExtension extension = (AbstractProgressionExtension) this.extensionMap.get(modelEntity.getPrClass());
+					if (extension != null && extension instanceof Activatable) {
+						((Activatable)extension).activate(modelEntity.getModel());
+						extension.getPrClass().setOnline(true);
+					} else {
+						logger.error("Progression extension is not found for prClass :" + modelEntity.getPrClass());
+					}
 				}
 			}
 		}

@@ -16,12 +16,14 @@ import edu.uci.eecs.wukong.framework.pipeline.Pipeline;
 import edu.uci.eecs.wukong.framework.select.FeatureChoosers;
 import edu.uci.eecs.wukong.framework.state.StateManager;
 import edu.uci.eecs.wukong.framework.wkpf.WKPF;
+import edu.uci.eecs.wukong.framework.util.Configuration;
 import edu.uci.eecs.wukong.rpc.netty.CommunicationServer;
 import edu.uci.eecs.wukong.rpc.netty.service.DataService;
 import edu.uci.eecs.wukong.rpc.netty.service.ProgressionDataServiceFactory;
 
 public class ProgressionServer {
 	private static Logger logger = LoggerFactory.getLogger(ProgressionServer.class);
+	private static Configuration configuration = Configuration.getInstance();
     private CommunicationServer server;
 	private SceneManager contextManager;
 	private BufferManager bufferManager;
@@ -38,7 +40,9 @@ public class ProgressionServer {
 		this.bufferManager = new BufferManager();
 		this.contextManager = new SceneManager();
 		this.wkpf = new WKPF(bufferManager);
-		this.monitorManager = new MonitorManager(wkpf);
+		if (configuration.isMonitorEnabled()) {
+			this.monitorManager = new MonitorManager(wkpf);
+		}
 		this.featureChoosers = new FeatureChoosers(bufferManager, wkpf);
 		this.pipeline = new Pipeline(contextManager, featureChoosers);	
 		this.pluginManager = new PluginManager(wkpf, contextManager, pipeline, bufferManager);

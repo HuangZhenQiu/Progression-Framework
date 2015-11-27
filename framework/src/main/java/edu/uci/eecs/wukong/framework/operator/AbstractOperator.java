@@ -4,7 +4,7 @@ import java.util.Map;
 import java.util.HashMap;
 
 public abstract class AbstractOperator<T> implements Operator<T> {
-	private Map<Integer, Integer> sourceKeys;
+	protected Map<Integer, Integer> sourceKeys;
 	
 	public AbstractOperator() {
 		sourceKeys = new HashMap<Integer, Integer>();

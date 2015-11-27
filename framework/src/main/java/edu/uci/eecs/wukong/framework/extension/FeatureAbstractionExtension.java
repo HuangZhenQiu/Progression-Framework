@@ -6,15 +6,13 @@ import edu.uci.eecs.wukong.framework.operator.Operator;
 import edu.uci.eecs.wukong.framework.prclass.PrClass;
 
 /**
+ * Feature abstraction is for a prclass to define how to use operator to extract feature through using operators.
  * 
- * 
- * @author Peter
  */
 public abstract class FeatureAbstractionExtension extends AbstractExtension {
 	
 	public FeatureAbstractionExtension(PrClass plugin) {
 		super(plugin);
-		// TODO Auto-generated constructor stub
 	}
 
 	public abstract List<Operator> registerOperators();

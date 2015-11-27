@@ -1,5 +1,7 @@
 package edu.uci.eecs.wukong.framework.xmpp;
 
+import java.util.Collection;
+
 import edu.uci.eecs.wukong.framework.factor.BaseFactor;
 import edu.uci.eecs.wukong.framework.factor.FactorClient;
 import edu.uci.eecs.wukong.framework.factor.FactorClientListener;
@@ -7,8 +9,10 @@ import edu.uci.eecs.wukong.framework.xmpp.FactorExtensionElementProvider;
 import edu.uci.eecs.wukong.framework.util.Configuration;
 
 import org.jivesoftware.smack.ConnectionConfiguration;
+import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.provider.ProviderManager;
 import org.jivesoftware.smack.roster.Roster;
+import org.jivesoftware.smack.roster.RosterListener;
 import org.jivesoftware.smackx.pubsub.ConfigureForm;
 import org.jivesoftware.smackx.xdata.packet.DataForm;
 import org.jivesoftware.smackx.pubsub.Node;
@@ -21,17 +25,19 @@ import org.jivesoftware.smackx.pubsub.AccessModel;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
 import org.jxmpp.jid.DomainBareJid;
+import org.jxmpp.jid.Jid;
 import org.jxmpp.jid.impl.JidCreate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class XMPPFactorClient implements FactorClient {
+public class XMPPFactorClient implements FactorClient, RosterListener {
 	private static Logger logger = LoggerFactory.getLogger(XMPPFactorClient.class);
 	private final static Configuration systemConfig= Configuration.getInstance(); 
 	private static XMPPFactorClient client;
 	private XMPPTCPConnectionConfiguration connectionConfig;
 	private XMPPTCPConnection tcpConnection;
 	private PubSubManager manager;
+	private Roster roster;
 	
 	public static synchronized XMPPFactorClient getInstance() {
 		if (client == null) {
@@ -45,6 +51,8 @@ public class XMPPFactorClient implements FactorClient {
 			DomainBareJid serviceName = JidCreate.domainBareFrom(systemConfig.getXMPPServerName());
 			connectionConfig = XMPPTCPConnectionConfiguration.builder()
 				.setUsernameAndPassword(systemConfig.getXMPPUserName(), systemConfig.getXMPPPassword())
+				.setResource("test")
+				.setDebuggerEnabled(true)
 				.setSecurityMode(ConnectionConfiguration.SecurityMode.disabled)
 				.setHost(systemConfig.getXMPPAddress())
 				.setXmppDomain(serviceName)
@@ -53,10 +61,14 @@ public class XMPPFactorClient implements FactorClient {
 			logger.info(systemConfig.getXMPPServerName());
 			tcpConnection = new XMPPTCPConnection(connectionConfig);
 			tcpConnection.setPacketReplyTimeout(10000);
+		 	// Disable roster loading at login
+			roster = Roster.getInstanceFor(tcpConnection);
+		 	roster.addRosterListener(this);
+		 	roster.setRosterLoadedAtLogin(false);
+		 	roster.setSubscriptionMode(Roster.SubscriptionMode.manual);
+		 	// Connect to server
 		 	tcpConnection.connect();
 		 	tcpConnection.login();
-		 	Roster roster = Roster.getInstanceFor(tcpConnection);
-		 	roster.setRosterLoadedAtLogin(false);
 			manager = PubSubManager.getInstance(tcpConnection);
 			addCustomizedProvider();
 			logger.info("Successfully connected with XMPP server:" + systemConfig.getXMPPServerName());
@@ -67,8 +79,10 @@ public class XMPPFactorClient implements FactorClient {
 		}
 	}
 	
+	/**
+	 * add the wukong progression factor provider to parse factor message
+	 */
 	private void addCustomizedProvider() {
-		// add the wukong progression factor provider to parse factor message
 		ProviderManager.addExtensionProvider(
 				FactorExtensionElement.ELEMENT, FactorExtensionElement.NAMESPACE, new FactorExtensionElementProvider());
 	}
@@ -137,5 +151,29 @@ public class XMPPFactorClient implements FactorClient {
 		}
 		
 		return null;
+	}
+
+	@Override
+	public void entriesAdded(Collection<Jid> addresses) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void entriesUpdated(Collection<Jid> addresses) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void entriesDeleted(Collection<Jid> addresses) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void presenceChanged(Presence presence) {
+		// TODO Auto-generated method stub
+		
 	}
 }

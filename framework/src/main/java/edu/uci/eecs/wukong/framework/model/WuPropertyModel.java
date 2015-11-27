@@ -7,21 +7,24 @@ import edu.uci.eecs.wukong.framework.model.PropertyType;
 public class WuPropertyModel {
 	private byte id;
 	private String name;
+	private Class<?> type;
 	private PropertyType ptype;
 	private DataType dtype;
 	
-	public WuPropertyModel(byte id, String name, PropertyType pType, DataType dType) {
+	public WuPropertyModel(byte id, String name, PropertyType pType, DataType dType, Class<?> type) {
 		this.id = id;
 		this.name = name;
 		this.ptype = pType;
 		this.dtype = dType;
+		this.type = type;
 	}
 	
-	public WuPropertyModel(WuProperty property) {
+	public WuPropertyModel(WuProperty property, Class<?> type) {
 		this.id = property.id();
 		this.name = property.name();
 		this.ptype = property.type();
 		this.dtype = property.dtype();
+		this.type = type;
 	}
 	
 	public byte getId() {
@@ -56,6 +59,14 @@ public class WuPropertyModel {
 		this.dtype = dtype;
 	}
 
+	public Class<?> getType() {
+		return type;
+	}
+
+	public void setType(Class<?> type) {
+		this.type = type;
+	}
+
 	@Override
 	public boolean equals(Object object) {
 		if (object instanceof WuPropertyModel) {
@@ -63,7 +74,8 @@ public class WuPropertyModel {
 			if (this.id == model.id
 					&& this.name.equals(model.name)
 					&& this.ptype.equals(model.ptype)
-					&& this.dtype.equals(model.dtype)) {
+					&& this.dtype.equals(model.dtype)
+					&& this.type.equals(model.type)) {
 				return true;
 			}
 		}
@@ -77,7 +89,8 @@ public class WuPropertyModel {
 		int code = id * base;
 		code = code * base + name.hashCode();
 		code = code * base + ptype.hashCode();
-		code = code * base + dtype.hashCode();	
+		code = code * base + dtype.hashCode();
+		code = code * base + type.hashCode();
 		return code;
 	}
 }

@@ -135,7 +135,7 @@ public class PluginManager implements PrClassInitListener {
 			for (Annotation annotation : annotations) {
 				if (annotation.annotationType().equals(WuProperty.class)) {
 					WuProperty property = (WuProperty)annotation;
-					wuClassModel.addProperty(name, property);
+					wuClassModel.addProperty(name, property, field.getType());
 				}
 			}
 		}

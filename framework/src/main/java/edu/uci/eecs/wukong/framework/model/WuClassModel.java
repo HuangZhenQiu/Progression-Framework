@@ -34,8 +34,8 @@ public class WuClassModel {
 		return idToProperties.get(Byte.valueOf(propertyId));
 	}
 	
-	public void addProperty(String name, WuProperty property) {
-		WuPropertyModel model = new WuPropertyModel(property);
+	public void addProperty(String name, WuProperty property, Class<?> type) {
+		WuPropertyModel model = new WuPropertyModel(property, type);
 		this.properties.put(name, model);
 		this.idToProperties.put(property.id(), model);
 	}

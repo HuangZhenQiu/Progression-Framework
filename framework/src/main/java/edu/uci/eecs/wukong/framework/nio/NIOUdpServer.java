@@ -83,8 +83,8 @@ public class NIOUdpServer implements Runnable {
 	
 	public void shutdown() {
 		try {
-			channel.close();
 			selector.close();
+			channel.close();
 			executorService.shutdown();
 		} catch (IOException e) {
 			logger.error(e.toString());

@@ -6,6 +6,12 @@ import com.google.protobuf.Service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
 
 import edu.uci.eecs.wukong.framework.manager.BufferManager;
 import edu.uci.eecs.wukong.framework.manager.PluginManager;
@@ -24,6 +30,7 @@ import edu.uci.eecs.wukong.rpc.netty.service.ProgressionDataServiceFactory;
 public class ProgressionServer {
 	private static Logger logger = LoggerFactory.getLogger(ProgressionServer.class);
 	private static Configuration configuration = Configuration.getInstance();
+	private static boolean isTest = false;
     private CommunicationServer server;
 	private SceneManager contextManager;
 	private BufferManager bufferManager;
@@ -34,8 +41,11 @@ public class ProgressionServer {
 	private Pipeline pipeline;
 	private WKPF wkpf;
 	
-	public ProgressionServer(PeerInfo peerInfo) {
+	public ProgressionServer(PeerInfo peerInfo, boolean isTest) {
 		
+		if (isTest) {
+			logger.info("Starting server in test model");
+		}
 		init(peerInfo);
 		this.bufferManager = new BufferManager();
 		this.contextManager = new SceneManager();
@@ -104,10 +114,25 @@ public class ProgressionServer {
 	}
 	
 	public static void main(String[] args) {
-		PeerInfo peerInfo = new PeerInfo("localhost", 10000);
-		ProgressionServer server = new ProgressionServer(peerInfo);
-		server.start();
-		server.attachShutDownHook();
+		Options options = new Options();
+		options.addOption("t", "test", false, "Run in test mode");
+		CommandLineParser parser = new DefaultParser();
+		
+		try {
+			CommandLine cmd = parser.parse(options, args);
+			if (cmd.hasOption("t")) {
+				isTest = true;
+			}
+			
+			PeerInfo peerInfo = new PeerInfo("localhost", 10000);
+			ProgressionServer server = new ProgressionServer(peerInfo, isTest);
+			server.start();
+			server.attachShutDownHook();
+			
+		} catch (ParseException e) {
+			HelpFormatter formatter = new HelpFormatter();
+			formatter.printHelp( "ant", options );
+		}
 	}
 
 }

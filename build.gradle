@@ -17,7 +17,7 @@ apply from: file("gradle/dependency-versions.gradle")
 
 subprojects {
   apply plugin: 'eclipse'
-  
+
   eclipse {
   	classpath {
   		containers 'org.springsource.ide.eclipse.gradle.classpathcontainer'
@@ -27,7 +27,7 @@ subprojects {
 
 project(':framework') {
   apply plugin: 'java'
-  
+
   task fatJar (type: Jar) {
     manifest {
         attributes 'Main-Class': 'edu.uci.eecs.wukong.framework.ProgressionServer'
@@ -38,7 +38,7 @@ project(':framework') {
   	}
   	with jar
   }
-  
+
   dependencies {
      compile "io.dropwizard.metrics:metrics-core:$dropwizardMetricsVersion"
      compile "io.dropwizard.metrics:metrics-graphite:$dropwizardMetricsVersion"
@@ -48,6 +48,7 @@ project(':framework') {
      compile "com.google.code.gson:gson:$gsonVersion"
      compile "org.apache.httpcomponents:httpclient:$httpClientVersion"
      compile "commons-httpclient:commons-httpclient:$commonsClientVersion"
+     compile "commons-cli:commons-cli:$commonsCliVersion"
      compile "com.google.guava:guava:$guavaVersion"
      compile "org.slf4j:slf4j-api:$slf4jVersion"
      compile "org.slf4j:jcl-over-slf4j:$slf4jVersion"

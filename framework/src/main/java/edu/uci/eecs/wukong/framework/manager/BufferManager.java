@@ -46,11 +46,12 @@ public class BufferManager {
 		if (model.isValid()) {
 			WuClassModel classModel = model.getType();
 			for (WuPropertyModel property : classModel.getProperties()) {
+				NPP npp = new NPP(mptn.getLongAddress(), model.getPort(), property.getId());
 				if (property.getPtype().equals(PropertyType.Input)
 						&&property.getDtype().equals(DataType.Channel)) {
 					AbstractProgressionExtension extension = model.getPrClass().getProgressionExtension(); 
 					if (extension != null && extension instanceof Channelable) {
-						NPP npp = new NPP(mptn.getLongAddress(), model.getPort(), property.getId());
+						
 						this.createShortChannel(npp);
 						Channelable channelable = (Channelable)extension;
 						this.addChannelListener(npp, channelable);
@@ -60,10 +61,14 @@ public class BufferManager {
 								+ property.getName()
 								+ " with type channle, but didn't implement Channelable interface");
 					}
-					// We only enable channel in this release
-					// TODO (Peter Huang) add buffer registertion
+				} else if (property.getPtype().equals(PropertyType.Input)
+						&& property.getDtype().equals(DataType.Buffer)) {
+					if (property.getType().equals(short.class)) {
+						createShortBuffer(npp, 1000, 100, 10);
+					} else if (property.getType().equals(byte.class)) {
+						createByteBuffer(npp, 1000, 100, 10);
+					}
 				}
-					
 			}
 		}
 	}

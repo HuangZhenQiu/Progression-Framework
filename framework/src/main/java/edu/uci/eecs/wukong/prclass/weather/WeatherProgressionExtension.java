@@ -5,6 +5,7 @@ import edu.uci.eecs.wukong.framework.api.Initiable;
 import edu.uci.eecs.wukong.framework.api.TimerExecutable;
 import edu.uci.eecs.wukong.framework.extension.AbstractProgressionExtension;
 import edu.uci.eecs.wukong.framework.service.WeatherService;
+import edu.uci.eecs.wukong.framework.util.Configuration;
 
 public class WeatherProgressionExtension extends AbstractProgressionExtension implements Initiable, TimerExecutable {
 	private WeatherService service;
@@ -17,10 +18,12 @@ public class WeatherProgressionExtension extends AbstractProgressionExtension im
 	
 	// It is called after remote programming
 	public void init() {
-		service = new WeatherService(prClass.getCityId());
+		// TODO (Peter Huang) enable this after parsing init values 
+		// service = new WeatherService(prClass.getCityId());
+		service = new WeatherService(2172797);
 	}
 
-	@WuTimer(interval = 60)
+	@WuTimer(interval = 2)
 	public void execute() {
 		short temp = service.getTemperature();
 		prClass.setTemperature(temp);

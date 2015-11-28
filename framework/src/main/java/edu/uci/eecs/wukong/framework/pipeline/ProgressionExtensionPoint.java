@@ -6,16 +6,17 @@ import java.util.Queue;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.lang.annotation.Annotation;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import edu.uci.eecs.wukong.framework.annotation.WuTimer;
 import edu.uci.eecs.wukong.framework.api.Activatable;
 import edu.uci.eecs.wukong.framework.api.FactorExecutable;
 import edu.uci.eecs.wukong.framework.api.TimerExecutable;
 import edu.uci.eecs.wukong.framework.entity.ModelEntity;
 import edu.uci.eecs.wukong.framework.event.Event;
-import edu.uci.eecs.wukong.framework.exception.ExtensionNotFoundException;
 import edu.uci.eecs.wukong.framework.extension.AbstractExtension;
 import edu.uci.eecs.wukong.framework.extension.AbstractProgressionExtension;
 import edu.uci.eecs.wukong.framework.factor.BaseFactor;
@@ -30,6 +31,7 @@ public class ProgressionExtensionPoint extends ExtensionPoint<AbstractProgressio
 	private static Configuration configuration = Configuration.getInstance();
 	private Map<PrClass, TimerTask> pluginTaskMap;
 	private Timer timer;
+	private final int DEFAULT_INTERVAL = 5;
 	
 	public ProgressionExtensionPoint(Pipeline pipeline) {
 		super(pipeline);
@@ -41,12 +43,27 @@ public class ProgressionExtensionPoint extends ExtensionPoint<AbstractProgressio
 	public synchronized void register(AbstractProgressionExtension extension) {
 		super.register(extension);
 		if (extension instanceof TimerExecutable) {
+			int internal = getIntervalFromAnnotation(extension);
 			ProgressionTimerTask timerTask = new ProgressionTimerTask((TimerExecutable)extension);
-			timer.scheduleAtFixedRate(timerTask, 0, 10 * 1000);
+			timer.scheduleAtFixedRate(timerTask, 0, internal * 1000);
 			pluginTaskMap.put(extension.getPrClass(), timerTask);
+			logger.info("Registered Timer Executor for every " + internal + "seconds  for plugin "
+					+ extension.getPrClass().getName() + " of port " + extension.getPrClass().getPortId());
 		}
 		logger.info("Registered Progression extension for plugin "
 				+ extension.getPrClass().getName() + " of port " + extension.getPrClass().getPortId());
+	}
+	
+	private int getIntervalFromAnnotation(AbstractProgressionExtension extension) {
+		Annotation[] annotations = extension.getClass().getAnnotations();
+		for (Annotation annotation : annotations) {
+			if (annotation.annotationType().equals(WuTimer.class)) {
+				WuTimer timer = (WuTimer) annotation;
+				return timer.interval();
+			}
+		}
+		
+		return DEFAULT_INTERVAL;
 	}
 	
 	@Override

@@ -14,6 +14,7 @@ import edu.uci.eecs.wukong.framework.xmpp.XMPPFactorListener;
 import edu.uci.eecs.wukong.framework.factor.BaseFactor;
 import edu.uci.eecs.wukong.framework.factor.FactorClientListener;
 import edu.uci.eecs.wukong.framework.factor.FactorListener;
+import edu.uci.eecs.wukong.framework.xmpp.FactorExtensionElement;
 
 public class XMPPMessageGenerator {
 	private static String TEST_TOPIC = "test";
@@ -26,19 +27,9 @@ public class XMPPMessageGenerator {
 			super(TEST_TOPIC);
 			this.content = content;
 		}
-		@Override
-		public String getElementName() {
-			// TODO Auto-generated method stub
-			return null;
-		}
-		@Override
-		public CharSequence toXML() {
-			// TODO Auto-generated method stub
-			return null;
-		}
 	}
 	
-	private static class TestListener extends FactorClientListener implements ItemEventListener<PayloadItem<BaseFactor>> {
+	private static class TestListener extends FactorClientListener implements ItemEventListener<PayloadItem<FactorExtensionElement>> {
 		private static Logger logger = LoggerFactory.getLogger(XMPPFactorListener.class);
 		public TestListener(ConcurrentMap<String, BaseFactor> factors, List<FactorListener> factorListeners) {
 			super(factors, factorListeners);

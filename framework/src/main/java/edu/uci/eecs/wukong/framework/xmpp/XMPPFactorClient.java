@@ -1,10 +1,12 @@
 package edu.uci.eecs.wukong.framework.xmpp;
 
+import com.google.gson.Gson;
 import java.util.Collection;
 
 import edu.uci.eecs.wukong.framework.factor.BaseFactor;
 import edu.uci.eecs.wukong.framework.factor.FactorClient;
 import edu.uci.eecs.wukong.framework.factor.FactorClientListener;
+import edu.uci.eecs.wukong.framework.xmpp.FactorExtensionElement;
 import edu.uci.eecs.wukong.framework.xmpp.FactorExtensionElementProvider;
 import edu.uci.eecs.wukong.framework.util.Configuration;
 
@@ -33,6 +35,7 @@ import org.slf4j.LoggerFactory;
 public class XMPPFactorClient implements FactorClient, RosterListener {
 	private static Logger logger = LoggerFactory.getLogger(XMPPFactorClient.class);
 	private final static Configuration systemConfig= Configuration.getInstance(); 
+	private final static Gson gson = new Gson();
 	private static XMPPFactorClient client;
 	private XMPPTCPConnectionConfiguration connectionConfig;
 	private XMPPTCPConnection tcpConnection;
@@ -90,8 +93,8 @@ public class XMPPFactorClient implements FactorClient, RosterListener {
 	public void subscribe(String nodeId, FactorClientListener listener) {
 		try {
 			if (listener instanceof ItemEventListener) {
-				ItemEventListener<PayloadItem<BaseFactor>> itemEventListener = 
-						(ItemEventListener<PayloadItem<BaseFactor>>) listener;
+				ItemEventListener<PayloadItem<FactorExtensionElement>> itemEventListener = 
+						(ItemEventListener<PayloadItem<FactorExtensionElement>>) listener;
 				Node eventNode = getOrCreateNode (nodeId);
 				if (eventNode != null) {
 					eventNode.addItemEventListener(itemEventListener);
@@ -123,7 +126,8 @@ public class XMPPFactorClient implements FactorClient, RosterListener {
 		try {
 			LeafNode node = getOrCreateNode(id);
 			if (node != null) {
-				PayloadItem<BaseFactor> item = new PayloadItem<BaseFactor>(context);
+				FactorExtensionElement element =  new FactorExtensionElement(id, context.getClass().toString(), gson.toJson(context));
+				PayloadItem<FactorExtensionElement> item = new PayloadItem<FactorExtensionElement>(element);
 				node.publish(item);
 				logger.info("Published message " + context + " to node " + id);
 			} else {

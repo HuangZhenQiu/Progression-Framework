@@ -1,8 +1,6 @@
 package edu.uci.eecs.wukong.framework.factor;
 
-import org.jivesoftware.smack.packet.ExtensionElement;
-
-public abstract class BaseFactor implements ExtensionElement {
+public abstract class BaseFactor {
 	private String topicId;
 	private String publisher;
 	private long timestamp;
@@ -35,10 +33,6 @@ public abstract class BaseFactor implements ExtensionElement {
 	}
 	public void setLasttime(long lasttime) {
 		this.lasttime = lasttime;
-	}
-	
-	public String getNamespace() {
-		return "";
 	}
 
 	public boolean isTriggered() {

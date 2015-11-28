@@ -13,7 +13,7 @@ import edu.uci.eecs.wukong.framework.model.PropertyType;
 public class BufferEnabledPrClass extends PrClass {
 	@WuProperty(name = "sInput", id = 1, type = PropertyType.Input, dtype = DataType.Buffer)
 	private short sInput;
-	@WuProperty(name = "dInput", id = 2, type = PropertyType.Input, dtype = DataType.Buffer)
+	@WuProperty(name = "bInput", id = 2, type = PropertyType.Input, dtype = DataType.Buffer)
 	private byte bInput;
 	@WuProperty(name = "output", id = 3, type = PropertyType.Output)
 	private short output;

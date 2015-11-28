@@ -14,6 +14,10 @@ import edu.uci.eecs.wukong.framework.factor.BaseFactor;
 import edu.uci.eecs.wukong.framework.factor.FactorClientListener;
 import edu.uci.eecs.wukong.framework.factor.FactorListener;
 
+/**
+ * XMPP subscribe broker for all of the PrClasses. It processed all of the facor message from xmpp. Extract message payload from
+ * FactorExtensionElement and convert to factor object according to the class information.
+ */
 public class XMPPFactorListener extends FactorClientListener implements ItemEventListener<PayloadItem<FactorExtensionElement>> {
 	private static Logger logger = LoggerFactory.getLogger(XMPPFactorListener.class);
 	public XMPPFactorListener(ConcurrentMap<String, BaseFactor> factors, List<FactorListener> factorListeners) {

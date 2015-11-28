@@ -86,6 +86,8 @@ public abstract class AbstractHttpService {
 		this.CONFIG_URL = "http://" + ip
 				+ ":" + port + "/"+ method;
 		this.connectionManager = new PoolingHttpClientConnectionManager();
+		
+		LOGGER.info("Created Service with URL: " + this.CONFIG_URL);
 		this.client = HttpClients.custom().setRetryHandler(retryHandler)
 				.setConnectionManager(connectionManager).build();
 	}
@@ -108,9 +110,8 @@ public abstract class AbstractHttpService {
 			if (statusCode == HttpStatus.SC_OK) {
 				return EntityUtils.toString(entity, "UTF-8");
 			}
-			LOGGER.error("Master is not accessible.");
 		} catch (Exception e) {
-			LOGGER.error("Can't open configuration client " + name);
+			LOGGER.error("Can't talk to service " + name + " because of error:" + e.toString());
 		} finally {
 			try {
 				response.close();

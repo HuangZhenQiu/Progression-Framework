@@ -1,6 +1,8 @@
 package edu.uci.eecs.wukong.framework.test;
 
 import edu.uci.eecs.wukong.framework.nio.NIOUdpClient;
+import edu.uci.eecs.wukong.framework.util.WKPFUtil;
+
 import java.io.IOException;
 
 /***
@@ -15,7 +17,11 @@ public class WKPFMessageGenerater {
 		client = new NIOUdpClient(domain, port);
 	}
 	
-	public void sendWriteProperty() {
+	public void sendWriteByteProperty(byte port, short wuClassId, byte propertyId, byte value) {
+		
+	}
+	
+	public void sendWriteShortProperty(byte port, short wuClassId, byte propertyId, short value) {
 		
 	}
 	

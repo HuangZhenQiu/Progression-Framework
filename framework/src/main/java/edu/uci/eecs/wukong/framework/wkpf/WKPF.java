@@ -17,6 +17,7 @@ import edu.uci.eecs.wukong.framework.model.ComponentMap;
 import edu.uci.eecs.wukong.framework.model.DataType;
 import edu.uci.eecs.wukong.framework.model.Link;
 import edu.uci.eecs.wukong.framework.model.LinkTable;
+import edu.uci.eecs.wukong.framework.model.InitValueTable;
 import edu.uci.eecs.wukong.framework.model.NPP;
 import edu.uci.eecs.wukong.framework.model.PropertyType;
 import edu.uci.eecs.wukong.framework.model.WuClassModel;
@@ -31,7 +32,7 @@ import edu.uci.eecs.wukong.framework.monitor.MonitorListener;
 
 /**
  * 
- * TODO (Peter Huang) use WKPFCOMM layer to simply reply messageß
+ * TODO (Peter Huang) use WKPFCOMM layer to simply reply message
  * 
  *
  */
@@ -55,6 +56,7 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 	private DJAData djaData;
 	private ComponentMap componentMap = null;
 	private LinkTable linkTable = null;
+	private InitValueTable initValues = null;
 	private BufferManager bufferManager;
 	private List<PrClassInitListener> listeners;
 	private List<StateUpdateListener> stateListeners;
@@ -120,9 +122,10 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 	/**
 	 * Called by DJAData after remote programmed by master
 	 */
-	public void update(LinkTable table, ComponentMap map) {
+	public void update(LinkTable table, ComponentMap map, InitValueTable initValues) {
 		this.linkTable = table;
 		this.componentMap = map;
+		this.initValues = initValues;
 		bindWuObjects();
 	}
 	

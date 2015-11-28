@@ -8,6 +8,8 @@ import edu.uci.eecs.wukong.framework.model.ComponentMap;
 import edu.uci.eecs.wukong.framework.model.EndPoint;
 import edu.uci.eecs.wukong.framework.model.Link;
 import edu.uci.eecs.wukong.framework.model.LinkTable;
+import edu.uci.eecs.wukong.framework.model.InitValue;
+import edu.uci.eecs.wukong.framework.model.InitValueTable;
 import edu.uci.eecs.wukong.framework.util.WKPFUtil;
 
 import java.util.ArrayList;
@@ -137,9 +139,63 @@ public class DJAData {
 	public void fireUpdateEvent() {
 		LinkTable table = extractLinkTable();
 		ComponentMap map = extractComponentMap();
+		InitValueTable initValue = extractInitValueTable();
 		for (RemoteProgrammingListener listener : listeners) {
-			listener.update(table, map);
+			listener.update(table, map, initValue);
 		}
+	}
+	
+	/** Initialisation list format (little endian)
+	       2 bytes: number of entries
+	       repeat for each entry:
+			   2 bytes: component id
+			   1 byte: property number
+		       1 byte: property value size
+		       X bytes: value
+	**/
+	private InitValueTable extractInitValueTable() {
+		access();
+		int index = findFileIndex(DJAConstants.DJ_FILETYPE_WKPF_INITVALUES_TABLE);
+		InitValueTable table = new InitValueTable();
+		if (index == -1) {
+			LOGGER.info("There is no init value table  in current DJAData.");
+			return table;
+		}
+		
+		// start of init value table
+		int start = index + 3;
+		// Size of init value table
+		int size = WKPFUtil.getLittleEndianShort(buffer, start);
+		InitValue value = null;
+		int offset = 0;
+		for (int i = 0; i < size; i++) {
+			start += offset;
+			offset = extractInitValue(start, value);
+			table.addInitValue(value);
+		}
+		
+		LOGGER.info("Extracted init value table information from DJAData: " + table.toString());
+		return table;
+	}
+	
+	/**
+	 *   2 bytes: component id
+	 *   1 byte: property number
+	 *	 1 byte: property value size
+	 *	 X bytes: value
+	 * @param start
+	 * @param value
+	 * @return
+	 */
+	private int extractInitValue(int start, InitValue value) {
+		short componentId = WKPFUtil.getLittleEndianShort(buffer, start);
+		byte propertyNumber = buffer[start + 2];
+		byte size = buffer[start + 3];
+		byte[] val = new byte[size];
+		System.arraycopy(buffer, start + 4, val, 0, size);
+		value = new InitValue(componentId, propertyNumber, size, val);
+		
+		return 4 + size;
 	}
 	
 	/**
@@ -149,11 +205,11 @@ public class DJAData {
 	private LinkTable extractLinkTable() {
 		access();
 		int index = findFileIndex(DJAConstants.DJ_FILETYPE_WKPF_LINK_TABLE);
+		LinkTable table = new LinkTable();
 		if (index == -1) {
 			LOGGER.error("Fail to find link table in current DJAData.");
+			return table;
 		}
-		
-		LinkTable table = new LinkTable();
 		
 		// get the size of links
 		int size = WKPFUtil.getLittleEndianShort(buffer, index + 3);
@@ -203,11 +259,12 @@ public class DJAData {
 	private ComponentMap extractComponentMap() {
 		access();
 		int index = findFileIndex(DJAConstants.DJ_FILETYPE_WKPF_COMPONENT_MAP);
+		ComponentMap componentMap = new ComponentMap();
 		if (index == -1) {
 			LOGGER.error("Fail to find component map in current DJAData");
+			return componentMap;
 		}
 		
-		ComponentMap componentMap = new ComponentMap();
 		// start of component map
 		int start = index + 3;
 		// Size of component

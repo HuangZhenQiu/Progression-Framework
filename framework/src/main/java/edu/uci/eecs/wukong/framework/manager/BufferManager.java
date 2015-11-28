@@ -36,6 +36,7 @@ public class BufferManager {
 	public BufferManager() {
 		this.bufferMap = new HashMap<NPP, DoubleTimeIndexDataBuffer<?>>();
 		this.channelMap = new HashMap<NPP, Channel>();
+		this.timer = new Timer();
 	}
 	
 	public void setMPTN(MPTN mptn) {
@@ -83,6 +84,7 @@ public class BufferManager {
 		
 		bufferMap.put(key, buffer);
 		timer.scheduleAtFixedRate(buffer.getIndexer(), 1000, buffer.getInterval());
+		LOGGER.info("Created Byte Buffer with key : " + key);
 		return true;
 	}
 	
@@ -96,6 +98,7 @@ public class BufferManager {
 		
 		bufferMap.put(key, buffer);
 		timer.scheduleAtFixedRate(buffer.getIndexer(), 1000, buffer.getInterval());
+		LOGGER.info("Created Short Buffer with key : " + key);
 		return true;
 	}
 	

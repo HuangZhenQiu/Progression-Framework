@@ -65,7 +65,7 @@ public class NPP {
 	
 	@Override
 	public String toString() {
-		return "NPP[nid=" + nid + ", portId=" + portId + ", propertyId" + propertyId + "]";
+		return "NPP[nid=" + nid + ", portId=" + portId + ", propertyId=" + propertyId + "]";
 	}
 	
 }

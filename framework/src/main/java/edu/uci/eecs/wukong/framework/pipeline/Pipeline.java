@@ -69,48 +69,52 @@ public class Pipeline extends Graph implements FactorListener{
 	}
 	
 	public void registerExtension(List<Extension> extensions) {
-		for (Extension extension : extensions) {
-			if (extension instanceof AbstractProgressionExtension) {
-				AbstractProgressionExtension progressionExtension = (AbstractProgressionExtension) extension;
-				try {
-					// Call the initial function 
-					if (extension instanceof Initiable) {
-						Initiable initiable = (Initiable) extension;
-						initiable.init();
+		if (extensions != null && !extensions.isEmpty()) {
+			for (Extension extension : extensions) {
+				if (extension instanceof AbstractProgressionExtension) {
+					AbstractProgressionExtension progressionExtension = (AbstractProgressionExtension) extension;
+					try {
+						// Call the initial function 
+						if (extension instanceof Initiable) {
+							Initiable initiable = (Initiable) extension;
+							initiable.init();
+						}
+						progressionPoint.register(progressionExtension);
+					} catch (Exception e) {
+						LOGGER.info("Fail to register progression extension for plugin "
+							+ progressionExtension.getPrClass() + ", base of exception: " + e.toString());
 					}
-					progressionPoint.register(progressionExtension);
-				} catch (Exception e) {
-					LOGGER.info("Fail to register progression extension for plugin "
-						+ progressionExtension.getPrClass() + ", base of exception: " + e.toString());
+				} else if (extension instanceof FeatureAbstractionExtension) {
+					featureExtractionPoint.register((FeatureAbstractionExtension) extension);
+				} else if (extension instanceof LearningExtension) {
+					learningPoint.register((LearningExtension) extension);
 				}
-			} else if (extension instanceof FeatureAbstractionExtension) {
-				featureExtractionPoint.register((FeatureAbstractionExtension) extension);
-			} else if (extension instanceof LearningExtension) {
-				learningPoint.register((LearningExtension) extension);
 			}
 		}
 	}
 	
 	public void unregisterExtension(List<Extension> extensions) {
-		for (Extension extension : extensions) {
-			if (extension instanceof AbstractProgressionExtension) {
-				AbstractProgressionExtension progressionExtension = (AbstractProgressionExtension) extension;
-				try {
-					// Call the close function 
-					if (extension instanceof Closable) {
-						Closable initiable = (Closable) extension;
-						initiable.close();
+		if (extensions != null && !extensions.isEmpty()) {
+			for (Extension extension : extensions) {
+				if (extension instanceof AbstractProgressionExtension) {
+					AbstractProgressionExtension progressionExtension = (AbstractProgressionExtension) extension;
+					try {
+						// Call the close function 
+						if (extension instanceof Closable) {
+							Closable initiable = (Closable) extension;
+							initiable.close();
+						}
+						progressionPoint.unregister((AbstractProgressionExtension) extension);
+					} catch (Exception e) {
+						LOGGER.info("Fail to register progression extension for plugin "
+							+ progressionExtension.getPrClass() + ", base of exception: " + e.toString());
 					}
-					progressionPoint.unregister((AbstractProgressionExtension) extension);
-				} catch (Exception e) {
-					LOGGER.info("Fail to register progression extension for plugin "
-						+ progressionExtension.getPrClass() + ", base of exception: " + e.toString());
+					
+				} else if (extension instanceof FeatureAbstractionExtension) {
+					featureExtractionPoint.unregister((FeatureAbstractionExtension) extension);
+				} else if (extension instanceof LearningExtension) {
+					learningPoint.unregister((LearningExtension) extension);
 				}
-				
-			} else if (extension instanceof FeatureAbstractionExtension) {
-				featureExtractionPoint.unregister((FeatureAbstractionExtension) extension);
-			} else if (extension instanceof LearningExtension) {
-				learningPoint.unregister((LearningExtension) extension);
 			}
 		}
 	}

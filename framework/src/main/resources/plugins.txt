@@ -1,5 +1,5 @@
 switcher.SwitchPrClass
-timertest.TimerPrClass 
+timertest.TimerPrClass
 icsdemo.ICSDemoFloorlampPrClass
 icsdemo.ICSDemoBloomPrClass
 icsdemo.ICSDemoGoPrClass
@@ -10,3 +10,4 @@ icsdemo.ICSDemoMusicPrClass
 icsdemo.ICSDemoTVPrClass
 icsdemo.ICSDemoQPrClass
 weather.WeatherPrClass
+buffer.BufferEnabledPrClass

@@ -65,15 +65,17 @@ public class StateManager implements StateUpdateListener {
 	 * 
 	 */
 	public void persist() {
-		StateModel model = new StateModel(wkpf, pluginManager);
-		String json = gson.toJson(model);
-		try {
-			FileWriter writer = new FileWriter(path.toString());
-			BufferedWriter bufferedWriter = new BufferedWriter(writer);
-			bufferedWriter.write(json);
-			bufferedWriter.close();
-		} catch (IOException ex) {
-			logger.error("Fail to write state information on the path of :" + path);
+		if (configuration.isStateEnabled()) {
+			StateModel model = new StateModel(wkpf, pluginManager);
+			String json = gson.toJson(model);
+			try {
+				FileWriter writer = new FileWriter(path.toString());
+				BufferedWriter bufferedWriter = new BufferedWriter(writer);
+				bufferedWriter.write(json);
+				bufferedWriter.close();
+			} catch (IOException ex) {
+				logger.error("Fail to write state information on the path of :" + path);
+			}
 		}
 	}
 	
@@ -81,12 +83,13 @@ public class StateManager implements StateUpdateListener {
 	 * Read states from local file system, and transform to StateModel.
 	 */
 	public StateModel recover() {
-		String content = readFile(path.toString());
-		if (content != null && content != "") {
-			StateModel model = gson.fromJson(content, StateModel.class);
-			return model;
+		if (configuration.isStateEnabled()) {
+			String content = readFile(path.toString());
+			if (content != null && content != "") {
+				StateModel model = gson.fromJson(content, StateModel.class);
+				return model;
+			}
 		}
-
 		return null;
 	}
 	

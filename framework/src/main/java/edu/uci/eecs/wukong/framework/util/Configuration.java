@@ -16,6 +16,7 @@ public class Configuration {
 	private static final String GATEWAY_PORT = "GATEWAY.PORT";
 	private static final String PROGRESSION_SERVER_IP = "PROGRESSION.SERVER.IP";
 	private static final String PROGRESSION_SERVER_PORT = "PROGRESSION.SERVER.PORT";
+	private static final String STATE_ENABLED = "STATE.ENABLED";
 	private static final String STATE_FILE_PATH = "STATE.PATH";
 	private static final String MONITOR_ENABLED = "MONITOR.ENABLED";
 	private static final String MONITOR_BACKEND = "MONITOR.BACKEND";
@@ -66,6 +67,14 @@ public class Configuration {
 	
 	public String getGatewayIP() {
 		return properties.getProperty(GATEWAY_IP);
+	}
+	
+	public boolean isStateEnabled() {
+		return getStateEnabled().equals("true");
+	}
+	
+	public String getStateEnabled() {
+		return properties.getProperty(STATE_ENABLED, "false");
 	}
 	
 	public String getStateFilePath() {

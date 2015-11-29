@@ -9,15 +9,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 import edu.uci.eecs.wukong.framework.entity.Entity;
-import edu.uci.eecs.wukong.framework.event.Event;
 
 /**
  * Abstract class for building up Pipeline. It is responsible for routing entities between extend points.
  *
  */
 public abstract class Graph {
-	private Set<Node> nodes;
-	private Map<Node, List<Link<? extends Entity>>> outLinks; 
+	protected Set<Node> nodes;
+	protected Map<Node, List<Link<? extends Entity>>> outLinks; 
 
 	public Graph() {
 		nodes = new HashSet<Node> ();
@@ -45,5 +44,9 @@ public abstract class Graph {
 				sink.append(entity);
 			}
 		}
+	}
+	
+	public int getNodeSize() {
+		return nodes.size();
 	}
 }

@@ -18,6 +18,7 @@ import edu.uci.eecs.wukong.framework.manager.PluginManager;
 import edu.uci.eecs.wukong.framework.manager.SceneManager;
 import edu.uci.eecs.wukong.framework.monitor.MonitorManager;
 import edu.uci.eecs.wukong.framework.model.StateModel;
+import edu.uci.eecs.wukong.framework.pipeline.BasicPipeline;
 import edu.uci.eecs.wukong.framework.pipeline.Pipeline;
 import edu.uci.eecs.wukong.framework.select.FeatureChoosers;
 import edu.uci.eecs.wukong.framework.state.StateManager;
@@ -54,7 +55,7 @@ public class ProgressionServer {
 			this.monitorManager = new MonitorManager(wkpf);
 		}
 		this.featureChoosers = new FeatureChoosers(bufferManager, wkpf);
-		this.pipeline = new Pipeline(contextManager, featureChoosers);	
+		this.pipeline = new BasicPipeline(contextManager, featureChoosers);	
 		this.pluginManager = new PluginManager(wkpf, contextManager, pipeline, bufferManager);
 		this.stateManager = new StateManager(wkpf, pluginManager);
 		this.wkpf.register(pluginManager);
@@ -101,6 +102,7 @@ public class ProgressionServer {
 	
 	public void shutdown() {
 		this.server.shutdown();
+		this.pipeline.shutdown();
 		this.wkpf.shutdown();
 	}
 	

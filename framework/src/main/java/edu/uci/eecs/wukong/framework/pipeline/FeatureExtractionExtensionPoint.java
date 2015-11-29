@@ -9,7 +9,7 @@ import edu.uci.eecs.wukong.framework.graph.ExtensionPoint;
 import edu.uci.eecs.wukong.framework.util.Configuration;
 import edu.uci.eecs.wukong.framework.select.FeatureChoosers;
 
-public class FeatureExtractionExtensionPoint extends ExtensionPoint<FeatureAbstractionExtension> implements Runnable {
+public class FeatureExtractionExtensionPoint extends ExtensionPoint<FeatureAbstractionExtension> {
 	private static Logger logger = LoggerFactory.getLogger(ProgressionExtensionPoint.class);
 	private static Configuration configuration = Configuration.getInstance();
 	private FeatureChoosers featureChoosers; 

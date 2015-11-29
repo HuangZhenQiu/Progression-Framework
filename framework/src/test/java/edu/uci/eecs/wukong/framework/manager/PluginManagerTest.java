@@ -1,6 +1,6 @@
 package edu.uci.eecs.wukong.framework.manager;
 
-import edu.uci.eecs.wukong.framework.pipeline.Pipeline;
+import edu.uci.eecs.wukong.framework.pipeline.BasicPipeline;
 import edu.uci.eecs.wukong.framework.wkpf.WKPF;
 
 import org.junit.Test;
@@ -14,7 +14,7 @@ public class PluginManagerTest extends TestCase {
 	@Before
 	public void setup() {
 		BufferManager bufferManager = new BufferManager();
-		manager = new PluginManager(new WKPF(bufferManager), new SceneManager(), new Pipeline(), bufferManager);
+		manager = new PluginManager(new WKPF(bufferManager), new SceneManager(), new BasicPipeline(), bufferManager);
 	}
 	
 	@Test

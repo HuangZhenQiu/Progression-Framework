@@ -19,16 +19,16 @@ import java.lang.Number;
  */
 public class FeatureChooser {
 	private BufferManager bufferManager;
-	private Map<Operator, Map<NPP, Integer>> operators;
+	private Map<Operator<?>, Map<NPP, Integer>> operaters;
 	
-	public FeatureChooser(BufferManager bufferManager, Map<Operator, Map<NPP, Integer>>  operaters) {
+	public FeatureChooser(BufferManager bufferManager, Map<Operator<?>, Map<NPP, Integer>>  operaters) {
 		this.bufferManager = bufferManager;
-		this.operators = operators;
+		this.operaters = operaters;
 	}
 	
 	public List<Number> choose() {
 		List<Number> result = new ArrayList<Number> ();
-		for (Entry<Operator, Map<NPP, Integer>> entry : operators.entrySet()) {
+		for (Entry<Operator<?>, Map<NPP, Integer>> entry : operaters.entrySet()) {
 			List<List<DataPoint<Short>>> dataList = new ArrayList<List<DataPoint<Short>>>();
 			for (Entry<NPP, Integer> nppEntry: entry.getValue().entrySet()) {
 				List<DataPoint<Short>> data = bufferManager.getData(nppEntry.getKey(), nppEntry.getValue());

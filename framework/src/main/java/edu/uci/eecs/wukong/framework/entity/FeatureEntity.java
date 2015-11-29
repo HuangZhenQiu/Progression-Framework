@@ -16,6 +16,10 @@ public class FeatureEntity<T> extends Entity {
 		this.features = new ArrayList<T> ();
 	}
 	
+	public void addFeatures(List<T> list) {
+		features.addAll(list);
+	}
+	
 	public List<T> getFeatures() {
 		return this.features;
 	}

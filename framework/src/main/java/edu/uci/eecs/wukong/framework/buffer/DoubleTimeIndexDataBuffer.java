@@ -6,11 +6,17 @@ import java.util.TimerTask;
 import java.nio.ByteBuffer;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import edu.uci.eecs.wukong.framework.model.NPP;
 
 public final class DoubleTimeIndexDataBuffer<T> {
+	private static Logger logger = LoggerFactory.getLogger(DoubleTimeIndexDataBuffer.class);
 	private TimeIndexBuffer indexBuffer;
 	private DataRingBuffer<T> dataBuffer;
 	private BufferIndexer indexer;
+	private NPP npp;
 	private int interval; //in seconds
 	
 	private class BufferIndexer extends TimerTask {
@@ -27,7 +33,8 @@ public final class DoubleTimeIndexDataBuffer<T> {
 		
 	}
 	
-	public DoubleTimeIndexDataBuffer(int dataCapacity, int timeUnits, int interval){
+	public DoubleTimeIndexDataBuffer(NPP npp, int dataCapacity, int timeUnits, int interval){
+		this.npp = npp;
 		this.indexBuffer = new TimeIndexBuffer(timeUnits);
 		this.dataBuffer = new DataRingBuffer<T>(dataCapacity);
 		this.interval = interval;
@@ -36,12 +43,12 @@ public final class DoubleTimeIndexDataBuffer<T> {
 	
 	public void addElement(long timestampe,  T value) {
 		this.dataBuffer.addElement(timestampe, value);
-		System.out.println("Data Buffer Header: " + dataBuffer.getHeader());
+		logger.info("Data Buffer for " + npp + " Header: " + dataBuffer.getHeader());
 	}
 	
 	public void addIndex() {
 		indexBuffer.appendIndex(dataBuffer.getHeader());
-		System.out.println("Index Buffer Header: " + indexBuffer.getHeader());
+		logger.info("Index Buffer " + npp + " Header: " + indexBuffer.getHeader());
 	}
 	
 	/**

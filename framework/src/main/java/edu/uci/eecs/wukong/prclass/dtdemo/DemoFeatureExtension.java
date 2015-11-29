@@ -3,11 +3,11 @@ package edu.uci.eecs.wukong.prclass.dtdemo;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.uci.eecs.wukong.framework.extension.FeatureAbstractionExtension;
+import edu.uci.eecs.wukong.framework.extension.FeatureExtractionExtension;
 import edu.uci.eecs.wukong.framework.operator.Operator;
 import edu.uci.eecs.wukong.framework.prclass.PrClass;
 
-public class DemoFeatureExtension extends FeatureAbstractionExtension {
+public class DemoFeatureExtension extends FeatureExtractionExtension {
 
 	
 	public DemoFeatureExtension(PrClass plugin) {

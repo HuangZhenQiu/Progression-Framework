@@ -2,10 +2,8 @@ package edu.uci.eecs.wukong.framework.pipeline;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Queue;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import java.lang.annotation.Annotation;
 
 import org.slf4j.Logger;
@@ -13,9 +11,11 @@ import org.slf4j.LoggerFactory;
 
 import edu.uci.eecs.wukong.framework.annotation.WuTimer;
 import edu.uci.eecs.wukong.framework.api.Activatable;
+import edu.uci.eecs.wukong.framework.api.Executable;
 import edu.uci.eecs.wukong.framework.api.FactorExecutable;
 import edu.uci.eecs.wukong.framework.api.TimerExecutable;
 import edu.uci.eecs.wukong.framework.entity.ModelEntity;
+import edu.uci.eecs.wukong.framework.entity.FeatureEntity;
 import edu.uci.eecs.wukong.framework.event.Event;
 import edu.uci.eecs.wukong.framework.extension.AbstractExtension;
 import edu.uci.eecs.wukong.framework.extension.AbstractProgressionExtension;
@@ -29,9 +29,10 @@ public class ProgressionExtensionPoint extends ExtensionPoint<AbstractProgressio
 	implements FactorListener, Runnable {
 	private static Logger logger = LoggerFactory.getLogger(ProgressionExtensionPoint.class);
 	private static Configuration configuration = Configuration.getInstance();
+	private final int DEFAULT_INTERVAL = 5;
 	private Map<PrClass, TimerTask> pluginTaskMap;
 	private Timer timer;
-	private final int DEFAULT_INTERVAL = 5;
+
 	
 	public ProgressionExtensionPoint(Pipeline pipeline) {
 		super(pipeline);
@@ -113,6 +114,7 @@ public class ProgressionExtensionPoint extends ExtensionPoint<AbstractProgressio
 	}
 	
 	public void run() {
+		logger.info("Progression Extension Point Starts to Run");
 		while(true) {
 			Event event = eventQueue.poll();
 			if (event != null) {
@@ -137,6 +139,14 @@ public class ProgressionExtensionPoint extends ExtensionPoint<AbstractProgressio
 						extension.getPrClass().setOnline(true);
 					} else {
 						logger.error("Progression extension is not found for prClass :" + modelEntity.getPrClass());
+					}
+				} else if (event.getType().equals(Event.EventType.FEATURE)) {
+					FeatureEntity featureEntity = (FeatureEntity) event.getData();
+					AbstractProgressionExtension extension = (AbstractProgressionExtension) this.extensionMap.get(featureEntity.getPrClass());
+					if (extension != null && extension instanceof Executable) {
+						((Executable)extension).execute(featureEntity.getFeatures(), this.pipeline.getCurrentContext(featureEntity.getPrClass()));
+					} else {
+						logger.error("Progression extension is not found for prClass :" + featureEntity.getPrClass());
 					}
 				}
 			}

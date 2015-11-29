@@ -1,6 +1,7 @@
 package edu.uci.eecs.wukong.prclass.buffer;
 
 import java.util.List;
+import java.util.ArrayList;
 
 import edu.uci.eecs.wukong.framework.api.Extension;
 import edu.uci.eecs.wukong.framework.prclass.PrClass;
@@ -24,7 +25,10 @@ public class BufferEnabledPrClass extends PrClass {
 
 	@Override
 	public List<Extension> registerExtension() {
-		return null;
+		List<Extension> extensions = new ArrayList<Extension> ();
+		extensions.add(new BufferFeatureExtractionExtension(this));
+		extensions.add(new BufferProgressionExtension(this));
+		return extensions;
 	}
 
 	@Override

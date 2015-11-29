@@ -9,9 +9,9 @@ import edu.uci.eecs.wukong.framework.prclass.PrClass;
  * Feature abstraction is for a prclass to define how to use operator to extract feature through using operators.
  * 
  */
-public abstract class FeatureAbstractionExtension extends AbstractExtension {
+public abstract class FeatureExtractionExtension extends AbstractExtension {
 	
-	public FeatureAbstractionExtension(PrClass plugin) {
+	public FeatureExtractionExtension(PrClass plugin) {
 		super(plugin);
 	}
 

@@ -31,9 +31,9 @@ public class MPTN implements MPTNMessageListener{
 	private byte[] uuid;
 	
 	private List<WKPFMessageListener> listeners;
-	private static int MPTN_HEADER_LENGTH = 9;
-	private static byte HEADER_TYPE_1 = 1;
-	private static byte HEADER_TYPE_2 = 2;
+	public static int MPTN_HEADER_LENGTH = 9;
+	public static byte HEADER_TYPE_1 = 1;
+	public static byte HEADER_TYPE_2 = 2;
 	
 	public MPTN() {
 		

@@ -86,8 +86,10 @@ public class SceneManager {
 	public synchronized ExecutionContext getPluginExecutionContext(PrClass plugin) {
 		List<String> subscribedTopics = pluginContextMap.get(plugin);
 		Map<String, BaseFactor> factorMap = new HashMap<String, BaseFactor>();
-		for(String topic : subscribedTopics) {
-			factorMap.put(topic, factors.get(topic));
+		if (subscribedTopics != null) {
+			for(String topic : subscribedTopics) {
+				factorMap.put(topic, factors.get(topic));
+			}
 		}
 		return new ExecutionContext(factorMap, factorClient);
 	}

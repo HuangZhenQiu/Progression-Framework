@@ -1,6 +1,6 @@
 package edu.uci.eecs.wukong.framework.select;
 
-import edu.uci.eecs.wukong.framework.extension.FeatureAbstractionExtension;
+import edu.uci.eecs.wukong.framework.extension.FeatureExtractionExtension;
 import edu.uci.eecs.wukong.framework.operator.Operator;
 import edu.uci.eecs.wukong.framework.manager.BufferManager;
 import edu.uci.eecs.wukong.framework.prclass.PrClass;
@@ -29,9 +29,9 @@ public class FeatureChoosers {
 	}
 	
 	@SuppressWarnings("rawtypes")
-	public void addFeatureExtractionExtenshion(FeatureAbstractionExtension extention) {
+	public void addFeatureExtractionExtenshion(FeatureExtractionExtension extention) {
 		PrClass plugin = extention.getPrClass();
-		Map<Operator, Map<NPP, Integer>> bindMap = new HashMap<Operator, Map<NPP, Integer>> ();
+		Map<Operator<?>, Map<NPP, Integer>> bindMap = new HashMap<Operator<?>, Map<NPP, Integer>> ();
 		for (Operator operator : extention.registerOperators()) {
 			Map<Integer, Integer>  portToInterval = operator.bind();
 			Map<NPP, Integer> nppMap = new HashMap<NPP, Integer> ();
@@ -42,8 +42,9 @@ public class FeatureChoosers {
 			bindMap.put(operator, nppMap);
 		}
 		
-		FeatureChooser chooser = new FeatureChooser(bufferManager, bindMap);
+		FeatureChooser chooser = new FeatureChooser(extention.getPrClass(), bufferManager, bindMap);
 		chooserMap.put(plugin, chooser);
+		logger.info("Add Feature Extraction Extension in Feature Choosers for PrClass " + plugin);
 	}
 	
 	public List<Number> choose(PrClass plugin) throws Exception {

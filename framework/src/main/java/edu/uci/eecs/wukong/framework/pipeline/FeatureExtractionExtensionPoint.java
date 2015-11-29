@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import edu.uci.eecs.wukong.framework.entity.FeatureEntity;
-import edu.uci.eecs.wukong.framework.extension.FeatureAbstractionExtension;
+import edu.uci.eecs.wukong.framework.extension.FeatureExtractionExtension;
 import edu.uci.eecs.wukong.framework.graph.ExtensionPoint;
 import edu.uci.eecs.wukong.framework.prclass.PrClass;
 import edu.uci.eecs.wukong.framework.util.Configuration;
@@ -12,7 +12,7 @@ import edu.uci.eecs.wukong.framework.select.FeatureChoosers;
 
 import java.util.List;
 
-public class FeatureExtractionExtensionPoint extends ExtensionPoint<FeatureAbstractionExtension> {
+public class FeatureExtractionExtensionPoint extends ExtensionPoint<FeatureExtractionExtension> {
 	private static Logger logger = LoggerFactory.getLogger(ProgressionExtensionPoint.class);
 	private static Configuration configuration = Configuration.getInstance();
 	private FeatureChoosers featureChoosers; 
@@ -23,22 +23,29 @@ public class FeatureExtractionExtensionPoint extends ExtensionPoint<FeatureAbstr
 	}
 
 	@Override
-	public synchronized void register(FeatureAbstractionExtension extension) {
+	public synchronized void register(FeatureExtractionExtension extension) {
 		super.register(extension);
 		featureChoosers.addFeatureExtractionExtenshion(extension);
+		logger.info("Add Feature Extraction Extension for " + extension.getPrClass());
 	}
 	
 	public void run() {
+		logger.info("Feature Extraction Extension Point Starts to Run");
 		// Round Rubin Choose
-		for (PrClass prClass : this.extensionMap.keySet()) {
+		while(true) {
 			try {
-				List<Number> result = featureChoosers.choose(prClass);
-				FeatureEntity<Number> entity = new FeatureEntity<Number>(prClass);
-				entity.addFeatures(result);
-				this.send(entity);
+				Thread.sleep(10000);
+				for (PrClass prClass : this.extensionMap.keySet()) {
+					List<Number> result = featureChoosers.choose(prClass);
+					FeatureEntity<Number> entity = new FeatureEntity<Number>(prClass);
+					entity.addFeatures(result);
+					this.send(entity);
+				}
 			} catch (Exception e) {
-				logger.info("Fail to choose features for PrClass " + prClass);
+				e.printStackTrace();
+				logger.info("Fail to choose features for PrClasses");
 			}
+			
 		}
 	}
 }

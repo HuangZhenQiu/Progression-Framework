@@ -1,10 +1,5 @@
 package edu.uci.eecs.wukong.framework.pipeline;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Queue;
-import java.util.concurrent.PriorityBlockingQueue;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -60,6 +55,7 @@ public class LearningExtensionPoint extends ExtensionPoint<LearningExtension> im
 	}
 
 	public void run() {
+		logger.info("Learning Extension Point Starts to Run");
 		while(true) {
 			Event event = eventQueue.poll();
 			if (event != null) {
@@ -67,8 +63,6 @@ public class LearningExtensionPoint extends ExtensionPoint<LearningExtension> im
 				if (extension != null) {
 					this.executor.execute(new LearningTask(extension, event,
 							pipeline.getCurrentContext(extension.getPrClass())));
-				} else {
-					logger.error("Cant't find learning extension for the PrClass instance: " + event.getPrClass());
 				}
 			}
 		}

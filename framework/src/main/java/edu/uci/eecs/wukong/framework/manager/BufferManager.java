@@ -47,7 +47,7 @@ public class BufferManager {
 		if (model.isValid()) {
 			WuClassModel classModel = model.getType();
 			for (WuPropertyModel property : classModel.getProperties()) {
-				NPP npp = new NPP(mptn.getLongAddress(), model.getPort(), property.getId());
+				NPP npp = new NPP(mptn.getNodeId(), model.getPort(), property.getId());
 				if (property.getPtype().equals(PropertyType.Input)
 						&&property.getDtype().equals(DataType.Channel)) {
 					AbstractProgressionExtension extension = model.getPrClass().getProgressionExtension(); 
@@ -80,7 +80,7 @@ public class BufferManager {
 			return false;
 		} 
 		DoubleTimeIndexDataBuffer<Byte> buffer =
-				new DoubleTimeIndexDataBuffer<Byte>(capacity, timeUnits, interval);
+				new DoubleTimeIndexDataBuffer<Byte>(key, capacity, timeUnits, interval);
 		
 		bufferMap.put(key, buffer);
 		timer.scheduleAtFixedRate(buffer.getIndexer(), 1000, buffer.getInterval());
@@ -94,7 +94,7 @@ public class BufferManager {
 			return false;
 		} 
 		DoubleTimeIndexDataBuffer<Short> buffer =
-				new DoubleTimeIndexDataBuffer<Short>(capacity, timeUnits, interval);
+				new DoubleTimeIndexDataBuffer<Short>(key, capacity, timeUnits, interval);
 		
 		bufferMap.put(key, buffer);
 		timer.scheduleAtFixedRate(buffer.getIndexer(), 1000, buffer.getInterval());

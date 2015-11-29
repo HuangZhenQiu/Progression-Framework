@@ -13,7 +13,7 @@ import edu.uci.eecs.wukong.framework.api.Initiable;
 import edu.uci.eecs.wukong.framework.entity.FeatureEntity;
 import edu.uci.eecs.wukong.framework.entity.ModelEntity;
 import edu.uci.eecs.wukong.framework.extension.AbstractProgressionExtension;
-import edu.uci.eecs.wukong.framework.extension.FeatureAbstractionExtension;
+import edu.uci.eecs.wukong.framework.extension.FeatureExtractionExtension;
 import edu.uci.eecs.wukong.framework.extension.LearningExtension;
 import edu.uci.eecs.wukong.framework.manager.SceneManager;
 import edu.uci.eecs.wukong.framework.select.FeatureChoosers;
@@ -65,8 +65,8 @@ public class BasicPipeline extends Pipeline {
 						LOGGER.info("Fail to register progression extension for plugin "
 							+ progressionExtension.getPrClass() + ", base of exception: " + e.toString());
 					}
-				} else if (extension instanceof FeatureAbstractionExtension) {
-					featureExtractionPoint.register((FeatureAbstractionExtension) extension);
+				} else if (extension instanceof FeatureExtractionExtension) {
+					featureExtractionPoint.register((FeatureExtractionExtension) extension);
 				} else if (extension instanceof LearningExtension) {
 					learningPoint.register((LearningExtension) extension);
 				}
@@ -92,8 +92,8 @@ public class BasicPipeline extends Pipeline {
 							+ progressionExtension.getPrClass() + ", base of exception: " + e.toString());
 					}
 					
-				} else if (extension instanceof FeatureAbstractionExtension) {
-					featureExtractionPoint.unregister((FeatureAbstractionExtension) extension);
+				} else if (extension instanceof FeatureExtractionExtension) {
+					featureExtractionPoint.unregister((FeatureExtractionExtension) extension);
 				} else if (extension instanceof LearningExtension) {
 					learningPoint.unregister((LearningExtension) extension);
 				}

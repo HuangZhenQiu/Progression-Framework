@@ -5,6 +5,7 @@ import edu.uci.eecs.wukong.framework.manager.BufferManager;
 import edu.uci.eecs.wukong.framework.operator.Operator;
 import edu.uci.eecs.wukong.framework.operator.SingleOperator;
 import edu.uci.eecs.wukong.framework.operator.MultipleOperator;
+import edu.uci.eecs.wukong.framework.prclass.PrClass;
 import edu.uci.eecs.wukong.framework.model.NPP;
 
 import java.util.ArrayList;
@@ -13,17 +14,23 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.lang.Number;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /*
  * Feature chooser instance of a plugin.
  * 
  */
 public class FeatureChooser {
+	private static Logger logger = LoggerFactory.getLogger(FeatureChooser.class);
+	private PrClass prClass;
 	private BufferManager bufferManager;
 	private Map<Operator<?>, Map<NPP, Integer>> operaters;
 	
-	public FeatureChooser(BufferManager bufferManager, Map<Operator<?>, Map<NPP, Integer>>  operaters) {
+	public FeatureChooser(PrClass prClass, BufferManager bufferManager, Map<Operator<?>, Map<NPP, Integer>>  operaters) {
 		this.bufferManager = bufferManager;
 		this.operaters = operaters;
+		this.prClass = prClass;
 	}
 	
 	public List<Number> choose() {
@@ -43,6 +50,7 @@ public class FeatureChooser {
 			}
 		}
 		
+		logger.info("Choosed features for PrClass : " + prClass);
 		return result;
 	}
 }

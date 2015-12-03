@@ -6,9 +6,6 @@ import java.nio.ByteOrder;
 
 /**
  * It is a ring buffer implementation on a direct buffer of Java NIO. 
- * 
- * @author Peter
- *
  */
 public class RingBuffer {
 	private ByteBuffer buffer;
@@ -58,6 +55,15 @@ public class RingBuffer {
 		return buffer.getInt((header - index + capacity) % capacity);
 	}
 	
+	/**
+	 * Copy bytes starts from k bytes back from curent header
+	 * 
+	 * @param dst 
+	 * @param k number of bytes back from header as start position
+	 */
+	public void getByteFromPosition(byte[] dst, int k) {
+		get(dst, (header - k + capacity) & capacity, dst.length);
+	}
 	
 	
 	/**
@@ -66,9 +72,16 @@ public class RingBuffer {
 	 * @param offset offset in the ring buffer
 	 * @param length
 	 */
-	public void get(byte[] dst, int offset, int length) {
-		for(int i=0; i < length; i++) {
-			dst[i] = buffer.get(offset + i);
+	private void get(byte[] dst, int offset, int length) {
+		if (dst.length >= length && length < buffer.capacity() &&
+				offset >= 0 && offset < buffer.capacity()) {
+			
+			if (offset + length < buffer.capacity()) {
+				System.arraycopy(buffer, offset, dst, 0, length);
+			} else {
+				System.arraycopy(buffer, offset, dst, 0, buffer.capacity() - offset);
+				System.arraycopy(buffer, 0, dst, buffer.capacity() - offset, length + offset - buffer.capacity());
+			}
 		}
 	}
 	
@@ -114,5 +127,9 @@ public class RingBuffer {
 	
 	public int getCapacity() {
 		return buffer.capacity();
+	}
+	
+	public boolean isFull() {
+		return this.size == this.capacity;
 	}
 }

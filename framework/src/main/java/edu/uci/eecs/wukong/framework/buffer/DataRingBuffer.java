@@ -44,4 +44,8 @@ public final class DataRingBuffer<T extends Object> extends RingBuffer {
 		
 		this.last = time;
 	}
+	
+	public void getLastKElement() {
+		
+	}
  }

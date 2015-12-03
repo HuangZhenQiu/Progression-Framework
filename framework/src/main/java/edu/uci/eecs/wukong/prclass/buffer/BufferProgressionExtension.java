@@ -18,6 +18,12 @@ public class BufferProgressionExtension extends AbstractProgressionExtension imp
 
 	@Override
 	public void execute(List data, ExecutionContext context) {
+		
+		int i = 1;
+		for (Object object : data) {
+			logger.info("Feature data i " + i + " equals " + object);
+			i ++;
+		}
 		logger.info("BufferProgressionExtension received feature data");
 	}
 }

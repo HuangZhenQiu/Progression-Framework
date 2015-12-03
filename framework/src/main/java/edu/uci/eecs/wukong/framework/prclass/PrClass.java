@@ -2,8 +2,14 @@ package edu.uci.eecs.wukong.framework.prclass;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.lang.annotation.Annotation;
 import java.util.List;
+import java.lang.reflect.Field;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import edu.uci.eecs.wukong.framework.annotation.WuProperty;
 import edu.uci.eecs.wukong.framework.api.Extension;
 import edu.uci.eecs.wukong.framework.extension.AbstractProgressionExtension;
 import edu.uci.eecs.wukong.framework.factor.BaseFactor;
@@ -31,6 +37,7 @@ import edu.uci.eecs.wukong.framework.manager.ConfigurationManager;
  *
  */
 public abstract class PrClass {
+	private final static Logger LOGGER = LoggerFactory.getLogger(PrClass.class);
 	/* Port starts from 1*/
 	private static byte id = 1; 
 	private byte portId;
@@ -60,6 +67,25 @@ public abstract class PrClass {
 	
 	public ConfigurationManager getConfigurationManager() {
 		return configManager;
+	}
+	
+	public boolean isInitialized() {
+		Annotation[] annotations = PrClass.class.getAnnotations();
+		for (Annotation annotation : annotations) {
+			if (annotation.annotationType().equals(WuProperty.class)) {
+				WuProperty wuProperty = (WuProperty) annotation;
+				try {
+					Field field = this.getClass().getDeclaredField(wuProperty.name());
+					if (field.get(this) == null) {
+						return false;
+					}
+				} catch (Exception e) {
+					LOGGER.error("Can't find field " + wuProperty.name() + " for PrClass " + this.name);
+				}
+			}
+		}
+		
+		return true;
 	}
 	
 	public void publish(String topic, BaseFactor value) {

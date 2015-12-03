@@ -156,8 +156,12 @@ public class PluginManager implements PrClassInitListener {
 		LOGGER.info("Start to bind plugins into plugin manager, the size of objects is" + objects.size());
 		bindedWuObjects.clear();
 		for (WuObjectModel model : objects) {
-			bindPlugin(model);
-			bindedWuObjects.add(model);
+			if (model.getPrClass().isInitialized()) {
+				bindPlugin(model);
+				bindedWuObjects.add(model);
+			} else {
+				LOGGER.error("Fail to bind WuObject with class type " + model.getPrClass().getName() + " because of missing init values");
+			}
 		}
 		
 		// Update wuobject information

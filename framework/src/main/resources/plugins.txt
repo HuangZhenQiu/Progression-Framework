@@ -11,3 +11,4 @@ icsdemo.ICSDemoTVPrClass
 icsdemo.ICSDemoQPrClass
 weather.WeatherPrClass
 buffer.BufferEnabledPrClass
+occupancy.OccupancyDetection

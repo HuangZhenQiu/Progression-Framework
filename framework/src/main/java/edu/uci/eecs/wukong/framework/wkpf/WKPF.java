@@ -1,5 +1,6 @@
 package edu.uci.eecs.wukong.framework.wkpf;
 
+import java.lang.reflect.Field;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.ArrayList;
@@ -7,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
+
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +19,7 @@ import edu.uci.eecs.wukong.framework.model.ComponentMap;
 import edu.uci.eecs.wukong.framework.model.DataType;
 import edu.uci.eecs.wukong.framework.model.Link;
 import edu.uci.eecs.wukong.framework.model.LinkTable;
+import edu.uci.eecs.wukong.framework.model.InitValue;
 import edu.uci.eecs.wukong.framework.model.InitValueTable;
 import edu.uci.eecs.wukong.framework.model.NPP;
 import edu.uci.eecs.wukong.framework.model.PropertyType;
@@ -138,7 +141,9 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 		List<WuObjectModel> objects = new ArrayList<WuObjectModel> ();
 		
 		for (Entry<Byte, Short> entry : wuclassMap.entrySet()) {
-			objects.add(this.portToWuObjectMap.get(entry.getKey()));
+			WuObjectModel object = this.portToWuObjectMap.get(entry.getKey());
+			initValue(object, initValues.getValues());
+			objects.add(object);
 		}
 		
 		for (PrClassInitListener listener : listeners) {
@@ -146,6 +151,31 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 		}
 		
 		LOGGER.info("Finished bind plugins with " + objects.size() + " WuObjects");
+	}
+	
+	
+	private void initValue(WuObjectModel object, List<InitValue> values) {
+		for (InitValue value : values) {
+			if (componentMap.getWuClassId(value.getComponentId()) == object.getType().getWuClassId()) {
+				WuPropertyModel property = object.getType().getPropertyModel(value.getPropertyNumber());
+				try {
+					Field field = object.getPrClass().getClass().getField(property.getName());
+					if (field.getType().equals(byte.class) && value.getSize() == 1) {
+						field.set(object, value.getValue()[0]);
+					} else if (field.getType().equals(short.class)) {
+						field.set(object, WKPFUtil.getLittleEndianShort(value.getValue(), 0));
+					} else if (field.getType().equals(boolean.class) && value.getSize() == 1) {
+						if (value.getValue()[0] == 1) {
+							field.set(object, true);
+						} else {
+							field.set(object, false);
+						}
+					} 
+				} catch (Exception e) {
+					LOGGER.error("Can't find field " + property.getName() +" in PrClass " + object.getPrClass().getName());
+				}
+			}
+		}
 	}
 	
 	/**

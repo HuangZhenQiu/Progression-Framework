@@ -166,12 +166,12 @@ public class DJAData {
 		int start = index + 3;
 		// Size of init value table
 		int size = WKPFUtil.getLittleEndianShort(buffer, start);
-		InitValue value = null;
 		int offset = 0;
 		for (int i = 0; i < size; i++) {
 			start += offset;
-			offset = extractInitValue(start, value);
+			InitValue value = extractInitValue(start);
 			table.addInitValue(value);
+			offset = value.getLength();
 		}
 		
 		LOGGER.info("Extracted init value table information from DJAData: " + table.toString());
@@ -187,15 +187,15 @@ public class DJAData {
 	 * @param value
 	 * @return
 	 */
-	private int extractInitValue(int start, InitValue value) {
+	private InitValue extractInitValue(int start) {
 		short componentId = WKPFUtil.getLittleEndianShort(buffer, start);
 		byte propertyNumber = buffer[start + 2];
 		byte size = buffer[start + 3];
 		byte[] val = new byte[size];
 		System.arraycopy(buffer, start + 4, val, 0, size);
-		value = new InitValue(componentId, propertyNumber, size, val);
+		InitValue value = new InitValue(componentId, propertyNumber, size, val);
 		
-		return 4 + size;
+		return value;
 	}
 	
 	/**

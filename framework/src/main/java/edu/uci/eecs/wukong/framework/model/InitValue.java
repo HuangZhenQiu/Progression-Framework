@@ -45,6 +45,10 @@ public class InitValue {
 		this.value = value;
 	}
 	
+	public int getLength() {
+		return 4 + size;
+	}
+	
 	@Override
 	public boolean equals(Object object) {
 		if (object instanceof InitValue) {

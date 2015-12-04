@@ -72,7 +72,7 @@ public class RingBuffer {
 	 * @param offset offset in the ring buffer
 	 * @param length
 	 */
-	private void get(byte[] dst, int offset, int length) {
+	public void get(byte[] dst, int offset, int length) {
 		if (dst.length >= length && length < buffer.capacity() &&
 				offset >= 0 && offset < buffer.capacity()) {
 			

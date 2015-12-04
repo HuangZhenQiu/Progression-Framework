@@ -14,6 +14,9 @@ public class InitValueTable {
 		values.add(value);
 	}
 	
+	public List<InitValue> getValues() {
+		return values;
+	}
 	
 	@Override
 	public boolean equals(Object object) {

@@ -13,8 +13,12 @@ public class ExistenceOperator extends SingleOperator<Byte> {
 
 	@Override
 	public Byte operate(List<DataPoint<Byte>> data) {
-		// TODO Auto-generated method stub
-		return null;
+		for (int i = 0; i < data.size(); i++) {
+			if (data.get(i).getValue() == 1) {
+				return (byte)1;
+			}
+		}
+		
+		return (byte) 0;
 	}
-
 }

@@ -18,9 +18,7 @@ public class WeatherProgressionExtension extends AbstractProgressionExtension im
 	
 	// It is called after remote programming
 	public void init() {
-		// TODO (Peter Huang) enable this after parsing init values 
-		// service = new WeatherService(prClass.getCityId());
-		service = new WeatherService(2172797);
+		service = new WeatherService(prClass.getCityId());
 	}
 
 	@WuTimer(interval = 2)

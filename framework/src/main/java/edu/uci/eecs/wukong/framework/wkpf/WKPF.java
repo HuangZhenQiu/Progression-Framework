@@ -159,19 +159,25 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 			if (componentMap.getWuClassId(value.getComponentId()) == object.getType().getWuClassId()) {
 				WuPropertyModel property = object.getType().getPropertyModel(value.getPropertyNumber());
 				try {
-					Field field = object.getPrClass().getClass().getField(property.getName());
+					Field field = object.getPrClass().getClass().getDeclaredField(property.getName());
+					field.setAccessible(true);
 					if (field.getType().equals(byte.class) && value.getSize() == 1) {
-						field.set(object, value.getValue()[0]);
+						field.set(object.getPrClass(), value.getValue()[0]);
 					} else if (field.getType().equals(short.class)) {
-						field.set(object, WKPFUtil.getLittleEndianShort(value.getValue(), 0));
+						field.set(object.getPrClass(), WKPFUtil.getLittleEndianShort(value.getValue(), 0));
+					} else if(field.getType().equals(int.class)) {
+						// temporary solution, there is no support as int init value in master right now.
+						int intValue = new Integer(WKPFUtil.getLittleEndianShort(value.getValue(), 0)).intValue();
+						field.set(object.getPrClass(), intValue);
 					} else if (field.getType().equals(boolean.class) && value.getSize() == 1) {
-						if (value.getValue()[0] == 1) {
-							field.set(object, true);
+						if (value.getValue()[0] == 0) {
+							field.set(object.getPrClass(), false);
 						} else {
-							field.set(object, false);
+							field.set(object.getPrClass(), true);
 						}
 					} 
 				} catch (Exception e) {
+					e.printStackTrace();
 					LOGGER.error("Can't find field " + property.getName() +" in PrClass " + object.getPrClass().getName());
 				}
 			}

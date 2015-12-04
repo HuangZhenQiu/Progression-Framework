@@ -166,7 +166,7 @@ public class DJAData {
 		int start = index + 3;
 		// Size of init value table
 		int size = WKPFUtil.getLittleEndianShort(buffer, start);
-		int offset = 0;
+		int offset = 2;
 		for (int i = 0; i < size; i++) {
 			start += offset;
 			InitValue value = extractInitValue(start);
@@ -190,6 +190,7 @@ public class DJAData {
 	private InitValue extractInitValue(int start) {
 		short componentId = WKPFUtil.getLittleEndianShort(buffer, start);
 		byte propertyNumber = buffer[start + 2];
+		propertyNumber ++;  /* start start from 0, PrClass start from 1*/
 		byte size = buffer[start + 3];
 		byte[] val = new byte[size];
 		System.arraycopy(buffer, start + 4, val, 0, size);

@@ -26,8 +26,12 @@ public class WeatherService extends AbstractHttpService {
 		String json  = this.send(new HttpGet(this.CONFIG_URL), null);
 		logger.debug("Received json message by calling weather service : " + json);
 		JsonElement root = parser.parse(json);
-		short temp =  root.getAsJsonObject().get("main").getAsJsonObject().get("temp").getAsShort();
-		logger.info("Get temperature from weather service for city " + cityId + " whose temperature is " + temp);	
-		return temp;
+		if (root != null) {
+			short temp =  root.getAsJsonObject().get("main").getAsJsonObject().get("temp").getAsShort();
+			logger.info("Get temperature from weather service for city " + cityId + " whose temperature is " + temp);	
+			return temp;
+		} else {
+			return 0;
+		}
 	}
 }

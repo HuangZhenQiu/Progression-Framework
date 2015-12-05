@@ -10,6 +10,9 @@ allprojects {
   repositories {
     mavenCentral()
     mavenLocal()
+    maven {
+       url "http://jahmm.googlecode.com/svn/repo/"
+    }
  }
 }
 
@@ -40,6 +43,7 @@ project(':framework') {
   }
 
   dependencies {
+     compile "be.ac.ulg.montefiore.run.jahmm:jahmm:$jahmmVersion"
      compile "io.dropwizard.metrics:metrics-core:$dropwizardMetricsVersion"
      compile "io.dropwizard.metrics:metrics-graphite:$dropwizardMetricsVersion"
      compile "junit:junit:$junitVersion"

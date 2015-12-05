@@ -73,14 +73,15 @@ public class RingBuffer {
 	 * @param length
 	 */
 	public void get(byte[] dst, int offset, int length) {
-		if (dst.length >= length && length < buffer.capacity() &&
-				offset >= 0 && offset < buffer.capacity()) {
-			
+		if (dst.length >= length && length <= buffer.capacity() &&
+				offset >= 0 && offset <= buffer.capacity()) {
+			buffer.position(offset);
 			if (offset + length < buffer.capacity()) {
-				System.arraycopy(buffer, offset, dst, 0, length);
+				buffer.get(dst, 0, length);
 			} else {
-				System.arraycopy(buffer, offset, dst, 0, buffer.capacity() - offset);
-				System.arraycopy(buffer, 0, dst, buffer.capacity() - offset, length + offset - buffer.capacity());
+				buffer.get(dst, 0, buffer.capacity() - offset);
+				buffer.position(0);
+				buffer.get(dst, buffer.capacity() - offset, length + offset - buffer.capacity());
 			}
 		}
 	}

@@ -1,5 +1,6 @@
 ext {
   dropwizardMetricsVersion = "3.1.0"
+  jahmmVersion = "0.6.2"
   junitVersion = "4.11"
   nettyVersion = "4.0.24.Final"
   protobufVersion = "2.5.0"

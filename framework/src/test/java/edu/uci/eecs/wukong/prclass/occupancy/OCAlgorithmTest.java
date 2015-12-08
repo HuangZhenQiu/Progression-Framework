@@ -2,12 +2,16 @@ package edu.uci.eecs.wukong.prclass.occupancy;
 
 import edu.uci.eecs.wukong.prclass.occupancy.HMMBasedLearningExtension;
 import edu.uci.eecs.wukong.prclass.occupancy.ODProgressionExtension;
+import edu.uci.eecs.wukong.prclass.occupancy.OccupancyDetection.Occupancy;
 
 import java.io.InputStream;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Random;
+
+import be.ac.ulg.montefiore.run.jahmm.ObservationDiscrete;
 
 /**
  * A simple test tool to compare the performance of schedule based algorithm and HMM based algorithm.
@@ -123,19 +127,146 @@ public class OCAlgorithmTest {
 		
 		System.out.println();
 	}
+	
+	private List<List<ObservationDiscrete<Occupancy>>> buildOccupancyList(List<List<Byte>> observations) {
+		List<List<ObservationDiscrete<Occupancy>>> occupancies =
+				new ArrayList<List<ObservationDiscrete<Occupancy>>>();
+		
+		for (List<Byte> observation : observations) {
+			occupancies.add(convent(observation));
+		}
+		
+		return occupancies;
+	}
+	
+	private List<ObservationDiscrete<Occupancy>> convent(List<Byte> observation){
+		List<ObservationDiscrete<Occupancy>> occupany =  new ArrayList<ObservationDiscrete<Occupancy>> ();
+		for (Byte value : observation) {
+			occupany.add(value == 1? Occupancy.YES.observation() : Occupancy.NO.observation());
+		}
+		
+		return occupany;
+	}
+	
+	/**
+	 * In order randomize the original observations one by one. It is because observations are from a period.
+	 * Observations in period should have pattern in sequence. 
+	 * 
+	 * @param observations  real observations
+	 * @param slots  how many slot to flip (randomize)
+	 * @param size  how many days to generate
+	 * @return
+	 */
+	private List<List<Byte>> ramdomize(List<List<Byte>> observations, int slots, int size) {
+		List<List<Byte>> randoms = new ArrayList<List<Byte>> ();
+		int round = size / observations.size();
+		Random rn = new Random(); 
+		for (int i = 0; i < round; i++) {
+			for (int j = 0; j < observations.size(); j++) {
+				List<Byte> copy = deepCopy(observations.get(j));
+				for (int k = 0; k < size ; k++) {
+					int ron = rn.nextInt(observations.get(j).size());
+					copy.set(ron, (byte) (1- copy.get(ron)));
+				}
+				randoms.add(copy);
+			}
+		}
+		
+		return randoms;
+	}
+	
+	private List<Byte> deepCopy(List<Byte> observation) {
+		List<Byte> copy = new ArrayList<Byte>();
+		for (Byte  b : observation) {
+			copy.add(b);
+		}
+		
+		return copy;
+	}
+	
+	private void printRatio(List<Double> ratio, int total) {
+		for (Double r : ratio) {
+			System.out.print(r / total);
+			System.out.print(" ");
+		}
+		System.out.println();
+	}
+	
+	private List<Byte> merge(List<Byte> a, List<Byte> b) {
+		List<Byte> merged = new ArrayList<Byte>();
+		
+		int max = a.size() > b.size() ? a.size() : b.size();
+		for (int i = 0; i< max; i++) {
+			if ( i < a.size() && i < b.size()) {
+				merged.add((byte) (a.get(i) & b.get(i)));
+			} else if (i < a.size()) {
+				merged.add(a.get(i));
+			} else {
+				merged.add(b.get(i));
+			}
+		}
+		
+		return merged;
+	}
 
 	public static void main(String[] arg) {
 		OCAlgorithmTest test = new OCAlgorithmTest();
 		List<List<Byte>> observations = new ArrayList<List<Byte>>();
+		List<Double> hammingRatio = new ArrayList<Double>();
+		List<Double> hmmRatio = new ArrayList<Double>();
 		
-		for (int i = 19; i<=26; i++) {
-			String path = "nov-" + i + "-node-1.txt";
-			List<PIRData> pir = test.loadData(path);
-			List<Byte> observation = test.generateObservation(pir, 15);
-			test.printObservation(observation);
-			observations.add(observation);
+		
+		for (int s = 1; s <= 1; s++) {
+			for (int i = 19; i<=26; i++) {
+				String path = "nov-" + i + "-node-" + s + ".txt";
+				List<PIRData> pir = test.loadData(path);
+				List<Byte> observation = test.generateObservation(pir, 15);
+				test.printObservation(observation);
+				if (s > 1) {
+					observations.set(i - 19, test.merge(observations.get(i - 19), observation));
+				} else {
+					observations.add(observation);
+				}
+			}
 		}
 		
-		test.hammingExtension.loadData(observations);
+		for (int i = 0; i< observations.get(0).size(); i++) {
+			hammingRatio.add(0.0);
+			hmmRatio.add(0.0);
+		}
+	
+		List<List<Byte>> trained = test.ramdomize(observations, 0, 7 * 10);
+		// Build Schedule model
+		test.hammingExtension.loadData(trained);
+		// Build HMM model
+		List<List<ObservationDiscrete<Occupancy>>> occupancies = test.buildOccupancyList(trained);
+		test.hmmExtension = new HMMBasedLearningExtension(occupancies, test.occupancyDetection);
+		
+		List<List<Byte>> rondomized = test.ramdomize(observations, 1, 7 * 500);
+		// Evaluate the prediction correctness ratio
+		for (List<Byte> observation : trained) {
+			for (int i = 0; i < observation.size() - 1; i ++) {
+				
+				// Prediction by using hamming distance
+				boolean result = test.hammingExtension.predict(observation.subList(0, i), observation.size());
+				boolean real = observation.get(i + 1) == 1;
+				if (result == real) {
+					hammingRatio.set(i, hammingRatio.get(i) + 1.0);
+				}
+				
+				// Prediction by using hmm
+				List<ObservationDiscrete<Occupancy>> subsequence = test.convent(observation.subList(0, i));
+				subsequence.add(Occupancy.YES.observation());
+				double yp = test.hmmExtension.predict(subsequence);
+				subsequence.set(subsequence.size() - 1, Occupancy.NO.observation());
+				double np = test.hmmExtension.predict(subsequence);
+				if ((yp > np && observation.get(i) == 1) || (yp < np && observation.get(i) == 0)) {
+					hmmRatio.set(i, hmmRatio.get(i) + 1.0);
+				}
+			}
+		}
+		
+		test.printRatio(hammingRatio, 70);
+		test.printRatio(hmmRatio, 70);
 	}
 }

@@ -56,7 +56,7 @@ public class RingBuffer {
 	}
 	
 	/**
-	 * Copy bytes starts from k bytes back from curent header
+	 * Copy bytes starts from k bytes back from current header
 	 * 
 	 * @param dst 
 	 * @param k number of bytes back from header as start position

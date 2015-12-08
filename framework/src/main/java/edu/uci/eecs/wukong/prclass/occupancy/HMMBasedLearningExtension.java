@@ -28,17 +28,16 @@ public class HMMBasedLearningExtension extends LearningExtension<Byte> {
 	private Hmm<ObservationDiscrete<Occupancy>> hmm;
 	
 	@VisibleForTesting
-	public HMMBasedLearningExtension(List<List<ObservationDiscrete<Occupancy>>> sequences, PrClass prClass) {
+	public HMMBasedLearningExtension(List<List<ObservationDiscrete<Occupancy>>> sequences, OccupancyDetection prClass) {
 		super(prClass);
 		this.factory = new OpdfDiscreteFactory<Occupancy>(Occupancy.class);
-		this.hmm = new Hmm<ObservationDiscrete<Occupancy>>(states, factory);
+		this.hmm = new Hmm<ObservationDiscrete<Occupancy>>(5, factory);
 		this.hmm = bwl.learn(this.hmm, sequences);
 	}
 	
 	@VisibleForTesting
 	public double predict(List<ObservationDiscrete<Occupancy>> subsequence) {
-		
-		return 0;
+		return hmm.lnProbability(subsequence);
 	}
 	
 	public HMMBasedLearningExtension(OccupancyDetection plugin) {

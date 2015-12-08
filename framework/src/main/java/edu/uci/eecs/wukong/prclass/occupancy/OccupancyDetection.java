@@ -71,7 +71,9 @@ public class OccupancyDetection extends PrClass {
 	}
 	
 	public void setOccupancy(boolean occupancy) {
-		this.support.firePropertyChange("occupancy", this.occupancy, occupancy);
+		if (!isTest) {
+			this.support.firePropertyChange("occupancy", this.occupancy, occupancy);
+		}
 		this.occupancy = occupancy;
 	}
 

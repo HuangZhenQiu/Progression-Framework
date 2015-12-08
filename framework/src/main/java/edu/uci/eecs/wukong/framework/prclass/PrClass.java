@@ -42,14 +42,16 @@ public abstract class PrClass {
 	private static byte id = 1; 
 	private byte portId;
 	private String name;
-	private boolean online;
-	private boolean learning;
+	protected boolean online;
+	protected boolean learning;
+	protected boolean isTest = false;
 	protected PropertyChangeSupport support;
 	private ConfigurationManager configManager;
 	
 	@VisibleForTesting
 	public PrClass(String name, boolean isTest) {
 		this(name, false, false);
+		this.isTest = isTest;
 		if (!isTest) {
 			this.support = new PropertyChangeSupport(this);
 			this.configManager =  ConfigurationManager.getInstance();

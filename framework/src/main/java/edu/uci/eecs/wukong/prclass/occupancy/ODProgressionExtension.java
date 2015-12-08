@@ -68,6 +68,8 @@ public class ODProgressionExtension extends AbstractProgressionExtension
 	@WuTimer(interval = 60 * 15)
 	public void execute() {
 		if (buffer.isFull()) {
+			// queue need to build every time
+			queue.clear();
 			LocalDateTime time = LocalDateTime.now();
 			int slotsUtilNow = time.getHour() * 4 + time.getMinute() / 15;
 			byte[] currentSlots = new byte[slotsUtilNow];
@@ -76,13 +78,11 @@ public class ODProgressionExtension extends AbstractProgressionExtension
 				byte[] slots = new byte[24 * 4]; 
 				// get occupancy slots i days before
 				buffer.getByteFromPosition(slots, slotsUtilNow + i * slots.length);
-				int distance = calculateHammingDistance(currentSlots, slots, slotsUtilNow);
+				int distance = calculateHammingDistance(currentSlots, slots);
 				DaySlots daySlots = new DaySlots(slots, distance);
 				queue.add(daySlots);
 			}
 			predict(slotsUtilNow + 1);
-			// queue need to build every time
-			queue.clear();
 		}
 	}
 	
@@ -98,9 +98,17 @@ public class ODProgressionExtension extends AbstractProgressionExtension
 	}
 	
 	@VisibleForTesting
-	public boolean predict(List<Byte> observation) {
-
-		return false;
+	public boolean predict(List<Byte> observation, int size) {
+		queue.clear();
+		for (int i = 0; i < this.days; i++) {
+			byte[] slots = new byte[size];
+			buffer.getByteFromPosition(slots, slots.length);
+			int distance = calculateHammingDistance(observation, slots);
+			DaySlots daySlots = new DaySlots(slots, distance);
+			queue.add(daySlots);
+		}
+		
+		return predict(observation.size() + 1);
 	}
 	
 	private boolean predict(int slot) {
@@ -121,9 +129,20 @@ public class ODProgressionExtension extends AbstractProgressionExtension
 		return false;
 	}
 	
-	private int calculateHammingDistance(byte[] source, byte[] dest, int length) {
+	private int calculateHammingDistance(List<Byte> source, byte[] dest) {
+		byte[] bsource = new byte[source.size()];
+		int i = 0;
+		for (Byte b : source) {
+			bsource[i++] = b;
+		}
+		
+		return calculateHammingDistance(bsource, dest);
+	}
+	
+	private int calculateHammingDistance(byte[] source, byte[] dest) {
 		int distance = 0;
-		for (int i = 0; i < length; i++) {
+		int min = source.length > dest.length ? dest.length : source.length;
+		for (int i = 0; i < min; i++) {
 			if (source[i] != dest[i]) {
 				distance ++;
 			}

@@ -13,6 +13,7 @@ import edu.uci.eecs.wukong.framework.annotation.WuTimer;
 import edu.uci.eecs.wukong.framework.buffer.RingBuffer;
 import edu.uci.eecs.wukong.framework.extension.AbstractProgressionExtension;
 import edu.uci.eecs.wukong.prclass.occupancy.OccupancyDetection;
+import com.google.common.annotations.VisibleForTesting;
 
 public class ODProgressionExtension extends AbstractProgressionExtension
 	implements Executable, TimerExecutable {
@@ -80,10 +81,29 @@ public class ODProgressionExtension extends AbstractProgressionExtension
 				queue.add(daySlots);
 			}
 			predict(slotsUtilNow + 1);
+			// queue need to build every time
+			queue.clear();
 		}
 	}
 	
-	private void predict(int slot) {
+	@VisibleForTesting
+	public void loadData(List<List<Byte>> observations) {
+		buffer.clear();
+		this.days = observations.size() + 1;
+		for (int i = 0; i < observations.size(); i++) {
+			for (int j = 0; j < observations.get(i).size(); j ++) {
+				buffer.appendByte(observations.get(i).get(j));
+			}
+		}
+	}
+	
+	@VisibleForTesting
+	public boolean predict(List<Byte> observation) {
+
+		return false;
+	}
+	
+	private boolean predict(int slot) {
 		int occupiedDays = 0;
 		Iterator<DaySlots> iterator = queue.iterator();
 		while(iterator.hasNext()) {
@@ -96,7 +116,9 @@ public class ODProgressionExtension extends AbstractProgressionExtension
 		double prob = occupiedDays / (double)days;
 		if (prob > 0.5) {
 			oc.setOccupancy(true);
+			return true;
 		}
+		return false;
 	}
 	
 	private int calculateHammingDistance(byte[] source, byte[] dest, int length) {

@@ -133,4 +133,10 @@ public class RingBuffer {
 	public boolean isFull() {
 		return this.size == this.capacity;
 	}
+	
+	public void clear() {
+		this.buffer.clear();
+		this.header = 0;
+		this.size = 0;
+	}
 }

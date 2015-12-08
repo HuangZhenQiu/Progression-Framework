@@ -1,4 +1,4 @@
-package edu.uci.eecs.wukong.plugin.demo;
+package edu.uci.eecs.wukong.prclass.demo;
 
 import junit.framework.TestCase;
 

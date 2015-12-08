@@ -14,7 +14,7 @@ import edu.uci.eecs.wukong.framework.api.Extension;
 import edu.uci.eecs.wukong.framework.extension.AbstractProgressionExtension;
 import edu.uci.eecs.wukong.framework.factor.BaseFactor;
 import edu.uci.eecs.wukong.framework.manager.ConfigurationManager;
-
+import com.google.common.annotations.VisibleForTesting;
 /**
  * Since we assume there is only one application running at any time,
  * appId which is unique for a FBP is not used right now. 
@@ -47,18 +47,28 @@ public abstract class PrClass {
 	protected PropertyChangeSupport support;
 	private ConfigurationManager configManager;
 	
-	public PrClass(String name, boolean online, boolean learning) {
+	@VisibleForTesting
+	public PrClass(String name, boolean isTest) {
+		this(name, false, false);
+		if (!isTest) {
+			this.support = new PropertyChangeSupport(this);
+			this.configManager =  ConfigurationManager.getInstance();
+		}
+	}
+	
+	public PrClass(String name) {
+		this(name, false, false);
+		this.support = new PropertyChangeSupport(this);
+		this.configManager =  ConfigurationManager.getInstance();
+	}
+	
+	private PrClass(String name, boolean online, boolean learning) {
 		this.name = name;
 		this.online = online;
 		this.portId = id ++;
 		this.online = online;
 		this.learning = learning;
-		this.support = new PropertyChangeSupport(this);
-		this.configManager =  ConfigurationManager.getInstance();
-	}
 
-	public PrClass(String name) {
-		this(name, false, false);
 	}
 
 	public abstract List<Extension> registerExtension();

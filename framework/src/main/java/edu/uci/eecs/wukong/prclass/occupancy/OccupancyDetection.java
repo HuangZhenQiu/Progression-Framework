@@ -2,6 +2,7 @@ package edu.uci.eecs.wukong.prclass.occupancy;
 
 import java.util.List;
 
+import be.ac.ulg.montefiore.run.jahmm.ObservationDiscrete;
 import edu.uci.eecs.wukong.framework.api.Extension;
 import edu.uci.eecs.wukong.framework.prclass.PrClass;
 import edu.uci.eecs.wukong.framework.annotation.WuClass;
@@ -9,6 +10,7 @@ import edu.uci.eecs.wukong.framework.annotation.WuProperty;
 import edu.uci.eecs.wukong.framework.model.DataType;
 import edu.uci.eecs.wukong.framework.model.PropertyType;
 
+import com.google.common.annotations.VisibleForTesting;
 @WuClass(id = 10113)
 public class OccupancyDetection extends PrClass {
 	@WuProperty(name = "pir", id = 1, type = PropertyType.Input, dtype = DataType.Buffer)
@@ -21,6 +23,22 @@ public class OccupancyDetection extends PrClass {
 	private short interval;
 	@WuProperty(name = "occupancy", id = 4, type = PropertyType.Output)
 	private boolean occupancy;
+	
+	public enum Occupancy {
+		YES, NO;
+		
+		public ObservationDiscrete<Occupancy> observation() {
+			return new ObservationDiscrete<Occupancy>(this);
+		}
+	};
+	
+	@VisibleForTesting
+	public OccupancyDetection(short days, short topK, short interval) {
+		super("OccupancyDetection", true);
+		this.days = days;
+		this.topK = topK;
+		this.interval = interval;
+	}
 
 	public OccupancyDetection() {
 		super("OccupancyDetection");

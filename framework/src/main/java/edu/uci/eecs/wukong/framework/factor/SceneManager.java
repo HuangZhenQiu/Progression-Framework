@@ -1,6 +1,7 @@
 package edu.uci.eecs.wukong.framework.factor;
 
 import com.google.gson.Gson;
+import com.google.common.annotations.VisibleForTesting;
 
 import edu.uci.eecs.wukong.framework.api.ExecutionContext;
 import edu.uci.eecs.wukong.framework.prclass.PrClass;
@@ -31,14 +32,21 @@ public class SceneManager {
 	private Set<String> topicFilterSet;
 	private FactorClientListener factorClientListener;
 	private List<FactorListener> listeners;
+	private FactorMetrics metrics;
 	
+	@VisibleForTesting
 	public SceneManager() {
-		pluginContextMap = new HashMap<PrClass, List<String>>();
-		factors = new ConcurrentHashMap<String, BaseFactor>();
-		listeners = new ArrayList<FactorListener>();
-		factorClient = FactorClientFactory.getFactorClient();
-		topicFilterSet = new HashSet<String>();
-		factorClientListener = new XMPPFactorListener(factors, listeners);
+		this(null);
+	}
+
+	public SceneManager(FactorMetrics metrics) {
+		this.pluginContextMap = new HashMap<PrClass, List<String>>();
+		this.factors = new ConcurrentHashMap<String, BaseFactor>();
+		this.listeners = new ArrayList<FactorListener>();
+		this.factorClient = FactorClientFactory.getFactorClient();
+		this.topicFilterSet = new HashSet<String>();
+		this.factorClientListener = new XMPPFactorListener(factors, listeners);
+		this.metrics = metrics;
 		subscribeTestFactor();
 	}
 	

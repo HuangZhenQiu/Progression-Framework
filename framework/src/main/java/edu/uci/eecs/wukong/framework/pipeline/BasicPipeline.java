@@ -29,8 +29,8 @@ public class BasicPipeline extends Pipeline {
 		
 	}
 	
-	public BasicPipeline(SceneManager sceneManager, FeatureChoosers featureChoosers) {
-		super(sceneManager, featureChoosers);
+	public BasicPipeline(SceneManager sceneManager, FeatureChoosers featureChoosers, PipelineMetrics pieplineMetrics) {
+		super(sceneManager, featureChoosers, pieplineMetrics);
 		this.progressionPoint = new ProgressionExtensionPoint(this);
 		this.featureExtractionPoint = new FeatureExtractionExtensionPoint(featureChoosers, this);
 		this.learningPoint = new LearningExtensionPoint(this);

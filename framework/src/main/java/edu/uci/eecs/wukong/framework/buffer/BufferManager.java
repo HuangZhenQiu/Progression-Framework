@@ -20,6 +20,7 @@ import edu.uci.eecs.wukong.framework.model.WuObjectModel;
 import edu.uci.eecs.wukong.framework.model.WuPropertyModel;
 import edu.uci.eecs.wukong.framework.wkpf.MPTN;
 
+import com.google.common.annotations.VisibleForTesting;
 public class BufferManager {
 	private final static Logger LOGGER = LoggerFactory.getLogger(BufferManager.class);
 	// Map network port property to buffer
@@ -28,13 +29,19 @@ public class BufferManager {
 	private Map<NPP, Channel> channelMap;
 	// Timer to set index for buffer
 	private Timer timer;
-	
 	private MPTN mptn;
+	private BufferMetrics metrics;
 
+	@VisibleForTesting
 	public BufferManager() {
+		this(null);
+	}
+	
+	public BufferManager(BufferMetrics metrics) {
 		this.bufferMap = new HashMap<NPP, DoubleTimeIndexDataBuffer<?>>();
 		this.channelMap = new HashMap<NPP, Channel>();
 		this.timer = new Timer();
+		this.metrics = metrics;
 	}
 	
 	public void setMPTN(MPTN mptn) {

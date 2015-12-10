@@ -30,17 +30,19 @@ public abstract class Pipeline extends Graph implements FactorListener{
 	protected BufferManager bufferManager;
 	protected FeatureChoosers featureChoosers;
 	protected ExecutorService executor;
+	protected PipelineMetrics pipelineMetrics;
 	
 	@VisibleForTesting
 	public Pipeline() {
 		
 	}
 	
-	public Pipeline(SceneManager sceneManager, FeatureChoosers featureChoosers) {
+	public Pipeline(SceneManager sceneManager, FeatureChoosers featureChoosers, PipelineMetrics pipelineMetrics) {
 		this.sceneManager = sceneManager;
 		this.configurationManager = ConfigurationManager.getInstance();
 		this.featureChoosers = featureChoosers;
 		this.sceneManager.subsribeFactor(this);
+		this.pipelineMetrics = pipelineMetrics;
 	}
 	
 	public void addExentionPoint(ExtensionPoint<?> point) {

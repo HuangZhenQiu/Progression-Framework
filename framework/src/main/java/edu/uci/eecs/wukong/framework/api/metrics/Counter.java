@@ -44,6 +44,10 @@ public class Counter implements Metrics {
 		return count.get();
 	}
 	
+	public String getName() {
+		return this.name;
+	}
+	
 	@Override
 	public void visit(MetricsVisitor visitor) {
 		visitor.counter(this);

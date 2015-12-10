@@ -14,15 +14,20 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
 import edu.uci.eecs.wukong.framework.buffer.BufferManager;
+import edu.uci.eecs.wukong.framework.buffer.BufferMetrics;
+import edu.uci.eecs.wukong.framework.metrics.MetricsRegistryHolder;
 import edu.uci.eecs.wukong.framework.factor.SceneManager;
+import edu.uci.eecs.wukong.framework.factor.FactorMetrics;
 import edu.uci.eecs.wukong.framework.monitor.MonitorManager;
 import edu.uci.eecs.wukong.framework.model.StateModel;
 import edu.uci.eecs.wukong.framework.pipeline.BasicPipeline;
 import edu.uci.eecs.wukong.framework.pipeline.Pipeline;
+import edu.uci.eecs.wukong.framework.pipeline.PipelineMetrics;
 import edu.uci.eecs.wukong.framework.prclass.PrClassManager;
 import edu.uci.eecs.wukong.framework.select.FeatureChoosers;
 import edu.uci.eecs.wukong.framework.state.StateManager;
 import edu.uci.eecs.wukong.framework.wkpf.WKPF;
+import edu.uci.eecs.wukong.framework.wkpf.WKPFMetrics;
 import edu.uci.eecs.wukong.framework.util.Configuration;
 import edu.uci.eecs.wukong.rpc.netty.CommunicationServer;
 import edu.uci.eecs.wukong.rpc.netty.service.DataService;
@@ -32,7 +37,8 @@ public class ProgressionServer {
 	private static Logger logger = LoggerFactory.getLogger(ProgressionServer.class);
 	private static Configuration configuration = Configuration.getInstance();
 	private static boolean isTest = false;
-    private CommunicationServer server;
+	private MetricsRegistryHolder registryHolder;
+	private CommunicationServer server;
 	private SceneManager contextManager;
 	private BufferManager bufferManager;
 	private PrClassManager pluginManager;
@@ -48,14 +54,19 @@ public class ProgressionServer {
 			logger.info("Starting server in test model");
 		}
 		init(peerInfo);
-		this.bufferManager = new BufferManager();
-		this.contextManager = new SceneManager();
-		this.wkpf = new WKPF(bufferManager);
+		this.registryHolder = new MetricsRegistryHolder();
+		BufferMetrics bufferMetrics = new BufferMetrics(this.registryHolder);
+		FactorMetrics factorMetrics = new FactorMetrics(this.registryHolder);
+		PipelineMetrics pieplineMetrocs = new PipelineMetrics(this.registryHolder);
+		WKPFMetrics wkpfMetrics = new WKPFMetrics(this.registryHolder);
+		this.bufferManager = new BufferManager(bufferMetrics);
+		this.contextManager = new SceneManager(factorMetrics);
+		this.wkpf = new WKPF(bufferManager, wkpfMetrics);
 		if (configuration.isMonitorEnabled()) {
 			this.monitorManager = new MonitorManager(wkpf);
 		}
 		this.featureChoosers = new FeatureChoosers(bufferManager, wkpf);
-		this.pipeline = new BasicPipeline(contextManager, featureChoosers);	
+		this.pipeline = new BasicPipeline(contextManager, featureChoosers, pieplineMetrocs);	
 		this.pluginManager = new PrClassManager(wkpf, contextManager, pipeline, bufferManager);
 		this.stateManager = new StateManager(wkpf, pluginManager);
 		this.wkpf.register(pluginManager);

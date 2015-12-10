@@ -32,6 +32,7 @@ import edu.uci.eecs.wukong.framework.prclass.PrClassInitListener;
 import edu.uci.eecs.wukong.framework.state.StateUpdateListener;
 import edu.uci.eecs.wukong.framework.monitor.MonitorListener;
 
+import com.google.common.annotations.VisibleForTesting;
 /**
  * 
  * TODO (Peter Huang) use WKPFCOMM layer to simply reply message
@@ -63,8 +64,14 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 	private List<PrClassInitListener> listeners;
 	private List<StateUpdateListener> stateListeners;
 	private List<MonitorListener> monitorListeners;
+	private WKPFMetrics metrics;
 
+	@VisibleForTesting
 	public WKPF(BufferManager bufferManager) {
+		this(bufferManager, null);
+	}
+	
+	public WKPF(BufferManager bufferManager, WKPFMetrics metrics) {
 		this.wuclasses = new ArrayList<WuClassModel> ();
 		this.portToWuObjectMap = new TreeMap<Byte, WuObjectModel> ();
 		this.listeners = new ArrayList<PrClassInitListener> ();
@@ -75,6 +82,7 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 		this.stateListeners = new ArrayList<StateUpdateListener> ();
 		this.monitorListeners = new ArrayList<MonitorListener> ();
 		this.bufferManager = bufferManager;
+		this.metrics = metrics;
 		// Intial default location
 		this.location = "/WuKong";
 	}

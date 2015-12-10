@@ -1,12 +1,11 @@
 package edu.uci.eecs.wukong.framework.service;
 
-import edu.uci.eecs.wukong.framework.manager.ConfigurationManager.ConfigurationType;
+import edu.uci.eecs.wukong.framework.reconfig.ConfigurationManager.ConfigurationType;
 
 import java.io.IOException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;

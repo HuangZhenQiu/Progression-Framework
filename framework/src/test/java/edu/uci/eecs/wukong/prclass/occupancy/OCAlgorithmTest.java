@@ -164,7 +164,7 @@ public class OCAlgorithmTest {
 		for (int i = 0; i < round; i++) {
 			for (int j = 0; j < observations.size(); j++) {
 				List<Byte> copy = deepCopy(observations.get(j));
-				for (int k = 0; k < size ; k++) {
+				for (int k = 0; k < slots ; k++) {
 					int ron = rn.nextInt(observations.get(j).size());
 					copy.set(ron, (byte) (1- copy.get(ron)));
 				}
@@ -187,7 +187,7 @@ public class OCAlgorithmTest {
 	private void printRatio(List<Double> ratio, int total) {
 		for (Double r : ratio) {
 			System.out.print(r / total);
-			System.out.print(" ");
+			System.out.print(",");
 		}
 		System.out.println();
 	}
@@ -198,7 +198,7 @@ public class OCAlgorithmTest {
 		int max = a.size() > b.size() ? a.size() : b.size();
 		for (int i = 0; i< max; i++) {
 			if ( i < a.size() && i < b.size()) {
-				merged.add((byte) (a.get(i) & b.get(i)));
+				merged.add((byte) (a.get(i) | b.get(i)));
 			} else if (i < a.size()) {
 				merged.add(a.get(i));
 			} else {
@@ -235,38 +235,42 @@ public class OCAlgorithmTest {
 			hmmRatio.add(0.0);
 		}
 	
-		List<List<Byte>> trained = test.ramdomize(observations, 0, 7 * 10);
+		List<List<Byte>> trained = test.ramdomize(observations, 3, 32);
 		// Build Schedule model
 		test.hammingExtension.loadData(trained);
 		// Build HMM model
 		List<List<ObservationDiscrete<Occupancy>>> occupancies = test.buildOccupancyList(trained);
 		test.hmmExtension = new HMMBasedLearningExtension(occupancies, test.occupancyDetection);
 		
-		List<List<Byte>> rondomized = test.ramdomize(observations, 1, 7 * 500);
-		// Evaluate the prediction correctness ratio
-		for (List<Byte> observation : trained) {
-			for (int i = 0; i < observation.size() - 1; i ++) {
-				
-				// Prediction by using hamming distance
-				boolean result = test.hammingExtension.predict(observation.subList(0, i), observation.size());
-				boolean real = observation.get(i + 1) == 1;
-				if (result == real) {
-					hammingRatio.set(i, hammingRatio.get(i) + 1.0);
-				}
-				
-				// Prediction by using hmm
-				List<ObservationDiscrete<Occupancy>> subsequence = test.convent(observation.subList(0, i));
-				subsequence.add(Occupancy.YES.observation());
-				double yp = test.hmmExtension.predict(subsequence);
-				subsequence.set(subsequence.size() - 1, Occupancy.NO.observation());
-				double np = test.hmmExtension.predict(subsequence);
-				if ((yp > np && observation.get(i) == 1) || (yp < np && observation.get(i) == 0)) {
-					hmmRatio.set(i, hmmRatio.get(i) + 1.0);
+		
+		int round = 10;
+		for (int j = 0; j < round; j ++) {
+			List<List<Byte>> rondomized = test.ramdomize(observations, 3, 8 * 100);
+			// Evaluate the prediction correctness ratio
+			for (List<Byte> observation : rondomized) {
+				for (int i = 0; i < observation.size() - 1; i++) {
+					
+					// Prediction by using hamming distance
+					boolean result = test.hammingExtension.predict(observation.subList(0, i), observation.size());
+					boolean real = observation.get(i + 1) == 1;
+					if (result == real) {
+						hammingRatio.set(i, hammingRatio.get(i) + 1.0);
+					}
+					
+					// Prediction by using hmm
+					List<ObservationDiscrete<Occupancy>> subsequence = test.convent(observation.subList(0, i));
+					subsequence.add(Occupancy.YES.observation());
+					double yp = test.hmmExtension.predict(subsequence);
+					subsequence.set(subsequence.size() - 1, Occupancy.NO.observation());
+					double np = test.hmmExtension.predict(subsequence);
+					if ((yp >= np && observation.get(i + 1) == 1) || (yp <= np && observation.get(i + 1) == 0)) {
+						hmmRatio.set(i, hmmRatio.get(i) + 1.0);
+					}
 				}
 			}
 		}
 		
-		test.printRatio(hammingRatio, 70);
-		test.printRatio(hmmRatio, 70);
+		test.printRatio(hammingRatio, 800 * round);
+		test.printRatio(hmmRatio, 800 * round);
 	}
 }

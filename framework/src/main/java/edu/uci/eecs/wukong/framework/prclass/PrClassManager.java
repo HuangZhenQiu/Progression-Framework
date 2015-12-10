@@ -1,12 +1,11 @@
-package edu.uci.eecs.wukong.framework.manager;
+package edu.uci.eecs.wukong.framework.prclass;
 
 import edu.uci.eecs.wukong.framework.annotation.WuProperty;
 import edu.uci.eecs.wukong.framework.annotation.WuClass;
+import edu.uci.eecs.wukong.framework.buffer.BufferManager;
 import edu.uci.eecs.wukong.framework.exception.PluginNotFoundException;
+import edu.uci.eecs.wukong.framework.factor.SceneManager;
 import edu.uci.eecs.wukong.framework.pipeline.Pipeline;
-import edu.uci.eecs.wukong.framework.prclass.PrClass;
-import edu.uci.eecs.wukong.framework.prclass.PrClassInitListener;
-import edu.uci.eecs.wukong.framework.prclass.PrClassPropertyMonitor;
 import edu.uci.eecs.wukong.framework.model.NPP;
 import edu.uci.eecs.wukong.framework.model.WuClassModel;
 import edu.uci.eecs.wukong.framework.model.WuObjectModel;
@@ -31,8 +30,8 @@ import java.lang.reflect.Field;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class PluginManager implements PrClassInitListener {
-	private final static Logger LOGGER = LoggerFactory.getLogger(PluginManager.class);
+public class PrClassManager implements PrClassInitListener {
+	private final static Logger LOGGER = LoggerFactory.getLogger(PrClassManager.class);
 	private static final String PLUGIN_DEFINATION_PATH = "plugins.txt";
 	private final static String PLUGIN_PATH = "edu.uci.eecs.wukong.prclass";
 	private BufferManager bufferManager;
@@ -48,7 +47,7 @@ public class PluginManager implements PrClassInitListener {
 	private List<String> pluginNames;
 	private List<StateUpdateListener> listeners;
 	
-	public PluginManager(WKPF wkpf, SceneManager contextManager, Pipeline pipeline, BufferManager bufferManager) {
+	public PrClassManager(WKPF wkpf, SceneManager contextManager, Pipeline pipeline, BufferManager bufferManager) {
 		this.bufferManager = bufferManager;
 		this.contextManager = contextManager;
 		this.pipeline = pipeline;
@@ -101,7 +100,7 @@ public class PluginManager implements PrClassInitListener {
 	public void init(StateModel model) throws Exception {
 		for (String pluginName : pluginNames) {
 			String path = PLUGIN_PATH + '.' + pluginName;
-			ClassLoader loader = PluginManager.class.getClassLoader();
+			ClassLoader loader = PrClassManager.class.getClassLoader();
 			Class<?> c = loader.loadClass(path);
 			WuClassModel wuClassModel = createWuClassModel(path, c);
 			
@@ -216,7 +215,7 @@ public class PluginManager implements PrClassInitListener {
 			throw new PluginNotFoundException("Try to load unregisted plugin.");
 		}
 		
-		ClassLoader loader = PluginManager.class.getClassLoader();
+		ClassLoader loader = PrClassManager.class.getClassLoader();
 		Class<?> c = loader.loadClass(path);
 		WuClassModel wuClassModel = createWuClassModel(path, c);
 		PrClass plugin = (PrClass)c.getConstructor(String.class, String.class).newInstance(name, appId);

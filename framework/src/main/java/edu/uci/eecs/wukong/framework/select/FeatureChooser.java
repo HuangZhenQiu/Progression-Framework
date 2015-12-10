@@ -1,7 +1,7 @@
 package edu.uci.eecs.wukong.framework.select;
 
+import edu.uci.eecs.wukong.framework.buffer.BufferManager;
 import edu.uci.eecs.wukong.framework.buffer.DataPoint;
-import edu.uci.eecs.wukong.framework.manager.BufferManager;
 import edu.uci.eecs.wukong.framework.operator.Operator;
 import edu.uci.eecs.wukong.framework.operator.SingleOperator;
 import edu.uci.eecs.wukong.framework.operator.MultipleOperator;

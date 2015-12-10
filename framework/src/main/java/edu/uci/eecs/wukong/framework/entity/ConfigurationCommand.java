@@ -1,6 +1,6 @@
 package edu.uci.eecs.wukong.framework.entity;
 
-import edu.uci.eecs.wukong.framework.manager.ConfigurationManager.ConfigurationType;
+import edu.uci.eecs.wukong.framework.reconfig.ConfigurationManager.ConfigurationType;
 
 import java.util.ArrayList;
 import java.util.List;

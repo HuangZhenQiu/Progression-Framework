@@ -2,13 +2,13 @@ package edu.uci.eecs.wukong.framework.pipeline;
 
 import edu.uci.eecs.wukong.framework.api.ExecutionContext;
 import edu.uci.eecs.wukong.framework.api.Extension;
-import edu.uci.eecs.wukong.framework.manager.BufferManager;
-import edu.uci.eecs.wukong.framework.manager.ConfigurationManager;
-import edu.uci.eecs.wukong.framework.manager.SceneManager;
+import edu.uci.eecs.wukong.framework.buffer.BufferManager;
 import edu.uci.eecs.wukong.framework.prclass.PrClass;
+import edu.uci.eecs.wukong.framework.reconfig.ConfigurationManager;
 import edu.uci.eecs.wukong.framework.select.FeatureChoosers;
 import edu.uci.eecs.wukong.framework.factor.BaseFactor;
 import edu.uci.eecs.wukong.framework.factor.FactorListener;
+import edu.uci.eecs.wukong.framework.factor.SceneManager;
 import edu.uci.eecs.wukong.framework.graph.ExtensionPoint;
 import edu.uci.eecs.wukong.framework.graph.Graph;
 import edu.uci.eecs.wukong.framework.graph.Link;

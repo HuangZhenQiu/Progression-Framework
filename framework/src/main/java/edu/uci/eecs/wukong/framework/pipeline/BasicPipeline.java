@@ -15,7 +15,7 @@ import edu.uci.eecs.wukong.framework.entity.ModelEntity;
 import edu.uci.eecs.wukong.framework.extension.AbstractProgressionExtension;
 import edu.uci.eecs.wukong.framework.extension.FeatureExtractionExtension;
 import edu.uci.eecs.wukong.framework.extension.LearningExtension;
-import edu.uci.eecs.wukong.framework.manager.SceneManager;
+import edu.uci.eecs.wukong.framework.factor.SceneManager;
 import edu.uci.eecs.wukong.framework.select.FeatureChoosers;
 
 public class BasicPipeline extends Pipeline {

@@ -1,4 +1,4 @@
-package edu.uci.eecs.wukong.framework.manager;
+package edu.uci.eecs.wukong.framework.buffer;
 
 import java.util.List;
 import java.util.HashMap;
@@ -11,8 +11,6 @@ import org.slf4j.LoggerFactory;
 
 import edu.uci.eecs.wukong.framework.api.Channelable;
 import edu.uci.eecs.wukong.framework.extension.AbstractProgressionExtension;
-import edu.uci.eecs.wukong.framework.buffer.DataPoint;
-import edu.uci.eecs.wukong.framework.buffer.DoubleTimeIndexDataBuffer;
 import edu.uci.eecs.wukong.framework.channel.Channel;
 import edu.uci.eecs.wukong.framework.model.DataType;
 import edu.uci.eecs.wukong.framework.model.NPP;

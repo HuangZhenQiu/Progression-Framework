@@ -1,8 +1,8 @@
 package edu.uci.eecs.wukong.framework.select;
 
+import edu.uci.eecs.wukong.framework.buffer.BufferManager;
 import edu.uci.eecs.wukong.framework.extension.FeatureExtractionExtension;
 import edu.uci.eecs.wukong.framework.operator.Operator;
-import edu.uci.eecs.wukong.framework.manager.BufferManager;
 import edu.uci.eecs.wukong.framework.prclass.PrClass;
 import edu.uci.eecs.wukong.framework.model.NPP;
 import edu.uci.eecs.wukong.framework.wkpf.WKPF;

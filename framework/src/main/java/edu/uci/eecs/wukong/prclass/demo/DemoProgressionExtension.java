@@ -33,8 +33,8 @@ import edu.uci.eecs.wukong.framework.entity.HueEntity;
 import edu.uci.eecs.wukong.framework.extension.ProgressionExtension;
 import edu.uci.eecs.wukong.framework.factor.BaseFactor;
 import edu.uci.eecs.wukong.framework.util.Configuration;
-import edu.uci.eecs.wukong.framework.manager.ConfigurationManager.ConfigurationType;
 import edu.uci.eecs.wukong.framework.prclass.PrClass;
+import edu.uci.eecs.wukong.framework.reconfig.ConfigurationManager.ConfigurationType;
 
 public class DemoProgressionExtension extends ProgressionExtension<FeatureEntity> {
 	private static Logger logger = LoggerFactory.getLogger(DemoProgressionExtension.class);

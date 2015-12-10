@@ -13,7 +13,8 @@ import edu.uci.eecs.wukong.framework.annotation.WuProperty;
 import edu.uci.eecs.wukong.framework.api.Extension;
 import edu.uci.eecs.wukong.framework.extension.AbstractProgressionExtension;
 import edu.uci.eecs.wukong.framework.factor.BaseFactor;
-import edu.uci.eecs.wukong.framework.manager.ConfigurationManager;
+import edu.uci.eecs.wukong.framework.reconfig.ConfigurationManager;
+
 import com.google.common.annotations.VisibleForTesting;
 /**
  * Since we assume there is only one application running at any time,

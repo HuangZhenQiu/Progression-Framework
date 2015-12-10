@@ -2,8 +2,8 @@ package edu.uci.eecs.wukong.framework.state;
 
 import edu.uci.eecs.wukong.framework.util.Configuration;
 import edu.uci.eecs.wukong.framework.wkpf.WKPF;
-import edu.uci.eecs.wukong.framework.manager.PluginManager;
 import edu.uci.eecs.wukong.framework.model.StateModel;
+import edu.uci.eecs.wukong.framework.prclass.PrClassManager;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -32,10 +32,10 @@ public class StateManager implements StateUpdateListener {
 	private Configuration configuration = Configuration.getInstance();
 	private static Gson gson = new Gson();
 	private WKPF wkpf;
-	private PluginManager pluginManager;
+	private PrClassManager pluginManager;
 	private String path;
 	
-	public StateManager(WKPF wkpf, PluginManager pluginManager) {
+	public StateManager(WKPF wkpf, PrClassManager pluginManager) {
 		try {
 			this.wkpf = wkpf;
 			this.pluginManager = pluginManager;

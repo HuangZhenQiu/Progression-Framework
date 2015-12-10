@@ -10,11 +10,9 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import edu.uci.eecs.wukong.framework.manager.PluginManager;
-
 public class PrClassPropertyMonitor {
 	private static Logger logger = LoggerFactory.getLogger(PrClassPropertyMonitor.class);
-	private PluginManager manager;
+	private PrClassManager manager;
 	private Map<PrClass, List<String>> monitoredProperties;
 	
 	private PropertyChangeListener listener = new PropertyChangeListener() {
@@ -24,7 +22,7 @@ public class PrClassPropertyMonitor {
 		 }
 	};
 	
-	public PrClassPropertyMonitor(PluginManager manager) {
+	public PrClassPropertyMonitor(PrClassManager manager) {
 		this.manager = manager;
 		this.monitoredProperties = new HashMap<PrClass, List<String>>();
 	}

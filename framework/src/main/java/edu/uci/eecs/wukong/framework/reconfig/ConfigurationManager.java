@@ -1,4 +1,4 @@
-package edu.uci.eecs.wukong.framework.manager;
+package edu.uci.eecs.wukong.framework.reconfig;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -103,4 +103,8 @@ public final class DoubleTimeIndexDataBuffer<T> {
 	protected DataRingBuffer<T> getDataRingBuffer() {
 		return this.dataBuffer;
 	}
+	
+	public int getSize() {
+		return indexBuffer.getSize() + dataBuffer.getSize();
+	}
 }

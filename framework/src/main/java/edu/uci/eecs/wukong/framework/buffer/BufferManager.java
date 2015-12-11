@@ -4,12 +4,14 @@ import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
+import java.util.TimerTask;
 import java.lang.IllegalArgumentException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import edu.uci.eecs.wukong.framework.api.Channelable;
+import edu.uci.eecs.wukong.framework.api.metrics.Gauge;
 import edu.uci.eecs.wukong.framework.extension.AbstractProgressionExtension;
 import edu.uci.eecs.wukong.framework.channel.Channel;
 import edu.uci.eecs.wukong.framework.model.DataType;
@@ -42,10 +44,26 @@ public class BufferManager {
 		this.channelMap = new HashMap<NPP, Channel>();
 		this.timer = new Timer();
 		this.metrics = metrics;
+		this.timer.schedule(new BufferMetricsTask(), 0, 10 * 1000);
 	}
 	
 	public void setMPTN(MPTN mptn) {
 		this.mptn = mptn;
+	}
+	
+	private class BufferMetricsTask extends TimerTask {
+
+		@Override
+		public void run() {
+			int totalSize = 0;
+			for (NPP npp : bufferMap.keySet()) {
+				Gauge<Integer> gauge = metrics.getBufferSizeGauge(npp);
+				totalSize += bufferMap.get(npp).getSize();
+				gauge.set(bufferMap.get(npp).getSize());
+			}
+			
+			metrics.bufferTotalSize.set(totalSize);
+		}
 	}
 	
 	public void bind(WuObjectModel model) {
@@ -89,6 +107,7 @@ public class BufferManager {
 		
 		bufferMap.put(key, buffer);
 		timer.scheduleAtFixedRate(buffer.getIndexer(), 1000, buffer.getInterval());
+		metrics.bufferCounter.set(bufferMap.size());
 		LOGGER.info("Created Byte Buffer with key : " + key);
 		return true;
 	}
@@ -103,6 +122,7 @@ public class BufferManager {
 		
 		bufferMap.put(key, buffer);
 		timer.scheduleAtFixedRate(buffer.getIndexer(), 1000, buffer.getInterval());
+		metrics.bufferCounter.set(bufferMap.size());
 		LOGGER.info("Created Short Buffer with key : " + key);
 		return true;
 	}
@@ -114,6 +134,7 @@ public class BufferManager {
 		
 		Channel channel = new Channel(key);
 		channelMap.put(key, channel);
+		metrics.bufferCounter.set(channelMap.size());
 		LOGGER.info("Created Short Channel with key : " + key);
 		return true;
 	}

@@ -36,4 +36,8 @@ public final class TimeIndexBuffer extends RingBuffer {
 	public void appendIndex(int pos) {
 		this.appendInt(pos);
 	}
+	
+	public int getSize() {
+		return this.getCapacity();
+	}
 }

@@ -8,7 +8,7 @@ import java.nio.ByteOrder;
  * It is a ring buffer implementation on a direct buffer of Java NIO. 
  */
 public class RingBuffer {
-	private ByteBuffer buffer;
+	protected ByteBuffer buffer;
 	private int header;
 	private int size;
 	private int capacity;

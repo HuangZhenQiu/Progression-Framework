@@ -207,16 +207,19 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 				byte propertyId = wuobject.getPropertyId(property);
 				if (componentId == -1) {
 					LOGGER.error("The plugin is not used in the application, can't propogate dirty message.");
+					metrics.setPropertyErrorCounter.inc();
 					return;
 				}
 				
 				if (propertyId == -1) {
 					LOGGER.error("Not recgonized property " + property + " , can find propertyId for it");
+					metrics.setPropertyErrorCounter.inc();
 					return;
 				}
 				
 				if (!djaData.isReadable()) {
 					LOGGER.error("Progression server in reprogramming, can send data out.");
+					metrics.setPropertyErrorCounter.inc();
 					return;
 				}
 				
@@ -230,6 +233,7 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 					
 					if (destWuClassId == -1 || destNodeId == -1 || destPortId == -1) {
 						LOGGER.error("Error in either link table or component map, can't find info for dest info for link " + link);
+						metrics.setPropertyErrorCounter.inc();
 					} else {
 						if (destNodeId == mptn.getLongAddress()) {
 							// TODO Peter Huang connect two plugins in a progression server together
@@ -281,11 +285,14 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 							buffer.put((byte) 0);
 							
 							mptn.send((int)destNodeId, buffer.array());
+							metrics.setPropertyCounter.inc();
 							LOGGER.info("Send set property message to destination : " + destNodeId + " with data " + toHexString(buffer.array()));
 
 						}
 					}
 				}
+				
+				
 			}
 		} catch (Exception e) {
 			LOGGER.error(e.toString());
@@ -349,6 +356,7 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 			}
 		}
 		
+		metrics.getWuClassCounter.inc();
 		mptn.send(MPTNUtil.MPTN_MASTER_ID, buffer.array());
 	}
 
@@ -393,6 +401,7 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 			}
 		}
 		
+		metrics.getWuObjectCounter.inc();
 		mptn.send(MPTNUtil.MPTN_MASTER_ID, buffer.array());
 	}
 
@@ -444,6 +453,7 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 		buffer.put((byte) (wuclassId / 256));
 		buffer.put(propertyId);
 		
+		metrics.writePropertyCounter.inc();
 		mptn.send(new Long(sourceId).intValue(), buffer.array());
 	}
 	
@@ -471,6 +481,7 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 		buffer.put(port);
 		buffer.put(propertyId);
 		
+		metrics.propertyInitCounter.inc();
 		mptn.send(new Long(sourceId).intValue(), buffer.array());
 	}
 
@@ -489,6 +500,7 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 			
 			MonitorDataModel model = new MonitorDataModel(
 					sourceId, wuCLassId, port, propertyNum, type, value, System.currentTimeMillis());
+			metrics.minitorCounter.inc();
 			this.fireMonitorEvent(model);
 		} else {
 			LOGGER.error("Recevied Broken Monitoring message data = " + message);
@@ -517,6 +529,7 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 		
 		ByteBuffer buffer = ByteBuffer.allocate(1);
 		buffer.put(WKPFUtil.WKPF_SET_LOCATION_R);
+		metrics.setLocationCounter.inc();
 		mptn.send(MPTNUtil.MPTN_MASTER_ID, buffer.array());
 	}
 
@@ -527,6 +540,7 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 		buffer.put(message[2]);
 		buffer.put((byte)this.location.getBytes().length);
 		buffer.put(location.getBytes());
+		metrics.getLocationCounter.inc();
 		mptn.send(MPTNUtil.MPTN_MASTER_ID, buffer.array());
 	}
 	
@@ -554,6 +568,8 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 		}
 		buffer.put((byte) (DJAData.DEFAULT_PAGE_SIZE % 256));
 		buffer.put((byte) (DJAData.DEFAULT_PAGE_SIZE / 256));
+		
+		metrics.reprogramOpenCounter.inc();
 		mptn.send(MPTNUtil.MPTN_MASTER_ID, buffer.array());
 	}
 	
@@ -573,6 +589,8 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 		} else {
 			buffer.put(WKPFUtil.WKPF_REPROG_FAILED);
 		}
+		
+		metrics.reprogramWriteCounter.inc();
 		mptn.send(MPTNUtil.MPTN_MASTER_ID, buffer.array());
 	}
 	
@@ -590,6 +608,8 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 		} else {
 			buffer.put(WKPFUtil.WKPF_REPROG_FAILED);
 		}
+		
+		metrics.reprogramCommitCounter.inc();
 		mptn.send(MPTNUtil.MPTN_MASTER_ID, buffer.array());
 		djaData.fireUpdateEvent();
 	}

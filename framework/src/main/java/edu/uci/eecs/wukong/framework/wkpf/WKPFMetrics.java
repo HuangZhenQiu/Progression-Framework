@@ -12,8 +12,17 @@ public class WKPFMetrics extends MetricsHelper {
 	
 	protected Counter getWuClassCounter = newCounter("get-wuclass-count");
 	protected Counter getWuObjectCounter = newCounter("get-wuobject-count");
-	protected Counter reprogramCounter = newCounter("reprogram-count");
-	protected Counter setPropertyCounter = newCounter("set=property-count");
+	protected Counter getLocationCounter = newCounter("get-location-count");
+	protected Counter reprogramOpenCounter = newCounter("reprogram-open-count");
+	protected Counter reprogramWriteCounter = newCounter("reprogram-write-count");
+	protected Counter reprogramCommitCounter = newCounter("reprogram-commit-count");
+	protected Counter reprogramErrorCounter = newCounter("reprogram-error-count");
+	protected Counter setPropertyCounter = newCounter("set-property-count");
+	protected Counter setLocationCounter = newCounter("set-location-count");
+	protected Counter setPropertyErrorCounter = newCounter("set-proper-error-count");
+	protected Counter writePropertyCounter = newCounter("write-property-count");
+	protected Counter minitorCounter = newCounter("monitor-count");
+	protected Counter propertyInitCounter = newCounter("propety-init-counter");
 	
 	public WKPFMetrics(MetricsRegistry registry) {
 		super(registry);

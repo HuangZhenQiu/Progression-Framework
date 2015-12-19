@@ -22,6 +22,10 @@ public class Gauge<T> implements Metrics {
 		return ref.compareAndSet(expect, update);
 	}
 	
+	public T get() {
+		return ref.get();
+	}
+	
 	public T set(T n) {
 		return ref.getAndSet(n);
 	}

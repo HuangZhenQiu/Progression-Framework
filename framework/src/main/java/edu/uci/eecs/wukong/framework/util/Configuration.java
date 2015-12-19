@@ -14,16 +14,25 @@ public class Configuration {
 	private static final String MASTER_PORT = "MASTER.PORT";
 	private static final String GATEWAY_IP = "GATEWAY.IP";
 	private static final String GATEWAY_PORT = "GATEWAY.PORT";
+	
+	private static final String GRAPHITE_ENABLED = "GRAPHITE.ENABLED";
+	private static final String GRAPHITE_HOST = "GRAPHITE.HOST";
+	private static final String GRAPHITE_IP = "GRAPHITE.IP'";
+	private static final String GRAPHITE_REPORT_PERIOD = "GRAPHITE.PERIOD";
+	
 	private static final String PROGRESSION_SERVER_IP = "PROGRESSION.SERVER.IP";
 	private static final String PROGRESSION_SERVER_PORT = "PROGRESSION.SERVER.PORT";
+	
 	private static final String STATE_ENABLED = "STATE.ENABLED";
 	private static final String STATE_FILE_PATH = "STATE.PATH";
+	
 	private static final String MONITOR_ENABLED = "MONITOR.ENABLED";
 	private static final String MONITOR_BACKEND = "MONITOR.BACKEND";
 	private static final String MONITOR_MONGO_URL = "MONITOR.MONGO.URL";
 	private static final String MONITOR_MONGO_DATABASE = "MONITOR.MONGO.DATABASE";
 	private static final String MONITOR_MONGO_COLLECTION = "MONITOR.MONGO.COLLECTION";
 	private static final String MONITOR_XMPP_TOPIC = "MONITOR.XMPP.TOPIC";
+	
 	private static final String HUE_ADDRESS = "HUE.ADDRESS";
 	private static final String HUE_POST = "HUE.PORT";
 	private static final String DEMO_KICHEN_SECONDS = "DEMO.KICHEN.SECONDS";
@@ -67,6 +76,34 @@ public class Configuration {
 	
 	public String getGatewayIP() {
 		return properties.getProperty(GATEWAY_IP);
+	}
+	
+	public String getGraphiteEnabled() {
+		return properties.getProperty(GRAPHITE_ENABLED);
+	}
+	
+	public boolean isGraphiteEnabled() {
+		return getGraphiteEnabled().equals("true"); 
+	}
+	
+	public String getGraphiteHost() {
+		return properties.getProperty(GRAPHITE_HOST);
+	}
+	
+	public int getGraphiteIP(int value) {
+		if (properties.getProperty(GRAPHITE_IP) != null) {
+			return Integer.parseInt(properties.getProperty(GRAPHITE_IP));
+		}
+		
+		return value;
+	}
+	
+	public long getGraphiteReportPeriod(long value) {
+		if (properties.getProperty(GRAPHITE_REPORT_PERIOD) != null) {
+			return Integer.parseInt(properties.getProperty(GRAPHITE_REPORT_PERIOD));
+		}
+		
+		return value;
 	}
 	
 	public boolean isStateEnabled() {

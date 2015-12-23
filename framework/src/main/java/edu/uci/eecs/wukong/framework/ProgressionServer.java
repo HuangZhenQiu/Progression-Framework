@@ -29,6 +29,7 @@ import edu.uci.eecs.wukong.framework.state.StateManager;
 import edu.uci.eecs.wukong.framework.wkpf.WKPF;
 import edu.uci.eecs.wukong.framework.wkpf.WKPFMetrics;
 import edu.uci.eecs.wukong.framework.util.Configuration;
+import edu.uci.eecs.wukong.framework.util.Constants;
 import edu.uci.eecs.wukong.rpc.netty.CommunicationServer;
 import edu.uci.eecs.wukong.rpc.netty.service.DataService;
 import edu.uci.eecs.wukong.rpc.netty.service.ProgressionDataServiceFactory;
@@ -126,6 +127,16 @@ public class ProgressionServer {
 		});
 	}
 	
+	public static void checkPath() {
+		String value = System.getenv(Constants.Path.PROGRESSION_HOME);
+		if (value != null) {
+			logger.info("Using Progression Home :" + value);
+		} else {
+			logger.error("Exit because of environement variable Progression_Home is not set.");
+			System.exit(-1);
+		}
+	}
+	
 	public static void main(String[] args) {
 		Options options = new Options();
 		options.addOption("t", "test", false, "Run in test mode");
@@ -136,7 +147,7 @@ public class ProgressionServer {
 			if (cmd.hasOption("t")) {
 				isTest = true;
 			}
-			
+			checkPath();
 			PeerInfo peerInfo = new PeerInfo("localhost", 10000);
 			ProgressionServer server = new ProgressionServer(peerInfo, isTest);
 			server.start();

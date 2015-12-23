@@ -1,6 +1,7 @@
 package edu.uci.eecs.wukong.framework.state;
 
 import edu.uci.eecs.wukong.framework.util.Configuration;
+import edu.uci.eecs.wukong.framework.util.Constants;
 import edu.uci.eecs.wukong.framework.wkpf.WKPF;
 import edu.uci.eecs.wukong.framework.model.StateModel;
 import edu.uci.eecs.wukong.framework.prclass.PrClassManager;
@@ -41,7 +42,7 @@ public class StateManager implements StateUpdateListener {
 			this.pluginManager = pluginManager;
 			this.wkpf.registerStateListener(this);
 			this.pluginManager.register(this);
-			this.path = configuration.getStateFilePath();
+			this.path = System.getenv(Constants.Path.PROGRESSION_HOME) + configuration.getStateFilePath();
 			logger.info(path);
 			File file = new File(path);
 			if (!file.exists()) {

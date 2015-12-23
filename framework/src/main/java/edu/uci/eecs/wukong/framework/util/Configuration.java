@@ -115,7 +115,7 @@ public class Configuration {
 	}
 	
 	public String getStateFilePath() {
-		return properties.getProperty(STATE_FILE_PATH, "local/state.json");
+		return properties.getProperty(STATE_FILE_PATH, "/local/state.json");
 	}
 	
 	public boolean isMonitorEnabled() {

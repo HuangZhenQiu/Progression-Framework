@@ -5,4 +5,8 @@ public class Constants {
 		public static String XMPP = "xmpp";
 		public static String MONGODB = "mongoDB";
 	}
+	
+	public static class Path {
+		public static String PROGRESSION_HOME = "PROGRESSION_HOME";
+	}
 }

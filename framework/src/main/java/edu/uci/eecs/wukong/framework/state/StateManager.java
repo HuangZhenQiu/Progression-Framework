@@ -119,6 +119,6 @@ public class StateManager implements StateUpdateListener {
 	}
 	
 	public static void main(String[] args) {
-		//StateManager manager = new StateManager();
+		// StateManager manager = new StateManager();
 	}
 }

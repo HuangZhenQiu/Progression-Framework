@@ -4,10 +4,8 @@ import edu.uci.eecs.wukong.framework.nio.NIOUdpClient;
 import edu.uci.eecs.wukong.framework.util.Configuration;
 import edu.uci.eecs.wukong.framework.util.MPTNUtil;
 import edu.uci.eecs.wukong.framework.util.WKPFUtil;
-import edu.uci.eecs.wukong.framework.wkpf.WKPF;
 import edu.uci.eecs.wukong.framework.wkpf.MPTN;
 
-import java.io.IOException;
 import java.nio.ByteBuffer;
 
 /***
@@ -15,16 +13,17 @@ import java.nio.ByteBuffer;
  * WKPF messages as input to have integration test with progression server.
  *
  */
-public class WKPFMessageGenerater {
+public class WKPFMessageSender {
 	private final static Configuration configuration = Configuration.getInstance();	
 	private NIOUdpClient client;
+	private PerformanceCollector collector;
 	private int sequence = 1;
 	private int nodeId;
 	private long longAddress;
 	
-	
-	public WKPFMessageGenerater(String domain, int port, int nodeId, long longAddress) {
+	public WKPFMessageSender(PerformanceCollector collector, String domain, int port, int nodeId, long longAddress) {
 		try {
+			this.collector = collector;
 			this.client = new NIOUdpClient(domain, port);
 			this.nodeId = nodeId;
 			this.longAddress = longAddress;
@@ -79,7 +78,7 @@ public class WKPFMessageGenerater {
 	
 	
 	public static void main(String[] arg) {
-		WKPFMessageGenerater generator = new WKPFMessageGenerater("127.0.0.1", 9000, 2, 2130706434);
+		WKPFMessageSender generator = new WKPFMessageSender("127.0.0.1", 9000, 2, 2130706434);
 		while(true) {
 			try {
 				generator.sendWriteShortProperty((byte)13, (short)10112, (byte)1, (short)1);

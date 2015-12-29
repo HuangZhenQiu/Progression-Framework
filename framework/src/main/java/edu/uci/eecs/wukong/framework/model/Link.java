@@ -1,5 +1,7 @@
 package edu.uci.eecs.wukong.framework.model;
 
+import java.nio.ByteBuffer;
+
 public class Link {
 	/* Component Id */
 	private short sourceId;
@@ -15,6 +17,15 @@ public class Link {
 		this.sourcePid = sourcePid;
 		this.destId = destId;
 		this.destPid = destPid;
+	}
+	
+	public byte[] toByteArray() {
+		ByteBuffer buffer = ByteBuffer.allocate(6);
+		buffer.putShort(sourceId);
+		buffer.put(sourcePid);
+		buffer.putShort(destId);
+		buffer.put(destPid);
+		return buffer.array();
 	}
 
 	public int getSourceId() {

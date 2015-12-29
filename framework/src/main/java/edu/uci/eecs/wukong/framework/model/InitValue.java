@@ -1,5 +1,7 @@
 package edu.uci.eecs.wukong.framework.model;
 
+import java.nio.ByteBuffer;
+
 public class InitValue {
 	private short componentId;
 	private byte propertyNumber;
@@ -11,6 +13,19 @@ public class InitValue {
 		this.propertyNumber = propertyNumber;
 		this.size = size;
 		this.value = value;
+	}
+	
+	public byte[] toByteArray() {
+		ByteBuffer buffer = ByteBuffer.allocate(length());
+		buffer.putShort(componentId);
+		buffer.put(propertyNumber);
+		buffer.put(size);
+		buffer.put(value);
+		return buffer.array();
+	}
+	
+	public int length() {
+		return 4 + size;
 	}
 
 	public short getComponentId() {

@@ -1,5 +1,6 @@
 package edu.uci.eecs.wukong.framework.model;
 
+import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -16,6 +17,25 @@ public class InitValueTable {
 	
 	public List<InitValue> getValues() {
 		return values;
+	}
+	
+	public byte[] toByteArray() {
+		ByteBuffer buffer = ByteBuffer.allocate(length());
+		buffer.put((byte) (length() % 256));
+		buffer.put((byte) (length() / 256));
+		for (InitValue value : values) {
+			buffer.put(value.toByteArray());
+		}
+		
+		return buffer.array();
+	}
+	
+	public int length() {
+		int length = 2;
+		for (InitValue value : values) {
+			length += value.length();
+		}
+		return length;
 	}
 	
 	@Override

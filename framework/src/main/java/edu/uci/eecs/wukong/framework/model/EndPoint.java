@@ -1,6 +1,9 @@
 package edu.uci.eecs.wukong.framework.model;
 
+import java.nio.ByteBuffer;
+
 public class EndPoint {
+	public static int ENDPOINT_LENGTH = 5;
 	/* Network address */
 	private long nodeId;
 	private byte portId;
@@ -8,6 +11,14 @@ public class EndPoint {
 	public EndPoint(long nodeId, byte portId) {
 		this.nodeId = nodeId;
 		this.portId = portId;
+	}
+	
+	public byte[] toByteArray() {
+		ByteBuffer buffer = ByteBuffer.allocate(ENDPOINT_LENGTH);
+		buffer.putLong(nodeId);
+		buffer.put(portId);
+		
+		return buffer.array();
 	}
 	
 	public long getNodeId() {

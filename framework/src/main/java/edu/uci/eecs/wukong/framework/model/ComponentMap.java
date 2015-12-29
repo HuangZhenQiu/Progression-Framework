@@ -1,5 +1,6 @@
 package edu.uci.eecs.wukong.framework.model;
 
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,6 +16,27 @@ public class ComponentMap {
 	private List<Component> components;
 	public ComponentMap() {
 		this.components = new ArrayList<Component> ();
+	}
+	
+	public byte[] toByteArray() {
+		int length = length();
+		ByteBuffer buffer = ByteBuffer.allocate(length);
+		buffer.put((byte) (length % 256));
+		buffer.put((byte) (length / 256));
+		for (Component component : components) {
+			buffer.put(component.toByteArray());
+		}
+		
+		return buffer.array();
+	}
+	
+	public int length() {
+		int length = 2;
+		for (Component component : components) {
+			length += component.length();
+		}
+		
+		return length;
 	}
 	
 	public void addComponent(Component component) {

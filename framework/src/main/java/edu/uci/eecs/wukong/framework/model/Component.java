@@ -1,5 +1,6 @@
 package edu.uci.eecs.wukong.framework.model;
 
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +19,20 @@ public class Component {
 	public Component(short wuclassId) {
 		this.wuclassId = wuclassId;
 		this.endPoints = new ArrayList<EndPoint> ();
+	}
+	
+	public byte[] toByteArray() {
+		ByteBuffer buffer = ByteBuffer.allocate(length());
+		buffer.putShort(wuclassId);
+		for (EndPoint point : endPoints) {
+			buffer.put(point.toByteArray());
+		}
+		
+		return buffer.array();
+	}
+	
+	public int length() {
+		return 2 + EndPoint.ENDPOINT_LENGTH * endPoints.size();
 	}
 	
 	public void addEndPoint(EndPoint endpoint) {

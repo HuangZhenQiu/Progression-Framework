@@ -1,6 +1,7 @@
 package edu.uci.eecs.wukong.framework.util;
 
 import java.nio.ByteBuffer;
+
 import com.google.common.primitives.UnsignedInteger;
 public class MPTNUtil {
 	
@@ -20,6 +21,19 @@ public class MPTNUtil {
 	public final static byte MPTN_MSQTYPE_IDACK = 3;
 	public final static byte MPTN_MSQTYPE_IDNAK = 4;	
 	public final static byte MPTN_MSATYPE_FWDREQ = 24;
+	
+	public static final char[] HEX_CHARS = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
+	
+	public static String toHexString(byte[] bytes) {
+	    char[] hexChars = new char[bytes.length * 2];
+	    int v;
+	    for (int j = 0; j < bytes.length; j++) {
+	      v = bytes[j] & 0xFF;
+	      hexChars[j * 2] = HEX_CHARS[v >>> 4];
+	      hexChars[j * 2 + 1] = HEX_CHARS[v & 0x0F];
+	    }
+	    return new String(hexChars);
+	}
 
 	public static void appendMPTNPacket(ByteBuffer buffer, long longAddress, int destId, byte type, byte[] payload) {
 		appendReversedInt(buffer, destId);
@@ -56,6 +70,16 @@ public class MPTNUtil {
 		}
 		
 		return result;
+	}
+	
+	public static ByteBuffer deepCopy(ByteBuffer original) {
+		final ByteBuffer clone = (original.isDirect()) ?
+				ByteBuffer.allocateDirect(original.capacity()) : ByteBuffer.allocate(original.capacity());
+		clone.put(original);
+		clone.order(original.order());
+		clone.position(original.position());
+		clone.flip();
+		return clone;
 	}
 	
 	private static byte getByteValue(int value, int deviation) {

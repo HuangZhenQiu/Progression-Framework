@@ -1,7 +1,11 @@
 package edu.uci.eecs.wukong.framework.test;
 
+import edu.uci.eecs.wukong.framework.model.Component;
 import edu.uci.eecs.wukong.framework.model.ComponentMap;
+import edu.uci.eecs.wukong.framework.model.EndPoint;
+import edu.uci.eecs.wukong.framework.model.InitValue;
 import edu.uci.eecs.wukong.framework.model.InitValueTable;
+import edu.uci.eecs.wukong.framework.model.Link;
 import edu.uci.eecs.wukong.framework.model.LinkTable;
 
 import edu.uci.eecs.wukong.framework.wkpf.DJAData.DJAConstants;
@@ -22,16 +26,24 @@ public class MockReprogrammer {
 		this.map = new ComponentMap();
 	}
 	
-	public void addPrClass() {
+	public void addPrObject(short wuclassId, long address, byte port) {
+		if (!map.contains(wuclassId)) {
+			Component component = new Component(wuclassId);
+			map.addComponent(component);
+		}
 		
+		Component component = map.getComponent(wuclassId);
+		component.addEndPoint(new EndPoint(address, port));
 	}
 	
-	public void addInput() {
-		
+	public void addLink(short sourceNodeId, byte spid, short destNodeId, byte dpid) {
+		Link link = new Link(sourceNodeId, spid, destNodeId, dpid);
+		linkTable.addLink(link);
 	}
 	
-	public void addOutput() {
-		
+	public void addInitValue(short nodeId, byte pid, byte[] value) {
+		InitValue v = new InitValue(nodeId, pid, value);
+		valueTable.addInitValue(v);
 	}
 	
 	public byte[] toByteArray() {

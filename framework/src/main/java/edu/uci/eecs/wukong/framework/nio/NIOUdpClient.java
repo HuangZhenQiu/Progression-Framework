@@ -46,6 +46,22 @@ public class NIOUdpClient {
 		}
 	}
 	
+	public synchronized ByteBuffer sendWaitResponse(byte[] value) {
+		try {
+			sendBuffer.clear();
+			sendBuffer.put(value);
+			sendBuffer.flip();
+			channel.send(sendBuffer, server);
+			receiveBuffer.clear();
+			channel.receive(receiveBuffer);
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error(e.toString());
+		}
+		
+		return MPTNUtil.deepCopy(receiveBuffer);
+	}
+	
 	public void shutdown() {
 		try {
 			this.channel.close();

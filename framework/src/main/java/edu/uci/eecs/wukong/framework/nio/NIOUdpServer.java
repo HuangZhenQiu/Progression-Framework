@@ -1,10 +1,10 @@
 package edu.uci.eecs.wukong.framework.nio;
 
 import edu.uci.eecs.wukong.framework.wkpf.MPTNMessageListener;
+import edu.uci.eecs.wukong.framework.util.MPTNUtil;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
@@ -65,7 +65,7 @@ public class NIOUdpServer implements Runnable {
 								attachment.setAddress(channel.receive(attachment.getBuffer()));
 								attachment.getBuffer().flip();
 								executorService.execute(
-										new EventHandleThread(deepCopy(attachment.getBuffer()), listeners));
+										new EventHandleThread(MPTNUtil.deepCopy(attachment.getBuffer()), listeners));
 								attachment.getBuffer().clear();
 							}
 						}
@@ -89,16 +89,6 @@ public class NIOUdpServer implements Runnable {
 		} catch (IOException e) {
 			logger.error(e.toString());
 		}
-	}
-	
-	private synchronized ByteBuffer deepCopy(ByteBuffer original) {
-		final ByteBuffer clone = (original.isDirect()) ?
-				ByteBuffer.allocateDirect(original.capacity()) : ByteBuffer.allocate(original.capacity());
-		clone.put(original);
-		clone.order(original.order());
-		clone.position(original.position());
-		clone.flip();
-		return clone;
 	}
 	
 	public static void main(String[] args) {

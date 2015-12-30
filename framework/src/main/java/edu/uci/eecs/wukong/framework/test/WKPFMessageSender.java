@@ -61,6 +61,10 @@ public class WKPFMessageSender {
 		send(nodeId, buffer.array());
 	}
 	
+	public void reprogram(byte[] payload) {
+		
+	}
+	
 	public void send(int destId, byte[] payload) {
 		int size = payload.length + 20;
 		ByteBuffer buffer = ByteBuffer.allocate(size);
@@ -78,7 +82,7 @@ public class WKPFMessageSender {
 	
 	
 	public static void main(String[] arg) {
-		WKPFMessageSender generator = new WKPFMessageSender("127.0.0.1", 9000, 2, 2130706434);
+		WKPFMessageSender generator = new WKPFMessageSender(new PerformanceCollector(), "127.0.0.1", 9000, 2, 2130706434);
 		while(true) {
 			try {
 				generator.sendWriteShortProperty((byte)13, (short)10112, (byte)1, (short)1);

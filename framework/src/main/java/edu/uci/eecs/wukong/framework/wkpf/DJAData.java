@@ -194,7 +194,7 @@ public class DJAData {
 		byte size = buffer[start + 3];
 		byte[] val = new byte[size];
 		System.arraycopy(buffer, start + 4, val, 0, size);
-		InitValue value = new InitValue(componentId, propertyNumber, size, val);
+		InitValue value = new InitValue(componentId, propertyNumber, val);
 		
 		return value;
 	}

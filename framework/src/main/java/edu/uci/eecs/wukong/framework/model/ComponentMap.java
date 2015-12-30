@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
 
 import edu.uci.eecs.wukong.framework.model.Component;
 import edu.uci.eecs.wukong.framework.model.EndPoint;
@@ -14,8 +15,11 @@ import edu.uci.eecs.wukong.framework.model.EndPoint;
  */
 public class ComponentMap {
 	private List<Component> components;
+	private Map<Short, Component> componentMap;
+	
 	public ComponentMap() {
 		this.components = new ArrayList<Component> ();
+		this.componentMap = new HashMap<Short, Component> ();
 	}
 	
 	public byte[] toByteArray() {
@@ -39,8 +43,19 @@ public class ComponentMap {
 		return length;
 	}
 	
+	public boolean contains(short wuClassId) {
+		return componentMap.containsKey(wuClassId);
+	}
+	
+	public Component getComponent(short wuClassId) {
+		return componentMap.get(wuClassId);
+	}
+	
 	public void addComponent(Component component) {
-		this.components.add(component);
+		if (!componentMap.containsKey(component.getWuClassId())) {
+			this.components.add(component);
+			this.componentMap.put(component.getWuClassId(), component);
+		}
 	}
 	
 	public long getPrimaryEndPointNodeId(int componentId) {

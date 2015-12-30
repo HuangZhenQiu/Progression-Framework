@@ -8,10 +8,10 @@ public class InitValue {
 	private byte size;
 	private byte[] value;
 	
-	public InitValue(short componentId,  byte propertyNumber, byte size, byte[] value) {
+	public InitValue(short componentId,  byte propertyNumber, byte[] value) {
 		this.componentId = componentId;
 		this.propertyNumber = propertyNumber;
-		this.size = size;
+		this.size = (byte) value.length;
 		this.value = value;
 	}
 	

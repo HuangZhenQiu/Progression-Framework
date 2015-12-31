@@ -20,7 +20,7 @@ import edu.uci.eecs.wukong.framework.model.PropertyType;
 import edu.uci.eecs.wukong.framework.model.WuClassModel;
 import edu.uci.eecs.wukong.framework.model.WuObjectModel;
 import edu.uci.eecs.wukong.framework.model.WuPropertyModel;
-import edu.uci.eecs.wukong.framework.wkpf.MPTN;
+import edu.uci.eecs.wukong.framework.mptn.MPTN;
 
 import com.google.common.annotations.VisibleForTesting;
 public class BufferManager {

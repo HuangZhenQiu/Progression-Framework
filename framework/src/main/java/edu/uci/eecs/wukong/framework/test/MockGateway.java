@@ -3,10 +3,10 @@ package edu.uci.eecs.wukong.framework.test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import edu.uci.eecs.wukong.framework.mptn.MPTN;
+import edu.uci.eecs.wukong.framework.mptn.MPTNMessageListener;
 import edu.uci.eecs.wukong.framework.nio.NIOUdpServer;
 import edu.uci.eecs.wukong.framework.util.MPTNUtil;
-import edu.uci.eecs.wukong.framework.wkpf.MPTNMessageListener;
-import edu.uci.eecs.wukong.framework.wkpf.MPTN;
 
 import java.math.BigInteger;
 import java.net.InetAddress;
@@ -106,7 +106,15 @@ public class MockGateway implements MPTNMessageListener {
 	 * @param length
 	 */
 	private void processMessage(ByteBuffer buffer, int length) {
+		byte[] bytes = new byte[length];
 		
+		if (bytes[8] == MPTN.MPTN_MSGTYPE_IDREQ) { 
+			
+		} else if (bytes[8] == MPTN.MPTN_MSQTYPE_FWDREQ) {
+			
+		} else {
+			LOGGER.error("Wrong MPTN type, Mock gateway only accepts IDREQ and FWDREQ");
+		}
 	}
 	
 	/**

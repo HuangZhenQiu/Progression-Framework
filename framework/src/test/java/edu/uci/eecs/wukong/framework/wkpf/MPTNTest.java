@@ -4,6 +4,7 @@ import java.nio.ByteBuffer;
 
 import org.junit.Test;
 
+import edu.uci.eecs.wukong.framework.mptn.MPTN;
 import edu.uci.eecs.wukong.framework.util.MPTNUtil;
 import edu.uci.eecs.wukong.framework.util.WKPFUtil;
 import junit.framework.TestCase;

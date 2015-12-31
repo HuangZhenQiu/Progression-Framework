@@ -6,7 +6,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import edu.uci.eecs.wukong.framework.wkpf.MPTNMessageListener;
+import edu.uci.eecs.wukong.framework.mptn.MPTNMessageListener;
 
 public class EventHandleThread implements Runnable {
 	private static Logger logger = LoggerFactory.getLogger(EventHandleThread.class);

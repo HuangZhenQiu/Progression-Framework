@@ -1,10 +1,10 @@
 package edu.uci.eecs.wukong.framework.test;
 
+import edu.uci.eecs.wukong.framework.mptn.MPTN;
 import edu.uci.eecs.wukong.framework.nio.NIOUdpClient;
 import edu.uci.eecs.wukong.framework.util.Configuration;
 import edu.uci.eecs.wukong.framework.util.MPTNUtil;
 import edu.uci.eecs.wukong.framework.util.WKPFUtil;
-import edu.uci.eecs.wukong.framework.wkpf.MPTN;
 
 import java.nio.ByteBuffer;
 

@@ -1,6 +1,6 @@
 package edu.uci.eecs.wukong.framework.nio;
 
-import edu.uci.eecs.wukong.framework.wkpf.MPTNMessageListener;
+import edu.uci.eecs.wukong.framework.mptn.MPTNMessageListener;
 import edu.uci.eecs.wukong.framework.util.MPTNUtil;
 
 import java.io.IOException;

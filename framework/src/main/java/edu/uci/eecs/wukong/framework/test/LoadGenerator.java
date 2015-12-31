@@ -14,7 +14,6 @@ public abstract class LoadGenerator<T> extends TimerTask {
 	private Class<T> type;
 	
 	public LoadGenerator(short wuclassId, byte port, byte propertyId, Class<T> type) {
-		this.sender = sender;
 		this.wuclassId = wuclassId;
 		this.port = port;
 		this.propertyId = propertyId;

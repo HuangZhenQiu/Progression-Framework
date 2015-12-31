@@ -49,9 +49,9 @@ public class MPTN implements MPTNMessageListener{
 	public static int IP_ADDRESS_LEN = 4;
 	
 	// MODE for adding and deleting node
-	public static int STOP_MODE = 0;
-	public static int ADD_MODE = 1;
-	public static int DEL_MODE = 2;
+	public enum MODE {
+		STOP_MODE, ADD_MODE, DEL_MODE
+	}
 	
 	// protocol handler admission control
 	public static int ONLY_FROM_TCP_SERVER = 1; // Master or peer gateway

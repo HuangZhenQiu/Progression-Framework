@@ -1,12 +1,13 @@
 package edu.uci.eecs.wukong.framework.test;
 
+import java.lang.Number;
 import java.util.TimerTask;
 
 /**
  * Simulate a sensor to periodically send value to progression server as workload.
  * 
  */
-public abstract class LoadGenerator<T> extends TimerTask {
+public abstract class LoadGenerator<T extends Number> extends TimerTask {
 	private short wuclassId;
 	private byte port;
 	private byte propertyId;
@@ -29,10 +30,12 @@ public abstract class LoadGenerator<T> extends TimerTask {
 	@Override
 	public void run() {
 		if (sender != null) {
+			Number value = nextValue();
 			if (type.isInstance(Byte.class) || type.isInstance(Boolean.class)) {
-				sender.sendWriteByteProperty(port, wuclassId, propertyId, (byte)nextValue());
+
+				sender.sendWriteByteProperty(port, wuclassId, propertyId, (byte)value);
 			} else {
-				sender.sendWriteShortProperty(port, wuclassId, propertyId, (short)nextValue());
+				sender.sendWriteShortProperty(port, wuclassId, propertyId, (short)value);
 			}
 		}
 	}

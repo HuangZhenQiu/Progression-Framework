@@ -22,6 +22,7 @@ public abstract class MetricsHelper {
 	public <T> Gauge<T> newGauge(String name, T value) {
 		return metricsGroup.newGauge(name, value);
 	}
+	
 	protected String getPrefix() {
 		return "";
 	}

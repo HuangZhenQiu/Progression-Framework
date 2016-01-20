@@ -37,7 +37,7 @@ public class GraphiteMetricsReporter implements MetricsReporter {
 	private static final long DEFAULT_GRAPHITE_REPORT_PERIOD_SEC = 30L;
 	private static final int DEFAULT_GRAPHITE_PORT = 2003;
 
-	private GraphiteMetricsReporter(String name) {
+	public GraphiteMetricsReporter(String name) {
 		this.reporterName = name;
 		this.graphiteRegistry = new MetricRegistry();
 		this.listeners = new HashMap<ReadableMetricsRegistry, ReadableMetricsRegistryListener>();

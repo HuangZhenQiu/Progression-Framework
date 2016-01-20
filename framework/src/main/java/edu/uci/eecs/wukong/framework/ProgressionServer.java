@@ -13,11 +13,13 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
+import edu.uci.eecs.wukong.framework.api.metrics.MetricsReporter;
 import edu.uci.eecs.wukong.framework.buffer.BufferManager;
 import edu.uci.eecs.wukong.framework.buffer.BufferMetrics;
 import edu.uci.eecs.wukong.framework.metrics.MetricsRegistryHolder;
 import edu.uci.eecs.wukong.framework.factor.SceneManager;
 import edu.uci.eecs.wukong.framework.factor.FactorMetrics;
+import edu.uci.eecs.wukong.framework.metrics.reporter.GraphiteMetricsReporter;
 import edu.uci.eecs.wukong.framework.monitor.MonitorManager;
 import edu.uci.eecs.wukong.framework.model.StateModel;
 import edu.uci.eecs.wukong.framework.pipeline.BasicPipeline;
@@ -44,6 +46,7 @@ public class ProgressionServer {
 	private BufferManager bufferManager;
 	private PrClassManager pluginManager;
 	private StateManager stateManager;
+	private MetricsReporter metricsReporter;
 	private MonitorManager monitorManager;
 	private FeatureChoosers featureChoosers;
 	private Pipeline pipeline;
@@ -56,6 +59,7 @@ public class ProgressionServer {
 		}
 		init(peerInfo);
 		this.registryHolder = new MetricsRegistryHolder();
+		this.metricsReporter = new GraphiteMetricsReporter("ProgressionServer");
 		BufferMetrics bufferMetrics = new BufferMetrics(this.registryHolder);
 		FactorMetrics factorMetrics = new FactorMetrics(this.registryHolder);
 		PipelineMetrics pieplineMetrocs = new PipelineMetrics(this.registryHolder);
@@ -71,6 +75,9 @@ public class ProgressionServer {
 		this.pluginManager = new PrClassManager(wkpf, contextManager, pipeline, bufferManager);
 		this.stateManager = new StateManager(wkpf, pluginManager);
 		this.wkpf.register(pluginManager);
+		// Update this place for setting up multiple progression server in distributed way.
+		this.metricsReporter.register("ProgressionServer", registryHolder);
+		
 	}
 	
 	/**

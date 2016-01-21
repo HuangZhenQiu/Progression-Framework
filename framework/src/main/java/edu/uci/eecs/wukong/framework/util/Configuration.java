@@ -1,7 +1,11 @@
 package edu.uci.eecs.wukong.framework.util;
 
+import java.io.File;
 import java.io.InputStream;
 import java.util.Properties;
+import java.util.Map;
+
+import com.google.common.io.Files;
 
 public class Configuration {
 	private static final String CONFIG_PATH = "config.properties";
@@ -48,12 +52,16 @@ public class Configuration {
 	private static Properties properties = new Properties();
 
 	private Configuration() {
-		
+		Map<String, String> env = System.getenv();
+		String home = env.get(Constants.Path.PROGRESSION_HOME);
+		String configPath = home + "/config/" + CONFIG_PATH;
 		try {
-			InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(CONFIG_PATH);
+			File configFile = new File(configPath);
+			//InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(configPath);
+			InputStream inputStream = Files.asByteSource(configFile).openStream();
 			properties.load(inputStream);
 		} catch (Exception e) {
-			System.out.println("Property File '" + CONFIG_PATH + "' not found in the classpath");
+			System.out.println("Property File '" + configPath + "' not found in the classpath");
 			System.exit(-1);
 		}
 		

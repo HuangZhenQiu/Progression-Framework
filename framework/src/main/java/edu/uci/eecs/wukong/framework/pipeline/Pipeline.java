@@ -3,7 +3,7 @@ package edu.uci.eecs.wukong.framework.pipeline;
 import edu.uci.eecs.wukong.framework.api.ExecutionContext;
 import edu.uci.eecs.wukong.framework.api.Extension;
 import edu.uci.eecs.wukong.framework.buffer.BufferManager;
-import edu.uci.eecs.wukong.framework.prclass.PrClass;
+import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
 import edu.uci.eecs.wukong.framework.reconfig.ConfigurationManager;
 import edu.uci.eecs.wukong.framework.select.FeatureChoosers;
 import edu.uci.eecs.wukong.framework.factor.BaseFactor;
@@ -53,7 +53,7 @@ public abstract class Pipeline extends Graph implements FactorListener{
 		this.addLink(new Link(source, sink, type));
 	}
 	
-	public ExecutionContext getCurrentContext(PrClass prClass) {
+	public ExecutionContext getCurrentContext(PipelinePrClass prClass) {
 		return sceneManager.getPluginExecutionContext(prClass);
 	}
 	

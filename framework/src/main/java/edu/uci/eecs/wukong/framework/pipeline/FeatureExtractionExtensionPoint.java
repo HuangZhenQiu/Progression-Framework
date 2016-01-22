@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import edu.uci.eecs.wukong.framework.entity.FeatureEntity;
 import edu.uci.eecs.wukong.framework.extension.FeatureExtractionExtension;
 import edu.uci.eecs.wukong.framework.graph.ExtensionPoint;
-import edu.uci.eecs.wukong.framework.prclass.PrClass;
+import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
 import edu.uci.eecs.wukong.framework.util.Configuration;
 import edu.uci.eecs.wukong.framework.select.FeatureChoosers;
 
@@ -35,7 +35,7 @@ public class FeatureExtractionExtensionPoint extends ExtensionPoint<FeatureExtra
 		while(true) {
 			try {
 				Thread.sleep(10000);
-				for (PrClass prClass : this.extensionMap.keySet()) {
+				for (PipelinePrClass prClass : this.extensionMap.keySet()) {
 					List<Number> result = featureChoosers.choose(prClass);
 					FeatureEntity<Number> entity = new FeatureEntity<Number>(prClass);
 					entity.addFeatures(result);

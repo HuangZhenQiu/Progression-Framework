@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 public class PrClassPropertyMonitor {
 	private static Logger logger = LoggerFactory.getLogger(PrClassPropertyMonitor.class);
 	private PrClassManager manager;
-	private Map<PrClass, List<String>> monitoredProperties;
+	private Map<PipelinePrClass, List<String>> monitoredProperties;
 	
 	private PropertyChangeListener listener = new PropertyChangeListener() {
 		 public void propertyChange(PropertyChangeEvent evt) {
@@ -24,10 +24,10 @@ public class PrClassPropertyMonitor {
 	
 	public PrClassPropertyMonitor(PrClassManager manager) {
 		this.manager = manager;
-		this.monitoredProperties = new HashMap<PrClass, List<String>>();
+		this.monitoredProperties = new HashMap<PipelinePrClass, List<String>>();
 	}
 	
-	public void addMonitorProperty(PrClass plugin, List<String> names) {
+	public void addMonitorProperty(PipelinePrClass plugin, List<String> names) {
 		List<String> properties = monitoredProperties.get(plugin);
 		if (properties == null) {
 			properties = new ArrayList<String>();
@@ -43,7 +43,7 @@ public class PrClassPropertyMonitor {
 		}
 	}
 	
-	public void remove(PrClass plugin) {
+	public void remove(PipelinePrClass plugin) {
 		monitoredProperties.remove(plugin);
 	}
 }

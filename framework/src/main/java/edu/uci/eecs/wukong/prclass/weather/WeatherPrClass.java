@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 import edu.uci.eecs.wukong.framework.api.Extension;
-import edu.uci.eecs.wukong.framework.prclass.PrClass;
+import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
 import edu.uci.eecs.wukong.framework.annotation.WuClass;
 import edu.uci.eecs.wukong.framework.annotation.WuProperty;
 import edu.uci.eecs.wukong.framework.model.PropertyType;
@@ -12,7 +12,7 @@ import edu.uci.eecs.wukong.framework.model.DataType;
 import edu.uci.eecs.wukong.prclass.weather.WeatherProgressionExtension;
 
 @WuClass(id = 10111)
-public class WeatherPrClass extends PrClass {
+public class WeatherPrClass extends PipelinePrClass {
 	@WuProperty(name = "cityId", id = 1, type = PropertyType.Input, dtype = DataType.Init_Value)
 	private int cityId;
 	@WuProperty(name = "temperature", id = 2, type = PropertyType.Output)

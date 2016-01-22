@@ -7,10 +7,10 @@ import edu.uci.eecs.wukong.framework.annotation.WuClass;
 import edu.uci.eecs.wukong.framework.annotation.WuProperty;
 import edu.uci.eecs.wukong.framework.api.Extension;
 import edu.uci.eecs.wukong.framework.model.PropertyType;
-import edu.uci.eecs.wukong.framework.prclass.PrClass;
+import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
 
 @WuClass(id = 9009)
-public class ICSDemoQPrClass extends PrClass {
+public class ICSDemoQPrClass extends PipelinePrClass {
 
 	@WuProperty(name = "question", id = 0, type = PropertyType.Output)
 	private boolean question;

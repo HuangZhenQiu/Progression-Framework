@@ -4,14 +4,14 @@ import java.util.List;
 import java.util.ArrayList;
 
 import edu.uci.eecs.wukong.framework.api.Extension;
-import edu.uci.eecs.wukong.framework.prclass.PrClass;
+import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
 import edu.uci.eecs.wukong.framework.annotation.WuClass;
 import edu.uci.eecs.wukong.framework.annotation.WuProperty;
 import edu.uci.eecs.wukong.framework.model.DataType;
 import edu.uci.eecs.wukong.framework.model.PropertyType;
 
 @WuClass(id = 10112)
-public class BufferEnabledPrClass extends PrClass {
+public class BufferEnabledPrClass extends PipelinePrClass {
 	@WuProperty(name = "sInput", id = 1, type = PropertyType.Input, dtype = DataType.Buffer)
 	private short sInput;
 	@WuProperty(name = "bInput", id = 2, type = PropertyType.Input, dtype = DataType.Buffer)

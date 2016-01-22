@@ -5,15 +5,14 @@ import edu.uci.eecs.wukong.framework.api.FactorExecutable;
 import edu.uci.eecs.wukong.framework.api.Executable;
 import edu.uci.eecs.wukong.framework.api.ExecutionContext;
 import edu.uci.eecs.wukong.framework.api.TimerExecutable;
-import edu.uci.eecs.wukong.framework.entity.FeatureEntity;
 import edu.uci.eecs.wukong.framework.factor.BaseFactor;
-import edu.uci.eecs.wukong.framework.prclass.PrClass;
+import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
 
 import java.util.List;
 public abstract class PropertyProgressionExtension extends AbstractProgressionExtension 
 	implements Activatable, Executable, FactorExecutable, TimerExecutable{
 	
-	public PropertyProgressionExtension(PrClass plugin) {
+	public PropertyProgressionExtension(PipelinePrClass plugin) {
 		super(plugin);
 		// TODO Auto-generated constructor stub
 	}

@@ -4,7 +4,6 @@ import java.util.List;
 
 import edu.uci.eecs.wukong.framework.api.ExecutionContext;
 import edu.uci.eecs.wukong.framework.extension.LearningExtension;
-import edu.uci.eecs.wukong.framework.prclass.PrClass;
 import edu.uci.eecs.wukong.prclass.occupancy.OccupancyDetection;
 import edu.uci.eecs.wukong.prclass.occupancy.OccupancyDetection.Occupancy;
 import be.ac.ulg.montefiore.run.jahmm.Hmm;

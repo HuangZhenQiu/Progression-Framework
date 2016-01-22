@@ -2,11 +2,11 @@ package edu.uci.eecs.wukong.framework.extension;
 
 import edu.uci.eecs.wukong.framework.api.ExecutionContext;
 import edu.uci.eecs.wukong.framework.api.Extension;
-import edu.uci.eecs.wukong.framework.prclass.PrClass;
+import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
 
 public abstract class AbstractExtension implements Extension {
-	protected PrClass prClass;
-	public AbstractExtension(PrClass prClass) {
+	protected PipelinePrClass prClass;
+	public AbstractExtension(PipelinePrClass prClass) {
 		this.prClass = prClass;
 	}
 	
@@ -18,7 +18,7 @@ public abstract class AbstractExtension implements Extension {
 		
 	}
 
-	public PrClass getPrClass() {
+	public PipelinePrClass getPrClass() {
 		return prClass;
 	}
 	

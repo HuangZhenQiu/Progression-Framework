@@ -38,7 +38,7 @@ public class PrClassManager implements PrClassInitListener {
 	private SceneManager contextManager;
 	private PrClassPropertyMonitor propertyMonitor;
 	private Pipeline pipeline;
-	private List<PrClass> plugins;
+	private List<PipelinePrClass> plugins;
 	/* WuclassId to WuClass model */
 	private Map<Short, WuClassModel> registedClasses;
 	/* Binded WuObjects */
@@ -53,7 +53,7 @@ public class PrClassManager implements PrClassInitListener {
 		this.pipeline = pipeline;
 		this.propertyMonitor = new PrClassPropertyMonitor(this);
 		this.registedClasses = new HashMap<Short, WuClassModel>();
-		this.plugins = new ArrayList<PrClass>();
+		this.plugins = new ArrayList<PipelinePrClass>();
 		this.bindedWuObjects = new ArrayList<WuObjectModel>();
 		this.wkpf = wkpf;
 		this.pluginNames =  new ArrayList<String> ();
@@ -109,7 +109,7 @@ public class PrClassManager implements PrClassInitListener {
 			// A temporary solution for easier mapping and deployment.
 			// Create an instance for each plugin classes as hard WuClass.
 			Constructor<?> constructor = c.getConstructor();
-			PrClass plugin = (PrClass) constructor.newInstance();
+			PipelinePrClass plugin = (PipelinePrClass) constructor.newInstance();
 			plugins.add(plugin);
 			WuObjectModel wuObjectModel = new WuObjectModel(wuClassModel, plugin);
 			wkpf.addWuObject(plugin.getPortId(), wuObjectModel);
@@ -172,7 +172,7 @@ public class PrClassManager implements PrClassInitListener {
 	 * for plugins, and also unregister the extensions in pipeline. 
 	 */
 	public void unbindPlugins() {
-    	for (PrClass plugin : plugins) {
+    	for (PipelinePrClass plugin : plugins) {
     		pipeline.unregisterExtension(plugin.registerExtension());
     	}
 	}
@@ -185,7 +185,7 @@ public class PrClassManager implements PrClassInitListener {
 	 * @throws NoSuchFieldException
 	 */
 	public void bindPlugin(WuObjectModel model) {
-		PrClass prClass = model.getPrClass();
+		PipelinePrClass prClass = model.getPrClass();
 		contextManager.subscribe(prClass, prClass.registerContext());
 		bufferManager.bind(model);
 		pipeline.registerExtension(prClass.registerExtension());
@@ -218,7 +218,7 @@ public class PrClassManager implements PrClassInitListener {
 		ClassLoader loader = PrClassManager.class.getClassLoader();
 		Class<?> c = loader.loadClass(path);
 		WuClassModel wuClassModel = createWuClassModel(path, c);
-		PrClass plugin = (PrClass)c.getConstructor(String.class, String.class).newInstance(name, appId);
+		PipelinePrClass plugin = (PipelinePrClass)c.getConstructor(String.class, String.class).newInstance(name, appId);
 		
 		plugins.add(plugin);
 		WuObjectModel wuObjectModel = new WuObjectModel(wuClassModel, plugin);
@@ -227,7 +227,7 @@ public class PrClassManager implements PrClassInitListener {
 	}
 	
 	// bind the update event of out property for plugin.
-	private void bindPropertyUpdateEvent(PrClass plugin) {
+	private void bindPropertyUpdateEvent(PipelinePrClass plugin) {
 		List<String> output = new ArrayList<String>();
 		for (Field field : plugin.getClass().getDeclaredFields()) {
 			String name = field.getName();
@@ -252,7 +252,7 @@ public class PrClassManager implements PrClassInitListener {
 	public void updateProperty(PropertyChangeEvent event) {
 		String name = event.getPropertyName();
 		Object value = event.getNewValue();
-		PrClass plugin = (PrClass)event.getSource();
+		PipelinePrClass plugin = (PipelinePrClass)event.getSource();
 		LOGGER.info("Trigger send set property for " + name + " whose portId is " + plugin.getPortId() + " and value is " + value);
 		wkpf.sendSetProperty(plugin.getPortId(), name, value);
 	}

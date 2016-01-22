@@ -3,12 +3,12 @@ package edu.uci.eecs.wukong.framework.extension;
 import java.util.List;
 
 import edu.uci.eecs.wukong.framework.api.ExecutionContext;
-import edu.uci.eecs.wukong.framework.prclass.PrClass;
+import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
 
 public abstract class LearningExtension<T extends Number> extends AbstractExtension {
 	private boolean ready;
 	
-	public LearningExtension(PrClass plugin) {
+	public LearningExtension(PipelinePrClass plugin) {
 		super(plugin);
 		this.ready = false;
 		// TODO Auto-generated constructor stub

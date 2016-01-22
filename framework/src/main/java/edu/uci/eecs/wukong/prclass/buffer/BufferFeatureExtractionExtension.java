@@ -7,12 +7,12 @@ import edu.uci.eecs.wukong.framework.extension.FeatureExtractionExtension;
 import edu.uci.eecs.wukong.framework.operator.Operator;
 import edu.uci.eecs.wukong.framework.operator.MaxOperator;
 import edu.uci.eecs.wukong.framework.operator.MinOperator;
-import edu.uci.eecs.wukong.framework.prclass.PrClass;
+import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
 
 public class BufferFeatureExtractionExtension extends
 		FeatureExtractionExtension {
 
-	public BufferFeatureExtractionExtension(PrClass plugin) {
+	public BufferFeatureExtractionExtension(PipelinePrClass plugin) {
 		super(plugin);
 	}
 

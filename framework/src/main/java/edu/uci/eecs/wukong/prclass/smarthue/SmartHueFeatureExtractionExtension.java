@@ -6,12 +6,12 @@ import java.util.List;
 import edu.uci.eecs.wukong.framework.extension.FeatureExtractionExtension;
 import edu.uci.eecs.wukong.framework.operator.Operator;
 import edu.uci.eecs.wukong.framework.operator.AverageOperator;
-import edu.uci.eecs.wukong.framework.prclass.PrClass;
+import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
 
 public class SmartHueFeatureExtractionExtension extends
 		FeatureExtractionExtension {
 
-	public SmartHueFeatureExtractionExtension(PrClass plugin) {
+	public SmartHueFeatureExtractionExtension(PipelinePrClass plugin) {
 		super(plugin);
 	}
 

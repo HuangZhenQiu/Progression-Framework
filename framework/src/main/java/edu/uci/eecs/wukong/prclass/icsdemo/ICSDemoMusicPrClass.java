@@ -7,10 +7,10 @@ import edu.uci.eecs.wukong.framework.annotation.WuClass;
 import edu.uci.eecs.wukong.framework.annotation.WuProperty;
 import edu.uci.eecs.wukong.framework.api.Extension;
 import edu.uci.eecs.wukong.framework.model.PropertyType;
-import edu.uci.eecs.wukong.framework.prclass.PrClass;
+import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
 
 @WuClass(id = 9006)
-public class ICSDemoMusicPrClass extends PrClass {
+public class ICSDemoMusicPrClass extends PipelinePrClass {
 
 	@WuProperty(name = "speaker_onoff", id = 0, type = PropertyType.Output)
 	private short speaker_onoff;

@@ -8,11 +8,11 @@ import org.slf4j.LoggerFactory;
 import edu.uci.eecs.wukong.framework.api.ExecutionContext;
 import edu.uci.eecs.wukong.framework.api.Executable;
 import edu.uci.eecs.wukong.framework.extension.AbstractProgressionExtension;
-import edu.uci.eecs.wukong.framework.prclass.PrClass;
+import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
 
 public class BufferProgressionExtension extends AbstractProgressionExtension implements Executable {
 	private static Logger logger = LoggerFactory.getLogger(BufferProgressionExtension.class);
-	public BufferProgressionExtension(PrClass plugin) {
+	public BufferProgressionExtension(PipelinePrClass plugin) {
 		super(plugin);
 	}
 

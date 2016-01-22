@@ -8,10 +8,10 @@ import edu.uci.eecs.wukong.framework.annotation.WuProperty;
 import edu.uci.eecs.wukong.framework.annotation.WuClass;
 import edu.uci.eecs.wukong.framework.model.DataType;
 import edu.uci.eecs.wukong.framework.model.PropertyType;
-import edu.uci.eecs.wukong.framework.prclass.PrClass;
+import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
 
 @WuClass(id = 10002)
-public class TestPrClass extends PrClass {
+public class TestPrClass extends PipelinePrClass {
 
 	@WuProperty(id = 1, type = PropertyType.Input, dtype = DataType.Buffer)
 	private short testProperty;

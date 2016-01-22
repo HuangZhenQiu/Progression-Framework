@@ -2,7 +2,7 @@ package edu.uci.eecs.wukong.prclass.test;
 
 import edu.uci.eecs.wukong.framework.api.TimerExecutable;
 import edu.uci.eecs.wukong.framework.extension.AbstractProgressionExtension;
-import edu.uci.eecs.wukong.framework.prclass.PrClass;
+import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
 
 import java.util.UUID;
 
@@ -13,7 +13,7 @@ public class TestPropertyProgressionExtension extends AbstractProgressionExtensi
 	implements TimerExecutable {
 	private static Logger logger = LoggerFactory.getLogger(TestPropertyProgressionExtension.class);
 
-	public TestPropertyProgressionExtension(PrClass plugin) {
+	public TestPropertyProgressionExtension(PipelinePrClass plugin) {
 		super(plugin);
 	}
 

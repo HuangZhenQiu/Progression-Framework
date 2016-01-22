@@ -7,10 +7,10 @@ import edu.uci.eecs.wukong.framework.annotation.WuClass;
 import edu.uci.eecs.wukong.framework.annotation.WuProperty;
 import edu.uci.eecs.wukong.framework.api.Extension;
 import edu.uci.eecs.wukong.framework.model.PropertyType;
-import edu.uci.eecs.wukong.framework.prclass.PrClass;
+import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
 
 @WuClass(id = 9005)
-public class ICSDemoAromaPrClass extends PrClass {
+public class ICSDemoAromaPrClass extends PipelinePrClass {
 
 	@WuProperty(name = "aroma_onoff", id = 1, type = PropertyType.Output)
 	private short aroma_onoff;

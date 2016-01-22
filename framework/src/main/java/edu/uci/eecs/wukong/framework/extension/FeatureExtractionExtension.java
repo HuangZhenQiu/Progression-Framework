@@ -3,7 +3,7 @@ package edu.uci.eecs.wukong.framework.extension;
 import java.util.List;
 
 import edu.uci.eecs.wukong.framework.operator.Operator;
-import edu.uci.eecs.wukong.framework.prclass.PrClass;
+import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
 
 /**
  * Feature abstraction is for a prclass to define how to use operator to extract feature through using operators.
@@ -11,7 +11,7 @@ import edu.uci.eecs.wukong.framework.prclass.PrClass;
  */
 public abstract class FeatureExtractionExtension extends AbstractExtension {
 	
-	public FeatureExtractionExtension(PrClass plugin) {
+	public FeatureExtractionExtension(PipelinePrClass plugin) {
 		super(plugin);
 	}
 

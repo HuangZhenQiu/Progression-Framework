@@ -33,7 +33,7 @@ import edu.uci.eecs.wukong.framework.entity.HueEntity;
 import edu.uci.eecs.wukong.framework.extension.ProgressionExtension;
 import edu.uci.eecs.wukong.framework.factor.BaseFactor;
 import edu.uci.eecs.wukong.framework.util.Configuration;
-import edu.uci.eecs.wukong.framework.prclass.PrClass;
+import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
 import edu.uci.eecs.wukong.framework.reconfig.ConfigurationManager.ConfigurationType;
 
 public class DemoProgressionExtension extends ProgressionExtension<FeatureEntity> {
@@ -50,7 +50,7 @@ public class DemoProgressionExtension extends ProgressionExtension<FeatureEntity
 	private DemoFactor lastContext = null;
 	private static long lastTime = 0;
 	
-	public DemoProgressionExtension(PrClass plugin) {
+	public DemoProgressionExtension(PipelinePrClass plugin) {
 		super(plugin);
 	}
 

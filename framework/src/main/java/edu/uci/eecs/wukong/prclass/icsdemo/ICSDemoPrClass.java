@@ -8,11 +8,11 @@ import edu.uci.eecs.wukong.framework.annotation.WuProperty;
 import edu.uci.eecs.wukong.framework.api.Extension;
 import edu.uci.eecs.wukong.framework.model.DataType;
 import edu.uci.eecs.wukong.framework.model.PropertyType;
-import edu.uci.eecs.wukong.framework.prclass.PrClass;
+import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
 import edu.uci.eecs.wukong.prclass.icsdemo.ContextProgressionExtension;
 
 @WuClass(id = 10003)
-public class ICSDemoPrClass extends PrClass {
+public class ICSDemoPrClass extends PipelinePrClass {
 	
 	@WuProperty(name = "uid", id = 0, type = PropertyType.Input, dtype = DataType.Channel)
 	private short uid;

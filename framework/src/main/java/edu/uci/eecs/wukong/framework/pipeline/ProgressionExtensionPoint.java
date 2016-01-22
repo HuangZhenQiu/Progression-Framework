@@ -22,7 +22,7 @@ import edu.uci.eecs.wukong.framework.extension.AbstractProgressionExtension;
 import edu.uci.eecs.wukong.framework.factor.BaseFactor;
 import edu.uci.eecs.wukong.framework.factor.FactorListener;
 import edu.uci.eecs.wukong.framework.graph.ExtensionPoint;
-import edu.uci.eecs.wukong.framework.prclass.PrClass;
+import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
 import edu.uci.eecs.wukong.framework.util.Configuration;
 
 public class ProgressionExtensionPoint extends ExtensionPoint<AbstractProgressionExtension>
@@ -30,13 +30,13 @@ public class ProgressionExtensionPoint extends ExtensionPoint<AbstractProgressio
 	private static Logger logger = LoggerFactory.getLogger(ProgressionExtensionPoint.class);
 	private static Configuration configuration = Configuration.getInstance();
 	private final int DEFAULT_INTERVAL = 5;
-	private Map<PrClass, TimerTask> pluginTaskMap;
+	private Map<PipelinePrClass, TimerTask> pluginTaskMap;
 	private Timer timer;
 
 	
 	public ProgressionExtensionPoint(Pipeline pipeline) {
 		super(pipeline);
-		this.pluginTaskMap = new HashMap<PrClass, TimerTask>();
+		this.pluginTaskMap = new HashMap<PipelinePrClass, TimerTask>();
 		this.timer = new Timer(true);
 	}
 	
@@ -122,7 +122,7 @@ public class ProgressionExtensionPoint extends ExtensionPoint<AbstractProgressio
 					BaseFactor factor = (BaseFactor)event.getData();
 					if(factor != null) {
 						logger.info("Progression Extension Point is polling new context:" + factor.toString());
-						for(Map.Entry<PrClass, AbstractExtension> entry : this.extensionMap.entrySet()) {
+						for(Map.Entry<PipelinePrClass, AbstractExtension> entry : this.extensionMap.entrySet()) {
 							AbstractProgressionExtension extension = (AbstractProgressionExtension) entry.getValue();
 							if (extension instanceof FactorExecutable) {
 								if (extension.isSubcribedTopic(factor.getTopicId())) {

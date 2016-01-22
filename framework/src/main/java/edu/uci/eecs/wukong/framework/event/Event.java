@@ -1,6 +1,6 @@
 package edu.uci.eecs.wukong.framework.event;
 
-import edu.uci.eecs.wukong.framework.prclass.PrClass;
+import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
 
 public class Event<T extends Object> implements Comparable<Event> {
 	
@@ -17,12 +17,12 @@ public class Event<T extends Object> implements Comparable<Event> {
 	}
 	
 	// mark for extension dispatch
-	private PrClass prClass;
+	private PipelinePrClass prClass;
 	private T data;
 	private EventType type;
 	private int priority;
 	
-	public Event(PrClass prClass, T data, EventType type, int priority) {
+	public Event(PipelinePrClass prClass, T data, EventType type, int priority) {
 		this.priority = priority;
 		this.prClass = prClass;
 		this.data = data;
@@ -42,11 +42,11 @@ public class Event<T extends Object> implements Comparable<Event> {
 		return data;
 	}
 
-	public PrClass getPrClass() {
+	public PipelinePrClass getPrClass() {
 		return prClass;
 	}
 
-	public void setPrClass(PrClass prClass) {
+	public void setPrClass(PipelinePrClass prClass) {
 		this.prClass = prClass;
 	}
 

@@ -8,11 +8,11 @@ import edu.uci.eecs.wukong.framework.annotation.WuClass;
 import edu.uci.eecs.wukong.framework.api.Extension;
 import edu.uci.eecs.wukong.framework.model.DataType;
 import edu.uci.eecs.wukong.framework.model.PropertyType;
-import edu.uci.eecs.wukong.framework.prclass.PrClass;
+import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
 
 
 @WuClass(id = 10001)
-public class SwitchPrClass extends PrClass {
+public class SwitchPrClass extends PipelinePrClass {
 	
 	@WuProperty(id = 0, type = PropertyType.Input, dtype = DataType.Channel)
 	private Boolean switchInput;

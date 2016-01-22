@@ -1,11 +1,11 @@
 package edu.uci.eecs.wukong.framework.extension;
 
-import edu.uci.eecs.wukong.framework.prclass.PrClass;
+import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
 
 public abstract class AbstractProgressionExtension
 	extends AbstractExtension {
 	
-	public AbstractProgressionExtension(PrClass plugin) {
+	public AbstractProgressionExtension(PipelinePrClass plugin) {
 		super(plugin);
 	}
 	

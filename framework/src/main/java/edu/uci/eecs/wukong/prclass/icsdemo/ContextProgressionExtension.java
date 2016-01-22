@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import edu.uci.eecs.wukong.framework.api.Channelable;
 import edu.uci.eecs.wukong.framework.model.ChannelData;
-import edu.uci.eecs.wukong.framework.prclass.PrClass;
+import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
 import edu.uci.eecs.wukong.prclass.icsdemo.ContextTable;
 import edu.uci.eecs.wukong.prclass.icsdemo.PreferenceTable;
 
@@ -19,9 +19,9 @@ public class ContextProgressionExtension extends AbstractProgressionExtension im
 	private ContextTable contextTable = new ContextTable();
 	private String currentContext = null;
 	private short currentUser = 0;
-	private PrClass icsDemoPlugin;
+	private PipelinePrClass icsDemoPlugin;
 	
-	public ContextProgressionExtension(PrClass plugin) {
+	public ContextProgressionExtension(PipelinePrClass plugin) {
 		super(plugin);
 		icsDemoPlugin = plugin;
 	}

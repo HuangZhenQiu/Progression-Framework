@@ -7,10 +7,10 @@ import edu.uci.eecs.wukong.framework.annotation.WuClass;
 import edu.uci.eecs.wukong.framework.annotation.WuProperty;
 import edu.uci.eecs.wukong.framework.api.Extension;
 import edu.uci.eecs.wukong.framework.model.PropertyType;
-import edu.uci.eecs.wukong.framework.prclass.PrClass;
+import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
 
 @WuClass(id = 9007)
-public class ICSDemoTVPrClass extends PrClass {
+public class ICSDemoTVPrClass extends PipelinePrClass {
 
 	@WuProperty(name = "tv_onoff", id = 0, type = PropertyType.Output)
 	private short tv_onoff;

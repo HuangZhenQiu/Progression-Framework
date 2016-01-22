@@ -4,13 +4,13 @@ import edu.uci.eecs.wukong.framework.api.ExecutionContext;
 import edu.uci.eecs.wukong.framework.entity.ConfigurationCommand;
 import edu.uci.eecs.wukong.framework.entity.FeatureEntity;
 import edu.uci.eecs.wukong.framework.factor.BaseFactor;
-import edu.uci.eecs.wukong.framework.prclass.PrClass;
+import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
 
 import java.util.List;
 public abstract class ProgressionExtension<T extends FeatureEntity> extends AbstractProgressionExtension {
 	private Object model;
 	
-	public ProgressionExtension(PrClass plugin) {
+	public ProgressionExtension(PipelinePrClass plugin) {
 		super(plugin);
 		// TODO Auto-generated constructor stub
 	}

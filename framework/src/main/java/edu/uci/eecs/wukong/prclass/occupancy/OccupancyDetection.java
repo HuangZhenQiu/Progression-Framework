@@ -4,7 +4,7 @@ import java.util.List;
 
 import be.ac.ulg.montefiore.run.jahmm.ObservationDiscrete;
 import edu.uci.eecs.wukong.framework.api.Extension;
-import edu.uci.eecs.wukong.framework.prclass.PrClass;
+import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
 import edu.uci.eecs.wukong.framework.annotation.WuClass;
 import edu.uci.eecs.wukong.framework.annotation.WuProperty;
 import edu.uci.eecs.wukong.framework.model.DataType;
@@ -12,7 +12,7 @@ import edu.uci.eecs.wukong.framework.model.PropertyType;
 
 import com.google.common.annotations.VisibleForTesting;
 @WuClass(id = 10113)
-public class OccupancyDetection extends PrClass {
+public class OccupancyDetection extends PipelinePrClass {
 	@WuProperty(name = "pir", id = 1, type = PropertyType.Input, dtype = DataType.Buffer)
 	private byte pir;
 	@WuProperty(name = "days", id = 2, type = PropertyType.Input, dtype = DataType.Init_Value)

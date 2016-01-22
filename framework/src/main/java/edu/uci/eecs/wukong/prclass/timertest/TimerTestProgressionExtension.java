@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import edu.uci.eecs.wukong.framework.api.TimerExecutable;
 import edu.uci.eecs.wukong.framework.extension.AbstractProgressionExtension;
-import edu.uci.eecs.wukong.framework.prclass.PrClass;
+import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
 import edu.uci.eecs.wukong.prclass.timertest.TimerPrClass;
 
 public class TimerTestProgressionExtension extends AbstractProgressionExtension
@@ -13,7 +13,7 @@ public class TimerTestProgressionExtension extends AbstractProgressionExtension
 	private static Logger logger = LoggerFactory.getLogger(TimerTestProgressionExtension.class);
 	private short number = 0; 
 	
-	public TimerTestProgressionExtension(PrClass prClass) {
+	public TimerTestProgressionExtension(PipelinePrClass prClass) {
 		super(prClass);
 	}
 

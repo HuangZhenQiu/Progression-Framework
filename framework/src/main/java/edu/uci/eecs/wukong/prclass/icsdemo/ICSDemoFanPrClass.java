@@ -7,10 +7,10 @@ import edu.uci.eecs.wukong.framework.annotation.WuClass;
 import edu.uci.eecs.wukong.framework.annotation.WuProperty;
 import edu.uci.eecs.wukong.framework.api.Extension;
 import edu.uci.eecs.wukong.framework.model.PropertyType;
-import edu.uci.eecs.wukong.framework.prclass.PrClass;
+import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
 
 @WuClass(id = 9004)
-public class ICSDemoFanPrClass extends PrClass {
+public class ICSDemoFanPrClass extends PipelinePrClass {
 
 	@WuProperty(name = "fan_onoff", id = 0, type = PropertyType.Output)
 	private short fan_onoff;

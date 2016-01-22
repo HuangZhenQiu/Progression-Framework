@@ -12,7 +12,7 @@ import edu.uci.eecs.wukong.framework.extension.AbstractProgressionExtension;
 import edu.uci.eecs.wukong.framework.factor.BaseFactor;
 import edu.uci.eecs.wukong.framework.factor.UserFactor;
 import edu.uci.eecs.wukong.framework.model.ChannelData;
-import edu.uci.eecs.wukong.framework.prclass.PrClass;
+import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
 
 public class SwitchProgressionExtension extends AbstractProgressionExtension
 	implements FactorExecutable, Channelable {
@@ -20,7 +20,7 @@ public class SwitchProgressionExtension extends AbstractProgressionExtension
 	// User ID to threshold Map
 	private Map<String, Double> userThresholdMap;
 	
-	public SwitchProgressionExtension(PrClass plugin){
+	public SwitchProgressionExtension(PipelinePrClass plugin){
 		super(plugin);
 		this.userThresholdMap = new HashMap<String, Double>();
 		//Add predefined rules map here.

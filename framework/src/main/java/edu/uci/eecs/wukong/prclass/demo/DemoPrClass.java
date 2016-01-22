@@ -5,10 +5,10 @@ import java.util.List;
 
 import edu.uci.eecs.wukong.framework.api.Extension;
 import edu.uci.eecs.wukong.framework.annotation.WuClass;
-import edu.uci.eecs.wukong.framework.prclass.PrClass;
+import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
 
 @WuClass(id = 10000)
-public class DemoPrClass extends PrClass {
+public class DemoPrClass extends PipelinePrClass {
 	
 	public DemoPrClass() {
 		super("Demo");

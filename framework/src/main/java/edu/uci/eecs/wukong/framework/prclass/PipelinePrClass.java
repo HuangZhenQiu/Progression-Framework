@@ -1,6 +1,5 @@
 package edu.uci.eecs.wukong.framework.prclass;
 
-import java.beans.PropertyChangeSupport;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -8,7 +7,6 @@ import org.slf4j.LoggerFactory;
 
 import edu.uci.eecs.wukong.framework.api.Extension;
 import edu.uci.eecs.wukong.framework.extension.AbstractProgressionExtension;
-import edu.uci.eecs.wukong.framework.reconfig.ConfigurationManager;
 
 import com.google.common.annotations.VisibleForTesting;
 
@@ -28,18 +26,16 @@ public abstract class PipelinePrClass extends PrClass {
 	
 	@VisibleForTesting
 	public PipelinePrClass(String name, boolean isTest) {
-		super(name, false, false);
-		this.isTest = isTest;
-		if (!isTest) {
-			this.support = new PropertyChangeSupport(this);
-			this.configManager =  ConfigurationManager.getInstance();
-		}
+		super(name);
 	}
 	
 	protected PipelinePrClass(String name) {
-		super(name, false, false);
-		this.support = new PropertyChangeSupport(this);
-		this.configManager =  ConfigurationManager.getInstance();
+		super(name, false, false, PrClass.PrClassType.PIPELINE_PRCLASS);
+		
+	}
+	
+	protected PipelinePrClass(String name, PrClass.PrClassType type) {
+		super(name, false, false, type);
 	}
 
 	public abstract List<Extension> registerExtension();

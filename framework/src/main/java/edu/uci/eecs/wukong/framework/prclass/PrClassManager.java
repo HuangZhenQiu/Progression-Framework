@@ -123,26 +123,41 @@ public class PrClassManager implements PrClassInitListener {
 	private WuClassModel createWuClassModel(String path, Class<?> c) throws ClassNotFoundException {
 		WuClass wuclass = c.getAnnotation(WuClass.class);
 		if (wuclass == null) {
-			LOGGER.info("Can't find WuClass annotation for PrClass " + path);
+			LOGGER.error("Can't find WuClass annotation for PrClass " + path);
 			return null;
 		}
+		
+		if (c.equals(PipelinePrClass.class) || c.equals(SimplePrClass.class) || c.equals(SystemPrClass.class)) {
+			PrClass.PrClassType type = null;
+			if (c.equals(PipelinePrClass.class)) {
+				type = PrClass.PrClassType.PIPELINE_PRCLASS;
+			} else if (c.equals(SimplePrClass.class)) {
+				type = PrClass.PrClassType.SIMPLE_PRCLASS;
+			} else if (c.equals(SystemPrClass.class)) {
+				type = PrClass.PrClassType.SYSTEM_PRCLASS;
+			}
 			
-		WuClassModel wuClassModel =  new WuClassModel(wuclass.id());
-		for (Field field : c.getDeclaredFields()) {
-			String name = field.getName();
-			Annotation[] annotations = field.getDeclaredAnnotations();
-			for (Annotation annotation : annotations) {
-				if (annotation.annotationType().equals(WuProperty.class)) {
-					WuProperty property = (WuProperty)annotation;
-					wuClassModel.addProperty(name, property, field.getType());
+			WuClassModel wuClassModel =  new WuClassModel(wuclass.id(), type);
+			for (Field field : c.getDeclaredFields()) {
+				String name = field.getName();
+				Annotation[] annotations = field.getDeclaredAnnotations();
+				for (Annotation annotation : annotations) {
+					if (annotation.annotationType().equals(WuProperty.class)) {
+						WuProperty property = (WuProperty)annotation;
+						wuClassModel.addProperty(name, property, field.getType());
+					}
 				}
 			}
+			
+			registedClasses.put(wuclass.id(), wuClassModel);
+			wkpf.addWuClass(wuClassModel);
+			
+			return wuClassModel;
 		}
 		
-		registedClasses.put(wuclass.id(), wuClassModel);
-		wkpf.addWuClass(wuClassModel);
 		
-		return wuClassModel;
+		LOGGER.error("Try to register an unsupport PrClass type " + c.getCanonicalName());
+		return null;
 	}
 	
 	/**
@@ -172,8 +187,18 @@ public class PrClassManager implements PrClassInitListener {
 	 * for plugins, and also unregister the extensions in pipeline. 
 	 */
 	public void unbindPlugins() {
-    	for (PipelinePrClass plugin : plugins) {
-    		pipeline.unregisterExtension(plugin.registerExtension());
+    	for (WuObjectModel model  : bindedWuObjects) {
+    		if (model.getType().getType().equals(PrClass.PrClassType.PIPELINE_PRCLASS)) {
+    			PipelinePrClass pipePrClass = (PipelinePrClass) model.getPrClass();
+    			contextManager.unsubscribe(pipePrClass);
+    			bufferManager.unbind(model);
+    			pipeline.unregisterExtension(pipePrClass.registerExtension());
+    			LOGGER.info("Finished bind pipeline prclass with context manager, pipeline and property monitor.");
+    		} else if (model.getType().getType().equals(PrClass.PrClassType.SIMPLE_PRCLASS)) {
+    			bufferManager.unbind(model);
+    		} else if (model.getType().getType().equals(PrClass.PrClassType.SYSTEM_PRCLASS)) {
+    			//TODO (Peter Huang) set the system management related meta data.
+    		}
     	}
 	}
 	
@@ -185,12 +210,20 @@ public class PrClassManager implements PrClassInitListener {
 	 * @throws NoSuchFieldException
 	 */
 	public void bindPlugin(WuObjectModel model) {
-		PipelinePrClass prClass = model.getPrClass();
-		contextManager.subscribe(prClass, prClass.registerContext());
-		bufferManager.bind(model);
-		pipeline.registerExtension(prClass.registerExtension());
+		PrClass prClass = model.getPrClass();
 		bindPropertyUpdateEvent(prClass);
-		LOGGER.info("Finished bind plugin with context manager, pipeline and property monitor.");
+		
+		if (model.getType().getType().equals(PrClass.PrClassType.PIPELINE_PRCLASS)) {
+			PipelinePrClass pipePrClass = (PipelinePrClass) prClass;
+			contextManager.subscribe(pipePrClass, pipePrClass.registerContext());
+			bufferManager.bind(model);
+			pipeline.registerExtension(pipePrClass.registerExtension());
+			LOGGER.info("Finished bind pipeline prclass with context manager, pipeline and property monitor.");
+		} else if (model.getType().getType().equals(PrClass.PrClassType.SIMPLE_PRCLASS)) {
+			bufferManager.bind(model);
+		} else if (model.getType().getType().equals(PrClass.PrClassType.SYSTEM_PRCLASS)) {
+			//TODO (Peter Huang) set the system management related meta data.
+		}
 	}
 	
 	/**
@@ -227,7 +260,7 @@ public class PrClassManager implements PrClassInitListener {
 	}
 	
 	// bind the update event of out property for plugin.
-	private void bindPropertyUpdateEvent(PipelinePrClass plugin) {
+	private void bindPropertyUpdateEvent(PrClass plugin) {
 		List<String> output = new ArrayList<String>();
 		for (Field field : plugin.getClass().getDeclaredFields()) {
 			String name = field.getName();

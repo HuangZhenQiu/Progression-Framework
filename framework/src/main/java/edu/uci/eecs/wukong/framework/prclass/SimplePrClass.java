@@ -11,7 +11,7 @@ package edu.uci.eecs.wukong.framework.prclass;
 public abstract class SimplePrClass extends PrClass {
 
 	protected SimplePrClass(String name) {
-		super(name, false, false);
+		super(name, false, false, PrClass.PrClassType.SIMPLE_PRCLASS);
 		// TODO Auto-generated constructor stub
 	}
 

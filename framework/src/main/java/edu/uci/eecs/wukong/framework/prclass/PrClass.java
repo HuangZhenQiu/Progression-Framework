@@ -8,6 +8,8 @@ import java.lang.reflect.Field;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.annotations.VisibleForTesting;
+
 import edu.uci.eecs.wukong.framework.annotation.WuProperty;
 import edu.uci.eecs.wukong.framework.factor.BaseFactor;
 import edu.uci.eecs.wukong.framework.reconfig.ConfigurationManager;
@@ -42,16 +44,31 @@ public abstract class PrClass {
 	protected boolean online;
 	protected boolean learning;
 	protected boolean isTest = false;
+	protected PrClassType type;
 	protected PropertyChangeSupport support;
 	protected ConfigurationManager configManager;
 	
-	protected PrClass(String name, boolean online, boolean learning) {
+	public static enum PrClassType {
+		SIMPLE_PRCLASS,
+		PIPELINE_PRCLASS,
+		SYSTEM_PRCLASS
+	}
+	
+	@VisibleForTesting
+	protected PrClass(String name) {
+		this.name = name;
+		this.portId = id ++;
+	}
+	
+	protected PrClass(String name, boolean online, boolean learning, PrClassType type) {
 		this.name = name;
 		this.online = online;
 		this.portId = id ++;
 		this.online = online;
 		this.learning = learning;
-
+		this.type = type;
+		this.support = new PropertyChangeSupport(this);
+		this.configManager =  ConfigurationManager.getInstance();
 	}
 	
 	public ConfigurationManager getConfigurationManager() {
@@ -75,6 +92,10 @@ public abstract class PrClass {
 		}
 		
 		return true;
+	}
+	
+	public PrClassType getType() {
+		return this.type;
 	}
 	
 	public void publish(String topic, BaseFactor value) {

@@ -11,7 +11,7 @@ package edu.uci.eecs.wukong.framework.prclass;
 public abstract class SystemPrClass extends PipelinePrClass {
 
 	public SystemPrClass(String name) {
-		super(name);
+		super(name, PrClass.PrClassType.SYSTEM_PRCLASS);
 	}
 	
 	public void remap() {

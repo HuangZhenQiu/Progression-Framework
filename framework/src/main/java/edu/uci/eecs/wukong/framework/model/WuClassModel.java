@@ -4,18 +4,25 @@ import java.util.HashMap;
 import java.util.Map;
 
 import edu.uci.eecs.wukong.framework.annotation.WuProperty;
-import edu.uci.eecs.wukong.framework.model.WuPropertyModel;
+import edu.uci.eecs.wukong.framework.prclass.PrClass.PrClassType;
 import com.google.common.collect.ImmutableList;
 
 public class WuClassModel {
+	
 	private short wuclassId;
+	private PrClassType type;
 	private Map<String, WuPropertyModel> properties;
 	private Map<Byte, WuPropertyModel> idToProperties;
 	
-	public WuClassModel(short wuclassId) {
+	public WuClassModel(short wuclassId, PrClassType type) {
 		this.wuclassId = wuclassId;
+		this.type = type;
 		this.properties = new HashMap<String, WuPropertyModel>();
 		this.idToProperties = new HashMap<Byte, WuPropertyModel>();
+	}
+	
+	public PrClassType getType() {
+		return this.type;
 	}
 	
 	public byte getPropertyId(String property) {

@@ -11,8 +11,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import edu.uci.eecs.wukong.framework.api.Channelable;
+import edu.uci.eecs.wukong.framework.api.Extension;
 import edu.uci.eecs.wukong.framework.api.metrics.Gauge;
-import edu.uci.eecs.wukong.framework.extension.AbstractProgressionExtension;
 import edu.uci.eecs.wukong.framework.channel.Channel;
 import edu.uci.eecs.wukong.framework.model.DataType;
 import edu.uci.eecs.wukong.framework.model.NPP;
@@ -21,6 +21,8 @@ import edu.uci.eecs.wukong.framework.model.WuClassModel;
 import edu.uci.eecs.wukong.framework.model.WuObjectModel;
 import edu.uci.eecs.wukong.framework.model.WuPropertyModel;
 import edu.uci.eecs.wukong.framework.mptn.MPTN;
+import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
+import edu.uci.eecs.wukong.framework.prclass.PrClass;
 
 import com.google.common.annotations.VisibleForTesting;
 public class BufferManager {
@@ -69,30 +71,76 @@ public class BufferManager {
 	public void bind(WuObjectModel model) {
 		if (model.isValid()) {
 			WuClassModel classModel = model.getType();
-			for (WuPropertyModel property : classModel.getProperties()) {
-				NPP npp = new NPP(mptn.getNodeId(), model.getPort(), property.getId());
-				if (property.getPtype().equals(PropertyType.Input)
-						&&property.getDtype().equals(DataType.Channel)) {
-					AbstractProgressionExtension extension = model.getPrClass().getProgressionExtension(); 
-					if (extension != null && extension instanceof Channelable) {
-						
-						this.createShortChannel(npp);
-						Channelable channelable = (Channelable)extension;
-						this.addChannelListener(npp, channelable);
-						LOGGER.info("Added channel for PrClass " + classModel.getWuClassId());
-					} else {
-						LOGGER.error("PrClass define input property "
-								+ property.getName()
-								+ " with type channle, but didn't implement Channelable interface");
-					}
-				} else if (property.getPtype().equals(PropertyType.Input)
-						&& property.getDtype().equals(DataType.Buffer)) {
-					if (property.getType().equals(short.class)) {
-						createShortBuffer(npp, 1000, 100, 10);
-					} else if (property.getType().equals(byte.class)) {
-						createByteBuffer(npp, 1000, 100, 10);
+			if (classModel.getType().equals(PrClass.PrClassType.PIPELINE_PRCLASS)) {
+				PipelinePrClass prClass =  (PipelinePrClass) model.getPrClass();
+				for (WuPropertyModel property : classModel.getProperties()) {
+					NPP npp = new NPP(mptn.getNodeId(), model.getPort(), property.getId());
+					if (property.getPtype().equals(PropertyType.Input)
+							&&property.getDtype().equals(DataType.Channel)) {
+						for (Extension extension : prClass.registerExtension()) {
+							if (extension instanceof Channelable) {
+								
+								this.createShortChannel(npp);
+								Channelable channelable = (Channelable)extension;
+								this.addChannelListener(npp, channelable);
+								LOGGER.info("Added channel for PrClass " + classModel.getWuClassId());
+							} else {
+								LOGGER.error("PrClass define input property "
+										+ property.getName()
+										+ " with type channle, but didn't implement Channelable interface");
+							}
+						}
+					} else if (property.getPtype().equals(PropertyType.Input)
+							&& property.getDtype().equals(DataType.Buffer)) {
+						if (property.getType().equals(short.class)) {
+							createShortBuffer(npp, 1000, 100, 10);
+						} else if (property.getType().equals(byte.class)) {
+							createByteBuffer(npp, 1000, 100, 10);
+						}
 					}
 				}
+			} else if (classModel.getType().equals(PrClass.PrClassType.SIMPLE_PRCLASS)) {
+				for (WuPropertyModel property : classModel.getProperties()) {
+					NPP npp = new NPP(mptn.getNodeId(), model.getPort(), property.getId());
+					if (property.getPtype().equals(PropertyType.Input)) {
+						this.addChannelFieldHook(npp, property.getName(), model);
+					} 
+				}
+			} else if (classModel.getType().equals(PrClass.PrClassType.SYSTEM_PRCLASS)) {
+				
+			}
+		}
+	}
+	
+	public void unbind(WuObjectModel model) {
+		if (model.isValid()) {
+			WuClassModel classModel = model.getType();
+			if (classModel.getType().equals(PrClass.PrClassType.PIPELINE_PRCLASS)) {
+				PipelinePrClass prClass =  (PipelinePrClass) model.getPrClass();
+				for (WuPropertyModel property : classModel.getProperties()) {
+					NPP npp = new NPP(mptn.getNodeId(), model.getPort(), property.getId());
+					if (property.getPtype().equals(PropertyType.Input)
+							&&property.getDtype().equals(DataType.Channel)) {
+						
+						for (Extension extension : prClass.registerExtension()) {
+							if (extension instanceof Channelable) {
+								this.removeChannelListener(npp, (Channelable) extension);
+							}
+						}
+					} else if (property.getPtype().equals(PropertyType.Input)
+							&& property.getDtype().equals(DataType.Buffer)) {
+						// TODO (Peter Huang) reallocate buffer memory
+					}
+				}
+			} else if (classModel.getType().equals(PrClass.PrClassType.SIMPLE_PRCLASS)) {
+				for (WuPropertyModel property : classModel.getProperties()) {
+					NPP npp = new NPP(mptn.getNodeId(), model.getPort(), property.getId());
+					if (property.getPtype().equals(PropertyType.Input)) {
+						this.removeChannelFieldHool(npp, property.getName(), model);
+					} 
+				}
+			} else if (classModel.getType().equals(PrClass.PrClassType.SYSTEM_PRCLASS)) {
+				
 			}
 		}
 	}
@@ -146,6 +194,36 @@ public class BufferManager {
 		
 		Channel channel = channelMap.get(key);
 		channel.addListener(listener);
+		return true;
+	}
+	
+	public boolean addChannelFieldHook(NPP key, String fieldName, WuObjectModel model) {
+		if (!channelMap.containsKey(key)) {
+			return false;
+		}
+		
+		Channel channel = channelMap.get(key);
+		channel.addField(fieldName, model);
+		return true;
+	}
+	
+	public boolean removeChannelFieldHool(NPP key, String fieldName, WuObjectModel model) {
+		if (!channelMap.containsKey(key)) {
+			return false;
+		}
+		
+		Channel channel = channelMap.get(key);
+		channel.removeField(fieldName, model);
+		return true;
+	}
+	
+	public boolean removeChannelListener(NPP key, Channelable listener) {
+		if (!channelMap.containsKey(key)) {
+			return false;
+		}
+		
+		Channel channel = channelMap.get(key);
+		channel.removeListener(listener);
 		return true;
 	}
 	

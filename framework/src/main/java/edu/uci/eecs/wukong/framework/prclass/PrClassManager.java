@@ -127,14 +127,16 @@ public class PrClassManager implements PrClassInitListener {
 			return null;
 		}
 		
-		if (c.equals(PipelinePrClass.class) || c.equals(SimplePrClass.class) || c.equals(SystemPrClass.class)) {
+		if (PipelinePrClass.class.isAssignableFrom(c)
+				|| SimplePrClass.class.isAssignableFrom(c)
+				|| SystemPrClass.class.isAssignableFrom(c)) {
 			PrClass.PrClassType type = null;
-			if (c.equals(PipelinePrClass.class)) {
-				type = PrClass.PrClassType.PIPELINE_PRCLASS;
-			} else if (c.equals(SimplePrClass.class)) {
+			if (SimplePrClass.class.isAssignableFrom(c)) {
 				type = PrClass.PrClassType.SIMPLE_PRCLASS;
-			} else if (c.equals(SystemPrClass.class)) {
+			} else if (SystemPrClass.class.isAssignableFrom(c)) {
 				type = PrClass.PrClassType.SYSTEM_PRCLASS;
+			} else if(PipelinePrClass.class.isAssignableFrom(c)) {
+				type = PrClass.PrClassType.PIPELINE_PRCLASS;
 			}
 			
 			WuClassModel wuClassModel =  new WuClassModel(wuclass.id(), type);

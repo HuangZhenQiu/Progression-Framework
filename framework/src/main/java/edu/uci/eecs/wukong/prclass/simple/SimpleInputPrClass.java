@@ -15,9 +15,8 @@ public class SimpleInputPrClass extends SimplePrClass {
 	@WuProperty(id = 0, name="input", type = PropertyType.Input)
 	private short input;
 	
-
-	protected SimpleInputPrClass() {
-		super("Simple");
+	public SimpleInputPrClass() {
+		super("SimpleInputPrClass");
 		// TODO Auto-generated constructor stub
 	}
 

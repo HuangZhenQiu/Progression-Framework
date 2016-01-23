@@ -43,7 +43,7 @@ public class PrClassManager implements PrClassInitListener {
 	private Pipeline pipeline;
 	private Timer timer;
 	private Map<PrClass, SimpleTimerTask> prClassTimerMap;
-	private List<PipelinePrClass> plugins;
+	private List<PrClass> plugins;
 	/* WuclassId to WuClass model */
 	private Map<Short, WuClassModel> registedClasses;
 	/* Binded WuObjects */
@@ -59,7 +59,7 @@ public class PrClassManager implements PrClassInitListener {
 		this.propertyMonitor = new PrClassPropertyMonitor(this);
 		this.prClassTimerMap = new HashMap<PrClass, SimpleTimerTask>();
 		this.registedClasses = new HashMap<Short, WuClassModel>();
-		this.plugins = new ArrayList<PipelinePrClass>();
+		this.plugins = new ArrayList<PrClass>();
 		this.bindedWuObjects = new ArrayList<WuObjectModel>();
 		this.wkpf = wkpf;
 		this.pluginNames =  new ArrayList<String> ();
@@ -123,17 +123,20 @@ public class PrClassManager implements PrClassInitListener {
 			Class<?> c = loader.loadClass(path);
 			WuClassModel wuClassModel = createWuClassModel(path, c);
 			
-			LOGGER.info("Initialized Wuclass in progression server : " + wuClassModel);
-			
-			// A temporary solution for easier mapping and deployment.
-			// Create an instance for each plugin classes as hard WuClass.
-			Constructor<?> constructor = c.getConstructor();
-			PipelinePrClass plugin = (PipelinePrClass) constructor.newInstance();
-			plugins.add(plugin);
-			WuObjectModel wuObjectModel = new WuObjectModel(wuClassModel, plugin);
-			wkpf.addWuObject(plugin.getPortId(), wuObjectModel);
+			if (wuClassModel != null) {
+				LOGGER.info("Initialized Wuclass in progression server : " + wuClassModel);
+				
+				// A temporary solution for easier mapping and deployment.
+				// Create an instance for each plugin classes as hard WuClass.
+				Constructor<?> constructor = c.getConstructor();
+				PrClass plugin = (PrClass) constructor.newInstance();
+				plugins.add(plugin);
+				WuObjectModel wuObjectModel = new WuObjectModel(wuClassModel, plugin);
+				wkpf.addWuObject(plugin.getPortId(), wuObjectModel);
+			}
 		}
 		
+		// Recovery from failure status
 		if (model != null && model.getBindedWuObject() != null && model.getBindedWuObject().size() > 0) {
 			bindPlugins(model.getBindedWuObject());
 		}

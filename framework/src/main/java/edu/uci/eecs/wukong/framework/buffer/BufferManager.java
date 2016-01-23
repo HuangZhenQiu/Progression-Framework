@@ -74,7 +74,8 @@ public class BufferManager {
 			if (classModel.getType().equals(PrClass.PrClassType.PIPELINE_PRCLASS)) {
 				PipelinePrClass prClass =  (PipelinePrClass) model.getPrClass();
 				for (WuPropertyModel property : classModel.getProperties()) {
-					NPP npp = new NPP(mptn.getNodeId(), model.getPort(), property.getId());
+					// Use long address
+					NPP npp = new NPP(mptn.getLongAddress(), model.getPort(), property.getId());
 					if (property.getPtype().equals(PropertyType.Input)
 							&&property.getDtype().equals(DataType.Channel)) {
 						for (Extension extension : prClass.registerExtension()) {
@@ -101,7 +102,7 @@ public class BufferManager {
 				}
 			} else if (classModel.getType().equals(PrClass.PrClassType.SIMPLE_PRCLASS)) {
 				for (WuPropertyModel property : classModel.getProperties()) {
-					NPP npp = new NPP(mptn.getNodeId(), model.getPort(), property.getId());
+					NPP npp = new NPP(mptn.getLongAddress(), model.getPort(), property.getId());
 					this.createShortChannel(npp);
 					if (property.getPtype().equals(PropertyType.Input)) {
 						this.addChannelFieldHook(npp, property.getName(), model);
@@ -119,7 +120,7 @@ public class BufferManager {
 			if (classModel.getType().equals(PrClass.PrClassType.PIPELINE_PRCLASS)) {
 				PipelinePrClass prClass =  (PipelinePrClass) model.getPrClass();
 				for (WuPropertyModel property : classModel.getProperties()) {
-					NPP npp = new NPP(mptn.getNodeId(), model.getPort(), property.getId());
+					NPP npp = new NPP(mptn.getLongAddress(), model.getPort(), property.getId());
 					if (property.getPtype().equals(PropertyType.Input)
 							&&property.getDtype().equals(DataType.Channel)) {
 						
@@ -135,7 +136,7 @@ public class BufferManager {
 				}
 			} else if (classModel.getType().equals(PrClass.PrClassType.SIMPLE_PRCLASS)) {
 				for (WuPropertyModel property : classModel.getProperties()) {
-					NPP npp = new NPP(mptn.getNodeId(), model.getPort(), property.getId());
+					NPP npp = new NPP(mptn.getLongAddress(), model.getPort(), property.getId());
 					if (property.getPtype().equals(PropertyType.Input)) {
 						this.removeChannelFieldHool(npp, property.getName(), model);
 					} 

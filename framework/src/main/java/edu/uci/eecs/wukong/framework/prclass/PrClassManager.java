@@ -56,6 +56,7 @@ public class PrClassManager implements PrClassInitListener {
 		this.bufferManager = bufferManager;
 		this.contextManager = contextManager;
 		this.pipeline = pipeline;
+		this.timer = new Timer();
 		this.propertyMonitor = new PrClassPropertyMonitor(this);
 		this.prClassTimerMap = new HashMap<PrClass, SimpleTimerTask>();
 		this.registedClasses = new HashMap<Short, WuClassModel>();

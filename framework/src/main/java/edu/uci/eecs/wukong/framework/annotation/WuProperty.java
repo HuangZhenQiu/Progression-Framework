@@ -17,9 +17,9 @@ public @interface WuProperty {
 	// Define the type of property, either input or output
 	PropertyType type() default PropertyType.Input;
 	
-	// Define the data type of the output property, either buffer or channel
-	DataType dtype() default DataType.Buffer;
+	// Define the data type of the input property, either buffer or channel
+	DataType dtype() default DataType.Channel;
 	
-	// Define the id of the property
+	// Define the id of the property, it has to be unique for each property
 	byte id() default 0;
 }

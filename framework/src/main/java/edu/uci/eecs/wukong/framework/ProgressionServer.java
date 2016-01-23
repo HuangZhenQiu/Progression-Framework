@@ -113,6 +113,7 @@ public class ProgressionServer {
 			this.pluginManager.init(model);
 			this.server.start();
 			this.pipeline.start();
+			this.metricsReporter.start();
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error("Fail to start progression server.");
@@ -123,6 +124,7 @@ public class ProgressionServer {
 		this.server.shutdown();
 		this.pipeline.shutdown();
 		this.wkpf.shutdown();
+		this.metricsReporter.stop();
 	}
 	
 	public void attachShutDownHook() {

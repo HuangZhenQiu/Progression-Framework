@@ -145,6 +145,6 @@ public abstract class PrClass {
 	
     @Override
 	public String toString() {
-    	return "PrClass[name = " + name + ", portId = " + portId + "]";
+    	return "PrClass[name = " + name + ", portId = " + portId + ", type=" + type + "]";
     }
 }

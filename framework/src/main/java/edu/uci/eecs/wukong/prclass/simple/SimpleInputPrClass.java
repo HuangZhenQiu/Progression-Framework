@@ -6,13 +6,14 @@ import org.slf4j.LoggerFactory;
 import edu.uci.eecs.wukong.framework.annotation.WuClass;
 import edu.uci.eecs.wukong.framework.annotation.WuProperty;
 import edu.uci.eecs.wukong.framework.annotation.WuTimer;
+import edu.uci.eecs.wukong.framework.model.DataType;
 import edu.uci.eecs.wukong.framework.model.PropertyType;
 import edu.uci.eecs.wukong.framework.prclass.SimplePrClass;
 
 @WuClass(id = 10114)
 public class SimpleInputPrClass extends SimplePrClass {
 	private final static Logger LOGGER = LoggerFactory.getLogger(SimpleInputPrClass.class);
-	@WuProperty(id = 0, name="input", type = PropertyType.Input)
+	@WuProperty(id = 0, name="input", type = PropertyType.Input, dtype = DataType.Channel)
 	private short input;
 	
 	public SimpleInputPrClass() {

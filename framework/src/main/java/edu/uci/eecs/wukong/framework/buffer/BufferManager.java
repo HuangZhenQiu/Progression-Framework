@@ -105,7 +105,7 @@ public class BufferManager {
 					this.createShortChannel(npp);
 					if (property.getPtype().equals(PropertyType.Input)) {
 						this.addChannelFieldHook(npp, property.getName(), model);
-					} 
+					} 					
 				}
 			} else if (classModel.getType().equals(PrClass.PrClassType.SYSTEM_PRCLASS)) {
 				
@@ -205,6 +205,7 @@ public class BufferManager {
 		
 		Channel channel = channelMap.get(key);
 		channel.addField(fieldName, model);
+		LOGGER.info("Added channel hook for " + fieldName + " PrClass " + model);
 		return true;
 	}
 	
@@ -215,6 +216,7 @@ public class BufferManager {
 		
 		Channel channel = channelMap.get(key);
 		channel.removeField(fieldName, model);
+		LOGGER.info("Removed channel for PrClass " + fieldName + " PrClass " + model);
 		return true;
 	}
 	

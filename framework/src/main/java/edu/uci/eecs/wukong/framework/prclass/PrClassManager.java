@@ -11,6 +11,7 @@ import edu.uci.eecs.wukong.framework.model.WuClassModel;
 import edu.uci.eecs.wukong.framework.model.WuObjectModel;
 import edu.uci.eecs.wukong.framework.model.PropertyType;
 import edu.uci.eecs.wukong.framework.model.StateModel;
+import edu.uci.eecs.wukong.framework.util.PipelineUtil;
 import edu.uci.eecs.wukong.framework.wkpf.WKPF;
 import edu.uci.eecs.wukong.framework.state.StateUpdateListener;
 
@@ -23,6 +24,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -38,6 +41,8 @@ public class PrClassManager implements PrClassInitListener {
 	private SceneManager contextManager;
 	private PrClassPropertyMonitor propertyMonitor;
 	private Pipeline pipeline;
+	private Timer timer;
+	private Map<PrClass, SimpleTimerTask> prClassTimerMap;
 	private List<PipelinePrClass> plugins;
 	/* WuclassId to WuClass model */
 	private Map<Short, WuClassModel> registedClasses;
@@ -52,6 +57,7 @@ public class PrClassManager implements PrClassInitListener {
 		this.contextManager = contextManager;
 		this.pipeline = pipeline;
 		this.propertyMonitor = new PrClassPropertyMonitor(this);
+		this.prClassTimerMap = new HashMap<PrClass, SimpleTimerTask>();
 		this.registedClasses = new HashMap<Short, WuClassModel>();
 		this.plugins = new ArrayList<PipelinePrClass>();
 		this.bindedWuObjects = new ArrayList<WuObjectModel>();
@@ -59,6 +65,19 @@ public class PrClassManager implements PrClassInitListener {
 		this.pluginNames =  new ArrayList<String> ();
 		this.listeners = new ArrayList<StateUpdateListener> ();
 		this.loadPrClassDefinition();
+	}
+	
+	private class SimpleTimerTask extends TimerTask {
+		private SimplePrClass executable;
+
+		public SimpleTimerTask(SimplePrClass executable) {
+			this.executable = executable;
+		}
+		
+		@Override
+		public void run() {
+			executable.update();
+		}
 	}
 
 	public void register(StateUpdateListener listener) {
@@ -198,6 +217,7 @@ public class PrClassManager implements PrClassInitListener {
     			LOGGER.info("Finished bind pipeline prclass with context manager, pipeline and property monitor.");
     		} else if (model.getType().getType().equals(PrClass.PrClassType.SIMPLE_PRCLASS)) {
     			bufferManager.unbind(model);
+    			unbindSimplePrClassTimer((SimplePrClass)model.getPrClass());
     		} else if (model.getType().getType().equals(PrClass.PrClassType.SYSTEM_PRCLASS)) {
     			//TODO (Peter Huang) set the system management related meta data.
     		}
@@ -222,10 +242,30 @@ public class PrClassManager implements PrClassInitListener {
 			pipeline.registerExtension(pipePrClass.registerExtension());
 			LOGGER.info("Finished bind pipeline prclass with context manager, pipeline and property monitor.");
 		} else if (model.getType().getType().equals(PrClass.PrClassType.SIMPLE_PRCLASS)) {
+			// bind the input property to channels
 			bufferManager.bind(model);
+			bindSimplePrClassTimer((SimplePrClass)model.getPrClass());
 		} else if (model.getType().getType().equals(PrClass.PrClassType.SYSTEM_PRCLASS)) {
 			//TODO (Peter Huang) set the system management related meta data.
 		}
+	}
+	
+	private void bindSimplePrClassTimer(SimplePrClass prclass) {
+		// start timer 
+		int internal = PipelineUtil.getIntervalFromAnnotation(prclass);
+		SimpleTimerTask timerTask = new SimpleTimerTask(prclass);
+		timer.scheduleAtFixedRate(timerTask, 0, internal * 1000);
+		prClassTimerMap.put(prclass, timerTask);
+		LOGGER.info("Registered Timer Executor for every " + internal + "seconds  for simple prclass "
+				+ prclass.getName() + " of port " + prclass.getPortId());
+	}
+	
+	private void unbindSimplePrClassTimer(SimplePrClass prclass) {
+		SimpleTimerTask task = prClassTimerMap.get(prclass);
+		task.cancel();
+		prClassTimerMap.remove(prclass);
+		LOGGER.info("unRegistered Timer Executor  for simple prclass "
+				+ prclass.getName() + " of port " + prclass.getPortId());
 	}
 	
 	/**

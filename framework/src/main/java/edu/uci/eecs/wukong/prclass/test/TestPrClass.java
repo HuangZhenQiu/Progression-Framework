@@ -13,7 +13,7 @@ import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
 @WuClass(id = 10002)
 public class TestPrClass extends PipelinePrClass {
 
-	@WuProperty(id = 1, type = PropertyType.Input, dtype = DataType.Buffer)
+	@WuProperty(id = 0, type = PropertyType.Input, dtype = DataType.Buffer)
 	private short testProperty;
 	
 	public TestPrClass() {

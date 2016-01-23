@@ -13,9 +13,9 @@ import edu.uci.eecs.wukong.prclass.weather.WeatherProgressionExtension;
 
 @WuClass(id = 10111)
 public class WeatherPrClass extends PipelinePrClass {
-	@WuProperty(name = "cityId", id = 1, type = PropertyType.Input, dtype = DataType.Init_Value)
+	@WuProperty(name = "cityId", id = 0, type = PropertyType.Input, dtype = DataType.Init_Value)
 	private int cityId;
-	@WuProperty(name = "temperature", id = 2, type = PropertyType.Output)
+	@WuProperty(name = "temperature", id = 1, type = PropertyType.Output)
 	private short temperature;
 
 	public WeatherPrClass() {

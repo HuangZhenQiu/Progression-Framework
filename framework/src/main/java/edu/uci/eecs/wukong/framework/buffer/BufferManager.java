@@ -102,6 +102,7 @@ public class BufferManager {
 			} else if (classModel.getType().equals(PrClass.PrClassType.SIMPLE_PRCLASS)) {
 				for (WuPropertyModel property : classModel.getProperties()) {
 					NPP npp = new NPP(mptn.getNodeId(), model.getPort(), property.getId());
+					this.createShortChannel(npp);
 					if (property.getPtype().equals(PropertyType.Input)) {
 						this.addChannelFieldHook(npp, property.getName(), model);
 					} 

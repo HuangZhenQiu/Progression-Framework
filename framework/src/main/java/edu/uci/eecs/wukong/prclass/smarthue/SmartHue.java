@@ -8,21 +8,21 @@ import edu.uci.eecs.wukong.framework.annotation.WuProperty;
 import edu.uci.eecs.wukong.framework.api.Extension;
 import edu.uci.eecs.wukong.framework.model.DataType;
 import edu.uci.eecs.wukong.framework.model.PropertyType;
-import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
+import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;;
 
 @WuClass(id = 10114)
 public class SmartHue extends PipelinePrClass {
 	protected static String LOCATION_TOPIC = "location";
 	protected static String GESTURE_TOPIC = "gesture";
-	@WuProperty(name = "outdoorLightness", id = 1, type = PropertyType.Input, dtype = DataType.Buffer)
+	@WuProperty(name = "outdoorLightness", id = 0, type = PropertyType.Input, dtype = DataType.Buffer)
 	private short outdoorLightness;
-	@WuProperty(name = "indoorLightness", id = 2, type = PropertyType.Input, dtype = DataType.Buffer)
+	@WuProperty(name = "indoorLightness", id = 1, type = PropertyType.Input, dtype = DataType.Buffer)
 	private short indoorLightness;
-	@WuProperty(name = "indoorLightness", id = 3, type = PropertyType.Input, dtype = DataType.Channel)
+	@WuProperty(name = "indoorLightness", id = 2, type = PropertyType.Input, dtype = DataType.Channel)
 	private short indoorLightness2; // It is for get feedback from control
-	@WuProperty(name = "userAction", id = 4, type = PropertyType.Input, dtype = DataType.Channel)
+	@WuProperty(name = "userAction", id = 3, type = PropertyType.Input, dtype = DataType.Channel)
 	private short userAction; // It is for collect user's hehavior
-	@WuProperty(name = "hueOuput", id = 5, type = PropertyType.Output)
+	@WuProperty(name = "hueOuput", id = 4, type = PropertyType.Output)
 	private short hueOutput;
 	
 	public SmartHue() {

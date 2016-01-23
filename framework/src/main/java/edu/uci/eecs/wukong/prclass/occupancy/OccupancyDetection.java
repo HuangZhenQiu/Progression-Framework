@@ -13,13 +13,13 @@ import edu.uci.eecs.wukong.framework.model.PropertyType;
 import com.google.common.annotations.VisibleForTesting;
 @WuClass(id = 10113)
 public class OccupancyDetection extends PipelinePrClass {
-	@WuProperty(name = "pir", id = 1, type = PropertyType.Input, dtype = DataType.Buffer)
+	@WuProperty(name = "pir", id = 0, type = PropertyType.Input, dtype = DataType.Buffer)
 	private byte pir;
-	@WuProperty(name = "days", id = 2, type = PropertyType.Input, dtype = DataType.Init_Value)
+	@WuProperty(name = "days", id = 1, type = PropertyType.Input, dtype = DataType.Init_Value)
 	private short days;
-	@WuProperty(name = "topK", id = 3, type = PropertyType.Input, dtype = DataType.Init_Value)
+	@WuProperty(name = "topK", id = 2, type = PropertyType.Input, dtype = DataType.Init_Value)
 	private short topK;
-	@WuProperty(name = "interval", id = 4, type = PropertyType.Input, dtype = DataType.Init_Value)
+	@WuProperty(name = "interval", id = 3, type = PropertyType.Input, dtype = DataType.Init_Value)
 	private short interval;
 	@WuProperty(name = "occupancy", id = 4, type = PropertyType.Output)
 	private boolean occupancy;

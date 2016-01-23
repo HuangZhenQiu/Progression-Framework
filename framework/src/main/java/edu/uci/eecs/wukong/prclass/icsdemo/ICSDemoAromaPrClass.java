@@ -12,7 +12,7 @@ import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
 @WuClass(id = 9005)
 public class ICSDemoAromaPrClass extends PipelinePrClass {
 
-	@WuProperty(name = "aroma_onoff", id = 1, type = PropertyType.Output)
+	@WuProperty(name = "aroma_onoff", id = 0, type = PropertyType.Output)
 	private short aroma_onoff;
 	
 	public ICSDemoAromaPrClass() {

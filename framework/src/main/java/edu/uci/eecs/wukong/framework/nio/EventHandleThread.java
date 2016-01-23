@@ -30,7 +30,13 @@ public class EventHandleThread implements Runnable {
 	
 	public void fireMPTNMessage(ByteBuffer bytes) {
 		for (MPTNMessageListener listener : listeners) {
-			listener.onMessage(bytes);
+			try {
+				// For realtime processing, it will call to Prclas logic, which is unsafe
+				listener.onMessage(bytes);
+			} catch (Exception e) {
+				e.printStackTrace();
+				logger.error("Failt to handle event for listener " + listener.getClass());
+			}
 		}
 	}
 }

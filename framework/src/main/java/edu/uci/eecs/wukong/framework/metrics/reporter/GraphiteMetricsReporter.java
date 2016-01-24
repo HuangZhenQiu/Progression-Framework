@@ -69,7 +69,7 @@ public class GraphiteMetricsReporter implements MetricsReporter {
 						public void counter(Counter counter) {
 							try {
 								String counterName = getGraphiteMetricsName(group, source, counter.getName());
-								logger.debug(String.format("Registering Graphite Counter: %s.", counterName));
+								logger.info(String.format("Registering Graphite Counter: %s.", counterName));
 								graphiteRegistry.register(counterName, new GraphiteCounter(counter));
 							} catch (IllegalArgumentException exception) {
 								logger.info("Exception while registring for onCounter: " + exception);
@@ -80,7 +80,7 @@ public class GraphiteMetricsReporter implements MetricsReporter {
 						public <T> void gauge(Gauge<T> gauge) {
 							try {
 								String gaugeName = getGraphiteMetricsName(group, source, gauge.getName());
-								logger.debug(String.format("Registering Graphite Gauge: %s.", gaugeName));
+								logger.info(String.format("Registering Graphite Gauge: %s.", gaugeName));
 								graphiteRegistry.register(gaugeName, new GraphiteGauge(gauge));
 							} catch (IllegalArgumentException exception) {
 								logger.info("Exception while registring for onGauge: " + exception);
@@ -115,7 +115,7 @@ public class GraphiteMetricsReporter implements MetricsReporter {
 				public void onCounter(String group, Counter counter) {
 					try {
 						String counterName = getGraphiteMetricsName(group, source, counter.getName());
-						logger.debug(String.format("Registering Graphite Counter: %s.", counterName));
+						logger.info(String.format("Registering Graphite Counter: %s.", counterName));
 						graphiteRegistry.register(counterName, new GraphiteCounter(counter));
 					} catch (IllegalArgumentException exception) {
 						logger.info("Exception while registring for onCounter: " + exception);
@@ -126,7 +126,7 @@ public class GraphiteMetricsReporter implements MetricsReporter {
 				public void onGauge(String group, Gauge<?> gauge) {
 					try {
 						String gaugeName = getGraphiteMetricsName(group, source, gauge.getName());
-						logger.debug(String.format("Registering Graphite Gauge: %s.", gaugeName));
+						logger.info(String.format("Registering Graphite Gauge: %s.", gaugeName));
 						graphiteRegistry.register(gaugeName, new GraphiteGauge(gauge));
 					} catch (IllegalArgumentException exception) {
 						logger.info("Exception while registring for onGauge: " + exception);

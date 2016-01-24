@@ -78,6 +78,8 @@ public class ProgressionServer {
 		this.pluginManager = new PrClassManager(wkpf, contextManager, pipeline, bufferManager);
 		this.stateManager = new StateManager(wkpf, pluginManager);
 		this.wkpf.register(pluginManager);
+		// Update this place for setting up multiple progression server in distributed way.
+		this.metricsReporter.register("ProgressionServer" + this.wkpf.getNetworkId(), registryHolder);
 	}
 	
 	/**
@@ -100,7 +102,6 @@ public class ProgressionServer {
 		Service dataService = DataService.NonBlockingDataService.newReflectiveService(new ProgressionDataServiceFactory.NonblockingDataServiceImpl());
 		logger.info("Register nonblocking service: " + dataService.getDescriptorForType().getName());
 		server.registerService(false, dataService);
-		
 		logger.info("Data services are registered in server");
 		
 	}
@@ -114,8 +115,6 @@ public class ProgressionServer {
 			this.server.start();
 			this.pipeline.start();
 			this.jvmMetrics.start();
-			// Update this place for setting up multiple progression server in distributed way.
-			this.metricsReporter.register("ProgressionServer" + this.wkpf.getNetworkId(), registryHolder);
 			this.metricsReporter.start();
 		} catch (Exception e) {
 			e.printStackTrace();

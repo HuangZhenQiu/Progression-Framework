@@ -114,9 +114,9 @@ public class ProgressionServer {
 			this.server.start();
 			this.pipeline.start();
 			this.jvmMetrics.start();
-			this.metricsReporter.start();
 			// Update this place for setting up multiple progression server in distributed way.
 			this.metricsReporter.register("ProgressionServer" + this.wkpf.getNetworkId(), registryHolder);
+			this.metricsReporter.start();
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error("Fail to start progression server.");

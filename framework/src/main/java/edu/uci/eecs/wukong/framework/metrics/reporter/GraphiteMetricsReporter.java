@@ -7,6 +7,7 @@ import com.codahale.metrics.MetricFilter;
 
 import edu.uci.eecs.wukong.framework.api.metrics.Counter;
 import edu.uci.eecs.wukong.framework.api.metrics.Gauge;
+import edu.uci.eecs.wukong.framework.api.metrics.Meter;
 import edu.uci.eecs.wukong.framework.api.metrics.Metrics;
 import edu.uci.eecs.wukong.framework.api.metrics.MetricsReporter;
 import edu.uci.eecs.wukong.framework.api.metrics.MetricsVisitor;
@@ -86,6 +87,17 @@ public class GraphiteMetricsReporter implements MetricsReporter {
 								logger.info("Exception while registring for onGauge: " + exception);
 							}
 							
+						}
+						
+						@Override
+						public void meter(Meter meter) {
+							try {
+								String meterName = getGraphiteMetricsName(group, source, meter.getName());
+								logger.info(String.format("Registering Graphite Meter: %s.", meterName));
+								
+							} catch (IllegalArgumentException exception) {
+								logger.info("Exception while registring for onGauge: " + exception);
+							}
 						}
 						
 					});

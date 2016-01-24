@@ -12,11 +12,15 @@ public abstract class MetricsVisitor {
 	
 	public abstract <T> void gauge(Gauge<T> gauge);
 	
+	public abstract void meter(Meter meter);
+	
 	public void visit(Metrics metrics) {
 		if (metrics instanceof Counter) {
 			counter((Counter) metrics);
 		} else if (metrics instanceof Gauge<?>) {
 			gauge((Gauge<?>) metrics);
+		} else if (metrics instanceof Meter) {
+			meter((Meter) metrics);
 		}
 	}
 }

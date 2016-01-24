@@ -17,6 +17,7 @@ import edu.uci.eecs.wukong.framework.api.metrics.MetricsReporter;
 import edu.uci.eecs.wukong.framework.buffer.BufferManager;
 import edu.uci.eecs.wukong.framework.buffer.BufferMetrics;
 import edu.uci.eecs.wukong.framework.metrics.MetricsRegistryHolder;
+import edu.uci.eecs.wukong.framework.metrics.JvmMetrics;
 import edu.uci.eecs.wukong.framework.factor.SceneManager;
 import edu.uci.eecs.wukong.framework.factor.FactorMetrics;
 import edu.uci.eecs.wukong.framework.metrics.reporter.GraphiteMetricsReporter;
@@ -51,6 +52,7 @@ public class ProgressionServer {
 	private FeatureChoosers featureChoosers;
 	private Pipeline pipeline;
 	private WKPF wkpf;
+	private JvmMetrics jvmMetrics;
 	
 	public ProgressionServer(PeerInfo peerInfo, boolean isTest) {
 		
@@ -60,6 +62,7 @@ public class ProgressionServer {
 		init(peerInfo);
 		this.registryHolder = new MetricsRegistryHolder();
 		this.metricsReporter = new GraphiteMetricsReporter("ProgressionServer");
+		this.jvmMetrics = new JvmMetrics(this.registryHolder);
 		BufferMetrics bufferMetrics = new BufferMetrics(this.registryHolder);
 		FactorMetrics factorMetrics = new FactorMetrics(this.registryHolder);
 		PipelineMetrics pieplineMetrocs = new PipelineMetrics(this.registryHolder);
@@ -75,9 +78,6 @@ public class ProgressionServer {
 		this.pluginManager = new PrClassManager(wkpf, contextManager, pipeline, bufferManager);
 		this.stateManager = new StateManager(wkpf, pluginManager);
 		this.wkpf.register(pluginManager);
-		// Update this place for setting up multiple progression server in distributed way.
-		this.metricsReporter.register("ProgressionServer", registryHolder);
-		
 	}
 	
 	/**
@@ -113,7 +113,10 @@ public class ProgressionServer {
 			this.pluginManager.init(model);
 			this.server.start();
 			this.pipeline.start();
+			this.jvmMetrics.start();
 			this.metricsReporter.start();
+			// Update this place for setting up multiple progression server in distributed way.
+			this.metricsReporter.register("ProgressionServer" + this.wkpf.getNetworkId(), registryHolder);
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error("Fail to start progression server.");
@@ -124,6 +127,7 @@ public class ProgressionServer {
 		this.server.shutdown();
 		this.pipeline.shutdown();
 		this.wkpf.shutdown();
+		this.jvmMetrics.stop();
 		this.metricsReporter.stop();
 	}
 	

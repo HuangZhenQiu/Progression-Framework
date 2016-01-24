@@ -99,7 +99,7 @@ public class GraphiteMetricsReporter implements MetricsReporter {
 			throw new IllegalArgumentException("Make sure group, source and name are defined");
 		}
 		
-		return String.format("%s.%s.%s", getSafeValue(group), getSafeValue(source), getSafeValue(name));
+		return String.format("Wukong.%s.%s.%s", getSafeValue(source), getSafeValue(group), getSafeValue(name));
 	}
 	
 	private String getSafeValue(String name) {

@@ -10,7 +10,7 @@ public abstract class MetricsHelper {
 	private MetricsGroup metricsGroup;
 	
 	public MetricsHelper(MetricsRegistry registry) {
-		this.group = this.getClass().getName();
+		this.group = this.getClass().getSimpleName();
 		this.registry = registry;
 		this.metricsGroup = new MetricsGroup(group, getPrefix(), registry);
 	}

@@ -11,7 +11,7 @@ import edu.uci.eecs.wukong.framework.extension.AbstractProgressionExtension;
 import edu.uci.eecs.wukong.prclass.occupancy.OccupancyDetection;
 import edu.uci.eecs.wukong.prclass.occupancy.OccupancyDetection.Occupancy;
 
-public class HMMBasedProgressionExtension extends AbstractProgressionExtension 
+public class HMMBasedProgressionExtension extends AbstractProgressionExtension<OccupancyDetection> 
 	implements Executable, Activatable{
 	private boolean isActivated;
 	private Hmm<ObservationDiscrete<Occupancy>> hmm;

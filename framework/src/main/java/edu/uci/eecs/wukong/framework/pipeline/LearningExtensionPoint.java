@@ -15,7 +15,9 @@ import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
 import edu.uci.eecs.wukong.framework.util.Configuration;
 
 @SuppressWarnings("rawtypes")
-public class LearningExtensionPoint extends ExtensionPoint<LearningExtension> implements FactorListener, Runnable{
+public class LearningExtensionPoint extends ExtensionPoint<LearningExtension<? extends Number, ? extends PipelinePrClass>>
+	implements FactorListener, Runnable{
+	
 	private static Logger logger = LoggerFactory.getLogger(LearningExtensionPoint.class);
 	private static Configuration configuration = Configuration.getInstance();
 	

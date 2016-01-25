@@ -12,7 +12,7 @@ import edu.uci.eecs.wukong.framework.select.FeatureChoosers;
 
 import java.util.List;
 
-public class FeatureExtractionExtensionPoint extends ExtensionPoint<FeatureExtractionExtension> {
+public class FeatureExtractionExtensionPoint extends ExtensionPoint<FeatureExtractionExtension<? extends PipelinePrClass>> {
 	private static Logger logger = LoggerFactory.getLogger(ProgressionExtensionPoint.class);
 	private static Configuration configuration = Configuration.getInstance();
 	private FeatureChoosers featureChoosers; 
@@ -23,7 +23,7 @@ public class FeatureExtractionExtensionPoint extends ExtensionPoint<FeatureExtra
 	}
 
 	@Override
-	public synchronized void register(FeatureExtractionExtension extension) {
+	public synchronized void register(FeatureExtractionExtension<? extends PipelinePrClass> extension) {
 		super.register(extension);
 		featureChoosers.addFeatureExtractionExtenshion(extension);
 		logger.info("Add Feature Extraction Extension for " + extension.getPrClass());

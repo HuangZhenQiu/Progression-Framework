@@ -16,6 +16,7 @@ import edu.uci.eecs.wukong.framework.extension.AbstractProgressionExtension;
 import edu.uci.eecs.wukong.framework.extension.FeatureExtractionExtension;
 import edu.uci.eecs.wukong.framework.extension.LearningExtension;
 import edu.uci.eecs.wukong.framework.factor.SceneManager;
+import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
 import edu.uci.eecs.wukong.framework.select.FeatureChoosers;
 
 public class BasicPipeline extends Pipeline {
@@ -53,7 +54,7 @@ public class BasicPipeline extends Pipeline {
 		if (extensions != null && !extensions.isEmpty()) {
 			for (Extension extension : extensions) {
 				if (extension instanceof AbstractProgressionExtension) {
-					AbstractProgressionExtension progressionExtension = (AbstractProgressionExtension) extension;
+					AbstractProgressionExtension<? extends PipelinePrClass> progressionExtension = (AbstractProgressionExtension<? extends PipelinePrClass>) extension;
 					try {
 						// Call the initial function 
 						if (extension instanceof Initiable) {
@@ -79,7 +80,7 @@ public class BasicPipeline extends Pipeline {
 		if (extensions != null && !extensions.isEmpty()) {
 			for (Extension extension : extensions) {
 				if (extension instanceof AbstractProgressionExtension) {
-					AbstractProgressionExtension progressionExtension = (AbstractProgressionExtension) extension;
+					AbstractProgressionExtension<? extends PipelinePrClass> progressionExtension = (AbstractProgressionExtension) extension;
 					try {
 						// Call the close function 
 						if (extension instanceof Closable) {

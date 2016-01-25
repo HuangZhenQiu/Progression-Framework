@@ -42,10 +42,10 @@ public abstract class PipelinePrClass extends PrClass {
 	
 	public abstract List<String> registerContext();
 	
-	public AbstractProgressionExtension getProgressionExtension() {
+	public AbstractProgressionExtension<?> getProgressionExtension() {
 		for(Extension extension : registerExtension()) {
 			if (extension instanceof AbstractProgressionExtension) {
-				return (AbstractProgressionExtension) extension;
+				return (AbstractProgressionExtension<?>) extension;
 			}
 		}
 		

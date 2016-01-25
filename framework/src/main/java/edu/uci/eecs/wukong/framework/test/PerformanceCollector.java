@@ -26,6 +26,7 @@ public class PerformanceCollector {
 		
 		sendTimeMap.put(port, System.currentTimeMillis());
 	}
+
 	/**
 	 * 
 	 * @param port the port of target WuObject

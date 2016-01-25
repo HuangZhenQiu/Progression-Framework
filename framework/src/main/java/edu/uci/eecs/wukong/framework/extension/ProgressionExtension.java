@@ -7,10 +7,10 @@ import edu.uci.eecs.wukong.framework.factor.BaseFactor;
 import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
 
 import java.util.List;
-public abstract class ProgressionExtension<T extends FeatureEntity> extends AbstractProgressionExtension {
+public abstract class ProgressionExtension<T extends FeatureEntity, F extends PipelinePrClass> extends AbstractProgressionExtension<F> {
 	private Object model;
-	
-	public ProgressionExtension(PipelinePrClass plugin) {
+
+	public ProgressionExtension(F plugin) {
 		super(plugin);
 		// TODO Auto-generated constructor stub
 	}

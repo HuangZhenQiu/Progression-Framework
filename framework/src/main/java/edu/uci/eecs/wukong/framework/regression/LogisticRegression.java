@@ -37,7 +37,7 @@ public class LogisticRegression {
         }
     }
 
-    private double classify(int[] x) {
+    public double classify(int[] x) {
         double logit = .0;
         for (int i=0; i<weights.length;i++)  {
             logit += weights[i] * x[i];

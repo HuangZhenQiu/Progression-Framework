@@ -6,12 +6,11 @@ import java.util.List;
 import edu.uci.eecs.wukong.framework.extension.FeatureExtractionExtension;
 import edu.uci.eecs.wukong.framework.operator.Operator;
 import edu.uci.eecs.wukong.framework.operator.AverageOperator;
-import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
 
 public class SmartHueFeatureExtractionExtension extends
-		FeatureExtractionExtension {
+		FeatureExtractionExtension<SmartHue> {
 
-	public SmartHueFeatureExtractionExtension(PipelinePrClass plugin) {
+	public SmartHueFeatureExtractionExtension(SmartHue plugin) {
 		super(plugin);
 	}
 
@@ -19,9 +18,9 @@ public class SmartHueFeatureExtractionExtension extends
 	public List<Operator> registerOperators() {
 		List<Operator> operators = new ArrayList<Operator>();
 		AverageOperator indoorAvr = new AverageOperator();
-		indoorAvr.addDataSource(1 /* property 1 */, 5 /* seconds */);
+		indoorAvr.addDataSource(1 /* property 1 */, 300 /* seconds */);
 		AverageOperator outdoorAvr = new AverageOperator();
-		outdoorAvr.addDataSource(2, 5);
+		outdoorAvr.addDataSource(2, 300);
 		operators.add(indoorAvr);
 		operators.add(outdoorAvr);
 		return operators;

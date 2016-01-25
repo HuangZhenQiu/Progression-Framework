@@ -7,18 +7,16 @@ import edu.uci.eecs.wukong.framework.api.ExecutionContext;
 import edu.uci.eecs.wukong.framework.entity.ConfigurationCommand;
 import edu.uci.eecs.wukong.framework.extension.ProgressionExtension;
 import edu.uci.eecs.wukong.framework.factor.BaseFactor;
-import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
 
-public class DemoProgressionExtension extends ProgressionExtension<DemoFeatureEntity> {
+
+public class DemoProgressionExtension extends ProgressionExtension<DemoFeatureEntity, DemoPrClass> {
 	private M5P model;
 	
-	public DemoProgressionExtension(PipelinePrClass plugin) {
+	public DemoProgressionExtension(DemoPrClass plugin) {
 		super(plugin);
-		// TODO Auto-generated constructor stub
 	}
 	
 	public void activate(Object model) {
-		// TODO Auto-generated method stub
 		this.model = (M5P)model;
 	}
 

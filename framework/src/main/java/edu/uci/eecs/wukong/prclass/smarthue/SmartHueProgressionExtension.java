@@ -8,23 +8,34 @@ import edu.uci.eecs.wukong.framework.api.ExecutionContext;
 import edu.uci.eecs.wukong.framework.api.Channelable;
 import edu.uci.eecs.wukong.framework.extension.AbstractProgressionExtension;
 import edu.uci.eecs.wukong.framework.model.ChannelData;
-import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
-import edu.uci.eecs.wukong.framework.regression.LogisticRegression;
+import edu.uci.eecs.wukong.framework.regression.LinearRegression;
 
-public class SmartHueProgressionExtension extends AbstractProgressionExtension implements
+public class SmartHueProgressionExtension extends AbstractProgressionExtension<SmartHue> implements
 	Activatable, Executable, Channelable{
-	private LogisticRegression regression = null;
-	private short indoorLightness;  // Latest Avr
-	private short outdoorLightness; // Latest Avr
+	private LinearRegression regression = null;
+	private double indoorLightness;  // Latest Avr
+	private double outdoorLightness; // Latest Avr
+	private double targetLightness;
+	private short controllerIndex;
 
-	public SmartHueProgressionExtension(PipelinePrClass plugin) {
+	public SmartHueProgressionExtension(SmartHue plugin) {
 		super(plugin);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	public void execute(List data, ExecutionContext context) {
-		if (regression != null) {
+		if (regression != null && data.size() == 2) {
+			indoorLightness = (double) data.get(0);
+			outdoorLightness = (double) data.get(1);
+			targetLightness = regression.predict(outdoorLightness);
+			
+			if (targetLightness - indoorLightness > 5) {
+				short targetValue = (short) (this.getPrClass().getHueOutput()  + 5 * controllerIndex);
+				this.getPrClass().setHueOutput(targetValue);
+			} else if (targetLightness - indoorLightness < -5) {
+				short targetValue = (short) (this.getPrClass().getHueOutput()  - 5 * controllerIndex);
+				this.getPrClass().setHueOutput(targetValue);
+			}
 		}
 	}
 
@@ -32,14 +43,14 @@ public class SmartHueProgressionExtension extends AbstractProgressionExtension i
 	public void execute(ChannelData data) {
 		// get user's action or feedback from control commands
 		if (data.getNpp().getPropertyId() == 3) { // Lightness feedback after control
-			
+			// TODO adaptively update the value, if the adjustment is not accurate enough
 		} else if (data.getNpp().getPropertyId() == 4) { // user's action on hue controller
-			
+			// TODO tuning the parameter for controllerIndex;
 		}
 	}
 	
 	@Override
 	public void activate(Object model) {
-		regression = (LogisticRegression) model;
+		regression = (LinearRegression) model;
 	}
 }

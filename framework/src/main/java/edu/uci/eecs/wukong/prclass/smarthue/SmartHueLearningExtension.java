@@ -1,22 +1,21 @@
 package edu.uci.eecs.wukong.prclass.smarthue;
 
 import java.util.List;
-import java.util.ArrayList;
 
 import edu.uci.eecs.wukong.framework.api.ExecutionContext;
 import edu.uci.eecs.wukong.framework.extension.LearningExtension;
-import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
-import edu.uci.eecs.wukong.framework.regression.Instance;
-import edu.uci.eecs.wukong.framework.regression.LogisticRegression;
+import edu.uci.eecs.wukong.framework.regression.LinearRegression;
 
-public class SmartHueLearningExtension extends LearningExtension<Short> {
-	private List<Instance> instances;
-	private int num = 0;
+public class SmartHueLearningExtension extends LearningExtension<Short, SmartHue> {
+	private double[] indoorLightAvr;   // y
+	private double[] outdoorLightAvr;  // x
+	private int number = 0;
+	private int size = 1000;
 	
-	public SmartHueLearningExtension(PipelinePrClass plugin) {
+	public SmartHueLearningExtension(SmartHue plugin) {
 		super(plugin);
-		// TODO Auto-generated constructor stub
-		instances = new ArrayList<Instance> ();
+		this.indoorLightAvr = new double[size];
+		this.outdoorLightAvr = new double[size];
 	}
 
 	@Override
@@ -25,30 +24,19 @@ public class SmartHueLearningExtension extends LearningExtension<Short> {
 		if (context.getContext(SmartHue.LOCATION_TOPIC).equals("Bedroom") &&
 				context.getContext(SmartHue.GESTURE_TOPIC).equals("Sitting")) {
 			// accumulate enough samples
-			Instance instance = new Instance(instances.size(), toArray(data));
-			if (instances.size() == 10000) {
+			indoorLightAvr[number % size] = data.get(0);
+			outdoorLightAvr[number % size] = data.get(1);
+			if (number % 1000 == 0) {
 				this.setReady(true);
 			}
 		}
-	}
-	
-	private int[] toArray(List<Short> data) {
-		int[] array = new int[data.size()];
-		int i = 0;
-		for (Short s : data) {
-			array[i++] = s.intValue();
-		}
-		
-		return array;
 	}
 	
 
 	@Override
 	public Object train() throws Exception {
 		this.setReady(false);
-		LogisticRegression regression = new LogisticRegression(2);
-		regression.train(instances);
-		instances.clear();
+		LinearRegression regression = new LinearRegression(outdoorLightAvr, indoorLightAvr);
 		return regression;
 	}
 }

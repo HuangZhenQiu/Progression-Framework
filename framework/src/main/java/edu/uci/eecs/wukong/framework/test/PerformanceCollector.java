@@ -30,7 +30,7 @@ public class PerformanceCollector {
 	 * 
 	 * @param port the port of target WuObject
 	 */
-	public void receiv(short port) {
+	public void receive(short port) {
 		if (sendTimeMap.containsKey(port) && responseTimeMap.containsKey(port) && messageCountMap.containsKey(port)) {
 			long responsetime = System.currentTimeMillis() - sendTimeMap.get(port);
 			messageCountMap.put(port, messageCountMap.get(port) + 1);

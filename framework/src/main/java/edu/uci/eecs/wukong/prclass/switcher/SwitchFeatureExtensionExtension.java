@@ -7,10 +7,9 @@ import edu.uci.eecs.wukong.framework.extension.FeatureExtractionExtension;
 import edu.uci.eecs.wukong.framework.operator.AverageOperator;
 import edu.uci.eecs.wukong.framework.operator.DefaultOperator;
 import edu.uci.eecs.wukong.framework.operator.Operator;
-import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
 
-public class SwitchFeatureExtensionExtension extends FeatureExtractionExtension {
-	public SwitchFeatureExtensionExtension(PipelinePrClass plugin) {
+public class SwitchFeatureExtensionExtension extends FeatureExtractionExtension<SwitchPrClass> {
+	public SwitchFeatureExtensionExtension(SwitchPrClass plugin) {
 		super(plugin);
 		// TODO Auto-generated constructor stub
 	}

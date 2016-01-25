@@ -9,10 +9,10 @@ import edu.uci.eecs.wukong.framework.factor.BaseFactor;
 import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
 
 import java.util.List;
-public abstract class PropertyProgressionExtension extends AbstractProgressionExtension 
+public abstract class PropertyProgressionExtension<T extends PipelinePrClass> extends AbstractProgressionExtension<T> 
 	implements Activatable, Executable, FactorExecutable, TimerExecutable{
 	
-	public PropertyProgressionExtension(PipelinePrClass plugin) {
+	public PropertyProgressionExtension(T plugin) {
 		super(plugin);
 		// TODO Auto-generated constructor stub
 	}

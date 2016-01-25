@@ -19,9 +19,9 @@ public class SmartHue extends PipelinePrClass {
 	@WuProperty(name = "indoorLightness", id = 1, type = PropertyType.Input, dtype = DataType.Buffer)
 	private short indoorLightness;
 	@WuProperty(name = "indoorLightness", id = 2, type = PropertyType.Input, dtype = DataType.Channel)
-	private short indoorLightness2; // It is for get feedback from control
+	private short indoorLightness2; // It is for getting feedback from control
 	@WuProperty(name = "userAction", id = 3, type = PropertyType.Input, dtype = DataType.Channel)
-	private short userAction; // It is for collect user's hehavior
+	private short userAction; // It is for collect user's behavior
 	@WuProperty(name = "hueOuput", id = 4, type = PropertyType.Output)
 	private short hueOutput;
 	
@@ -44,6 +44,10 @@ public class SmartHue extends PipelinePrClass {
 		context.add(LOCATION_TOPIC);
 		context.add(GESTURE_TOPIC);
 		return context;
+	}
+	
+	public short getHueOutput() {
+		return this.hueOutput;
 	}
 	
 	public void setHueOutput(short output) {

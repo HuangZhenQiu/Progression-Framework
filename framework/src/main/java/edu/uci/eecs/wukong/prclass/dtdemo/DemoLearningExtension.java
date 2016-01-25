@@ -13,13 +13,13 @@ import edu.uci.eecs.wukong.framework.api.ExecutionContext;
 import edu.uci.eecs.wukong.framework.extension.LearningExtension;
 import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
 
-public class DemoLearningExtension extends LearningExtension<Number> {
+public class DemoLearningExtension extends LearningExtension<Number, DemoPrClass> {
 	private int attributeNumber;
 	private FastVector<Attribute> attributes;
 	private Instances traniningSet;
 	private M5P tree;
 	
-	public DemoLearningExtension(PipelinePrClass plugin) {
+	public DemoLearningExtension(DemoPrClass plugin) {
 		super(plugin);
 		this.attributeNumber = 7; // Context + Light Sensor
 		this.attributes = new FastVector<Attribute>(7);

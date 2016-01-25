@@ -11,6 +11,7 @@ import edu.uci.eecs.wukong.framework.extension.LearningExtension;
 import edu.uci.eecs.wukong.framework.factor.BaseFactor;
 import edu.uci.eecs.wukong.framework.factor.FactorListener;
 import edu.uci.eecs.wukong.framework.graph.ExtensionPoint;
+import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
 import edu.uci.eecs.wukong.framework.util.Configuration;
 
 @SuppressWarnings("rawtypes")
@@ -23,7 +24,7 @@ public class LearningExtensionPoint extends ExtensionPoint<LearningExtension> im
 	}
 
 	private class LearningTask implements Runnable{
-		private LearningExtension<?> extension;
+		private LearningExtension<?, ? extends PipelinePrClass> extension;
 		private Event event;
 		private ExecutionContext contexts;
 		public LearningTask(LearningExtension extension, Event event, ExecutionContext context) {

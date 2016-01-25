@@ -32,7 +32,8 @@ public class FeatureChoosers {
 	public void addFeatureExtractionExtenshion(FeatureExtractionExtension extention) {
 		PipelinePrClass plugin = extention.getPrClass();
 		Map<Operator<?>, Map<NPP, Integer>> bindMap = new HashMap<Operator<?>, Map<NPP, Integer>> ();
-		for (Operator operator : extention.registerOperators()) {
+		for (Object object : extention.registerOperators()) {
+			Operator operator = (Operator) object;
 			Map<Integer, Integer>  portToInterval = operator.bind();
 			Map<NPP, Integer> nppMap = new HashMap<NPP, Integer> ();
 			for (Entry<Integer, Integer> entry : portToInterval.entrySet()) {

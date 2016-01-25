@@ -19,7 +19,7 @@ import com.google.common.annotations.VisibleForTesting;
  * The jahhm firstly use k-means to cluster the observations. Then use 
  *
  */
-public class HMMBasedLearningExtension extends LearningExtension<Byte> {
+public class HMMBasedLearningExtension extends LearningExtension<Byte, OccupancyDetection> {
 	// Number of hidden states for a day
 	private int states;
 	private OpdfDiscreteFactory<Occupancy> factory;

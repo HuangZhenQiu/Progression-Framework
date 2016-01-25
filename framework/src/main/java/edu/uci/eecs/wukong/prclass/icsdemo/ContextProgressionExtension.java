@@ -13,7 +13,7 @@ import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
 import edu.uci.eecs.wukong.prclass.icsdemo.ContextTable;
 import edu.uci.eecs.wukong.prclass.icsdemo.PreferenceTable;
 
-public class ContextProgressionExtension extends AbstractProgressionExtension implements FactorExecutable, Channelable {
+public class ContextProgressionExtension extends AbstractProgressionExtension<PipelinePrClass> implements FactorExecutable, Channelable {
 	private static Logger logger = LoggerFactory.getLogger(ContextProgressionExtension.class);
 	private PreferenceTable preferenceTable = new PreferenceTable();
 	private ContextTable contextTable = new ContextTable();

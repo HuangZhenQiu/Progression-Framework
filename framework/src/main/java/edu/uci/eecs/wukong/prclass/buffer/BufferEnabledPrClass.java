@@ -12,10 +12,10 @@ import edu.uci.eecs.wukong.framework.model.PropertyType;
 
 @WuClass(id = 10112)
 public class BufferEnabledPrClass extends PipelinePrClass {
-	@WuProperty(name = "sInput", id = 0, type = PropertyType.Input, dtype = DataType.Buffer)
-	private short sInput;
-	@WuProperty(name = "bInput", id = 1, type = PropertyType.Input, dtype = DataType.Buffer)
-	private byte bInput;
+	@WuProperty(name = "sinput", id = 0, type = PropertyType.Input, dtype = DataType.Buffer)
+	private short sinput;
+	@WuProperty(name = "binput", id = 1, type = PropertyType.Input, dtype = DataType.Buffer)
+	private byte binput;
 	@WuProperty(name = "output", id = 2, type = PropertyType.Output)
 	private short output;
 	

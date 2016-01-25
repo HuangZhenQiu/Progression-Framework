@@ -3,6 +3,7 @@ package edu.uci.eecs.wukong.framework.metrics;
 import edu.uci.eecs.wukong.framework.api.metrics.MetricsRegistry;
 import edu.uci.eecs.wukong.framework.api.metrics.Counter;
 import edu.uci.eecs.wukong.framework.api.metrics.Gauge;
+import edu.uci.eecs.wukong.framework.api.metrics.Meter;
 
 public abstract class MetricsHelper {
 	private String group;
@@ -21,6 +22,10 @@ public abstract class MetricsHelper {
 	
 	public <T> Gauge<T> newGauge(String name, T value) {
 		return metricsGroup.newGauge(name, value);
+	}
+	
+	public Meter newMeter(String name) {
+		return metricsGroup.newMeter(name);
 	}
 	
 	protected String getPrefix() {

@@ -12,4 +12,8 @@ public interface MetricsRegistry {
 
 
 	  <T> Gauge<T> newGauge(String group, Gauge<T> value);
+	  
+	  Meter newMeter(String group, String name);
+	  
+	  Meter newMeter(String group, Meter meter);
 }

@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import edu.uci.eecs.wukong.framework.api.metrics.Counter;
 import edu.uci.eecs.wukong.framework.api.metrics.Gauge;
+import edu.uci.eecs.wukong.framework.api.metrics.Meter;
 import edu.uci.eecs.wukong.framework.api.metrics.Metrics;
 import edu.uci.eecs.wukong.framework.api.metrics.ReadableMetricsRegistry;
 import edu.uci.eecs.wukong.framework.api.metrics.ReadableMetricsRegistryListener;
@@ -65,6 +66,24 @@ public class MetricsRegistryHolder implements ReadableMetricsRegistry {
 		Gauge<T> created = (Gauge<T>) metricsMap.get(group).get(gauge.getName());
 		for (ReadableMetricsRegistryListener listener : listeners) {
 			listener.onGauge(group, created);
+		}
+		return created;
+	}
+	
+	@Override
+	public Meter newMeter(String group, String name) {
+		LOGGER.debug(String.format("Creating new meter %s %s", group, name));
+		return newMeter(group, new Meter(name));
+	}
+	
+	@Override
+	public Meter newMeter(String group, Meter meter) {
+		LOGGER.debug(String.format("Add new meter %s %s %s", group, meter.getName(), meter));
+		putAndGetGroup(group).putIfAbsent(meter.getName(), meter);
+		
+		Meter created = (Meter) metricsMap.get(group).get(meter.getName());
+		for (ReadableMetricsRegistryListener listener : listeners) {
+			listener.onMeter(group, created);
 		}
 		return created;
 	}

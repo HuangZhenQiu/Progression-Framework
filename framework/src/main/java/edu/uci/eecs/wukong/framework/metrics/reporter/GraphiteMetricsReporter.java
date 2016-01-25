@@ -15,6 +15,7 @@ import edu.uci.eecs.wukong.framework.api.metrics.ReadableMetricsRegistry;
 import edu.uci.eecs.wukong.framework.api.metrics.ReadableMetricsRegistryListener;
 import edu.uci.eecs.wukong.framework.graphite.GraphiteCounter;
 import edu.uci.eecs.wukong.framework.graphite.GraphiteGauge;
+import edu.uci.eecs.wukong.framework.graphite.GraphiteMeter;
 import edu.uci.eecs.wukong.framework.util.Configuration;
 
 import java.net.InetSocketAddress;
@@ -142,6 +143,17 @@ public class GraphiteMetricsReporter implements MetricsReporter {
 						graphiteRegistry.register(gaugeName, new GraphiteGauge(gauge));
 					} catch (IllegalArgumentException exception) {
 						logger.info("Exception while registring for onGauge: " + exception);
+					}
+				}
+				
+				@Override
+				public void onMeter(String group, Meter meter) {
+					try {
+						String meterName = getGraphiteMetricsName(group, source, meter.getName());
+						logger.info(String.format("Registering Graphite Meter: %s.", meterName));
+						graphiteRegistry.register(meterName, new GraphiteMeter(meter));
+					} catch (IllegalArgumentException exception) {
+						logger.info("Exception while registring for onMeter: " + exception);
 					}
 				}
 				

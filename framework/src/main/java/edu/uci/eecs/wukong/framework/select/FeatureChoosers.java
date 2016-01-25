@@ -37,7 +37,7 @@ public class FeatureChoosers {
 			Map<Integer, Integer>  portToInterval = operator.bind();
 			Map<NPP, Integer> nppMap = new HashMap<NPP, Integer> ();
 			for (Entry<Integer, Integer> entry : portToInterval.entrySet()) {
-				NPP npp = new NPP(wkpf.getNetworkId(), plugin.getPortId(), entry.getKey().byteValue());
+				NPP npp = new NPP(wkpf.getLongAddress(), plugin.getPortId(), entry.getKey().byteValue());
 				nppMap.put(npp, entry.getValue());
 			}
 			bindMap.put(operator, nppMap);

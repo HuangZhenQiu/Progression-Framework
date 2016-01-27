@@ -53,6 +53,7 @@ public class ProgressionServer {
 	private Pipeline pipeline;
 	private WKPF wkpf;
 	private JvmMetrics jvmMetrics;
+	private PipelineMetrics pipelineMetrics;
 	
 	public ProgressionServer(PeerInfo peerInfo, boolean isTest) {
 		
@@ -63,9 +64,9 @@ public class ProgressionServer {
 		this.registryHolder = new MetricsRegistryHolder();
 		this.metricsReporter = new GraphiteMetricsReporter("ProgressionServer");
 		this.jvmMetrics = new JvmMetrics(this.registryHolder);
+		this.pipelineMetrics = new PipelineMetrics(this.registryHolder);
 		BufferMetrics bufferMetrics = new BufferMetrics(this.registryHolder);
 		FactorMetrics factorMetrics = new FactorMetrics(this.registryHolder);
-		PipelineMetrics pieplineMetrocs = new PipelineMetrics(this.registryHolder);
 		WKPFMetrics wkpfMetrics = new WKPFMetrics(this.registryHolder);
 		this.bufferManager = new BufferManager(bufferMetrics);
 		this.contextManager = new SceneManager(factorMetrics);
@@ -74,7 +75,7 @@ public class ProgressionServer {
 			this.monitorManager = new MonitorManager(wkpf);
 		}
 		this.featureChoosers = new FeatureChoosers(bufferManager, wkpf);
-		this.pipeline = new BasicPipeline(contextManager, featureChoosers, pieplineMetrocs);	
+		this.pipeline = new BasicPipeline(contextManager, featureChoosers, pipelineMetrics);	
 		this.pluginManager = new PrClassManager(wkpf, contextManager, pipeline, bufferManager);
 		this.stateManager = new StateManager(wkpf, pluginManager);
 		this.wkpf.register(pluginManager);
@@ -115,6 +116,7 @@ public class ProgressionServer {
 			this.server.start();
 			this.pipeline.start();
 			this.jvmMetrics.start();
+			this.pipelineMetrics.start();
 			this.metricsReporter.start();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -127,6 +129,7 @@ public class ProgressionServer {
 		this.pipeline.shutdown();
 		this.wkpf.shutdown();
 		this.jvmMetrics.stop();
+		this.pipelineMetrics.stop();
 		this.metricsReporter.stop();
 	}
 	

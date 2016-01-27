@@ -62,4 +62,8 @@ public abstract class ExtensionPoint<E extends AbstractExtension<? extends Pipel
 	public void shutdown() {
 		this.executor.shutdown();
 	}
+	
+	public int getQueueSize() {
+		return this.eventQueue.size();
+	}
 }

@@ -46,6 +46,7 @@ public abstract class Pipeline extends Graph implements FactorListener{
 	}
 	
 	public void addExentionPoint(ExtensionPoint<?> point) {
+		pipelineMetrics.addExtensionGauge(point);
 		this.addNode(point);
 	}
 	
@@ -76,6 +77,10 @@ public abstract class Pipeline extends Graph implements FactorListener{
 			point.shutdown();
 		}
 		executor.shutdown();
+	}
+	
+	public void markQueueSize(String name, int size) {
+		pipelineMetrics.setExtensonQueuLag(name, size);
 	}
 
 	public void onFactorArrival(BaseFactor context) {

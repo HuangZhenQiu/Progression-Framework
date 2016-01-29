@@ -30,7 +30,7 @@ public class BufferManager {
 	// Map network port property to buffer
 	private Map<NPP, DoubleTimeIndexDataBuffer<?>> bufferMap;
 	// Map network port property to channel
-	private Map<NPP, Channel> channelMap;
+	private Map<NPP, Channel<?>> channelMap;
 	// Timer to set index for buffer
 	private Timer timer;
 	private MPTN mptn;
@@ -43,7 +43,7 @@ public class BufferManager {
 	
 	public BufferManager(BufferMetrics metrics) {
 		this.bufferMap = new HashMap<NPP, DoubleTimeIndexDataBuffer<?>>();
-		this.channelMap = new HashMap<NPP, Channel>();
+		this.channelMap = new HashMap<NPP, Channel<?>>();
 		this.timer = new Timer();
 		this.metrics = metrics;
 		this.timer.schedule(new BufferMetricsTask(), 0, 10 * 1000);
@@ -182,7 +182,7 @@ public class BufferManager {
 			return false;
 		}
 		
-		Channel channel = new Channel(key);
+		Channel<Short> channel = new Channel<Short>(key);
 		channelMap.put(key, channel);
 		metrics.bufferCounter.set(channelMap.size());
 		LOGGER.info("Created Short Channel with key : " + key);
@@ -194,7 +194,7 @@ public class BufferManager {
 			return false;
 		}
 		
-		Channel channel = channelMap.get(key);
+		Channel<?> channel = channelMap.get(key);
 		channel.addListener(listener);
 		return true;
 	}
@@ -204,7 +204,7 @@ public class BufferManager {
 			return false;
 		}
 		
-		Channel channel = channelMap.get(key);
+		Channel<?> channel = channelMap.get(key);
 		channel.addField(fieldName, model);
 		LOGGER.info("Added channel hook for " + fieldName + " PrClass " + model);
 		return true;
@@ -215,7 +215,7 @@ public class BufferManager {
 			return false;
 		}
 		
-		Channel channel = channelMap.get(key);
+		Channel<?> channel = channelMap.get(key);
 		channel.removeField(fieldName, model);
 		LOGGER.info("Removed channel for PrClass " + fieldName + " PrClass " + model);
 		return true;
@@ -226,7 +226,7 @@ public class BufferManager {
 			return false;
 		}
 		
-		Channel channel = channelMap.get(key);
+		Channel<?> channel = channelMap.get(key);
 		channel.removeListener(listener);
 		return true;
 	}
@@ -237,7 +237,7 @@ public class BufferManager {
 			throw new IllegalArgumentException("Insert into a chanel don't exist:" + key);
 		}
 
-		Channel channel = (Channel)channelMap.get(key);
+		Channel<Short> channel = (Channel<Short>)channelMap.get(key);
 		channel.append(value);
 	}
 	

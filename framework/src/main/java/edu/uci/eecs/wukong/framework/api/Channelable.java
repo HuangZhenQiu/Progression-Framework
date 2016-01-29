@@ -8,7 +8,7 @@ import edu.uci.eecs.wukong.framework.model.ChannelData;
  * implements this interface.
  * 
  */
-public interface Channelable {
+public interface Channelable<T> {
 
-	public void execute(ChannelData data);
+	public void execute(ChannelData<T> data);
 }

@@ -1,10 +1,10 @@
 package edu.uci.eecs.wukong.framework.model;
 
-public class ChannelData {
+public class ChannelData<T> {
 	private NPP npp;
-	private short value;
+	private T value;
 	
-	public ChannelData(NPP npp, short value) {
+	public ChannelData(NPP npp, T value) {
 		this.npp = npp;
 		this.value = value;
 	}
@@ -17,11 +17,11 @@ public class ChannelData {
 		this.npp = npp;
 	}
 
-	public short getValue() {
+	public T getValue() {
 		return value;
 	}
 
-	public void setValue(short value) {
+	public void setValue(T value) {
 		this.value = value;
 	}
 }

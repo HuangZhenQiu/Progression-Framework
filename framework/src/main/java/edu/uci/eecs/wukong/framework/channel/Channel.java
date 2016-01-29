@@ -29,16 +29,16 @@ import edu.uci.eecs.wukong.framework.extension.AbstractProgressionExtension;
  * @author Peter
  *
  */
-public class Channel {
+public class Channel<T> {
 	private final static Logger LOGGER = LoggerFactory.getLogger(PipelinePrClass.class);
 	private NPP key;
-	private Queue<Short> queue; // TODO leave it here for user operation optimization
+	private Queue<T> queue; // TODO leave it here for user operation optimization
 	private Set<Channelable> listeners;
 	private Map<Field, Set<WuObjectModel>> fieldMap;
 	
 	public Channel(NPP key) {
 		this.key = key;
-		this.queue = new ArrayDeque<Short>();
+		this.queue = new ArrayDeque<T>();
 		this.listeners = new HashSet<Channelable>();
 		this.fieldMap = new HashMap<Field, Set<WuObjectModel>>();
 	}

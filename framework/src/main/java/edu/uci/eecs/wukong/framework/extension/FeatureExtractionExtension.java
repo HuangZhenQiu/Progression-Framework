@@ -15,6 +15,5 @@ public abstract class FeatureExtractionExtension<T extends PipelinePrClass> exte
 		super(plugin);
 	}
 
-	@SuppressWarnings("rawtypes")
-	public abstract List<Operator> registerOperators();
+	public abstract List<Operator<?>> registerOperators();
 }

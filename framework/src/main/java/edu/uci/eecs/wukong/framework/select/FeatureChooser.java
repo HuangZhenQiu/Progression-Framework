@@ -4,7 +4,7 @@ import edu.uci.eecs.wukong.framework.buffer.BufferManager;
 import edu.uci.eecs.wukong.framework.buffer.DataPoint;
 import edu.uci.eecs.wukong.framework.operator.Operator;
 import edu.uci.eecs.wukong.framework.operator.SingleOperator;
-import edu.uci.eecs.wukong.framework.operator.MultipleOperator;
+import edu.uci.eecs.wukong.framework.operator.MisoOperator;
 import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
 import edu.uci.eecs.wukong.framework.model.NPP;
 
@@ -45,7 +45,7 @@ public class FeatureChooser {
 				SingleOperator singleOperator = (SingleOperator) entry.getKey();
 				result.add(singleOperator.operate(dataList.get(0)));
 			} else {
-				MultipleOperator multipleOperator = (MultipleOperator) entry.getKey();
+				MisoOperator multipleOperator = (MisoOperator) entry.getKey();
 				result.add(multipleOperator.operate(dataList));
 			}
 		}

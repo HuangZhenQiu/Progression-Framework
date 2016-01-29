@@ -6,8 +6,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import edu.uci.eecs.wukong.framework.buffer.DataPoint;
 
-public abstract class SingleOperator<T extends Number> extends AbstractOperator<Number> {
-	private static Logger logger = LoggerFactory.getLogger(SingleOperator.class);
+public abstract class SisoOperator<T extends Number> extends AbstractOperator<Number> {
+	private static Logger logger = LoggerFactory.getLogger(SisoOperator.class);
 	
 	@Override
 	public void addDataSource(Integer key, int interval) {

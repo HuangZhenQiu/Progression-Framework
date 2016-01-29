@@ -9,7 +9,7 @@ import edu.uci.eecs.wukong.framework.buffer.DataPoint;
  * occupancy.
  *
  */
-public class ExistenceOperator extends SingleOperator<Byte> {
+public class ExistenceOperator extends SisoOperator<Byte> {
 
 	@Override
 	public Byte operate(List<DataPoint<Byte>> data) {

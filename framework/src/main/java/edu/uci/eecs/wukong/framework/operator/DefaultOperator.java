@@ -4,7 +4,7 @@ import java.util.List;
 
 import edu.uci.eecs.wukong.framework.buffer.DataPoint;
 
-public class DefaultOperator<T extends Number> extends SingleOperator<Number> {
+public class DefaultOperator<T extends Number> extends SisoOperator<Number> {
 
 	@Override
 	public Number operate(List<DataPoint<Number>> data) {

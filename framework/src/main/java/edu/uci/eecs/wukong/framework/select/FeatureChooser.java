@@ -3,7 +3,7 @@ package edu.uci.eecs.wukong.framework.select;
 import edu.uci.eecs.wukong.framework.buffer.BufferManager;
 import edu.uci.eecs.wukong.framework.buffer.DataPoint;
 import edu.uci.eecs.wukong.framework.operator.Operator;
-import edu.uci.eecs.wukong.framework.operator.SingleOperator;
+import edu.uci.eecs.wukong.framework.operator.SisoOperator;
 import edu.uci.eecs.wukong.framework.operator.MisoOperator;
 import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
 import edu.uci.eecs.wukong.framework.model.NPP;
@@ -42,7 +42,7 @@ public class FeatureChooser {
 				dataList.add(data);
 			}
 			if (dataList.size() == 1) {
-				SingleOperator singleOperator = (SingleOperator) entry.getKey();
+				SisoOperator singleOperator = (SisoOperator) entry.getKey();
 				result.add(singleOperator.operate(dataList.get(0)));
 			} else {
 				MisoOperator multipleOperator = (MisoOperator) entry.getKey();

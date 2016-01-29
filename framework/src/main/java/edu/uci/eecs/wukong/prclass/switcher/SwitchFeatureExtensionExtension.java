@@ -14,8 +14,8 @@ public class SwitchFeatureExtensionExtension extends FeatureExtractionExtension<
 		// TODO Auto-generated constructor stub
 	}
 
-	public List<Operator> registerOperators() {
-		List<Operator> operators = new ArrayList<Operator>();
+	public List<Operator<?>> registerOperators() {
+		List<Operator<?>> operators = new ArrayList<Operator<?>>();
 		
 		// Set operator for plugin property switchInput
 		DefaultOperator<Integer> operator= new DefaultOperator<Integer>();

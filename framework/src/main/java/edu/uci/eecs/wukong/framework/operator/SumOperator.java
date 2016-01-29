@@ -4,7 +4,7 @@ import java.util.List;
 
 import edu.uci.eecs.wukong.framework.buffer.DataPoint;
 
-public class SumOperator<T extends Number> extends SingleOperator<Number> {
+public class SumOperator<T extends Number> extends SisoOperator<Number> {
 
 	@Override
 	public Number operate(List<DataPoint<Number>> data) {

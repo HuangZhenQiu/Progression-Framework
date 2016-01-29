@@ -15,11 +15,11 @@ public class SmartHueFeatureExtractionExtension extends
 	}
 
 	@Override
-	public List<Operator> registerOperators() {
-		List<Operator> operators = new ArrayList<Operator>();
-		AverageOperator indoorAvr = new AverageOperator();
+	public List<Operator<?>> registerOperators() {
+		List<Operator<?>> operators = new ArrayList<Operator<?>>();
+		AverageOperator<Short> indoorAvr = new AverageOperator<Short>();
 		indoorAvr.addDataSource(1 /* property 1 */, 300 /* seconds */);
-		AverageOperator outdoorAvr = new AverageOperator();
+		AverageOperator<Short> outdoorAvr = new AverageOperator<Short>();
 		outdoorAvr.addDataSource(2, 300);
 		operators.add(indoorAvr);
 		operators.add(outdoorAvr);

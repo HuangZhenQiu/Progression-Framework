@@ -1,5 +1,6 @@
 package edu.uci.eecs.wukong.framework.mptn;
 
+import java.net.Inet4Address;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +29,8 @@ public class MPTN implements MPTNMessageListener{
 	private int nodeId = -1; 
 	// Address for communication between IP device in network
 	private long longAddress;
+	// local ip address
+	private String serverAddress;
 	// UUID for node id acquire
 	private byte[] uuid;
 	
@@ -93,6 +96,7 @@ public class MPTN implements MPTNMessageListener{
 		listeners = new ArrayList<WKPFMessageListener>();
 		this.hasNodeId = false;
 		try {
+			this.serverAddress = Inet4Address.getLocalHost().getHostAddress();
 			this.gatewayClient = new NIOUdpClient(
 					configuration.getGatewayIP(), configuration.getGatewayPort());
 			this.server = new NIOUdpServer(configuration.getProgressionServerPort());
@@ -178,7 +182,7 @@ public class MPTN implements MPTNMessageListener{
 	}
 	
 	private void appendMPTNHeader(ByteBuffer buffer, int nodeId, byte type, byte payload_bytes) {
-		int ipaddress = MPTNUtil.IPToInteger(configuration.getProgressionServerIP());
+		int ipaddress = MPTNUtil.IPToInteger(this.serverAddress);
 		short port = configuration.getProgressionServerPort();
 		MPTNUtil.appendMPTNHeader(buffer, ipaddress, port, nodeId, type, payload_bytes);
 	}
@@ -192,7 +196,7 @@ public class MPTN implements MPTNMessageListener{
 				processFWDMessage(message, length);
 			} else if (type == HEADER_TYPE_2){
 				if (length == 1) {
-					processInfoMessage(message.get());
+					processInfoMessage(message.getInt());
 				} else {
 					processIDMessage(message.getInt());
 				}
@@ -245,6 +249,7 @@ public class MPTN implements MPTNMessageListener{
 		this.hasNodeId = true;
 		LOGGER.info("Recevied Node Id: " + nodeId);
 	}
+
 	
 	
 	/**

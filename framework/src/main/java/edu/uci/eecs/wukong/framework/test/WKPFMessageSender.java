@@ -44,7 +44,7 @@ public class WKPFMessageSender {
 		buffer.put(propertyId);
 		buffer.put(WKPFUtil.WKPF_PROPERTY_TYPE_REFRESH_RATE);
 		buffer.put(value);
-		send(nodeId, buffer.array());
+		send(nodeId, MPTN.HEADER_TYPE_1, MPTN.MPTN_MSQTYPE_FWDREQ, buffer.array());
 	}
 	
 	public void sendWriteShortProperty(byte port, short wuClassId, byte propertyId, short value) {
@@ -58,26 +58,32 @@ public class WKPFMessageSender {
 		buffer.put(propertyId);
 		buffer.put(WKPFUtil.WKPF_PROPERTY_TYPE_SHORT);
 		buffer.putShort(value);
-		send(nodeId, buffer.array());
+		send(nodeId, MPTN.HEADER_TYPE_1, MPTN.MPTN_MSQTYPE_FWDREQ, buffer.array());
 	}
 	
 	public void reprogram(byte[] payload) {
 		
 	}
 	
-	public void send(int destId, byte[] payload) {
-		int size = payload.length + 20;
-		ByteBuffer buffer = ByteBuffer.allocate(size);
-		appendMPTNHeader(buffer, nodeId, MPTN.HEADER_TYPE_1, (byte)(payload.length + 9));
-		MPTNUtil.appendMPTNPacket(buffer, longAddress, destId,
-				MPTNUtil.MPTN_MSATYPE_FWDREQ, payload);
+	public void sendNodeId(int destId, byte nodeId) {
+		ByteBuffer buffer = ByteBuffer.allocate(15);
+		appendMPTNHeader(buffer, destId, nodeId, MPTN.HEADER_TYPE_2, (byte)1);
+		buffer.putInt(nodeId);
 		client.send(buffer.array());
 	}
 	
-	private void appendMPTNHeader(ByteBuffer buffer, int nodeId, byte type, byte payload_bytes) {
-		int ipaddress = MPTNUtil.IPToInteger(configuration.getProgressionServerIP());
+	public void send(int destAddress, byte headerType, byte messageType, byte[] payload) {
+		int size = payload.length + 20;
+		ByteBuffer buffer = ByteBuffer.allocate(size);
+		appendMPTNHeader(buffer, destAddress, nodeId, headerType, (byte)(payload.length + 9));
+		MPTNUtil.appendMPTNPacket(buffer, longAddress, destAddress,
+				messageType, payload);
+		client.send(buffer.array());
+	}
+	
+	private void appendMPTNHeader(ByteBuffer buffer, int destAddress, int nodeId, byte type, byte payload_bytes) {
 		short port = configuration.getProgressionServerPort();
-		MPTNUtil.appendMPTNHeader(buffer, ipaddress, port, nodeId, type, payload_bytes);
+		MPTNUtil.appendMPTNHeader(buffer, destAddress, port, nodeId, type, payload_bytes);
 	}
 	
 	

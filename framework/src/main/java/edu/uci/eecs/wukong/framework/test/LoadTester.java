@@ -11,9 +11,9 @@ public class LoadTester {
 	private MockReprogrammer programmer;
 	
 	public LoadTester(int port) {
-		MockReprogrammer programmer = new MockReprogrammer();
-		collector = new PerformanceCollector();
-		gateway = new MockGateway(port, programmer, collector);
+		this.programmer = new MockReprogrammer();
+		this.collector = new PerformanceCollector();
+		this.gateway = new MockGateway(port, programmer, collector);
 	}
 	
 	public void start() {
@@ -21,6 +21,7 @@ public class LoadTester {
 	}
 	
 	public static void main(String args[]) {
-		
+		LoadTester tester = new LoadTester(5775);
+		tester.start();
 	}
 }

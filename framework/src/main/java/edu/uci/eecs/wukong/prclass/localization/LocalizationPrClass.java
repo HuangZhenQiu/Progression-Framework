@@ -19,7 +19,7 @@ public class LocalizationPrClass extends PipelinePrClass{
 	@WuProperty(id = 2, name = "signalZ", type = PropertyType.Input, dtype = DataType.Channel)
 	private short signalZ;
 	@WuProperty(id = 3, name = "particleCount", type = PropertyType.Input, dtype = DataType.Init_Value)
-	private byte particleCount;
+	private short particleCount;
 	@WuProperty(id = 4, name = "movNoise", type = PropertyType.Input, dtype = DataType.Init_Value)
 	private short movNoise;
 	@WuProperty(id = 5, name = "rotNoise", type = PropertyType.Input, dtype = DataType.Init_Value)
@@ -75,7 +75,7 @@ public class LocalizationPrClass extends PipelinePrClass{
 		this.signalZ = signalZ;
 	}
 
-	public byte getParticleCount() {
+	public short getParticleCount() {
 		return particleCount;
 	}
 

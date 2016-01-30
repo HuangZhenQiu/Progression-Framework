@@ -8,6 +8,7 @@ import edu.uci.eecs.wukong.framework.metrics.MetricsHelper;
 import edu.uci.eecs.wukong.framework.util.DaemanThreadFactory;
 
 import java.lang.Runnable;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
@@ -29,6 +30,7 @@ public class PipelineMetrics extends MetricsHelper implements Runnable{
 	
 	public PipelineMetrics(MetricsRegistry registry) {
 		super(registry);
+		this.extensionPointMap = new HashMap<String, ExtensionPoint>();
 		this.extensionQueueLagGauges = new ConcurrentHashMap<String, Gauge<Integer>>();
 	}
 	

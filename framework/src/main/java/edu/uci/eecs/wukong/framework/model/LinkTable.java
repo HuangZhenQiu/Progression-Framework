@@ -20,8 +20,8 @@ public class LinkTable {
 	public byte[] toByteArray() {
 		int length = length();
 		ByteBuffer buffer = ByteBuffer.allocate(length);
-		buffer.put((byte) (length % 256));
-		buffer.put((byte) (length / 256));
+		buffer.put((byte) (links.size() % 256));
+		buffer.put((byte) (links.size() / 256));
 		for (Link link : links) {
 			buffer.put(link.toByteArray());
 		}

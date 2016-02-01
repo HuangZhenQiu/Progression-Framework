@@ -21,9 +21,11 @@ public class Link {
 	
 	public byte[] toByteArray() {
 		ByteBuffer buffer = ByteBuffer.allocate(6);
-		buffer.putShort(sourceId);
+		buffer.put((byte) (sourceId % 256));
+		buffer.put((byte) (sourceId / 256));
 		buffer.put(sourcePid);
-		buffer.putShort(destId);
+		buffer.put((byte) (destId % 256));
+		buffer.put((byte) (destId / 256));
 		buffer.put(destPid);
 		return buffer.array();
 	}

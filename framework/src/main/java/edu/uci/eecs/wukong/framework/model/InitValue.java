@@ -17,7 +17,8 @@ public class InitValue {
 	
 	public byte[] toByteArray() {
 		ByteBuffer buffer = ByteBuffer.allocate(length());
-		buffer.putShort(componentId);
+		buffer.put((byte) (componentId % 256));
+		buffer.put((byte) (componentId / 256));
 		buffer.put(propertyNumber);
 		buffer.put(size);
 		buffer.put(value);

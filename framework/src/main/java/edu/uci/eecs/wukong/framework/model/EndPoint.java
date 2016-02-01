@@ -5,17 +5,20 @@ import java.nio.ByteBuffer;
 public class EndPoint {
 	public static int ENDPOINT_LENGTH = 5;
 	/* Network address */
-	private long nodeId;
+	private int nodeId;
 	private byte portId;
 	
-	public EndPoint(long nodeId, byte portId) {
+	public EndPoint(int nodeId, byte portId) {
 		this.nodeId = nodeId;
 		this.portId = portId;
 	}
 	
 	public byte[] toByteArray() {
 		ByteBuffer buffer = ByteBuffer.allocate(ENDPOINT_LENGTH);
-		buffer.putInt((int)nodeId);
+		buffer.put((byte) (nodeId % 256));
+		buffer.put((byte) ((nodeId >> 8) % 256));
+		buffer.put((byte) ((nodeId >> 16) % 256));
+		buffer.put((byte) ((nodeId >> 24) % 256));
 		buffer.put(portId);
 		
 		return buffer.array();

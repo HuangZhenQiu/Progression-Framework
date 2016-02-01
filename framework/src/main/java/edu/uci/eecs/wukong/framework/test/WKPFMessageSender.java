@@ -1,6 +1,5 @@
 package edu.uci.eecs.wukong.framework.test;
 
-import edu.uci.eecs.wukong.framework.model.MPTNPackage;
 import edu.uci.eecs.wukong.framework.model.WKPFPackage;
 import edu.uci.eecs.wukong.framework.mptn.MPTN;
 import edu.uci.eecs.wukong.framework.nio.NIOUdpClient;

@@ -23,9 +23,17 @@ public class ComponentMap {
 	
 	public byte[] toByteArray() {
 		int length = length();
-		ByteBuffer buffer = ByteBuffer.allocate(length);
-		buffer.put((byte) (length % 256));
-		buffer.put((byte) (length / 256));
+		ByteBuffer buffer = ByteBuffer.allocate(length);	
+		buffer.put((byte) (components.size() % 256));
+		buffer.put((byte) (components.size() / 256));
+		
+		int offset = 2 + 2 * components.size();
+		for (Component component : components) {
+			buffer.put((byte) (offset % 256));
+			buffer.put((byte) (offset / 256));
+			offset += component.length();	
+		}
+		
 		for (Component component : components) {
 			buffer.put(component.toByteArray());
 		}
@@ -34,7 +42,7 @@ public class ComponentMap {
 	}
 	
 	public int length() {
-		int length = 2;
+		int length = 2 + 2 * components.size();
 		for (Component component : components) {
 			length += component.length();
 		}

@@ -23,7 +23,9 @@ public class Component {
 	
 	public byte[] toByteArray() {
 		ByteBuffer buffer = ByteBuffer.allocate(length());
-		buffer.putShort(wuclassId);
+		buffer.put((byte) (endPoints.size() % 256));
+		buffer.put((byte) (wuclassId % 256));
+		buffer.put((byte) (wuclassId / 256));
 		for (EndPoint point : endPoints) {
 			buffer.put(point.toByteArray());
 		}
@@ -32,7 +34,7 @@ public class Component {
 	}
 	
 	public int length() {
-		return 2 + EndPoint.ENDPOINT_LENGTH * endPoints.size();
+		return 3 + EndPoint.ENDPOINT_LENGTH * endPoints.size();
 	}
 	
 	public void addEndPoint(EndPoint endpoint) {

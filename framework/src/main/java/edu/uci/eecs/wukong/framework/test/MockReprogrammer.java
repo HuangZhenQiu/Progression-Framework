@@ -26,7 +26,7 @@ public class MockReprogrammer {
 		this.map = new ComponentMap();
 	}
 	
-	public void addPrObject(short wuclassId, long address, byte port) {
+	public void addPrObject(short wuclassId, int address, byte port) {
 		if (!map.contains(wuclassId)) {
 			Component component = new Component(wuclassId);
 			map.addComponent(component);
@@ -60,8 +60,8 @@ public class MockReprogrammer {
 	}
 	
 	private void appendFile(ByteBuffer buffer, byte type,  byte[] payload) {
-		buffer.put((byte) (payload.length / 256));
 		buffer.put((byte) (payload.length % 256));
+		buffer.put((byte) (payload.length / 256));
 		buffer.put(type);
 		buffer.put(payload);
 	}

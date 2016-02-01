@@ -15,7 +15,7 @@ public class EndPoint {
 	
 	public byte[] toByteArray() {
 		ByteBuffer buffer = ByteBuffer.allocate(ENDPOINT_LENGTH);
-		buffer.putLong(nodeId);
+		buffer.putInt((int)nodeId);
 		buffer.put(portId);
 		
 		return buffer.array();

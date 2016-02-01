@@ -48,8 +48,8 @@ public class MockReprogrammer {
 	
 	public byte[] toByteArray() {
 		int length = linkTable.length() + 3;
-		length = valueTable.length() + 3;
-		length = map.length() + 3;
+		length += valueTable.length() + 3;
+		length += map.length() + 3;
 		ByteBuffer buffer = ByteBuffer.allocate(length);
 		
 		appendFile(buffer, DJAConstants.DJ_FILETYPE_WKPF_COMPONENT_MAP, map.toByteArray());
@@ -60,8 +60,8 @@ public class MockReprogrammer {
 	}
 	
 	private void appendFile(ByteBuffer buffer, byte type,  byte[] payload) {
-		buffer.put((byte) (payload.length % 256));
 		buffer.put((byte) (payload.length / 256));
+		buffer.put((byte) (payload.length % 256));
 		buffer.put(type);
 		buffer.put(payload);
 	}

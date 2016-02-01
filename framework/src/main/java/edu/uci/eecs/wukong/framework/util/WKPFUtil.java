@@ -55,6 +55,16 @@ public class WKPFUtil {
 		return (short) (getUnsignedByteValue(buffer[start + 1]) * 256 + getUnsignedByteValue(buffer[start]));
 	}
 	
+	public static byte[] getLittleEndianIntegerBytes(byte[] buffer, int start) {
+		byte[] b = new byte[4];
+		b[0] = buffer[start + 3];
+		b[1] = buffer[start + 2];
+		b[2] = buffer[start + 1];
+		b[3] = buffer[start];
+		
+		return b;
+	}
+	
 	/**
 	 * Get little endian int from the start index of the buffer
 	 * @param start the index of the buffer

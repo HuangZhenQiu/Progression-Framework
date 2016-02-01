@@ -3,19 +3,18 @@ package edu.uci.eecs.wukong.framework.test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import edu.uci.eecs.wukong.framework.model.MPTNPackage;
+import edu.uci.eecs.wukong.framework.model.WKPFPackage;
 import edu.uci.eecs.wukong.framework.mptn.MPTN;
 import edu.uci.eecs.wukong.framework.mptn.MPTNMessageListener;
 import edu.uci.eecs.wukong.framework.nio.NIOUdpServer;
 import edu.uci.eecs.wukong.framework.util.MPTNUtil;
 import edu.uci.eecs.wukong.framework.util.WKPFUtil;
 
-import java.math.BigInteger;
 import java.net.InetAddress;
 import java.net.Inet4Address;
 import java.net.NetworkInterface;
 import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -31,13 +30,14 @@ public class MockGateway implements MPTNMessageListener {
 	private NIOUdpServer server;
 	private PerformanceCollector collector;
 	private MockReprogrammer programmer;
+	private DeadlineIntensiveFBPBuilder builder;
 	private Map<LoadGenerator<?>, Long> generators;
 	private Timer timer;
 	private WKPFMessageSender sender; // init after server is added into network
 	private int maskLength;
 	private int mask;
 	private byte nodeId;
-	private long longAddress;
+	private int longAddress;
 	private byte[] longAddressBytes;
 	
 	public MockGateway(int port, MockReprogrammer programmer, PerformanceCollector collector) {
@@ -47,6 +47,7 @@ public class MockGateway implements MPTNMessageListener {
 		this.timer = new Timer();
 		this.collector = collector;
 		this.programmer = programmer;
+		this.builder = new DeadlineIntensiveFBPBuilder(programmer);
 		
 		try {
 			InetAddress localHost = Inet4Address.getLocalHost();
@@ -60,49 +61,33 @@ public class MockGateway implements MPTNMessageListener {
 	}
 
 	@Override
-	public void onMessage(ByteBuffer message) {
-		
-		LOGGER.info("Get packet " + MPTNUtil.toHexString(message.array()));
-		byte[] header = new byte[MPTN.MPTN_HEADER_LENGTH];
-		message.get(header);
-		int p1 = header[0] & 0xFF;
-		int p2 = header[1] & 0xFF;
-		if (p1 != 0xAA || p2 != 0x55) {
-			LOGGER.error("Get unknow packet " + MPTNUtil.toHexString(message.array()));
-			return;
-		}
-		int souceId = header[2];
-		long ip = WKPFUtil.getLittleEndianInteger(header, 3);
-		short port = WKPFUtil.getLittleEndianShort(header, 7);
-		
+	public void onMessage(MPTNPackage mptnPackage) {
 		try {
-			byte type = message.get();
-			int length = (int) message.get();
-			if (type == MPTN.HEADER_TYPE_2) {  // get local ID				
-				InetAddress address = InetAddress.getByAddress(getIPBytes(header, 3));
-				this.nodeId = (byte) ((~mask) & ip);
-				this.longAddress = ip;
+			LOGGER.info("Get packet " + MPTNUtil.toHexString(mptnPackage.getPayload()));
+					
+			if (mptnPackage.getH1() != 0xAA ||  mptnPackage.getH2() != 0x55) {
+				LOGGER.error("Get unknow MPTN packet");
+				return;
+			}
+			
+			if (mptnPackage.getType() == MPTN.HEADER_TYPE_2) {  // get local ID				
+				InetAddress address = InetAddress.getByAddress(mptnPackage.getSourceIPBytes());
+				this.nodeId = (byte) ((~mask) & mptnPackage.getSourceIP());
+				this.longAddress = mptnPackage.getSourceIP();
 				setLongAddressBytes(longAddress);
-				createWKPFMessageSender(address.getHostAddress(), port, nodeId, longAddress);
+				createWKPFMessageSender(address.getHostAddress(), mptnPackage.getSoucePort(), nodeId, longAddress);
 				processInfoMessage((byte) nodeId);
-			} else if (type == MPTN.HEADER_TYPE_1){  // get Long ID
-				processMessage(message, length);
+			} else if (mptnPackage.getType() == MPTN.HEADER_TYPE_1){  // get Long ID
+				processMessage(mptnPackage);
 			} else {
 				LOGGER.error("Received message error message type");
 			}
 		} catch (Exception e) {
-			LOGGER.error("Can't create InetAddress from integer :" + e);
+			e.printStackTrace();
+			LOGGER.error("Unexpected exception when handle mptn message :" + e.getMessage());
 		}
 	}
-	
-	private byte[] getIPBytes(byte[] header, int start) {
-		byte[] bytes = new byte[4];
-		bytes[0] = header[start + 3];
-		bytes[1] = header[start + 2];
-		bytes[2] = header[start + 1];
-		bytes[3] = header[start];
-		return bytes;
-	}
+
 	
 	private void setLongAddressBytes(long ip) {
 		ByteBuffer buffer =  ByteBuffer.allocate(4);
@@ -111,7 +96,7 @@ public class MockGateway implements MPTNMessageListener {
 	}
 	
 	//PerformanceCollector collector, String domain, int port, int nodeId, long longAddress
-	private void createWKPFMessageSender(String host, short port, byte nodeId, long longAddress) {
+	private void createWKPFMessageSender(String host, short port, byte nodeId, int longAddress) {
 		sender = new WKPFMessageSender(collector, host, port, nodeId, longAddress);
 		for (LoadGenerator<?> generatoer : generators.keySet()) {
 			generatoer.setSender(sender);
@@ -123,16 +108,27 @@ public class MockGateway implements MPTNMessageListener {
 	 * 
 	 * @param buffer
 	 * @param length
+	 * @throws InterruptedException 
 	 */
-	private void processMessage(ByteBuffer buffer, int length) {
-		if (length > 9) {
-			byte[] bytes = new byte[length];
-			buffer.get(bytes);
-			if (bytes[8] == MPTN.MPTN_MSGTYPE_IDREQ) {
-				ByteBuffer payload = ByteBuffer.allocate(13);
-				MPTNUtil.appendMPTNPacket(payload, MPTNUtil.MPTN_MASTER_ID, (int)this.longAddress, MPTNUtil.MPTN_MSQTYPE_IDREQ, this.longAddressBytes);
-				sender.send((int)this.longAddress, MPTN.HEADER_TYPE_2, MPTN.MPTN_MSGTYPE_IDACK, payload.array());
-			} else if (bytes[8] == MPTN.MPTN_MSQTYPE_FWDREQ) {
+	private void processMessage(MPTNPackage mptnPackage) throws InterruptedException {
+		if (mptnPackage.getLength() > 9) {
+			WKPFPackage pack = new WKPFPackage(mptnPackage.getPayload());
+			
+			/* receive async response*/
+			if(sender != null && sender.updatePackage(pack)) {
+				return;
+			}
+		
+			if (pack.getType() == MPTN.MPTN_MSGTYPE_IDREQ) {
+				ByteBuffer payload = ByteBuffer.allocate(4);
+				payload.putInt(longAddress);
+				sender.send(MPTN.HEADER_TYPE_2, MPTN.MPTN_MSGTYPE_IDACK, payload.array());
+				Thread.sleep(3000);
+				/* start to generate mock FBP*/
+				byte[] infusion = builder.build();
+				sender.reprogram(infusion);
+				
+			} else if (pack.getType() == MPTN.MPTN_MSQTYPE_FWDREQ) {
 				
 			} else {
 				LOGGER.error("Wrong MPTN type, Mock gateway only accepts IDREQ and FWDREQ");

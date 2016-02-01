@@ -9,7 +9,9 @@ import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import edu.uci.eecs.wukong.framework.model.MPTNPackage;
 import edu.uci.eecs.wukong.framework.model.StateModel;
+import edu.uci.eecs.wukong.framework.model.WKPFPackage;
 import edu.uci.eecs.wukong.framework.nio.NIOUdpClient;
 import edu.uci.eecs.wukong.framework.nio.NIOUdpServer;
 import edu.uci.eecs.wukong.framework.util.Configuration;
@@ -175,7 +177,7 @@ public class MPTN implements MPTNMessageListener{
 		int size = payload.length + 20;
 		ByteBuffer buffer = ByteBuffer.allocate(size);
 		appendMPTNHeader(buffer, nodeId, HEADER_TYPE_1, (byte)(payload.length + 9));
-		MPTNUtil.appendMPTNPacket(buffer, longAddress, destId,
+		MPTNUtil.appendMPTNPacket(buffer, (int)longAddress, destId,
 				MPTNUtil.MPTN_MSATYPE_FWDREQ, payload);
 		LOGGER.info(MPTNUtil.toHexString(buffer.array()));
 		gatewayClient.send(buffer.array());
@@ -187,18 +189,15 @@ public class MPTN implements MPTNMessageListener{
 		MPTNUtil.appendMPTNHeader(buffer, ipaddress, port, nodeId, type, payload_bytes);
 	}
 
-	public void onMessage(ByteBuffer message) {
+	public void onMessage(MPTNPackage message) {
 		if (validateMPTNHeader(message)) {
-			// The 11th byte is the length of the WKPF message
-			byte type = message.get();
-			int length = (int)message.get();
-			if (type == HEADER_TYPE_1) { 
-				processFWDMessage(message, length);
-			} else if (type == HEADER_TYPE_2){
-				if (length == 1) {
-					processInfoMessage(message.getInt());
+			if (message.getType() == HEADER_TYPE_1) { 
+				processFWDMessage(message);
+			} else if (message.getType() == HEADER_TYPE_2){
+				if (message.getLength() == 1) {
+					processInfoMessage(message.getPayload()[0]);
 				} else {
-					processIDMessage(message.getInt());
+					processIDMessage(WKPFUtil.getLittleEndianInteger(message.getPayload(), 0));
 				}
 			} else {
 				LOGGER.error("Received message error message type");
@@ -206,16 +205,11 @@ public class MPTN implements MPTNMessageListener{
 		}
 	}
 	
-	private boolean validateMPTNHeader(ByteBuffer message) {
-		byte[] header = new byte[MPTN_HEADER_LENGTH];
-		message.get(header);
-		int p1 = header[0] & 0xFF;
-		int p2 = header[1] & 0xFF;
-		int destId = header[2] & 0xFF;
-		if (p1 != 0xAA || p2 != 0x55) {
+	private boolean validateMPTNHeader(MPTNPackage message) {
+		if (message.getH1() != 0xAA || message.getH2() != 0x55) {
 			LOGGER.error("Received Incorrect Wukong Message.");
 			return false;
-		} else if (this.nodeId != -1 && this.nodeId != destId) {
+		} else if (this.nodeId != -1 && this.nodeId != message.getNodeId()) {
 			LOGGER.error("Received message not target to progression server: " + message.toString());
 			return false;
 		}
@@ -270,48 +264,43 @@ public class MPTN implements MPTNMessageListener{
 	 * @param message WKPF Message
 	 */
 	@VisibleForTesting
-	public byte processFWDMessage(ByteBuffer message, int length) {
-		if (length >= 9) {
-			// Need to be used to verify correctness of message
-			long destLongId = (long) message.getInt() & 0xffffffffL;
-			long sourceLongId = (long) message.getInt() & 0xffffffffL;
-			byte type = message.get();
-			if (type == MPTNUtil.MPTN_MSATYPE_FWDREQ) {
-				byte[] payload = new byte[message.remaining()];
-				message.get(payload);
-				switch(payload[0]) {
+	public byte processFWDMessage(MPTNPackage message) {
+		if (message.getLength() >= 9) {
+			WKPFPackage wkpfPackage = new WKPFPackage(message.getPayload());
+			if (wkpfPackage.getType() == MPTNUtil.MPTN_MSATYPE_FWDREQ) {
+				switch(wkpfPackage.getPayload()[0]) {
 					case WKPFUtil.WKPF_REPRG_OPEN:
-						fireWKPFRemoteProgramOpen(sourceLongId, payload);
+						fireWKPFRemoteProgramOpen(wkpfPackage);
 						return WKPFUtil.WKPF_REPRG_OPEN;
 					case WKPFUtil.WKPF_REPRG_WRITE:
-						fireWKPFRemoteProgramWrite(sourceLongId, payload);
+						fireWKPFRemoteProgramWrite(wkpfPackage);
 						return WKPFUtil.WKPF_REPRG_WRITE;
 					case WKPFUtil.WKPF_REPRG_COMMIT:
-						fireWKPFRemoteProgramCommit(sourceLongId, payload);
+						fireWKPFRemoteProgramCommit(wkpfPackage);
 						return WKPFUtil.WKPF_REPRG_COMMIT;
 					case WKPFUtil.WKPF_GET_WUCLASS_LIST:
-						fireWKPFGetWuClassList(sourceLongId, payload);
+						fireWKPFGetWuClassList(wkpfPackage);
 						return WKPFUtil.WKPF_GET_WUCLASS_LIST;
 					case WKPFUtil.WKPF_GET_WUOBJECT_LIST:
-						fireWKPFGetWuObjectList(sourceLongId, payload);
+						fireWKPFGetWuObjectList(wkpfPackage);
 						return WKPFUtil.WKPF_GET_WUOBJECT_LIST;
 					case WKPFUtil.WKPF_READ_PROPERTY:
-						fireWKPFReadProperty(sourceLongId, payload);
+						fireWKPFReadProperty(wkpfPackage);
 						return WKPFUtil.WKPF_READ_PROPERTY;
 					case WKPFUtil.WKPF_WRITE_PROPERTY:
-						fireWKPFWriteProperty(sourceLongId, payload);
+						fireWKPFWriteProperty(wkpfPackage);
 						return WKPFUtil.WKPF_WRITE_PROPERTY;
 					case WKPFUtil.WKPF_REQUEST_PROPERTY_INIT:
-						fireWKPFRequestPropertyInit(sourceLongId, payload);
+						fireWKPFRequestPropertyInit(wkpfPackage);
 						return WKPFUtil.WKPF_REQUEST_PROPERTY_INIT;
 					case WKPFUtil.WKPF_GET_LOCATION:
-						fireWKPFGetLocation(sourceLongId, payload);
+						fireWKPFGetLocation(wkpfPackage);
 						return WKPFUtil.WKPF_GET_LOCATION;
 					case WKPFUtil.WKPF_SET_LOCATION:
-						fireWKPFSetLocation(sourceLongId, payload);
+						fireWKPFSetLocation(wkpfPackage);
 						return  WKPFUtil.WKPF_SET_LOCATION;
 					case WKPFUtil.MONITORING:
-						fireWKPFMonitoredData(sourceLongId, payload);
+						fireWKPFMonitoredData(wkpfPackage);
 						return WKPFUtil.MONITORING;
 					case WKPFUtil.WKPF_REPRG_REBOOT:
 						LOGGER.info("I dont't want to reboot");
@@ -319,10 +308,10 @@ public class MPTN implements MPTNMessageListener{
 					case WKPFUtil.WKPF_WRITE_PROPERTY_R:
 						return WKPFUtil.WKPF_WRITE_PROPERTY_R;
 					default:
-						LOGGER.error("Received unpexcted WKPF message type " + payload[0]);
+						LOGGER.error("Received unpexcted WKPF message type " + wkpfPackage);
 				}
-			} else if (type == MPTNUtil.MPTN_MSQTYPE_IDACK) {
-				processIDMessage(destLongId);
+			} else if (wkpfPackage.getType() == MPTNUtil.MPTN_MSQTYPE_IDACK) {
+				processIDMessage(wkpfPackage.getDestAddress());
 			} 
 		} else {
 			LOGGER.error("Received unpexcted WKPF message with length less than 9 bytes");
@@ -330,80 +319,80 @@ public class MPTN implements MPTNMessageListener{
 		return WKPFUtil.WKPF_ERROR;
 	}
 	
-	private void fireWKPFRemoteProgramOpen(long sourceId, byte[] message) {
+	private void fireWKPFRemoteProgramOpen(WKPFPackage message) {
 		LOGGER.debug("Received remote programming open message");
 		for (WKPFMessageListener listener : listeners) {
-			listener.onWKPFRemoteProgramOpen(sourceId, message);
+			listener.onWKPFRemoteProgramOpen(message.getSourceAddress(), message.getPayload());
 		}
 	}
 	
-	private void fireWKPFRemoteProgramWrite(long sourceId, byte[] message) {
+	private void fireWKPFRemoteProgramWrite(WKPFPackage message) {
 		LOGGER.debug("Received remote programming write message");
 		for (WKPFMessageListener listener : listeners) {
-			listener.onWKPFRemoteProgramWrite(sourceId, message);
+			listener.onWKPFRemoteProgramWrite(message.getSourceAddress(), message.getPayload());
 		}
 	}
 	
-	private void fireWKPFRemoteProgramCommit(long sourceId, byte[] message) {
+	private void fireWKPFRemoteProgramCommit(WKPFPackage message) {
 		LOGGER.debug("Received remote programming commit message");
 		for (WKPFMessageListener listener : listeners) {
-			listener.onWKPFRemoteProgramCommit(sourceId, message);
+			listener.onWKPFRemoteProgramCommit(message.getSourceAddress(), message.getPayload());
 		}
 	}
 	
-	private void fireWKPFGetWuClassList(long sourceId, byte[] message) {
+	private void fireWKPFGetWuClassList(WKPFPackage message) {
 		LOGGER.info("Received get Wuclass List message");
 		for (WKPFMessageListener listener : listeners) {
-			listener.onWKPFGetWuClassList(sourceId, message);
+			listener.onWKPFGetWuClassList(message.getSourceAddress(), message.getPayload());
 		}
 	}
 	
-	private void fireWKPFGetWuObjectList(long sourceId, byte[] message) {
+	private void fireWKPFGetWuObjectList(WKPFPackage message) {
 		LOGGER.debug("Received get WuObject List message");
 		for (WKPFMessageListener listener : listeners) {
-			listener.onWKPFGetWuObjectList(sourceId, message);
+			listener.onWKPFGetWuObjectList(message.getSourceAddress(), message.getPayload());
 		}
 	}
 	
-	private void fireWKPFReadProperty(long sourceId, byte[] message) {
+	private void fireWKPFReadProperty(WKPFPackage message) {
 		LOGGER.debug("Received read Property message");
 		for (WKPFMessageListener listener : listeners) {
-			listener.onWKPFReadProperty(sourceId, message);
+			listener.onWKPFReadProperty(message.getSourceAddress(), message.getPayload());
 		}
 	}
 	
-	private void fireWKPFWriteProperty(long sourceId, byte[] message) {
+	private void fireWKPFWriteProperty(WKPFPackage message) {
 		LOGGER.debug("Received write Property message");
 		for (WKPFMessageListener listener : listeners) {
-			listener.onWKPFWriteProperty(sourceId, message);
+			listener.onWKPFWriteProperty(message.getSourceAddress(), message.getPayload());
 		}
 	}
 	
-	private void fireWKPFRequestPropertyInit(long sourceId, byte[] message) {
+	private void fireWKPFRequestPropertyInit(WKPFPackage message) {
 		LOGGER.debug("Received Request Property init message");
 		for (WKPFMessageListener listener : listeners) {
-			listener.onWKPFRequestPropertyInit(sourceId, message);
+			listener.onWKPFRequestPropertyInit(message.getSourceAddress(), message.getPayload());
 		}
 	}
 	
-	private void fireWKPFMonitoredData(long sourceId, byte[] message) {
+	private void fireWKPFMonitoredData(WKPFPackage message) {
 		LOGGER.debug("Received Monitored data message");
 		for (WKPFMessageListener listener : listeners) {
-			listener.onWKPFMonitoredData(sourceId, message);
+			listener.onWKPFMonitoredData(message.getSourceAddress(), message.getPayload());
 		}
 	}
 	
-	private void fireWKPFGetLocation(long sourceId, byte[] message) {
+	private void fireWKPFGetLocation(WKPFPackage message) {
 		LOGGER.debug("Received get location message");
 		for (WKPFMessageListener listener : listeners) {
-			listener.onWKPFGetLocation(sourceId, message);
+			listener.onWKPFGetLocation(message.getSourceAddress(), message.getPayload());
 		}
 	}
 	
-	private void fireWKPFSetLocation(long sourceId, byte[] message) {
+	private void fireWKPFSetLocation(WKPFPackage message) {
 		LOGGER.debug("Received set location message");
 		for (WKPFMessageListener listener : listeners) {
-			listener.onWKPFSetLocation(sourceId, message);
+			listener.onWKPFSetLocation(message.getSourceAddress(), message.getPayload());
 		}
 	}
 

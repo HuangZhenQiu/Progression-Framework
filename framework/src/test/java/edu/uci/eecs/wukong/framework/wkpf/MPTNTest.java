@@ -4,6 +4,7 @@ import java.nio.ByteBuffer;
 
 import org.junit.Test;
 
+import edu.uci.eecs.wukong.framework.model.MPTNPackage;
 import edu.uci.eecs.wukong.framework.mptn.MPTN;
 import edu.uci.eecs.wukong.framework.util.MPTNUtil;
 import edu.uci.eecs.wukong.framework.util.WKPFUtil;
@@ -15,7 +16,7 @@ public class MPTNTest extends TestCase {
 	private MPTN mptn = new MPTN();
 
 	@Test
-	public void testHandleWritePropertyMessage() {
+	public void testHandleWritePropertyMessage() throws Exception {
 		ByteBuffer buffer = ByteBuffer.allocate(10);
 		buffer.putInt(SOURCE_IP);
 		buffer.putInt(DEST_IP);
@@ -23,6 +24,7 @@ public class MPTNTest extends TestCase {
 		buffer.put(WKPFUtil.WKPF_WRITE_PROPERTY);
 		System.out.println(WKPFUtil.WKPF_REQUEST_PROPERTY_INIT);
 		buffer.flip();
-		assertEquals(WKPFUtil.WKPF_WRITE_PROPERTY, mptn.processFWDMessage(buffer, 10));
+		MPTNPackage mptnPackage = new MPTNPackage(buffer);
+		assertEquals(WKPFUtil.WKPF_WRITE_PROPERTY, mptn.processFWDMessage(mptnPackage));
 	}
 }

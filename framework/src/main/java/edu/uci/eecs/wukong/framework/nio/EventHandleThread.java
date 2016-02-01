@@ -6,6 +6,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import edu.uci.eecs.wukong.framework.model.MPTNPackage;
 import edu.uci.eecs.wukong.framework.mptn.MPTNMessageListener;
 
 public class EventHandleThread implements Runnable {
@@ -32,7 +33,8 @@ public class EventHandleThread implements Runnable {
 		for (MPTNMessageListener listener : listeners) {
 			try {
 				// For realtime processing, it will call to Prclas logic, which is unsafe
-				listener.onMessage(bytes);
+				MPTNPackage mptn = new MPTNPackage(bytes);
+				listener.onMessage(mptn);
 			} catch (Exception e) {
 				e.printStackTrace();
 				logger.error("Failt to handle event for listener " + listener.getClass());

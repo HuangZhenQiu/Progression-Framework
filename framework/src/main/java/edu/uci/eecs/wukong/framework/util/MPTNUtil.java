@@ -35,11 +35,13 @@ public class MPTNUtil {
 	    return new String(hexChars);
 	}
 
-	public static void appendMPTNPacket(ByteBuffer buffer, long longAddress, int destId, byte type, byte[] payload) {
+	public static void appendMPTNPacket(ByteBuffer buffer, int sourceId, int destId, byte type, byte[] payload) {
 		appendReversedInt(buffer, destId);
-		appendReversedInt(buffer, (int) (longAddress & 0xffffffffL));
+		appendReversedInt(buffer, (int) (sourceId & 0xffffffffL));
 		buffer.put(type);
-		buffer.put(payload);
+		if (payload != null) {
+			buffer.put(payload);
+		}
 	}
 	
 	public static void appendReversedInt(ByteBuffer buffer, int value) {
@@ -50,7 +52,7 @@ public class MPTNUtil {
 	}
 	
 	public static void appendMPTNHeader(ByteBuffer buffer, int ipaddress, short port,
-			int nodeId, byte type, byte payloadByte) {
+			int nodeId, byte type, byte length) {
 		buffer.put((byte)0xAA);
 		buffer.put((byte)0x55);
 		buffer.put(getByteValue(nodeId, 0));
@@ -58,7 +60,7 @@ public class MPTNUtil {
 		buffer.put(new Integer(port%256).byteValue());
 		buffer.put(new Integer(port/256).byteValue());
 		buffer.put(type);
-		buffer.put(payloadByte);
+		buffer.put(length);
 	}
 	
 	public static int IPToInteger(String ipstr) {

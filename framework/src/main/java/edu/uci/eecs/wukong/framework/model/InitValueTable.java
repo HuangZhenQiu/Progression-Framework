@@ -20,9 +20,10 @@ public class InitValueTable {
 	}
 	
 	public byte[] toByteArray() {
+		int length = length();
 		ByteBuffer buffer = ByteBuffer.allocate(length());
-		buffer.put((byte) (length() % 256));
-		buffer.put((byte) (length() / 256));
+		buffer.put((byte) (length % 256));
+		buffer.put((byte) (length / 256));
 		for (InitValue value : values) {
 			buffer.put(value.toByteArray());
 		}

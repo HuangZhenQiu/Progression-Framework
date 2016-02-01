@@ -34,6 +34,11 @@ public class NIOUdpClient {
 		socket.bind(address);
 	}
 	
+	/**
+	 * Non-blocked send
+	 * 
+	 * @param value byte array content of message
+	 */
 	public synchronized void send(byte[] value) {
 		try {
 			sendBuffer.clear();
@@ -44,22 +49,6 @@ public class NIOUdpClient {
 			e.printStackTrace();
 			logger.error(e.toString());
 		}
-	}
-	
-	public synchronized ByteBuffer sendWaitResponse(byte[] value) {
-		try {
-			sendBuffer.clear();
-			sendBuffer.put(value);
-			sendBuffer.flip();
-			channel.send(sendBuffer, server);
-			receiveBuffer.clear();
-			channel.receive(receiveBuffer);
-		} catch (Exception e) {
-			e.printStackTrace();
-			logger.error(e.toString());
-		}
-		
-		return MPTNUtil.deepCopy(receiveBuffer);
 	}
 	
 	public void shutdown() {

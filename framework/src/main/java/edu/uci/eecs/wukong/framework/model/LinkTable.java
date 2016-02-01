@@ -30,7 +30,7 @@ public class LinkTable {
 	}
 	
 	public int length() {
-		return 2 + links.size() * 6;
+		return 2 + links.size() * LINK_LENGTH;
 	}
 	
 	public List<Link> getOutLinks(int srcId, byte propertyId) {

@@ -9,6 +9,7 @@ import edu.uci.eecs.wukong.framework.annotation.WuClass;
 import edu.uci.eecs.wukong.framework.model.DataType;
 import edu.uci.eecs.wukong.framework.model.PropertyType;
 import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
+import edu.uci.eecs.wukong.framework.prclass.PrClassMetrics;
 
 @WuClass(id = 10002)
 public class TestPrClass extends PipelinePrClass {
@@ -16,8 +17,8 @@ public class TestPrClass extends PipelinePrClass {
 	@WuProperty(id = 0, type = PropertyType.Input, dtype = DataType.Buffer)
 	private short testProperty;
 	
-	public TestPrClass() {
-		super("Test");
+	public TestPrClass(PrClassMetrics metrics) {
+		super("Test", metrics);
 	}
 
 	@Override

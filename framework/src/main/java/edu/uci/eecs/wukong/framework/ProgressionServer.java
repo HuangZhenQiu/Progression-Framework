@@ -27,6 +27,7 @@ import edu.uci.eecs.wukong.framework.pipeline.BasicPipeline;
 import edu.uci.eecs.wukong.framework.pipeline.Pipeline;
 import edu.uci.eecs.wukong.framework.pipeline.PipelineMetrics;
 import edu.uci.eecs.wukong.framework.prclass.PrClassManager;
+import edu.uci.eecs.wukong.framework.prclass.PrClassMetrics;
 import edu.uci.eecs.wukong.framework.select.FeatureChoosers;
 import edu.uci.eecs.wukong.framework.state.StateManager;
 import edu.uci.eecs.wukong.framework.wkpf.WKPF;
@@ -68,6 +69,7 @@ public class ProgressionServer {
 		BufferMetrics bufferMetrics = new BufferMetrics(this.registryHolder);
 		FactorMetrics factorMetrics = new FactorMetrics(this.registryHolder);
 		WKPFMetrics wkpfMetrics = new WKPFMetrics(this.registryHolder);
+		PrClassMetrics prClassMetrics = new PrClassMetrics(this.registryHolder);
 		this.bufferManager = new BufferManager(bufferMetrics);
 		this.contextManager = new SceneManager(factorMetrics);
 		this.wkpf = new WKPF(bufferManager, wkpfMetrics);
@@ -76,7 +78,7 @@ public class ProgressionServer {
 		}
 		this.featureChoosers = new FeatureChoosers(bufferManager, wkpf);
 		this.pipeline = new BasicPipeline(contextManager, featureChoosers, pipelineMetrics);	
-		this.pluginManager = new PrClassManager(wkpf, contextManager, pipeline, bufferManager);
+		this.pluginManager = new PrClassManager(wkpf, contextManager, pipeline, bufferManager, prClassMetrics);
 		this.stateManager = new StateManager(wkpf, pluginManager);
 		this.wkpf.register(pluginManager);
 		// Update this place for setting up multiple progression server in distributed way.

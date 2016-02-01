@@ -8,6 +8,7 @@ import edu.uci.eecs.wukong.framework.annotation.WuProperty;
 import edu.uci.eecs.wukong.framework.api.Extension;
 import edu.uci.eecs.wukong.framework.model.PropertyType;
 import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
+import edu.uci.eecs.wukong.framework.prclass.PrClassMetrics;
 
 @WuClass(id = 9006)
 public class ICSDemoMusicPrClass extends PipelinePrClass {
@@ -21,8 +22,8 @@ public class ICSDemoMusicPrClass extends PipelinePrClass {
 	@WuProperty(name = "speaker_volume", id = 2, type = PropertyType.Output)
 	private short speaker_volume;
 	
-	public ICSDemoMusicPrClass() {
-		super("ICSDemoMusicPrClass");
+	public ICSDemoMusicPrClass(PrClassMetrics metrics) {
+		super("ICSDemoMusicPrClass", metrics);
 		// TODO Auto-generated constructor stub
 	}
 

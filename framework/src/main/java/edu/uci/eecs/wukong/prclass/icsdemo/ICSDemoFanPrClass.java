@@ -8,6 +8,7 @@ import edu.uci.eecs.wukong.framework.annotation.WuProperty;
 import edu.uci.eecs.wukong.framework.api.Extension;
 import edu.uci.eecs.wukong.framework.model.PropertyType;
 import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
+import edu.uci.eecs.wukong.framework.prclass.PrClassMetrics;
 
 @WuClass(id = 9004)
 public class ICSDemoFanPrClass extends PipelinePrClass {
@@ -19,8 +20,8 @@ public class ICSDemoFanPrClass extends PipelinePrClass {
 	@WuProperty(name = "fan_rotation", id = 2, type = PropertyType.Output)
 	private short fan_rotation;
 	
-	public ICSDemoFanPrClass() {
-		super("ICSDemoFanPrClass");
+	public ICSDemoFanPrClass(PrClassMetrics metrics) {
+		super("ICSDemoFanPrClass", metrics);
 		// TODO Auto-generated constructor stub
 	}
 	

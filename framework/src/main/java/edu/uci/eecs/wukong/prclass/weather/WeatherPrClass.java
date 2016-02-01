@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import edu.uci.eecs.wukong.framework.api.Extension;
 import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
+import edu.uci.eecs.wukong.framework.prclass.PrClassMetrics;
 import edu.uci.eecs.wukong.framework.annotation.WuClass;
 import edu.uci.eecs.wukong.framework.annotation.WuProperty;
 import edu.uci.eecs.wukong.framework.model.PropertyType;
@@ -18,8 +19,8 @@ public class WeatherPrClass extends PipelinePrClass {
 	@WuProperty(name = "temperature", id = 1, type = PropertyType.Output)
 	private short temperature;
 
-	public WeatherPrClass() {
-		super("WeatherPrClass");
+	public WeatherPrClass(PrClassMetrics metrics) {
+		super("WeatherPrClass", metrics);
 		// TODO Auto-generated constructor stub
 	}
 

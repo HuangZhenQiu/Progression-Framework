@@ -29,13 +29,13 @@ public abstract class PipelinePrClass extends PrClass {
 		super(name);
 	}
 	
-	protected PipelinePrClass(String name) {
-		super(name, false, false, PrClass.PrClassType.PIPELINE_PRCLASS);
+	protected PipelinePrClass(String name, PrClassMetrics metrics) {
+		super(name, false, false, PrClass.PrClassType.PIPELINE_PRCLASS, metrics);
 		
 	}
 	
-	protected PipelinePrClass(String name, PrClass.PrClassType type) {
-		super(name, false, false, type);
+	protected PipelinePrClass(String name, PrClass.PrClassType type, PrClassMetrics metrics) {
+		super(name, false, false, type, metrics);
 	}
 
 	public abstract List<Extension> registerExtension();

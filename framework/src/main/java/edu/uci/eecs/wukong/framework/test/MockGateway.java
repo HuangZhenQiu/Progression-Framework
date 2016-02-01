@@ -16,6 +16,7 @@ import java.net.Inet4Address;
 import java.net.NetworkInterface;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Timer;
@@ -124,11 +125,16 @@ public class MockGateway implements MPTNMessageListener {
 				payload.putInt(longAddress);
 				sender.send(MPTN.HEADER_TYPE_2, MPTN.MPTN_MSGTYPE_IDACK, payload.array());
 				Thread.sleep(3000);
-				/* start to generate mock FBP*/
+				/* start to generate mock FBP */
 				byte[] infusion = builder.build();
 				sender.reprogram(infusion);
 				
+				/* Schedule load generators  */
+				schedule();
+				startLoad();
 			} else if (pack.getType() == MPTN.MPTN_MSQTYPE_FWDREQ) {
+				/* Collect performance data */
+				
 				
 			} else {
 				LOGGER.error("Wrong MPTN type, Mock gateway only accepts IDREQ and FWDREQ");
@@ -147,12 +153,15 @@ public class MockGateway implements MPTNMessageListener {
 		sender.sendNodeId((int)this.longAddress, nodeId);
 	}
 	
-	public void schedule(LoadGenerator<?> generator, long period) {
-		generator.setSender(sender);
-		generators.put(generator, period);
+	public void schedule() {
+		List<LoadGenerator<?>> loads = builder.createLoadGenerator();
+		for (LoadGenerator<?> generator : loads) {
+			generator.setSender(sender);
+			generators.put(generator, 5L);
+		}
 	}
 	
-	public void generateLoad() {
+	public void startLoad() {
 		for (Entry<LoadGenerator<?>, Long> entry : generators.entrySet()) {
 			timer.schedule(entry.getKey(), entry.getValue());
 		}

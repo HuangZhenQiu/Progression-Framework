@@ -81,7 +81,7 @@ public class WKPFMessageSender {
 		return false;
 	}
 	
-	public void sendWriteByteProperty(byte port, short wuClassId, byte propertyId, byte value) {
+	public void sendWriteByteProperty(byte port, short wuClassId, byte propertyId, byte value, boolean collect) {
 		this.sequence++;
 		ByteBuffer buffer = ByteBuffer.allocate(9); // include dummy piggyback count 0
 		buffer.put(WKPFUtil.WKPF_WRITE_PROPERTY);
@@ -92,10 +92,13 @@ public class WKPFMessageSender {
 		buffer.put(propertyId);
 		buffer.put(WKPFUtil.WKPF_PROPERTY_TYPE_REFRESH_RATE);
 		buffer.put(value);
+		if (collect) {
+			collector.send(port, (long)this.sequence);
+		}
 		send(MPTN.HEADER_TYPE_1, MPTN.MPTN_MSQTYPE_FWDREQ, buffer.array());
 	}
 	
-	public void sendWriteShortProperty(byte port, short wuClassId, byte propertyId, short value) {
+	public void sendWriteShortProperty(byte port, short wuClassId, byte propertyId, short value, boolean collect) {
 		this.sequence++;
 		ByteBuffer buffer = ByteBuffer.allocate(10); // include dummy piggyback count 0
 		buffer.put(WKPFUtil.WKPF_WRITE_PROPERTY);
@@ -106,6 +109,9 @@ public class WKPFMessageSender {
 		buffer.put(propertyId);
 		buffer.put(WKPFUtil.WKPF_PROPERTY_TYPE_SHORT);
 		buffer.putShort(value);
+		if (collect) {
+			collector.send(port, (long)this.sequence);
+		}
 		send(MPTN.HEADER_TYPE_1, MPTN.MPTN_MSQTYPE_FWDREQ, buffer.array());
 	}
 	
@@ -271,7 +277,7 @@ public class WKPFMessageSender {
 		WKPFMessageSender generator = new WKPFMessageSender(new PerformanceCollector(), "127.0.0.1", 9000, (byte)2, 2130706434);
 		while(true) {
 			try {
-				generator.sendWriteShortProperty((byte)13, (short)10112, (byte)1, (short)1);
+				generator.sendWriteShortProperty((byte)13, (short)10112, (byte)1, (short)1, false);
 				Thread.sleep(5000);
 			} catch (InterruptedException e) {
 				System.out.println(e.toString());

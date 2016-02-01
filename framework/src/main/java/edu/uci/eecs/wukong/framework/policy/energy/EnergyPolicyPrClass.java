@@ -3,6 +3,7 @@ package edu.uci.eecs.wukong.framework.policy.energy;
 import java.util.List;
 
 import edu.uci.eecs.wukong.framework.api.Extension;
+import edu.uci.eecs.wukong.framework.prclass.PrClassMetrics;
 import edu.uci.eecs.wukong.framework.prclass.SystemPrClass;
 
 
@@ -13,8 +14,8 @@ import edu.uci.eecs.wukong.framework.prclass.SystemPrClass;
  */
 public class EnergyPolicyPrClass extends SystemPrClass {
 
-	public EnergyPolicyPrClass(String name) {
-		super(name);
+	public EnergyPolicyPrClass(PrClassMetrics metrics) {
+		super("EnergyPolicy", metrics);
 		// TODO Auto-generated constructor stub
 	}
 

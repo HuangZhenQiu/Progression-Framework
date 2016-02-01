@@ -9,6 +9,7 @@ import edu.uci.eecs.wukong.framework.model.PropertyType;
 import edu.uci.eecs.wukong.framework.model.DataType;
 import edu.uci.eecs.wukong.framework.api.Extension;
 import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
+import edu.uci.eecs.wukong.framework.prclass.PrClassMetrics;
 
 @WuClass(id = 10115)
 public class ActivityRecgonitionPrClass extends PipelinePrClass {
@@ -18,8 +19,8 @@ public class ActivityRecgonitionPrClass extends PipelinePrClass {
 	@WuProperty(id = 0, name = "input", type = PropertyType.Output)
 	private short output;
 	
-	protected ActivityRecgonitionPrClass() {
-		super("ActivityRecgonition");
+	protected ActivityRecgonitionPrClass(PrClassMetrics metrics) {
+		super("ActivityRecgonition", metrics);
 		// TODO Auto-generated constructor stub
 	}
 

@@ -1,5 +1,7 @@
 package edu.uci.eecs.wukong.framework.test;
 
+import java.util.List;
+
 /**
  * MockFBPBuilder is an abstract FBP builder for building different test scenarios
  * 
@@ -30,4 +32,7 @@ public abstract class MockFBPBuilder {
 	
 	
 	protected abstract void createLinkTable();
+	
+	
+	protected abstract List<LoadGenerator<?>> createLoadGenerator();
 }

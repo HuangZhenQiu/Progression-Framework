@@ -2,6 +2,7 @@ package edu.uci.eecs.wukong.prclass.localization;
 
 import edu.uci.eecs.wukong.framework.api.Channelable;
 import edu.uci.eecs.wukong.framework.api.FactorExecutable;
+import edu.uci.eecs.wukong.framework.api.metrics.Meter;
 import edu.uci.eecs.wukong.framework.extension.AbstractProgressionExtension;
 import edu.uci.eecs.wukong.framework.factor.BaseFactor;
 import edu.uci.eecs.wukong.framework.model.ChannelData;
@@ -21,6 +22,8 @@ public class LocalizationProgressionExtension extends AbstractProgressionExtensi
 
 	@Override
 	public void execute(ChannelData<Short> data) {
+		Meter meter = this.prClass.getPrClassMetrics().getMeter(this.prClass, this);
+		meter.mark();
 		if (inited) {
 		}	
 	}

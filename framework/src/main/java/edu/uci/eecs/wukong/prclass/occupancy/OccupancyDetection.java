@@ -5,6 +5,7 @@ import java.util.List;
 import be.ac.ulg.montefiore.run.jahmm.ObservationDiscrete;
 import edu.uci.eecs.wukong.framework.api.Extension;
 import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
+import edu.uci.eecs.wukong.framework.prclass.PrClassMetrics;
 import edu.uci.eecs.wukong.framework.annotation.WuClass;
 import edu.uci.eecs.wukong.framework.annotation.WuProperty;
 import edu.uci.eecs.wukong.framework.model.DataType;
@@ -40,8 +41,8 @@ public class OccupancyDetection extends PipelinePrClass {
 		this.interval = interval;
 	}
 
-	public OccupancyDetection() {
-		super("OccupancyDetection");
+	public OccupancyDetection(PrClassMetrics metrics) {
+		super("OccupancyDetection", metrics);
 	}
 
 	@Override

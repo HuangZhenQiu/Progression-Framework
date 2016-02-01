@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import edu.uci.eecs.wukong.framework.api.Extension;
 import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
+import edu.uci.eecs.wukong.framework.prclass.PrClassMetrics;
 import edu.uci.eecs.wukong.framework.annotation.WuClass;
 import edu.uci.eecs.wukong.framework.annotation.WuProperty;
 import edu.uci.eecs.wukong.framework.model.DataType;
@@ -19,8 +20,8 @@ public class BufferEnabledPrClass extends PipelinePrClass {
 	@WuProperty(name = "output", id = 2, type = PropertyType.Output)
 	private short output;
 	
-	public BufferEnabledPrClass() {
-		super("BufferEnabledPrClass");
+	public BufferEnabledPrClass(PrClassMetrics metrics) {
+		super("BufferEnabledPrClass", metrics);
 	}
 
 	@Override

@@ -8,6 +8,7 @@ import edu.uci.eecs.wukong.framework.annotation.WuProperty;
 import edu.uci.eecs.wukong.framework.api.Extension;
 import edu.uci.eecs.wukong.framework.model.PropertyType;
 import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
+import edu.uci.eecs.wukong.framework.prclass.PrClassMetrics;
 
 @WuClass(id = 9009)
 public class ICSDemoQPrClass extends PipelinePrClass {
@@ -15,8 +16,8 @@ public class ICSDemoQPrClass extends PipelinePrClass {
 	@WuProperty(name = "question", id = 0, type = PropertyType.Output)
 	private boolean question;
 	
-	public ICSDemoQPrClass() {
-		super("ICSDemoQPrClass");
+	public ICSDemoQPrClass(PrClassMetrics metrics) {
+		super("ICSDemoQPrClass", metrics);
 		// TODO Auto-generated constructor stub
 	}
 

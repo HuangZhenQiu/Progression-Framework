@@ -10,10 +10,16 @@ import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
  * 
  */
 public abstract class FeatureExtractionExtension<T extends PipelinePrClass> extends AbstractExtension<T> {
+	public static final String FEATURE_EXTRACTION_PREFIX = "feature-extraction";
 	
 	public FeatureExtractionExtension(T plugin) {
 		super(plugin);
 	}
 
 	public abstract List<Operator<?>> registerOperators();
+	
+	@Override
+	public String prefix() {
+		return FEATURE_EXTRACTION_PREFIX;
+	}
 }

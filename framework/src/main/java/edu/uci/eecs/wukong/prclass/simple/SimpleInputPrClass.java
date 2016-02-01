@@ -8,6 +8,7 @@ import edu.uci.eecs.wukong.framework.annotation.WuProperty;
 import edu.uci.eecs.wukong.framework.annotation.WuTimer;
 import edu.uci.eecs.wukong.framework.model.DataType;
 import edu.uci.eecs.wukong.framework.model.PropertyType;
+import edu.uci.eecs.wukong.framework.prclass.PrClassMetrics;
 import edu.uci.eecs.wukong.framework.prclass.SimplePrClass;
 
 @WuClass(id = 10114)
@@ -16,8 +17,8 @@ public class SimpleInputPrClass extends SimplePrClass {
 	@WuProperty(id = 0, name="input", type = PropertyType.Input, dtype = DataType.Channel)
 	private short input;
 	
-	public SimpleInputPrClass() {
-		super("SimpleInputPrClass");
+	public SimpleInputPrClass(PrClassMetrics metrics) {
+		super("SimpleInputPrClass", metrics);
 		// TODO Auto-generated constructor stub
 	}
 

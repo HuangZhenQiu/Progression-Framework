@@ -19,8 +19,8 @@ public abstract class SystemPrClass extends PipelinePrClass implements RemotePro
 	protected ComponentMap map;
 	protected InitValueTable initValues;
 	
-	public SystemPrClass(String name) {
-		super(name, PrClass.PrClassType.SYSTEM_PRCLASS);
+	public SystemPrClass(String name, PrClassMetrics metrics) {
+		super(name, PrClass.PrClassType.SYSTEM_PRCLASS, metrics);
 		this.enabled = false;
 	}
 	

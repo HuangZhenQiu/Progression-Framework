@@ -9,6 +9,7 @@ import edu.uci.eecs.wukong.framework.api.Extension;
 import edu.uci.eecs.wukong.framework.model.DataType;
 import edu.uci.eecs.wukong.framework.model.PropertyType;
 import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
+import edu.uci.eecs.wukong.framework.prclass.PrClassMetrics;
 
 @WuClass(id = 9002)
 public class ICSDemoGoPrClass extends PipelinePrClass {
@@ -28,8 +29,8 @@ public class ICSDemoGoPrClass extends PipelinePrClass {
 	
 	private ICSDemoHuePrClass hueObj;
 
-	public ICSDemoGoPrClass() {
-		super("ICSDemoGoPrClass");
+	public ICSDemoGoPrClass(PrClassMetrics metrics) {
+		super("ICSDemoGoPrClass", metrics);
 		hueObj = new ICSDemoHuePrClass("ICSDemoGoPrClass", "LLC020");
 		// TODO Auto-generated constructor stub
 	}

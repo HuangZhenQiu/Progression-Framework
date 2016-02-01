@@ -1,5 +1,8 @@
 package edu.uci.eecs.wukong.framework.test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * This FBP builder aims to test the throughput of single localization prclass.
  * In the mock fbp, there are three components lays in a line. 
@@ -60,4 +63,19 @@ public class DeadlineIntensiveFBPBuilder extends MockFBPBuilder {
 		this.reprogrammer.addLink((short)2, (byte)8, (short)3, (byte)1);
 	}
 
+	@Override
+	protected List<LoadGenerator<?>> createLoadGenerator() {
+		List<LoadGenerator<?>> loadGenerators = new ArrayList<LoadGenerator<?>> ();
+		LoadGenerator<Short> signalXGenerator = new LoadGenerator.RandomShortGenerator(
+				LOCALIZATION_WUCLASS_ID, LOCALIZATION_PRCLASS_PORT, (byte)1 , false);
+		LoadGenerator<Short> signalYGenerator = new LoadGenerator.RandomShortGenerator(
+				LOCALIZATION_WUCLASS_ID, LOCALIZATION_PRCLASS_PORT, (byte)2 , false);
+		LoadGenerator<Short> signalZGenerator = new LoadGenerator.RandomShortGenerator(
+				LOCALIZATION_WUCLASS_ID, LOCALIZATION_PRCLASS_PORT, (byte)3 , true);
+		loadGenerators.add(signalXGenerator);
+		loadGenerators.add(signalYGenerator);
+		loadGenerators.add(signalZGenerator);
+		
+		return loadGenerators;
+	}
 }

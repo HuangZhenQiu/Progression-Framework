@@ -6,6 +6,7 @@ import edu.uci.eecs.wukong.framework.api.ExecutionContext;
 import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
 
 public abstract class LearningExtension<F extends Number, T extends PipelinePrClass> extends AbstractExtension<T> {
+	public static final String LEARNING_PREFIX = "learning";
 	private boolean ready;
 	
 	public LearningExtension(T plugin) {
@@ -24,5 +25,10 @@ public abstract class LearningExtension<F extends Number, T extends PipelinePrCl
 
 	public void setReady(boolean ready) {
 		this.ready = ready;
+	}
+	
+	@Override
+	public String prefix() {
+		return LEARNING_PREFIX;
 	}
 }

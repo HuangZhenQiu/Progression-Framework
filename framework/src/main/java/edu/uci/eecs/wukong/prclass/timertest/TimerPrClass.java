@@ -9,6 +9,7 @@ import edu.uci.eecs.wukong.framework.annotation.WuProperty;
 import edu.uci.eecs.wukong.framework.model.DataType;
 import edu.uci.eecs.wukong.framework.model.PropertyType;
 import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
+import edu.uci.eecs.wukong.framework.prclass.PrClassMetrics;
 import edu.uci.eecs.wukong.prclass.timertest.TimerTestProgressionExtension;
 
 
@@ -25,8 +26,8 @@ public class TimerPrClass extends PipelinePrClass{
 	@WuProperty(name = "output", id = 0, type = PropertyType.Output, dtype = DataType.Short)
 	private short output;
 	
-	public TimerPrClass() {
-		super("TimerPrClass");
+	public TimerPrClass(PrClassMetrics metrics) {
+		super("TimerPrClass", metrics);
 	}
 
 	@Override

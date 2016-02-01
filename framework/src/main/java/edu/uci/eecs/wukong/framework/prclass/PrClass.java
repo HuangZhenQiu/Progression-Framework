@@ -47,6 +47,7 @@ public abstract class PrClass {
 	protected PrClassType type;
 	protected PropertyChangeSupport support;
 	protected ConfigurationManager configManager;
+	protected PrClassMetrics metrics;
 	
 	public static enum PrClassType {
 		SIMPLE_PRCLASS,
@@ -60,12 +61,13 @@ public abstract class PrClass {
 		this.portId = id ++;
 	}
 	
-	protected PrClass(String name, boolean online, boolean learning, PrClassType type) {
+	protected PrClass(String name, boolean online, boolean learning, PrClassType type, PrClassMetrics metrics) {
 		this.name = name;
 		this.online = online;
 		this.portId = id ++;
 		this.online = online;
 		this.learning = learning;
+		this.metrics = metrics;
 		this.type = type;
 		this.support = new PropertyChangeSupport(this);
 		this.configManager =  ConfigurationManager.getInstance();
@@ -141,6 +143,10 @@ public abstract class PrClass {
 
 	public byte getPortId() {
 		return portId;
+	}
+	
+	public PrClassMetrics getPrClassMetrics() {
+		return this.metrics;
 	}
 	
     @Override

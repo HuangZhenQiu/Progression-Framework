@@ -9,6 +9,7 @@ import edu.uci.eecs.wukong.framework.api.Extension;
 import edu.uci.eecs.wukong.framework.model.DataType;
 import edu.uci.eecs.wukong.framework.model.PropertyType;
 import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
+import edu.uci.eecs.wukong.framework.prclass.PrClassMetrics;
 
 
 @WuClass(id = 10001)
@@ -21,8 +22,8 @@ public class SwitchPrClass extends PipelinePrClass {
 	@WuProperty(id = 2, type = PropertyType.Output, dtype = DataType.Short)
 	private Double threshold;
 	
-	public SwitchPrClass() {
-		super("SwitchPlugin");
+	public SwitchPrClass(PrClassMetrics metrics) {
+		super("SwitchPlugin", metrics);
 	}
 	public List<Extension> registerExtension() {
 		List<Extension> extensions = new ArrayList<Extension>();

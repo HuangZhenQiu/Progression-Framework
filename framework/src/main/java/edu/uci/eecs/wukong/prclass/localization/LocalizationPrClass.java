@@ -9,6 +9,7 @@ import edu.uci.eecs.wukong.framework.api.Extension;
 import edu.uci.eecs.wukong.framework.model.DataType;
 import edu.uci.eecs.wukong.framework.model.PropertyType;
 import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
+import edu.uci.eecs.wukong.framework.prclass.PrClassMetrics;
 
 @WuClass(id = 10114)
 public class LocalizationPrClass extends PipelinePrClass{
@@ -33,8 +34,8 @@ public class LocalizationPrClass extends PipelinePrClass{
 	private double[] sensors = {1.0, 1.0, 1.0};
 	
 
-	protected LocalizationPrClass() {
-		super("LocalizationPrClass");
+	protected LocalizationPrClass(PrClassMetrics metrics) {
+		super("LocalizationPrClass", metrics);
 	}
 
 	@Override

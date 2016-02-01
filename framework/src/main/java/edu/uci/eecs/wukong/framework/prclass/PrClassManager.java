@@ -41,6 +41,7 @@ public class PrClassManager implements PrClassInitListener {
 	private SceneManager contextManager;
 	private PrClassPropertyMonitor propertyMonitor;
 	private Pipeline pipeline;
+	private PrClassMetrics prClassMetrics;
 	private Timer timer;
 	private Map<PrClass, SimpleTimerTask> prClassTimerMap;
 	private List<PrClass> plugins;
@@ -52,10 +53,12 @@ public class PrClassManager implements PrClassInitListener {
 	private List<String> pluginNames;
 	private List<StateUpdateListener> listeners;
 	
-	public PrClassManager(WKPF wkpf, SceneManager contextManager, Pipeline pipeline, BufferManager bufferManager) {
+	public PrClassManager(WKPF wkpf, SceneManager contextManager,
+			Pipeline pipeline, BufferManager bufferManager, PrClassMetrics prClassMetrics) {
 		this.bufferManager = bufferManager;
 		this.contextManager = contextManager;
 		this.pipeline = pipeline;
+		this.prClassMetrics = prClassMetrics;
 		this.timer = new Timer();
 		this.propertyMonitor = new PrClassPropertyMonitor(this);
 		this.prClassTimerMap = new HashMap<PrClass, SimpleTimerTask>();
@@ -130,7 +133,8 @@ public class PrClassManager implements PrClassInitListener {
 				// A temporary solution for easier mapping and deployment.
 				// Create an instance for each plugin classes as hard WuClass.
 				Constructor<?> constructor = c.getConstructor();
-				PrClass plugin = (PrClass) constructor.newInstance();
+				PrClass plugin = (PrClass) constructor.newInstance(prClassMetrics);
+				prClassMetrics.addPrClassMeter(plugin);
 				plugins.add(plugin);
 				WuObjectModel wuObjectModel = new WuObjectModel(wuClassModel, plugin);
 				wkpf.addWuObject(plugin.getPortId(), wuObjectModel);

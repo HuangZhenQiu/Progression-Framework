@@ -12,6 +12,7 @@ import edu.uci.eecs.wukong.framework.api.metrics.Counter;
 import edu.uci.eecs.wukong.framework.api.metrics.Gauge;
 import edu.uci.eecs.wukong.framework.api.metrics.Meter;
 import edu.uci.eecs.wukong.framework.api.metrics.Metrics;
+import edu.uci.eecs.wukong.framework.api.metrics.Timer;
 import edu.uci.eecs.wukong.framework.api.metrics.ReadableMetricsRegistry;
 import edu.uci.eecs.wukong.framework.api.metrics.ReadableMetricsRegistryListener;
 
@@ -84,6 +85,23 @@ public class MetricsRegistryHolder implements ReadableMetricsRegistry {
 		Meter created = (Meter) metricsMap.get(group).get(meter.getName());
 		for (ReadableMetricsRegistryListener listener : listeners) {
 			listener.onMeter(group, created);
+		}
+		return created;
+	}
+	
+	@Override
+	public Timer newTimer(String group, String name) {
+		LOGGER.debug(String.format("Creating new timer %s %s", group, name));
+		return newTimer(group, new Timer(name));
+	}
+	
+	@Override
+	public Timer newTimer(String group, Timer timer) {
+		LOGGER.debug(String.format("Add new timer %s %s %s", group, timer.getName(), timer));
+		putAndGetGroup(group).putIfAbsent(timer.getName(), timer);
+		Timer created = (Timer) metricsMap.get(group).get(timer.getName());
+		for (ReadableMetricsRegistryListener listener : listeners) {
+			listener.onTimer(group, created);
 		}
 		return created;
 	}

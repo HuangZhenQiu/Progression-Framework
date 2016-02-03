@@ -6,4 +6,6 @@ public interface ReadableMetricsRegistryListener {
 	void onGauge(String group, Gauge<?> gauge);
 	
 	void onMeter(String group, Meter meter);
+	
+	void onTimer(String group, Timer timer);
 }

@@ -2,8 +2,9 @@ package edu.uci.eecs.wukong.framework.pipeline;
 
 
 import edu.uci.eecs.wukong.framework.api.metrics.MetricsRegistry;
-import edu.uci.eecs.wukong.framework.graph.ExtensionPoint;
 import edu.uci.eecs.wukong.framework.api.metrics.Gauge;
+import edu.uci.eecs.wukong.framework.api.metrics.Timer;
+import edu.uci.eecs.wukong.framework.graph.ExtensionPoint;
 import edu.uci.eecs.wukong.framework.metrics.MetricsHelper;
 import edu.uci.eecs.wukong.framework.util.DaemanThreadFactory;
 
@@ -26,12 +27,14 @@ public class PipelineMetrics extends MetricsHelper implements Runnable{
 	// protected Map<String, Map<WuObjectModel, Timer>> extensionTimers;
 	// extension point name - current queue size
 	protected Map<String, Gauge<Integer>> extensionQueueLagGauges;
+	protected Map<String, Timer> extensionExtentionTimes;
 	
 	
 	public PipelineMetrics(MetricsRegistry registry) {
 		super(registry);
 		this.extensionPointMap = new HashMap<String, ExtensionPoint>();
 		this.extensionQueueLagGauges = new ConcurrentHashMap<String, Gauge<Integer>>();
+		this.extensionExtentionTimes = new ConcurrentHashMap<String, Timer>();
 	}
 	
 	public void start() {

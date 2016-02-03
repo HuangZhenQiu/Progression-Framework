@@ -4,6 +4,7 @@ import edu.uci.eecs.wukong.framework.api.metrics.MetricsRegistry;
 import edu.uci.eecs.wukong.framework.api.metrics.Counter;
 import edu.uci.eecs.wukong.framework.api.metrics.Gauge;
 import edu.uci.eecs.wukong.framework.api.metrics.Meter;
+import edu.uci.eecs.wukong.framework.api.metrics.Timer;
 
 public abstract class MetricsHelper {
 	private String group;
@@ -26,6 +27,10 @@ public abstract class MetricsHelper {
 	
 	public Meter newMeter(String name) {
 		return metricsGroup.newMeter(name);
+	}
+	
+	public Timer newTimer(String name) {
+		return metricsGroup.newTimer(name);
 	}
 	
 	protected String getPrefix() {

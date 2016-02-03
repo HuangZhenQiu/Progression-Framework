@@ -3,6 +3,7 @@ package edu.uci.eecs.wukong.framework.metrics;
 import edu.uci.eecs.wukong.framework.api.metrics.Counter;
 import edu.uci.eecs.wukong.framework.api.metrics.Gauge;
 import edu.uci.eecs.wukong.framework.api.metrics.Meter;
+import edu.uci.eecs.wukong.framework.api.metrics.Timer;
 import edu.uci.eecs.wukong.framework.api.metrics.MetricsRegistry;
 
 public class MetricsGroup {
@@ -26,5 +27,9 @@ public class MetricsGroup {
 	
 	public Meter newMeter(String name) {
 		return registry.newMeter(groupName, (prefix + name).toLowerCase());
+	}
+	
+	public Timer newTimer(String name) {
+		return registry.newTimer(groupName, (prefix + name).toLowerCase());
 	}
 }

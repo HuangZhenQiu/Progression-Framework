@@ -10,7 +10,7 @@ import edu.uci.eecs.wukong.framework.factor.BaseFactor;
  */
 public class CheckpointableModel<T extends BaseFactor> {
 	private String topic;
-	private T model;
+	private BaseFactor model;
 	
 	protected CheckpointableModel(T model) {
 		this.model = model;
@@ -21,18 +21,18 @@ public class CheckpointableModel<T extends BaseFactor> {
 	 * @return json representation of the model
 	 */
 	protected String checkpoint() {
-		return "";
+		return model.toString();
 	}
 	
 	/**
 	 * Used by CheckPointManager to restore the model from historical message
 	 * @param content json representation of the model
 	 */
-	protected void restore(String content) {
-		
+	protected void restore(BaseFactor factor) {
+		this.model = factor;
 	}
 	
 	public T getModel() {
-		return model;
+		return (T)model;
 	}
 }

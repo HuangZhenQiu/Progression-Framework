@@ -14,6 +14,8 @@ public abstract class MetricsVisitor {
 	
 	public abstract void meter(Meter meter);
 	
+	public abstract void timer(Timer timer);
+	
 	public void visit(Metrics metrics) {
 		if (metrics instanceof Counter) {
 			counter((Counter) metrics);
@@ -21,6 +23,8 @@ public abstract class MetricsVisitor {
 			gauge((Gauge<?>) metrics);
 		} else if (metrics instanceof Meter) {
 			meter((Meter) metrics);
+		} else if (metrics instanceof Timer) {
+			timer((Timer) metrics);
 		}
 	}
 }

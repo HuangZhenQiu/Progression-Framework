@@ -1,7 +1,8 @@
 package edu.uci.eecs.wukong.framework.model;
 
 import java.nio.ByteBuffer;
-import java.util.Arrays;
+
+import com.google.common.annotations.VisibleForTesting;
 
 import edu.uci.eecs.wukong.framework.mptn.MPTN;
 import edu.uci.eecs.wukong.framework.util.WKPFUtil;
@@ -17,6 +18,12 @@ public class MPTNPackage {
 	private int length;
 	private byte[] payload;
 	
+	@VisibleForTesting
+	public MPTNPackage(int length) {
+		this.length = length;
+	}
+	
+	
 	public MPTNPackage(ByteBuffer buffer) throws Exception {
 		byte[] header = new byte[MPTN.MPTN_HEADER_LENGTH];
 		buffer.get(header);
@@ -28,8 +35,10 @@ public class MPTNPackage {
 		this.soucePort = WKPFUtil.getLittleEndianShort(header, 7);
 		this.type = buffer.get();
 		this.length = (int) buffer.get();
-		this.payload = new byte[length];
-		buffer.get(payload);
+		if (length != 0) {
+			this.payload = new byte[length];
+			buffer.get(payload);
+		}
 	}
 
 	public int getH1() {

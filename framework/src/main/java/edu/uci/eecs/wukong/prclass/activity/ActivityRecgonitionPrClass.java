@@ -16,20 +16,19 @@ public class ActivityRecgonitionPrClass extends PipelinePrClass {
 
 	@WuProperty(id = 0, name = "input", type = PropertyType.Input, dtype = DataType.Buffer)
 	private short input;
-	@WuProperty(id = 0, name = "input", type = PropertyType.Output)
+	@WuProperty(id = 0, name = "output", type = PropertyType.Output)
 	private short output;
 	
 	protected ActivityRecgonitionPrClass(PrClassMetrics metrics) {
 		super("ActivityRecgonition", metrics);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	public List<Extension> registerExtension() {
 		List<Extension> extensions = new ArrayList<Extension> ();
 		extensions.add(new ActivityFeatureExtractionExtension(this));
-		extensions.add(new ActivityPatternLearningExtension(this));	
-		return null;
+		extensions.add(new ActivityProgressionExtension(this));	
+		return extensions;
 	}
 
 	@Override

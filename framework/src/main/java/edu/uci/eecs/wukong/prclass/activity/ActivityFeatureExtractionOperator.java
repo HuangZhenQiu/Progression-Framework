@@ -3,14 +3,14 @@ package edu.uci.eecs.wukong.prclass.activity;
 import java.util.List;
 
 import edu.uci.eecs.wukong.framework.buffer.DataPoint;
-import edu.uci.eecs.wukong.framework.operator.MimoOperator;
+import edu.uci.eecs.wukong.framework.operator.SimoOperator;
 
-public class ActivityFeatureExtractionOperator extends MimoOperator<Short> {
+public class ActivityFeatureExtractionOperator extends SimoOperator<Short> {
 
 	@Override
-	public List<Short> operate(List<List<DataPoint<Short>>> data) {
-		// TODO Auto-generated method stub
+	public List<Short> operate(List<DataPoint<Short>> data) {
+		
+		
 		return null;
 	}
-
 }

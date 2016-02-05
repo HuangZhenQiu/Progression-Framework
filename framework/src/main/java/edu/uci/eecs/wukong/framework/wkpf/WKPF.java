@@ -429,6 +429,8 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 			bufferManager.addData(npp, System.currentTimeMillis(), value);
 		} else if (wuproperty.getDtype().equals(DataType.Channel)){
 			bufferManager.addRealTimeData(npp, value);
+		} else if (wuproperty.getDtype().equals(DataType.MixedBuffer)) {
+			
 		}
 		
 		//TODO (Peter Huang) return error code, when problem happens

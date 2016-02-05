@@ -4,6 +4,8 @@ import edu.uci.eecs.wukong.framework.buffer.BufferManager;
 import edu.uci.eecs.wukong.framework.buffer.DataPoint;
 import edu.uci.eecs.wukong.framework.operator.Operator;
 import edu.uci.eecs.wukong.framework.operator.SisoOperator;
+import edu.uci.eecs.wukong.framework.operator.SimoOperator;
+import edu.uci.eecs.wukong.framework.operator.MimoOperator;
 import edu.uci.eecs.wukong.framework.operator.MisoOperator;
 import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
 import edu.uci.eecs.wukong.framework.model.NPP;
@@ -41,12 +43,19 @@ public class FeatureChooser {
 				List<DataPoint<Short>> data = bufferManager.getData(nppEntry.getKey(), nppEntry.getValue());
 				dataList.add(data);
 			}
-			if (dataList.size() == 1) {
-				SisoOperator singleOperator = (SisoOperator) entry.getKey();
+			
+			if (entry.getKey() instanceof SisoOperator) {
+				SisoOperator<Short> singleOperator = (SisoOperator<Short>) entry.getKey();
 				result.add(singleOperator.operate(dataList.get(0)));
-			} else {
-				MisoOperator multipleOperator = (MisoOperator) entry.getKey();
+			} else if (entry.getKey() instanceof MisoOperator ) {
+				MisoOperator<Short> multipleOperator = (MisoOperator<Short>) entry.getKey();
 				result.add(multipleOperator.operate(dataList));
+			} else if (entry.getKey() instanceof MimoOperator) {
+				MimoOperator<Short> mimoOperator = (MimoOperator<Short>) entry.getKey();
+				result.addAll(mimoOperator.operate(dataList));
+			} else if (entry.getKey() instanceof SimoOperator) {
+				SimoOperator<Short> simoOperator = (SimoOperator<Short>) entry.getKey();
+				result.addAll(simoOperator.operate(dataList.get(0)));
 			}
 		}
 		

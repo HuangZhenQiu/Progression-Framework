@@ -71,6 +71,7 @@ project(':framework') {
      compile "nz.ac.waikato.cms.weka:weka-dev:$wekaVersion"
      compile "mockit:jmockit:$mockitVersion"
      compile "org.ow2.chameleon.fuchsia.base.philips-hue:org.ow2.chameleon.fuchsia.base.philips-hue.huedsk-bundle:$hueVersion"
+     compile "tw.edu.ntu.csie:libsvm:$libsvm"
   }
 }
 

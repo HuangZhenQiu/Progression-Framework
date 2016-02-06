@@ -1,11 +1,19 @@
 package edu.uci.eecs.wukong.framework.buffer;
 
+import edu.uci.eecs.wukong.framework.model.NPP;
+
 public class DataPoint<T> {
+	private NPP npp;
 	private int deviation;
 	private T value;
-	public DataPoint(int deviation, T value) {
+	
+	public DataPoint(NPP npp, int deviation, T value) {
 		this.deviation = deviation;
 		this.value = value;
+	}
+	
+	public NPP getNPP() {
+		return this.npp;
 	}
 		
 	public int getDeviation() {

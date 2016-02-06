@@ -21,4 +21,5 @@ ext {
   wekaVersion = "3.7.5"
   mockitVersion = "0.998"
   hueVersion = "0.0.4"
+  libsvm = "3.17"
 }

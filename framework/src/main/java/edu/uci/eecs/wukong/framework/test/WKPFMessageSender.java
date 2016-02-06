@@ -3,6 +3,7 @@ package edu.uci.eecs.wukong.framework.test;
 import edu.uci.eecs.wukong.framework.model.WKPFPackage;
 import edu.uci.eecs.wukong.framework.mptn.MPTN;
 import edu.uci.eecs.wukong.framework.nio.NIOUdpClient;
+import edu.uci.eecs.wukong.framework.test.LoadGenerator.Location;
 import edu.uci.eecs.wukong.framework.util.Configuration;
 import edu.uci.eecs.wukong.framework.util.MPTNUtil;
 import edu.uci.eecs.wukong.framework.util.WKPFUtil;
@@ -113,6 +114,16 @@ public class WKPFMessageSender {
 			collector.send(port, (long)this.sequence);
 		}
 		send(MPTN.HEADER_TYPE_1, MPTN.MPTN_MSQTYPE_FWDREQ, buffer.array());
+	}
+	
+	
+	public void sendWriteLocationProperty(byte port, short wuClassId,
+			byte propertyId, Location location, boolean collect) {
+		
+	}
+	
+	public void sendWriteActivityProperty() {
+		
 	}
 	
 	public void reprogram(byte[] payload) {

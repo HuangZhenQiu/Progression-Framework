@@ -7,6 +7,10 @@ import java.util.List;
  * This FBP builder aims to test the throughput of single localization prclass.
  * In the mock fbp, there are three components lays in a line. 
  * 
+ * 
+ * Mock data generator ---->  LocalizationPrClass -----> Performance Collector
+ *       PS                        Raspberry pi                PS                         
+ * 
  * @author peter
  *
  */

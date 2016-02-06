@@ -22,6 +22,41 @@ public class ActivityRecgonitionPrClass extends PipelinePrClass {
 	protected ActivityRecgonitionPrClass(PrClassMetrics metrics) {
 		super("ActivityRecgonition", metrics);
 	}
+	
+	public enum ACTIVITY_TYPE {
+		BATHE,
+		BED_TOI_LET_TRANSITION,
+		COOK,
+		COOK_BREAKFAST,
+		COOK_DINNER,
+		COOK_LUNCH,
+		DRESS,
+		EAT,
+		EAT_BREAKFAST,
+		EAT_DINNER,
+		EAT_LUNCH,
+		ENTER_HOME,
+		ENTERTAIN_GUESTS,
+		EVENING_MDES,
+		GROOM,
+		LEAVE_HOME,
+		MORNING_MEDS,
+		PERSOANL_HYGIENE,
+		PHONE,
+		RELAX,
+		SLEEP,
+		SLEEP_OUT_OF_BED,
+		TAKE_MEDICINE,
+		TOILET,
+		WASH_BREAKFAST_DISHES,
+		WASH_DINNER_DISHES,
+		WASH_DISHES,
+		WASH_LUNCH_DISHES,
+		WATCH_TV,
+		WORK_AT_TABLE,
+		WORK_ON_COMPUTER,
+		WORK
+	}
 
 	@Override
 	public List<Extension> registerExtension() {
@@ -36,6 +71,13 @@ public class ActivityRecgonitionPrClass extends PipelinePrClass {
 		List<String> topics = new ArrayList<String> ();
 		topics.add("Acvitiy_Model");
 		return topics;
+	}
+	
+	public void setOutput(short value) {
+		if (value != output) {
+			support.firePropertyChange("output", output, value);
+			output = value;
+		}
 	}
 
 }

@@ -1,6 +1,5 @@
 package edu.uci.eecs.wukong.framework.test;
 
-import java.lang.Number;
 import java.util.Random;
 import java.util.TimerTask;
 
@@ -8,7 +7,7 @@ import java.util.TimerTask;
  * Simulate a sensor to periodically send value to progression server as workload.
  * 
  */
-public abstract class LoadGenerator<T extends Number> extends TimerTask {
+public abstract class LoadGenerator<T> extends TimerTask {
 	private short wuclassId;
 	private byte port;
 	private byte propertyId;
@@ -33,11 +32,13 @@ public abstract class LoadGenerator<T extends Number> extends TimerTask {
 	@Override
 	public void run() {
 		if (sender != null) {
-			Number value = nextValue();
+			Object value = nextValue();
 			if (type.isAssignableFrom(Byte.class) || type.isAssignableFrom(Boolean.class)) {
 				sender.sendWriteByteProperty(port, wuclassId, propertyId, (byte)value, collect);
-			} else {
+			} else if (type.isAssignableFrom(Short.class)){
 				sender.sendWriteShortProperty(port, wuclassId, propertyId, (short)value, collect);
+			} else if (type.isAssignableFrom(Location.class)) {
+				sender.sendWriteLocationProperty(port, wuclassId, propertyId, (Location)value, collect);
 			}
 		}
 	}
@@ -64,5 +65,55 @@ public abstract class LoadGenerator<T extends Number> extends TimerTask {
 		public Short nextValue() {
 			return (short) (random.nextInt() % Short.MAX_VALUE);
 		}
+	}
+	
+	public static class Location {
+		private double x;
+		private double y;
+		private double z;
+		public Location(double x, double y, double z) {
+			this.x = x;
+			this.y = y;
+			this.z = z;
+		}
+	}
+	
+	public static class RondomLocationGenerator extends LoadGenerator<Location> {
+		private Random random;
+		public RondomLocationGenerator(short wuclassId, byte port, byte propertyId, boolean collect) {
+			super(wuclassId, port, propertyId, Location.class, collect);
+		}
+		
+		@Override
+		public Location nextValue() {
+			Location location = new Location(
+					random.nextDouble(), random.nextDouble(), random.nextDouble());
+			return location;
+		}
+	}
+	
+	public static class Activity {
+		private long timestamp;
+		private short deviceId;
+		private double value;
+		
+		public Activity() {
+			
+		}
+	}
+	
+	public static class RandomActivityGenerator extends LoadGenerator<Activity> {
+		private Random random;
+		public RandomActivityGenerator(short wuclassId, byte port, byte propertyId,
+				Class<edu.uci.eecs.wukong.framework.test.LoadGenerator.Activity> type, boolean collect) {
+			super(wuclassId, port, propertyId, type, collect);
+			// TODO Auto-generated constructor stub
+		}
+		
+		@Override
+		public Activity nextValue() {
+			return new Activity();
+		}
+		
 	}
 }

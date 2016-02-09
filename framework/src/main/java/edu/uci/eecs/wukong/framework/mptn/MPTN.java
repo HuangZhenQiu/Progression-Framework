@@ -1,6 +1,6 @@
 package edu.uci.eecs.wukong.framework.mptn;
 
-import java.net.Inet4Address;
+import java.net.InetAddress;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
@@ -98,7 +98,7 @@ public class MPTN implements MPTNMessageListener{
 		listeners = new ArrayList<WKPFMessageListener>();
 		this.hasNodeId = false;
 		try {
-			this.serverAddress = Inet4Address.getLocalHost().getHostAddress();
+			this.serverAddress = InetAddress.getLocalHost().getHostAddress();
 			this.gatewayClient = new NIOUdpClient(
 					configuration.getGatewayIP(), configuration.getGatewayPort());
 			this.server = new NIOUdpServer(configuration.getProgressionServerPort());

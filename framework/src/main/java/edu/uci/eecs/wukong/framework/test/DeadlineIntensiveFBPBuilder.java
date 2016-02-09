@@ -3,6 +3,8 @@ package edu.uci.eecs.wukong.framework.test;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.uci.eecs.wukong.framework.test.LoadGenerator.Location;
+
 /**
  * This FBP builder aims to test the throughput of single localization prclass.
  * In the mock fbp, there are three components lays in a line. 
@@ -16,9 +18,8 @@ import java.util.List;
  */
 public class DeadlineIntensiveFBPBuilder extends MockFBPBuilder {
 	// The meta info of the localization PrClass
-	private static final short LOCALIZATION_WUCLASS_ID = 10115;
-	private static final int PROGRESSION_SERVER_LONG_ADDRESS = 2;
-	private static final byte LOCALIZATION_PRCLASS_PORT = 16;
+	private static final short LOCALIZATION_WUCLASS_ID = 10114;
+	private static final byte LOCALIZATION_PRCLASS_PORT = 15;
 	
 	// The fake wuobject that will generate signal to localization prclass
 	private static final short MOCK_MOBILE_INPUT_WUCLASS_ID = 20114;
@@ -70,15 +71,9 @@ public class DeadlineIntensiveFBPBuilder extends MockFBPBuilder {
 	@Override
 	protected List<LoadGenerator<?>> createLoadGenerator() {
 		List<LoadGenerator<?>> loadGenerators = new ArrayList<LoadGenerator<?>> ();
-		LoadGenerator<Short> signalXGenerator = new LoadGenerator.RandomShortGenerator(
-				LOCALIZATION_WUCLASS_ID, LOCALIZATION_PRCLASS_PORT, (byte)1 , false);
-		LoadGenerator<Short> signalYGenerator = new LoadGenerator.RandomShortGenerator(
-				LOCALIZATION_WUCLASS_ID, LOCALIZATION_PRCLASS_PORT, (byte)2 , false);
-		LoadGenerator<Short> signalZGenerator = new LoadGenerator.RandomShortGenerator(
-				LOCALIZATION_WUCLASS_ID, LOCALIZATION_PRCLASS_PORT, (byte)3 , true);
-		loadGenerators.add(signalXGenerator);
-		loadGenerators.add(signalYGenerator);
-		loadGenerators.add(signalZGenerator);
+		LoadGenerator<Location> locationGenerator = new LoadGenerator.RondomLocationGenerator(
+				LOCALIZATION_WUCLASS_ID, LOCALIZATION_PRCLASS_PORT, (byte)0 , false);
+		loadGenerators.add(locationGenerator);
 		
 		return loadGenerators;
 	}

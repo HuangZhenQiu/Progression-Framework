@@ -83,8 +83,8 @@ public class BufferManager {
 						for (Extension extension : prClass.registerExtension()) {
 							if (extension instanceof Channelable) {
 								
-								this.createShortChannel(npp);
-								Channelable channelable = (Channelable)extension;
+								this.createChannel(npp);
+								Channelable<?> channelable = (Channelable<?>)extension;
 								this.addChannelListener(npp, channelable);
 								LOGGER.info("Added channel for PrClass " + classModel.getWuClassId());
 							} else {
@@ -96,16 +96,16 @@ public class BufferManager {
 					} else if (property.getPtype().equals(PropertyType.Input)
 							&& property.getDtype().equals(DataType.Buffer)) {
 						if (property.getType().equals(short.class)) {
-							createShortBuffer(npp, 1000, 100, 10);
+							createBuffer(npp, ShortUnit.class, 2, 1000, 100, 10);
 						} else if (property.getType().equals(byte.class)) {
-							createByteBuffer(npp, 1000, 100, 10);
+							createBuffer(npp, ByteUnit.class, 1, 1000, 100, 10);
 						}
 					}
 				}
 			} else if (classModel.getType().equals(PrClass.PrClassType.SIMPLE_PRCLASS)) {
 				for (WuPropertyModel property : classModel.getProperties()) {
 					NPP npp = new NPP(mptn.getLongAddress(), model.getPort(), property.getId());
-					this.createShortChannel(npp);
+					this.createChannel(npp);
 					if (property.getPtype().equals(PropertyType.Input)) {
 						this.addChannelFieldHook(npp, property.getName(), model);
 					} 					
@@ -149,54 +149,40 @@ public class BufferManager {
 		}
 	}
 	
-	private boolean createByteBuffer(NPP key,
+	private <T, E extends BufferUnit<T>> boolean createBuffer(NPP key, Class<E> type, int unitSize,
 			int capacity, int timeUnits, int interval) {
 		if(bufferMap.containsKey(key)) {
 			return false;
 		} 
-		DoubleTimeIndexDataBuffer<Byte, ByteUnit> buffer =
-				new DoubleTimeIndexDataBuffer<Byte, ByteUnit>(key, ByteUnit.class, capacity, timeUnits, interval);
+		
+		DoubleTimeIndexDataBuffer<T, E> buffer =
+				new DoubleTimeIndexDataBuffer<T, E>(key, type, unitSize, capacity, timeUnits, interval);
 		
 		bufferMap.put(key, buffer);
 		timer.scheduleAtFixedRate(buffer.getIndexer(), 1000, buffer.getInterval());
 		metrics.bufferCounter.set(bufferMap.size());
-		LOGGER.info("Created Byte Buffer with key : " + key);
+		LOGGER.info("Created " + type.getSimpleName() + " Buffer with key : " + key);
 		return true;
 	}
 	
-	private boolean createShortBuffer(NPP key,
-			int capacity, int timeUnits, int interval) {
-		if(bufferMap.containsKey(key)) {
-			return false;
-		} 
-		DoubleTimeIndexDataBuffer<Short, ShortUnit> buffer =
-				new DoubleTimeIndexDataBuffer<Short, ShortUnit>(key, ShortUnit.class, capacity, timeUnits, interval);
-		
-		bufferMap.put(key, buffer);
-		timer.scheduleAtFixedRate(buffer.getIndexer(), 1000, buffer.getInterval());
-		metrics.bufferCounter.set(bufferMap.size());
-		LOGGER.info("Created Short Buffer with key : " + key);
-		return true;
-	}
-	
-	private boolean createShortChannel(NPP key) {
+	private <T> boolean createChannel(NPP key) {
 		if (channelMap.containsKey(key)) {
 			return false;
 		}
 		
-		Channel<Short> channel = new Channel<Short>(key);
+		Channel<T> channel = new Channel<T>(key);
 		channelMap.put(key, channel);
 		metrics.bufferCounter.set(channelMap.size());
-		LOGGER.info("Created Short Channel with key : " + key);
+		LOGGER.info("Created Channel with key : " + key);
 		return true;
 	}
 	
-	public boolean addChannelListener(NPP key, Channelable listener) {
+	public <T> boolean addChannelListener(NPP key, Channelable<T> listener) {
 		if (!channelMap.containsKey(key)) {
 			return false;
 		}
 		
-		Channel<?> channel = channelMap.get(key);
+		Channel<T> channel = (Channel<T>)channelMap.get(key);
 		channel.addListener(listener);
 		return true;
 	}
@@ -234,18 +220,18 @@ public class BufferManager {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public void addRealTimeData(NPP key, short value) {
+	public <T> void addRealTimeData(NPP key, T value) {
 		if(!channelMap.containsKey(key)) {
 			LOGGER.error("Try to insert into a channel doesn't exist:" + key);
 			return;
 		}
 
-		Channel<Short> channel = (Channel<Short>)channelMap.get(key);
+		Channel<T> channel = (Channel<T>)channelMap.get(key);
 		channel.append(value);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public <T, E extends BufferUnit<T>> void addData(NPP key, long time, T value) throws IllegalArgumentException {
+	public <T, E extends BufferUnit<T>> void addData(NPP key, long time, E value) throws IllegalArgumentException {
 		if(!bufferMap.containsKey(key)) {
 			LOGGER.error("Try to insert into a buffer doesn't exist:" + key);
 		}

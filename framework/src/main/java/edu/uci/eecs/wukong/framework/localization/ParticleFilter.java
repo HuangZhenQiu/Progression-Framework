@@ -56,12 +56,12 @@ public class ParticleFilter {
 	private void sampleFromTransitionModel(Particle p, int action, double value) {
         if (action==ACTION_MOVE){
 			// value is the distance of the movement
-			// TODO: fill out
-
+        	double newX = p.getX() + value * Math.cos(p.getA());
+        	double newY = p.getY() + value * Math.sin(p.getA()); 
+        	p.setX(newX);
+        	p.setY(newY);
         } else if (action==ACTION_ROTATE){
-			// value is the angle of the rotation
-			// TODO: fill out
-
+        	p.setA(value);
         }
 		
 	}

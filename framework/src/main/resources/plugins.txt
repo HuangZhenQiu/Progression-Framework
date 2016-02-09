@@ -12,5 +12,6 @@ icsdemo.ICSDemoQPrClass
 weather.WeatherPrClass
 buffer.BufferEnabledPrClass
 occupancy.OccupancyDetection
-simple.SimpleInputPrClass
+localization.LocalizationPrClass
 activity.ActivityRecgonitionPrClass
+simple.SimpleInputPrClass

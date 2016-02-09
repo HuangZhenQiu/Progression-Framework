@@ -85,7 +85,7 @@ public class WKPFMessageSender {
 	
 	public void sendWriteByteProperty(byte port, short wuClassId, byte propertyId, byte value, boolean collect) {
 		this.sequence++;
-		ByteBuffer buffer = ByteBuffer.allocate(9); // include dummy piggyback count 0
+		ByteBuffer buffer = ByteBuffer.allocate(6); // include dummy piggyback count 0
 		appendMetaData(buffer, port, wuClassId, propertyId);
 		buffer.put(WKPFUtil.WKPF_PROPERTY_TYPE_REFRESH_RATE);
 		buffer.put(value);
@@ -97,18 +97,18 @@ public class WKPFMessageSender {
 	
 	public void sendWriteLocationProperty(byte port, short wuClassId, byte propertyId, Location location, boolean collect) {
 		this.sequence++;
-		ByteBuffer buffer = ByteBuffer.allocate(32); // include dummy piggyback count 0
+		ByteBuffer buffer = ByteBuffer.allocate(17); // include dummy piggyback count 0
 		appendMetaData(buffer, port, wuClassId, propertyId);
 		buffer.put(WKPFUtil.WKPF_PROPERTY_TYPE_LOCATION);
-		buffer.putDouble(location.getX());
-		buffer.putDouble(location.getY());
-		buffer.putDouble(location.getZ());
+		buffer.putFloat(location.getX());
+		buffer.putFloat(location.getY());
+		buffer.putFloat(location.getZ());
 		send(MPTN.HEADER_TYPE_1, WKPFUtil.WKPF_WRITE_PROPERTY, buffer.array());
 	}
 	
 	public void sendWriteActivityProperty(byte port, short wuClassId, byte propertyId, Activity activity, boolean collect) {
 		this.sequence++;
-		ByteBuffer buffer = ByteBuffer.allocate(26);
+		ByteBuffer buffer = ByteBuffer.allocate(23);
 		appendMetaData(buffer, port, wuClassId, propertyId);
 		buffer.put(WKPFUtil.WKPF_PROPERTY_TYPE_LOCATION);
 		buffer.putLong(activity.getTimeStamp());
@@ -119,7 +119,7 @@ public class WKPFMessageSender {
 	
 	public void sendWriteShortProperty(byte port, short wuClassId, byte propertyId, short value, boolean collect) {
 		this.sequence++;
-		ByteBuffer buffer = ByteBuffer.allocate(10); // include dummy piggyback count 0
+		ByteBuffer buffer = ByteBuffer.allocate(7); // include dummy piggyback count 0
 		appendMetaData(buffer, port, wuClassId, propertyId);
 		buffer.put(WKPFUtil.WKPF_PROPERTY_TYPE_SHORT);
 		buffer.putShort(value);
@@ -131,11 +131,9 @@ public class WKPFMessageSender {
 	
 	
 	private void appendMetaData(ByteBuffer buffer, byte port, short wuClassId, byte propertyId) {
-		buffer.put(WKPFUtil.WKPF_WRITE_PROPERTY);
-		buffer.put((byte) (this.sequence % 256));
-		buffer.put((byte) (this.sequence / 256));
 		buffer.put(port);
-		buffer.putShort(wuClassId);
+		buffer.put((byte) (wuClassId % 256));
+		buffer.put((byte) (wuClassId / 256));
 		buffer.put(propertyId);
 	}
 	

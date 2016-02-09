@@ -10,13 +10,14 @@ import edu.uci.eecs.wukong.framework.model.DataType;
 import edu.uci.eecs.wukong.framework.api.Extension;
 import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
 import edu.uci.eecs.wukong.framework.prclass.PrClassMetrics;
+import edu.uci.eecs.wukong.framework.test.LoadGenerator.Activity;
 
 @WuClass(id = 10115)
 public class ActivityRecgonitionPrClass extends PipelinePrClass {
 
 	@WuProperty(id = 0, name = "input", type = PropertyType.Input, dtype = DataType.Buffer)
-	private short input;
-	@WuProperty(id = 0, name = "output", type = PropertyType.Output)
+	private Activity input;
+	@WuProperty(id = 1, name = "output", type = PropertyType.Output)
 	private short output;
 	
 	public ActivityRecgonitionPrClass(PrClassMetrics metrics) {

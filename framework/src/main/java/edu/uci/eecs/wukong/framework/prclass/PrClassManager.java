@@ -138,6 +138,7 @@ public class PrClassManager implements PrClassInitListener {
 				plugins.add(plugin);
 				WuObjectModel wuObjectModel = new WuObjectModel(wuClassModel, plugin);
 				wkpf.addWuObject(plugin.getPortId(), wuObjectModel);
+				LOGGER.info("Registered " + plugin.getName() +  " in progression server on port " + plugin.getPortId());
 			}
 		}
 		

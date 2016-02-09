@@ -34,16 +34,17 @@ public final class DoubleTimeIndexDataBuffer<T, E extends BufferUnit<T>> {
 		
 	}
 	
-	public DoubleTimeIndexDataBuffer(NPP npp, Class<E> type, int dataCapacity, int timeUnits, int interval){
+	public DoubleTimeIndexDataBuffer(NPP npp, Class<E> type, int unitSize,
+			int dataCapacity, int timeUnits, int interval){
 		this.npp = npp;
 		this.type = type;
 		this.indexBuffer = new TimeIndexBuffer(timeUnits);
-		this.dataBuffer = new DataRingBuffer<T, E>(dataCapacity, type);
+		this.dataBuffer = new DataRingBuffer<T, E>(dataCapacity, unitSize, type);
 		this.interval = interval;
 		this.indexer = new BufferIndexer(this);
 	}
 	
-	public void addElement(long timestampe,  T value) {
+	public void addElement(long timestampe,  E value) {
 		this.dataBuffer.addElement(timestampe, value);
 		logger.info("Data Buffer for " + npp + " Header: " + dataBuffer.getHeader());
 	}
@@ -80,7 +81,7 @@ public final class DoubleTimeIndexDataBuffer<T, E extends BufferUnit<T>> {
 	
 	public List<DataPoint<T>> readDataPoint(int units) {
 		ByteBuffer data = read(units);
-		int size = data.capacity() / DataRingBuffer.DATA_SIZE;
+		int size = data.capacity() / dataBuffer.getUnitSize();
 		List<DataPoint<T>> points = new ArrayList<DataPoint<T>>();
 		while(size > 0) {
 			try {

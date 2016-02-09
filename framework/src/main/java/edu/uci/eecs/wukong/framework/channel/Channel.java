@@ -33,13 +33,13 @@ public class Channel<T> {
 	private final static Logger LOGGER = LoggerFactory.getLogger(PipelinePrClass.class);
 	private NPP key;
 	private Queue<T> queue; // TODO leave it here for user operation optimization
-	private Set<Channelable> listeners;
+	private Set<Channelable<T>> listeners;
 	private Map<Field, Set<WuObjectModel>> fieldMap;
 	
 	public Channel(NPP key) {
 		this.key = key;
 		this.queue = new ArrayDeque<T>();
-		this.listeners = new HashSet<Channelable>();
+		this.listeners = new HashSet<Channelable<T>>();
 		this.fieldMap = new HashMap<Field, Set<WuObjectModel>>();
 	}
 
@@ -56,9 +56,9 @@ public class Channel<T> {
 		return ((ParameterizedType)type).getActualTypeArguments()[0];
 	}
 	
-	public synchronized void append(short data) {
-		ChannelData channelData = new ChannelData(key, data);
-		for (Channelable listener : listeners) {
+	public synchronized void append(T data) {
+		ChannelData<T> channelData = new ChannelData<T>(key, data);
+		for (Channelable<T> listener : listeners) {
 			listener.execute(channelData);
 		}
 		
@@ -73,14 +73,14 @@ public class Channel<T> {
 		}
 	}
 	
-	public synchronized void addListener(Channelable listener) {
+	public synchronized void addListener(Channelable<T> listener) {
 		// Channel will be used only for progression extenson for now.
 		if (listener instanceof AbstractProgressionExtension) {
 			this.listeners.add(listener);
 		}
 	}
 	
-	public synchronized void removeListener(Channelable listener) {
+	public synchronized void removeListener(Channelable<T> listener) {
 		this.listeners.remove(listener);
 	}
 	

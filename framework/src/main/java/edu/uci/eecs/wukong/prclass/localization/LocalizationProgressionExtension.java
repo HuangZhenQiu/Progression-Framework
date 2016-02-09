@@ -6,11 +6,12 @@ import edu.uci.eecs.wukong.framework.api.metrics.Timer;
 import edu.uci.eecs.wukong.framework.extension.AbstractProgressionExtension;
 import edu.uci.eecs.wukong.framework.factor.BaseFactor;
 import edu.uci.eecs.wukong.framework.model.ChannelData;
+import edu.uci.eecs.wukong.framework.test.LoadGenerator.Location;
 import edu.uci.eecs.wukong.framework.localization.ParticleFilter;
 import edu.uci.eecs.wukong.framework.localization.Map;
 
 public class LocalizationProgressionExtension extends AbstractProgressionExtension<LocalizationPrClass> implements
-	Channelable<Short>, FactorExecutable {
+	Channelable<Location>, FactorExecutable {
 	private ParticleFilter filter;
 	private Map map;
 	private boolean inited = false;
@@ -18,10 +19,9 @@ public class LocalizationProgressionExtension extends AbstractProgressionExtensi
 	public LocalizationProgressionExtension(LocalizationPrClass plugin) {
 		super(plugin);
 	}
-	
 
 	@Override
-	public void execute(ChannelData<Short> data) {
+	public void execute(ChannelData<Location> data) {
 		Timer timer = this.prClass.getPrClassMetrics().getTimer(this.prClass, this);
 		if (inited) {
 			long start = System.currentTimeMillis();

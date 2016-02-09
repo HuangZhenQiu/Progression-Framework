@@ -8,19 +8,23 @@ package edu.uci.eecs.wukong.framework.buffer;
  *
  */
 public final class DataRingBuffer<T, E extends BufferUnit<T>> extends RingBuffer {
-	public static final int DATA_SIZE = 6;
 	private long initial;
 	private long last;
+	private int unitSize;
+	private int capacity;
+	private int size;
 	private Class<E> type;
 	
-	public DataRingBuffer(int capacity, Class<E> type) {
-		super(DATA_SIZE * capacity);
+	public DataRingBuffer(int capacity, int unitSize, Class<E> type) {
+		super(unitSize * capacity);
+		this.capacity = capacity;
+		this.unitSize = unitSize;
 		this.type = type;
 		this.initial = 0;
 		this.last = 0;
 	}
 	
-	public synchronized void addElement(long time, T value) {
+	public synchronized void addElement(long time, E value) {
 		if(!(value instanceof BufferUnit)) {
 			throw new IllegalArgumentException("Only support subclass of BufferUnit as type of data.");
 		}
@@ -31,11 +35,20 @@ public final class DataRingBuffer<T, E extends BufferUnit<T>> extends RingBuffer
 		
 		// Add time deviation
 		this.appendInt((int)(time - last));
-		
+		this.append(value.toArray());
 		this.last = time;
+		this.size = (size ++) % capacity;
 	}
 	
 	public int getSize() {
-		return this.buffer.capacity();
+		return this.size;
+	}
+	
+	public int getUnitSize() {
+		return this.unitSize;
+	}
+	
+	public int getCapacity() {
+		return this.capacity;
 	}
  }

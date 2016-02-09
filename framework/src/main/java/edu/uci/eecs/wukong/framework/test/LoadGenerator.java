@@ -81,15 +81,15 @@ public abstract class LoadGenerator<T> extends TimerTask {
 			this.z = z;
 		}
 		
-		public double getX() {
+		public float getX() {
 			return x;
 		}
 		
-		public double getY() {
+		public float getY() {
 			return y;
 		}
 		
-		public double getZ() {
+		public float getZ() {
 			return z;
 		}
 	}
@@ -98,6 +98,7 @@ public abstract class LoadGenerator<T> extends TimerTask {
 		private Random random;
 		public RondomLocationGenerator(short wuclassId, byte port, byte propertyId, boolean collect) {
 			super(wuclassId, port, propertyId, Location.class, collect);
+			this.random = new Random();
 		}
 		
 		@Override
@@ -137,7 +138,7 @@ public abstract class LoadGenerator<T> extends TimerTask {
 		public RandomActivityGenerator(short wuclassId, byte port, byte propertyId,
 				Class<edu.uci.eecs.wukong.framework.test.LoadGenerator.Activity> type, boolean collect) {
 			super(wuclassId, port, propertyId, type, collect);
-			// TODO Auto-generated constructor stub
+			this.random = new Random();
 		}
 		
 		@Override

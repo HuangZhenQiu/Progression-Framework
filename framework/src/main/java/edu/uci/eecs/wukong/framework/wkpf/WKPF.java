@@ -14,7 +14,13 @@ import org.slf4j.LoggerFactory;
 
 import edu.uci.eecs.wukong.framework.util.MPTNUtil;
 import edu.uci.eecs.wukong.framework.util.WKPFUtil;
+import edu.uci.eecs.wukong.framework.buffer.ActivityUnit;
 import edu.uci.eecs.wukong.framework.buffer.BufferManager;
+import edu.uci.eecs.wukong.framework.buffer.BufferUnits.ByteUnit;
+import edu.uci.eecs.wukong.framework.buffer.BufferUnits.ShortUnit;
+import edu.uci.eecs.wukong.framework.buffer.BufferUnits.IntUnit;
+import edu.uci.eecs.wukong.framework.buffer.BufferUnits.FloatUnit;
+import edu.uci.eecs.wukong.framework.buffer.LocationUnit;
 import edu.uci.eecs.wukong.framework.model.ComponentMap;
 import edu.uci.eecs.wukong.framework.model.DataType;
 import edu.uci.eecs.wukong.framework.model.Link;
@@ -30,6 +36,8 @@ import edu.uci.eecs.wukong.framework.model.StateModel;
 import edu.uci.eecs.wukong.framework.model.MonitorDataModel;
 import edu.uci.eecs.wukong.framework.prclass.PrClassInitListener;
 import edu.uci.eecs.wukong.framework.state.StateUpdateListener;
+import edu.uci.eecs.wukong.framework.test.LoadGenerator.Activity;
+import edu.uci.eecs.wukong.framework.test.LoadGenerator.Location;
 import edu.uci.eecs.wukong.framework.monitor.MonitorListener;
 import edu.uci.eecs.wukong.framework.mptn.MPTN;
 
@@ -406,10 +414,6 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 		short wuclassId = WKPFUtil.getBigEndianShort(message, 4);
 		byte propertyId = message[6];
 		byte type = message[7];
-		short value = message[8];
-        if (type != 1) { // If it is not boolean
-            value = (short) ((int)(message[8] & 0xff) << 8 + message[9]);
-        }
 		
 		WuObjectModel wuobject = portToWuObjectMap.get(Byte.valueOf(port));
 		if (wuobject == null) {
@@ -426,11 +430,72 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 		NPP npp = new NPP(this.mptn.getLongAddress(), port, propertyId);
 		// Put data into write container
 		if (wuproperty.getDtype().equals(DataType.Buffer)) {
-			bufferManager.addData(npp, System.currentTimeMillis(), value);
+			if (wuproperty.getType().equals(Byte.class)
+					&& (type == WKPFUtil.WKPF_PROPERTY_TYPE_BOOLEAN)) {
+				byte value =  message[8];
+				bufferManager.addData(npp, System.currentTimeMillis(), new ByteUnit(value));
+			} else if (wuproperty.getType().equals(Short.class)
+					&& (type == WKPFUtil.WKPF_PROPERTY_TYPE_REFRESH_RATE
+					|| type == WKPFUtil.WKPF_PROPERTY_TYPE_SHORT)) {
+				short value = (short) ((int)(message[8] & 0xff) << 8 + message[9]);
+				bufferManager.addData(npp, System.currentTimeMillis(), new ShortUnit(value));
+			} else if (wuproperty.getType().equals(Location.class)
+					&& type == WKPFUtil.WKPF_PROPERTY_TYPE_LOCATION) {
+				LocationUnit location = new LocationUnit();
+				int length = location.size() + 8;
+				if (message.length == length) {
+					location.parse(ByteBuffer.wrap(Arrays.copyOfRange(message, 8, length)));
+					bufferManager.addData(npp, System.currentTimeMillis(), location);
+				} else {
+					LOGGER.error("Broken message for write location property");
+				}
+			} else if (wuproperty.getType().equals(Activity.class)
+					&& type == WKPFUtil.WKPF_PROPERTY_TYPE_ACTIVITY) {
+				ActivityUnit activity = new ActivityUnit();
+				int length = activity.size() + 8;
+				if (message.length == length) {
+					activity.parse(ByteBuffer.wrap(Arrays.copyOfRange(message, 8, length)));
+					bufferManager.addData(npp, System.currentTimeMillis(), activity);
+				} else {
+					LOGGER.error("Broken message for write activity property");
+				}
+				
+			} else {
+				LOGGER.error("Unrecgonized write property message type " + type);
+			}
 		} else if (wuproperty.getDtype().equals(DataType.Channel)){
-			bufferManager.addRealTimeData(npp, value);
-		} else if (wuproperty.getDtype().equals(DataType.MixedBuffer)) {
-			
+			if (wuproperty.getType().equals(Short.class)
+					&& (type == WKPFUtil.WKPF_PROPERTY_TYPE_REFRESH_RATE
+					|| type == WKPFUtil.WKPF_PROPERTY_TYPE_SHORT)) {
+				short value = (short) ((int)(message[8] & 0xff) << 8 + message[9]);
+				bufferManager.addRealTimeData(npp, value);
+			} else if (wuproperty.getType().equals(Boolean.class)
+					&& (type == WKPFUtil.WKPF_PROPERTY_TYPE_BOOLEAN)) {
+				byte value = message[8];
+				bufferManager.addRealTimeData(npp, value);
+			} else if (wuproperty.getType().equals(Location.class)
+					&& (type == WKPFUtil.WKPF_PROPERTY_TYPE_LOCATION)) {
+				LocationUnit location = new LocationUnit();
+				int length = location.size() + 8;
+				if (message.length == length) {
+					location.parse(ByteBuffer.wrap(Arrays.copyOfRange(message, 8, length)));
+					bufferManager.addRealTimeData(npp, location.getValue());
+				} else {
+					LOGGER.error("Broken message for write location property");
+				}
+			} else if (wuproperty.getType().equals(Activity.class)
+					&& type == WKPFUtil.WKPF_PROPERTY_TYPE_ACTIVITY) {
+				ActivityUnit activity = new ActivityUnit();
+				int length = activity.size() + 8;
+				if (message.length == length) {
+					activity.parse(ByteBuffer.wrap(Arrays.copyOfRange(message, 8, length)));
+					bufferManager.addRealTimeData(npp, activity.getValue());
+				} else {
+					LOGGER.error("Broken message for write activity property");
+				}
+			} else {
+				LOGGER.error("Unrecgonized write property message type " + type);
+			}
 		}
 		
 		//TODO (Peter Huang) return error code, when problem happens

@@ -156,13 +156,13 @@ public class MockGateway implements MPTNMessageListener {
 		List<LoadGenerator<?>> loads = builder.createLoadGenerator();
 		for (LoadGenerator<?> generator : loads) {
 			generator.setSender(sender);
-			generators.put(generator, 5L);
+			generators.put(generator, 2000L);
 		}
 	}
 	
 	public void startLoad() {
 		for (Entry<LoadGenerator<?>, Long> entry : generators.entrySet()) {
-			timer.schedule(entry.getKey(), entry.getValue());
+			timer.schedule(entry.getKey(), 0, entry.getValue());
 		}
 	}
 	

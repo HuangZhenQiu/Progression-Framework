@@ -10,15 +10,12 @@ import edu.uci.eecs.wukong.framework.model.DataType;
 import edu.uci.eecs.wukong.framework.model.PropertyType;
 import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
 import edu.uci.eecs.wukong.framework.prclass.PrClassMetrics;
+import edu.uci.eecs.wukong.framework.test.LoadGenerator.Location;
 
 @WuClass(id = 10114)
 public class LocalizationPrClass extends PipelinePrClass{
-	@WuProperty(id = 0, name = "signalX", type = PropertyType.Input, dtype = DataType.Channel)
-	private short signalX;
-	@WuProperty(id = 1, name = "signalY", type = PropertyType.Input, dtype = DataType.Channel)
-	private short signalY;
-	@WuProperty(id = 2, name = "signalZ", type = PropertyType.Input, dtype = DataType.Channel)
-	private short signalZ;
+	@WuProperty(id = 0, name = "signal", type = PropertyType.Input, dtype = DataType.Channel)
+	private Location signal;
 	@WuProperty(id = 3, name = "particleCount", type = PropertyType.Input, dtype = DataType.Init_Value)
 	private short particleCount;
 	@WuProperty(id = 4, name = "movNoise", type = PropertyType.Input, dtype = DataType.Init_Value)
@@ -33,8 +30,7 @@ public class LocalizationPrClass extends PipelinePrClass{
 	private short output;
 	private double[] sensors = {1.0, 1.0, 1.0};
 	
-
-	protected LocalizationPrClass(PrClassMetrics metrics) {
+	public LocalizationPrClass(PrClassMetrics metrics) {
 		super("LocalizationPrClass", metrics);
 	}
 
@@ -50,30 +46,6 @@ public class LocalizationPrClass extends PipelinePrClass{
 		List<String> topics = new ArrayList<String>();
 		topics.add("Map");
 		return topics;
-	}
-
-	public short getSignalX() {
-		return signalX;
-	}
-
-	public void setSignalX(short signalX) {
-		this.signalX = signalX;
-	}
-
-	public short getSignalY() {
-		return signalY;
-	}
-
-	public void setSignalY(short signalY) {
-		this.signalY = signalY;
-	}
-
-	public short getSignalZ() {
-		return signalZ;
-	}
-
-	public void setSignalZ(short signalZ) {
-		this.signalZ = signalZ;
 	}
 
 	public short getParticleCount() {

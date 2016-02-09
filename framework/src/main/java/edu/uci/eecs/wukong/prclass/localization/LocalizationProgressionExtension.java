@@ -1,5 +1,8 @@
 package edu.uci.eecs.wukong.prclass.localization;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import edu.uci.eecs.wukong.framework.api.Channelable;
 import edu.uci.eecs.wukong.framework.api.FactorExecutable;
 import edu.uci.eecs.wukong.framework.api.metrics.Timer;
@@ -12,6 +15,7 @@ import edu.uci.eecs.wukong.framework.localization.Map;
 
 public class LocalizationProgressionExtension extends AbstractProgressionExtension<LocalizationPrClass> implements
 	Channelable<Location>, FactorExecutable {
+	private final static Logger LOGGER = LoggerFactory.getLogger(LocalizationProgressionExtension.class);
 	private ParticleFilter filter;
 	private Map map;
 	private boolean inited = false;
@@ -22,14 +26,16 @@ public class LocalizationProgressionExtension extends AbstractProgressionExtensi
 
 	@Override
 	public void execute(ChannelData<Location> data) {
-		Timer timer = this.prClass.getPrClassMetrics().getTimer(this.prClass, this);
-		if (inited) {
+		try {
+			Timer timer = this.prClass.getPrClassMetrics().getTimer(this.prClass, this);
 			long start = System.currentTimeMillis();
-			
-			// Do somthing		
-		    long end = System.currentTimeMillis();
+			// Do something
+			Thread.sleep(2000);
+			long end = System.currentTimeMillis();
 			timer.update(end - start);
-		}	
+		} catch (Exception e) {
+			LOGGER.error("Fail to execut method triggered by channel: " + e.toString());
+		}
 	}
 
 

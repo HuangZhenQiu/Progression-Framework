@@ -81,8 +81,6 @@ public class ProgressionServer {
 		this.pluginManager = new PrClassManager(wkpf, contextManager, pipeline, bufferManager, prClassMetrics);
 		this.stateManager = new StateManager(wkpf, pluginManager);
 		this.wkpf.register(pluginManager);
-		// Update this place for setting up multiple progression server in distributed way.
-		this.metricsReporter.register("ProgressionServer" + this.wkpf.getNetworkId(), registryHolder);
 	}
 	
 	/**
@@ -119,6 +117,7 @@ public class ProgressionServer {
 			this.pipeline.start();
 			this.jvmMetrics.start();
 			this.pipelineMetrics.start();
+			this.metricsReporter.register("ProgressionServer" + this.wkpf.getNetworkId(), registryHolder);
 			this.metricsReporter.start();
 		} catch (Exception e) {
 			e.printStackTrace();

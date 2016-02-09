@@ -60,12 +60,9 @@ public class DeadlineIntensiveFBPBuilder extends MockFBPBuilder {
 	@Override
 	protected void createLinkTable() {
 		// Links from signal generator to prclass
-		this.reprogrammer.addLink((short)1, (byte)1, (short)2, (byte)1); //signalX
-		this.reprogrammer.addLink((short)1, (byte)1, (short)2, (byte)2); //signalY
-		this.reprogrammer.addLink((short)1, (byte)1, (short)2, (byte)3); //singalZ
-		
+		this.reprogrammer.addLink((short)1, (byte)1, (short)2, (byte)0);
 		// link from prclass to receiver
-		this.reprogrammer.addLink((short)2, (byte)8, (short)3, (byte)1);
+		this.reprogrammer.addLink((short)2, (byte)6, (short)3, (byte)1);
 	}
 
 	@Override

@@ -16,17 +16,17 @@ import edu.uci.eecs.wukong.framework.test.LoadGenerator.Location;
 public class LocalizationPrClass extends PipelinePrClass{
 	@WuProperty(id = 0, name = "signal", type = PropertyType.Input, dtype = DataType.Channel)
 	private Location signal;
-	@WuProperty(id = 3, name = "particleCount", type = PropertyType.Input, dtype = DataType.Init_Value)
+	@WuProperty(id = 1, name = "particleCount", type = PropertyType.Input, dtype = DataType.Init_Value)
 	private short particleCount;
-	@WuProperty(id = 4, name = "movNoise", type = PropertyType.Input, dtype = DataType.Init_Value)
+	@WuProperty(id = 2, name = "movNoise", type = PropertyType.Input, dtype = DataType.Init_Value)
 	private short movNoise;
-	@WuProperty(id = 5, name = "rotNoise", type = PropertyType.Input, dtype = DataType.Init_Value)
+	@WuProperty(id = 3, name = "rotNoise", type = PropertyType.Input, dtype = DataType.Init_Value)
 	private short rotNoise;
-	@WuProperty(id = 6, name = "senseNoise", type = PropertyType.Input, dtype = DataType.Init_Value)
+	@WuProperty(id = 4, name = "senseNoise", type = PropertyType.Input, dtype = DataType.Init_Value)
 	private short senseNoise;
-	@WuProperty(id = 7, name = "maxr", type = PropertyType.Input, dtype = DataType.Init_Value)
+	@WuProperty(id = 5, name = "maxr", type = PropertyType.Input, dtype = DataType.Init_Value)
 	private short maxr;
-	@WuProperty(id = 8, name = "output", type = PropertyType.Output)
+	@WuProperty(id = 6, name = "output", type = PropertyType.Output)
 	private short output;
 	private double[] sensors = {1.0, 1.0, 1.0};
 	

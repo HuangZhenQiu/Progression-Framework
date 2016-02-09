@@ -135,9 +135,8 @@ public abstract class LoadGenerator<T> extends TimerTask {
 	
 	public static class RandomActivityGenerator extends LoadGenerator<Activity> {
 		private Random random;
-		public RandomActivityGenerator(short wuclassId, byte port, byte propertyId,
-				Class<edu.uci.eecs.wukong.framework.test.LoadGenerator.Activity> type, boolean collect) {
-			super(wuclassId, port, propertyId, type, collect);
+		public RandomActivityGenerator(short wuclassId, byte port, byte propertyId, boolean collect) {
+			super(wuclassId, port, propertyId, Activity.class, collect);
 			this.random = new Random();
 		}
 		

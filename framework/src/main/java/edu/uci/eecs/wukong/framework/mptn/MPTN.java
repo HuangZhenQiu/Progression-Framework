@@ -154,7 +154,7 @@ public class MPTN implements MPTNMessageListener{
 		if (this.uuid == null) {
 			this.uuid = generateUUID();
 		}
-		MPTNUtil.appendMPTNPacket(buffer, MPTNUtil.MPTN_MAX_ID.intValue(), MPTNUtil.MPTN_MASTER_ID,
+		WKPFUtil.appendWKPFPacket(buffer, MPTNUtil.MPTN_MAX_ID.intValue(), MPTNUtil.MPTN_MASTER_ID,
 				MPTNUtil.MPTN_MSQTYPE_IDREQ, this.uuid);
 		gatewayClient.send(buffer.array());
 	}
@@ -177,7 +177,7 @@ public class MPTN implements MPTNMessageListener{
 		int size = payload.length + 20;
 		ByteBuffer buffer = ByteBuffer.allocate(size);
 		appendMPTNHeader(buffer, nodeId, HEADER_TYPE_1, (byte)(payload.length + 9));
-		MPTNUtil.appendMPTNPacket(buffer, (int)longAddress, destId,
+		WKPFUtil.appendWKPFPacket(buffer, (int)longAddress, destId,
 				MPTNUtil.MPTN_MSATYPE_FWDREQ, payload);
 		LOGGER.info(MPTNUtil.toHexString(buffer.array()));
 		gatewayClient.send(buffer.array());
@@ -196,8 +196,6 @@ public class MPTN implements MPTNMessageListener{
 			} else if (message.getType() == HEADER_TYPE_2){
 				if (message.getLength() == 1) {
 					processInfoMessage(message.getPayload()[0]);
-				} else {
-					processIDMessage(WKPFUtil.getLittleEndianInteger(message.getPayload(), 0));
 				}
 			} else {
 				LOGGER.error("Received message error message type");
@@ -251,8 +249,8 @@ public class MPTN implements MPTNMessageListener{
 	 * 
 	 * @param message
 	 */
-	private void processIDMessage(long longAddress) {
-		this.longAddress = longAddress;
+	private void processIDMessage(int address) {
+		this.longAddress = address;
 		LOGGER.info("Received Long Address from gateway: " + longAddress);
 	}
 	

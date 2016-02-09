@@ -11,8 +11,8 @@ public class WKPFPackage {
 	private byte[] payload;
 	
 	public WKPFPackage(byte[] payload) {
-		this.sourceAddress = WKPFUtil.getLittleEndianInteger(payload, 0);
-		this.destAddress =  WKPFUtil.getLittleEndianInteger(payload, 4);
+		this.destAddress =  WKPFUtil.getBigEndianInteger(payload, 0);
+		this.sourceAddress = WKPFUtil.getBigEndianInteger(payload, 4);
 		this.type = payload[8];
 		this.payload = Arrays.copyOfRange(payload, 9, payload.length);
 	}
@@ -50,6 +50,6 @@ public class WKPFPackage {
 	}
 	
 	public short getSequence() {
-		return WKPFUtil.getLittleEndianShort(payload, 1);
+		return WKPFUtil.getBigEndianShort(payload, 1);
 	}
 }

@@ -37,7 +37,7 @@ public class DeadlineIntensiveFBPBuilder extends MockFBPBuilder {
 		// Node 1: signal generator
 		this.reprogrammer.addPrObject(MOCK_MOBILE_INPUT_WUCLASS_ID, (int)MockGateway.MOCK_GATEWAY_ADDRESS, MOCK_MOBILE_INPUT_PORT);
 		// Node 2: localization prclass
-		this.reprogrammer.addPrObject(LOCALIZATION_WUCLASS_ID, PROGRESSION_SERVER_LONG_ADDRESS, LOCALIZATION_PRCLASS_PORT);
+		this.reprogrammer.addPrObject(LOCALIZATION_WUCLASS_ID, MockGateway.longAddress, LOCALIZATION_PRCLASS_PORT);
 		// Node 3: location feedback receiver
 		this.reprogrammer.addPrObject(MOCK_MOBILE_OUTPUT_WUCLASS_ID, (int)MockGateway.MOCK_GATEWAY_ADDRESS, MOCK_MOBILE_OUTPUT_PORT);
 	}

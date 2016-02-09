@@ -25,10 +25,12 @@ public class PrClassMetrics extends MetricsHelper {
 			prClassMeter.put(name, meter);
 		} else if (prClass instanceof PipelinePrClass) {
 			PipelinePrClass pipelinePrClass = (PipelinePrClass)prClass;
-			for (Extension extension : pipelinePrClass.registerExtension()) {
-				String name = buildMetricsName(prClass, extension);
-				Timer meter = newTimer(name);
-				prClassMeter.put(name, meter);
+			if (pipelinePrClass.registerExtension() != null) {
+				for (Extension extension : pipelinePrClass.registerExtension()) {
+					String name = buildMetricsName(prClass, extension);
+					Timer meter = newTimer(name);
+					prClassMeter.put(name, meter);
+				}
 			}
 		}
 	}

@@ -172,10 +172,10 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 					if (field.getType().equals(byte.class) && value.getSize() == 1) {
 						field.set(object.getPrClass(), value.getValue()[0]);
 					} else if (field.getType().equals(short.class)) {
-						field.set(object.getPrClass(), WKPFUtil.getLittleEndianShort(value.getValue(), 0));
+						field.set(object.getPrClass(), WKPFUtil.getBigEndianShort(value.getValue(), 0));
 					} else if(field.getType().equals(int.class)) {
 						// temporary solution, there is no support as int init value in master right now.
-						int intValue = new Integer(WKPFUtil.getLittleEndianShort(value.getValue(), 0)).intValue();
+						int intValue = new Integer(WKPFUtil.getBigEndianShort(value.getValue(), 0)).intValue();
 						field.set(object.getPrClass(), intValue);
 					} else if (field.getType().equals(boolean.class) && value.getSize() == 1) {
 						if (value.getValue()[0] == 0) {
@@ -403,7 +403,7 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 	 */
 	public void onWKPFWriteProperty(long sourceId, byte[] message) {
 		byte port = message[3];
-		short wuclassId = WKPFUtil.getLittleEndianShort(message, 4);
+		short wuclassId = WKPFUtil.getBigEndianShort(message, 4);
 		byte propertyId = message[6];
 		byte type = message[7];
 		short value = message[8];
@@ -477,7 +477,7 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 
 	public void onWKPFMonitoredData(long sourceId, byte[] message) {
 		if (message.length >= 7) {
-			short wuCLassId = WKPFUtil.getLittleEndianShort(message, 2);
+			short wuCLassId = WKPFUtil.getBigEndianShort(message, 2);
 			byte port = message[4];
 			byte propertyNum = message[5];
 			byte type = message[6];
@@ -485,7 +485,7 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 			if (type == 1) { // Boolean
 				value = message[7];
 			} else {
-				value = WKPFUtil.getLittleEndianShort(message, 7);
+				value = WKPFUtil.getBigEndianShort(message, 7);
 			}
 			
 			MonitorDataModel model = new MonitorDataModel(

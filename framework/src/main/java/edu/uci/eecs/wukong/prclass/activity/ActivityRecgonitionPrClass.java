@@ -19,7 +19,7 @@ public class ActivityRecgonitionPrClass extends PipelinePrClass {
 	@WuProperty(id = 0, name = "output", type = PropertyType.Output)
 	private short output;
 	
-	protected ActivityRecgonitionPrClass(PrClassMetrics metrics) {
+	public ActivityRecgonitionPrClass(PrClassMetrics metrics) {
 		super("ActivityRecgonition", metrics);
 	}
 	

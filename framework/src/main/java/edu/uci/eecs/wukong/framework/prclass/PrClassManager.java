@@ -132,7 +132,7 @@ public class PrClassManager implements PrClassInitListener {
 				
 				// A temporary solution for easier mapping and deployment.
 				// Create an instance for each plugin classes as hard WuClass.
-				Constructor<?> constructor = c.getConstructor();
+				Constructor<?> constructor = c.getConstructor(PrClassMetrics.class);
 				PrClass plugin = (PrClass) constructor.newInstance(prClassMetrics);
 				prClassMetrics.addPrClassMeter(plugin);
 				plugins.add(plugin);
@@ -196,7 +196,7 @@ public class PrClassManager implements PrClassInitListener {
 	 * @param wuobjectMap map port to wuclassId
 	 */
 	public void bindPlugins(List<WuObjectModel> objects) {
-		LOGGER.info("Start to bind plugins into plugin manager, the size of objects is" + objects.size());
+		LOGGER.info("Start to bind plugins into plugin manager, the size of objects is " + objects.size());
 		bindedWuObjects.clear();
 		for (WuObjectModel model : objects) {
 			if (model.getPrClass().isInitialized()) {

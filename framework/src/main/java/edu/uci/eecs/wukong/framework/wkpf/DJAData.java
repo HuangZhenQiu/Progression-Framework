@@ -165,7 +165,7 @@ public class DJAData {
 		// start of init value table
 		int start = index + 3;
 		// Size of init value table
-		int size = WKPFUtil.getLittleEndianShort(buffer, start);
+		int size = WKPFUtil.getBigEndianShort(buffer, start);
 		int offset = 2;
 		for (int i = 0; i < size; i++) {
 			start += offset;
@@ -188,7 +188,7 @@ public class DJAData {
 	 * @return
 	 */
 	private InitValue extractInitValue(int start) {
-		short componentId = WKPFUtil.getLittleEndianShort(buffer, start);
+		short componentId = WKPFUtil.getBigEndianShort(buffer, start);
 		byte propertyNumber = buffer[start + 2];
 		byte size = buffer[start + 3];
 		byte[] val = new byte[size];
@@ -211,7 +211,7 @@ public class DJAData {
 		}
 		
 		// get the size of links
-		int size = WKPFUtil.getLittleEndianShort(buffer, index + 3);
+		int size = WKPFUtil.getBigEndianShort(buffer, index + 3);
 		// start index of the links
 		int start = index + 5;
 		for (int i = 0; i < size; i++) {
@@ -234,8 +234,8 @@ public class DJAData {
 	 */
 	private Link extractLink(int start) {
 		try {
-			short srcComponentId = WKPFUtil.getLittleEndianShort(buffer, start);
-			short destComponentId = WKPFUtil.getLittleEndianShort(buffer, start + 3);
+			short srcComponentId = WKPFUtil.getBigEndianShort(buffer, start);
+			short destComponentId = WKPFUtil.getBigEndianShort(buffer, start + 3);
 			
 			Link link = new Link(srcComponentId, buffer[start + 2], destComponentId, buffer[start + 5]);
 			return link;
@@ -267,13 +267,13 @@ public class DJAData {
 		// start of component map
 		int start = index + 3;
 		// Size of component
-		int size = WKPFUtil.getLittleEndianShort(buffer, start);
+		int size = WKPFUtil.getBigEndianShort(buffer, start);
 		// start of component offset table;
 		int offsetStart = index + 5;
 		LOGGER.info("Start index of component map : " + start);
 		for (int i = 0; i < size; i++) {
 			// the offset relative to the start of component map
-			int componentOffset = WKPFUtil.getLittleEndianShort(buffer, offsetStart + i * 2);
+			int componentOffset = WKPFUtil.getBigEndianShort(buffer, offsetStart + i * 2);
 			LOGGER.info("Start index of component " + i + " : " + componentOffset);
 			componentMap.addComponent(extractComponent(start + componentOffset));
 		}
@@ -294,7 +294,7 @@ public class DJAData {
 	private Component extractComponent(int index) {
 		try {
 			int endpointSize = buffer[index];
-			short wuclassId = (short) WKPFUtil.getLittleEndianShort(buffer, index + 1);
+			short wuclassId = (short) WKPFUtil.getBigEndianShort(buffer, index + 1);
 		    
 			Component component = new Component(wuclassId);
 			// Start of end point table
@@ -320,7 +320,7 @@ public class DJAData {
 	 *     1 byte port number
 	 */
 	private EndPoint extractEndPoint(int index) {
-		int nodeId = WKPFUtil.getLittleEndianInteger(buffer, index);
+		int nodeId = WKPFUtil.getBigEndianInteger(buffer, index);
 		return new EndPoint(nodeId, buffer[index + 4]);
 	}
 	
@@ -340,7 +340,7 @@ public class DJAData {
 		while (start < pos - 3) {
 			byte fileType = this.buffer[start + DJAConstants.FILE_TYPE_OFFSET];
 			if (type != fileType) {
-				start += 3 + WKPFUtil.getLittleEndianShort(buffer, start);
+				start += 3 + WKPFUtil.getBigEndianShort(buffer, start);
 			} else {
 				return start;
 			}

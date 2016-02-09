@@ -30,9 +30,9 @@ public class MPTNPackage {
 		this.h1 = header[0] & 0xFF;
 		this.h2 = header[1] & 0xFF;
 		this.nodeId = header[2];
-		this.sourceIP = WKPFUtil.getLittleEndianInteger(header, 3);
-		this.sourceIPBytes = WKPFUtil.getLittleEndianIntegerBytes(header, 3);
-		this.soucePort = WKPFUtil.getLittleEndianShort(header, 7);
+		this.sourceIP = WKPFUtil.getBigEndianInteger(header, 3);
+		this.sourceIPBytes = WKPFUtil.getBigEndianIntegerBytes(header, 3);
+		this.soucePort = WKPFUtil.getBigEndianShort(header, 7);
 		this.type = buffer.get();
 		this.length = (int) buffer.get();
 		if (length != 0) {

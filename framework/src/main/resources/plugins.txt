@@ -13,3 +13,4 @@ weather.WeatherPrClass
 buffer.BufferEnabledPrClass
 occupancy.OccupancyDetection
 simple.SimpleInputPrClass
+activity.ActivityRecgonitionPrClass

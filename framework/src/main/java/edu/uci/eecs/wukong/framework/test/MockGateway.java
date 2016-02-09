@@ -9,7 +9,6 @@ import edu.uci.eecs.wukong.framework.mptn.MPTN;
 import edu.uci.eecs.wukong.framework.mptn.MPTNMessageListener;
 import edu.uci.eecs.wukong.framework.nio.NIOUdpServer;
 import edu.uci.eecs.wukong.framework.util.MPTNUtil;
-import edu.uci.eecs.wukong.framework.util.WKPFUtil;
 
 import java.net.InetAddress;
 import java.net.Inet4Address;
@@ -37,8 +36,8 @@ public class MockGateway implements MPTNMessageListener {
 	private WKPFMessageSender sender; // init after server is added into network
 	private int maskLength;
 	private int mask;
-	private byte nodeId;
-	private int longAddress;
+	private byte nodeId = 2;
+	public static int longAddress;
 	private byte[] longAddressBytes;
 	
 	public MockGateway(int port, MockReprogrammer programmer, PerformanceCollector collector) {
@@ -73,7 +72,7 @@ public class MockGateway implements MPTNMessageListener {
 			
 			if (mptnPackage.getType() == MPTN.HEADER_TYPE_2) {  // get local ID				
 				InetAddress address = InetAddress.getByAddress(mptnPackage.getSourceIPBytes());
-				this.nodeId = (byte) ((~mask) & mptnPackage.getSourceIP());
+				// this.nodeId = (byte) ((~mask) & mptnPackage.getSourceIP());
 				this.longAddress = mptnPackage.getSourceIP();
 				setLongAddressBytes(longAddress);
 				createWKPFMessageSender(address.getHostAddress(), mptnPackage.getSoucePort(), nodeId, longAddress);
@@ -123,7 +122,7 @@ public class MockGateway implements MPTNMessageListener {
 			if (pack.getType() == MPTN.MPTN_MSGTYPE_IDREQ) {
 				ByteBuffer payload = ByteBuffer.allocate(4);
 				payload.putInt(longAddress);
-				sender.send(MPTN.HEADER_TYPE_2, MPTN.MPTN_MSGTYPE_IDACK, payload.array());
+				sender.sendLongAddress(MPTN.HEADER_TYPE_1, payload.array());
 				Thread.sleep(3000);
 				/* start to generate mock FBP */
 				byte[] infusion = builder.build();

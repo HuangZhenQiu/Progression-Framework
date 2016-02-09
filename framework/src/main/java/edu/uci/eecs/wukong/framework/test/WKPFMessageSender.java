@@ -99,6 +99,10 @@ public class WKPFMessageSender {
 		send(MPTN.HEADER_TYPE_1, MPTN.MPTN_MSQTYPE_FWDREQ, buffer.array());
 	}
 	
+	public void sendWriteLocationProperty(byte port, short wuClassId, byte propertyId, Location location, boolean collect) {
+		
+	}
+	
 	public void sendWriteShortProperty(byte port, short wuClassId, byte propertyId, short value, boolean collect) {
 		this.sequence++;
 		ByteBuffer buffer = ByteBuffer.allocate(10); // include dummy piggyback count 0
@@ -113,17 +117,7 @@ public class WKPFMessageSender {
 		if (collect) {
 			collector.send(port, (long)this.sequence);
 		}
-		send(MPTN.HEADER_TYPE_1, MPTN.MPTN_MSQTYPE_FWDREQ, buffer.array());
-	}
-	
-	
-	public void sendWriteLocationProperty(byte port, short wuClassId,
-			byte propertyId, Location location, boolean collect) {
-		
-	}
-	
-	public void sendWriteActivityProperty() {
-		
+		send(MPTN.HEADER_TYPE_1, WKPFUtil.WKPF_WRITE_PROPERTY, buffer.array());
 	}
 	
 	public void reprogram(byte[] payload) {
@@ -223,10 +217,14 @@ public class WKPFMessageSender {
 		client.send(buffer.array());
 	}
 	
+	public void sendLongAddress(byte headerType, byte[] payload) {
+		client.send(pack(headerType, MPTNUtil.MPTN_MSQTYPE_IDACK, (byte)0, sequence++, payload));
+	}
+	
 	public WKPFPackage sendWaitResponse(byte headerType, byte mptnType, byte[] payload) {
 		PackageHolder holder = new PackageHolder(System.currentTimeMillis());
 		queue.put(sequence, holder);
-		client.send(pack(headerType, mptnType, sequence, payload));
+		client.send(pack(headerType, MPTNUtil.MPTN_MSATYPE_FWDREQ, mptnType, sequence, payload));
 		sequence++;
 		try {
 			
@@ -255,16 +253,16 @@ public class WKPFMessageSender {
 	 * @param payload
 	 */
 	public void send(byte headerType, byte messageType, byte[] payload) {
-		client.send(pack(headerType, messageType, sequence++, payload));
+		client.send(pack(headerType, MPTNUtil.MPTN_MSATYPE_FWDREQ, messageType, sequence++, payload));
 	}
 	
-	private byte[] pack(byte headerType, byte messageType, short sequence, byte[] payload) {
+	private byte[] pack(byte headerType, byte mptnMessageType, byte wkpfMessageType, short sequence, byte[] payload) {
 		int payloadLength = 3 /* type + sequence*/;
 		if (payload != null) {
 			payloadLength += payload.length;
 		}
 		ByteBuffer wkpfPayload = ByteBuffer.allocate(payloadLength);
-		wkpfPayload.put(messageType);
+		wkpfPayload.put(wkpfMessageType);
 		wkpfPayload.put((byte) (sequence % 256));
 		wkpfPayload.put((byte) (sequence / 256));
 		if (payload!= null) {
@@ -273,8 +271,8 @@ public class WKPFMessageSender {
 		int size = payloadLength + 20;
 		ByteBuffer buffer = ByteBuffer.allocate(size);
 		appendMPTNHeader(buffer, destAddress, (byte)nodeId, headerType, (byte)(payloadLength + 9));
-		MPTNUtil.appendMPTNPacket(buffer, MPTNUtil.MPTN_MASTER_ID, destAddress,
-				MPTNUtil.MPTN_MSATYPE_FWDREQ, wkpfPayload.array());
+		WKPFUtil.appendWKPFPacket(buffer, MPTNUtil.MPTN_MASTER_ID, destAddress,
+				mptnMessageType, wkpfPayload.array());
 		return buffer.array();
 	}
 	

@@ -1,5 +1,7 @@
 package edu.uci.eecs.wukong.framework.util;
 
+import java.nio.ByteBuffer;
+
 public class WKPFUtil {
 	public static final byte DEFAULT_OBJECT_SIZE = 4;
 	public static final byte DEFAULT_CLASS_SIZE = 3;
@@ -46,21 +48,31 @@ public class WKPFUtil {
 	public static final byte MONITORING                   = (byte)0xB5;
 	public static final byte WKPF_ERROR                   = (byte)0x86;
 	
+	
+	public static void appendWKPFPacket(ByteBuffer buffer, int sourceId, int destId, byte type, byte[] payload) {
+		MPTNUtil.appendReversedInt(buffer, destId);
+		MPTNUtil.appendReversedInt(buffer, (int) (sourceId & 0xffffffffL));
+		buffer.put(type);
+		if (payload != null) {
+			buffer.put(payload);
+		}
+	}
+	
 	/**
 	 * Get little endian short from the start index of the buffer
 	 * @param start the index in the buffer
 	 * @return the converted short
 	 */
-	public static short getLittleEndianShort(byte[] buffer, int start) {
+	public static short getBigEndianShort(byte[] buffer, int start) {
 		return (short) (getUnsignedByteValue(buffer[start + 1]) * 256 + getUnsignedByteValue(buffer[start]));
 	}
 	
-	public static byte[] getLittleEndianIntegerBytes(byte[] buffer, int start) {
+	public static byte[] getBigEndianIntegerBytes(byte[] buffer, int start) {
 		byte[] b = new byte[4];
-		b[0] = buffer[start + 3];
-		b[1] = buffer[start + 2];
-		b[2] = buffer[start + 1];
-		b[3] = buffer[start];
+		b[0] = buffer[start];
+		b[1] = buffer[start + 1];
+		b[2] = buffer[start + 2];
+		b[3] = buffer[start + 3];
 		
 		return b;
 	}
@@ -70,7 +82,7 @@ public class WKPFUtil {
 	 * @param start the index of the buffer
 	 * @return the converted int
 	 */
-	public static int getLittleEndianInteger(byte[] buffer, int start) {
+	public static int getBigEndianInteger(byte[] buffer, int start) {
 		int result = buffer[start];
 		result += buffer[start + 1] << 8;
 		result += buffer[start + 2] << 16;
@@ -79,7 +91,7 @@ public class WKPFUtil {
 		return (int) (result & 0xffffffffL);
 	}
 	
-	public static long getLittleEndianLong(byte[] buffer, int start) {
+	public static long getBigEndianLong(byte[] buffer, int start) {
 		long result = (long)(buffer[start] & 0xff);
 		result += (long)(buffer[start + 1] & 0xff) << 8;
 		result += (long)(buffer[start + 2] & 0xff) << 16;

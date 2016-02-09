@@ -44,18 +44,20 @@ public class FeatureChooser {
 				dataList.add(data);
 			}
 			
-			if (entry.getKey() instanceof SisoOperator) {
-				SisoOperator<Short> singleOperator = (SisoOperator<Short>) entry.getKey();
-				result.add(singleOperator.operate(dataList.get(0)));
-			} else if (entry.getKey() instanceof MisoOperator ) {
-				MisoOperator<Short> multipleOperator = (MisoOperator<Short>) entry.getKey();
-				result.add(multipleOperator.operate(dataList));
-			} else if (entry.getKey() instanceof MimoOperator) {
-				MimoOperator<Short> mimoOperator = (MimoOperator<Short>) entry.getKey();
-				result.addAll(mimoOperator.operate(dataList));
-			} else if (entry.getKey() instanceof SimoOperator) {
-				SimoOperator<Short> simoOperator = (SimoOperator<Short>) entry.getKey();
-				result.addAll(simoOperator.operate(dataList.get(0)));
+			if (!dataList.isEmpty()) {
+				if (entry.getKey() instanceof SisoOperator) {
+					SisoOperator<Short> singleOperator = (SisoOperator<Short>) entry.getKey();
+					result.add(singleOperator.operate(dataList.get(0)));
+				} else if (entry.getKey() instanceof MisoOperator ) {
+					MisoOperator<Short> multipleOperator = (MisoOperator<Short>) entry.getKey();
+					result.add(multipleOperator.operate(dataList));
+				} else if (entry.getKey() instanceof MimoOperator) {
+					MimoOperator<Short> mimoOperator = (MimoOperator<Short>) entry.getKey();
+					result.addAll(mimoOperator.operate(dataList));
+				} else if (entry.getKey() instanceof SimoOperator) {
+					SimoOperator<Short> simoOperator = (SimoOperator<Short>) entry.getKey();
+					result.addAll(simoOperator.operate(dataList.get(0)));
+				}
 			}
 		}
 		

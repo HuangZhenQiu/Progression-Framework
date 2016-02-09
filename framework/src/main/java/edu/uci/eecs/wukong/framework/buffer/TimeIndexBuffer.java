@@ -13,7 +13,7 @@ public final class TimeIndexBuffer extends RingBuffer {
 	public TimeIndexBuffer(int capacity) {
 		// an integer to record the index on data buffer
 		super(4 * capacity);
-		this.put(0); // Point the index of start point to the start of data buffer
+		this.appendInt(0); // Point the index of start point to the start of data buffer
 	}
 	
 	/**

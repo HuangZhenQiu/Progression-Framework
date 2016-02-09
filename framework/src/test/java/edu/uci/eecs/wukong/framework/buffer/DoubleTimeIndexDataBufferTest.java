@@ -3,12 +3,15 @@ package edu.uci.eecs.wukong.framework.buffer;
 import junit.framework.TestCase;
 
 import java.util.List;
+
+import edu.uci.eecs.wukong.framework.buffer.BufferUnits.ShortUnit;
 import edu.uci.eecs.wukong.framework.model.NPP;
 
 public class DoubleTimeIndexDataBufferTest extends TestCase{
 	
 	public void testDoubleTimeIndexDataBuffer() {
-		DoubleTimeIndexDataBuffer buffer = new DoubleTimeIndexDataBuffer(new NPP(1, (byte)1, (byte)1), 1000, 60, 3);
+		DoubleTimeIndexDataBuffer<Short, ShortUnit> buffer =
+				new DoubleTimeIndexDataBuffer<Short, ShortUnit>(new NPP(1, (byte)1, (byte)1), ShortUnit.class, 1000, 60, 3);
 		for(int i=0; i< 60; i++) {
 			buffer.addElement(100000 + 3 * i, new Integer(i).shortValue());
 			buffer.addElement(100000 + 3 * i + 1, new Integer(i).shortValue());
@@ -16,7 +19,7 @@ public class DoubleTimeIndexDataBufferTest extends TestCase{
 			buffer.addIndex();	
 		}
 		
-		List<DataPoint> data = buffer.readDataPoint(3);
+		List<DataPoint<Short>> data = buffer.readDataPoint(3);
 		assertEquals(data.size(), 9);
 		System.out.println(data.toString());
 	}

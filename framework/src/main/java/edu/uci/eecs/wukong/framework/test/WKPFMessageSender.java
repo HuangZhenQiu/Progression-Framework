@@ -4,6 +4,7 @@ import edu.uci.eecs.wukong.framework.model.WKPFPackage;
 import edu.uci.eecs.wukong.framework.mptn.MPTN;
 import edu.uci.eecs.wukong.framework.nio.NIOUdpClient;
 import edu.uci.eecs.wukong.framework.test.LoadGenerator.Location;
+import edu.uci.eecs.wukong.framework.test.LoadGenerator.Activity;
 import edu.uci.eecs.wukong.framework.util.Configuration;
 import edu.uci.eecs.wukong.framework.util.MPTNUtil;
 import edu.uci.eecs.wukong.framework.util.WKPFUtil;
@@ -85,12 +86,7 @@ public class WKPFMessageSender {
 	public void sendWriteByteProperty(byte port, short wuClassId, byte propertyId, byte value, boolean collect) {
 		this.sequence++;
 		ByteBuffer buffer = ByteBuffer.allocate(9); // include dummy piggyback count 0
-		buffer.put(WKPFUtil.WKPF_WRITE_PROPERTY);
-		buffer.put((byte) (this.sequence % 256));
-		buffer.put((byte) (this.sequence / 256));
-		buffer.put(port);
-		buffer.putShort(wuClassId);
-		buffer.put(propertyId);
+		appendMetaData(buffer, port, wuClassId, propertyId);
 		buffer.put(WKPFUtil.WKPF_PROPERTY_TYPE_REFRESH_RATE);
 		buffer.put(value);
 		if (collect) {
@@ -100,24 +96,47 @@ public class WKPFMessageSender {
 	}
 	
 	public void sendWriteLocationProperty(byte port, short wuClassId, byte propertyId, Location location, boolean collect) {
-		
+		this.sequence++;
+		ByteBuffer buffer = ByteBuffer.allocate(32); // include dummy piggyback count 0
+		appendMetaData(buffer, port, wuClassId, propertyId);
+		buffer.put(WKPFUtil.WKPF_PROPERTY_TYPE_LOCATION);
+		buffer.putDouble(location.getX());
+		buffer.putDouble(location.getY());
+		buffer.putDouble(location.getZ());
+		send(MPTN.HEADER_TYPE_1, WKPFUtil.WKPF_WRITE_PROPERTY, buffer.array());
+	}
+	
+	public void sendWriteActivityProperty(byte port, short wuClassId, byte propertyId, Activity activity, boolean collect) {
+		this.sequence++;
+		ByteBuffer buffer = ByteBuffer.allocate(26);
+		appendMetaData(buffer, port, wuClassId, propertyId);
+		buffer.put(WKPFUtil.WKPF_PROPERTY_TYPE_LOCATION);
+		buffer.putLong(activity.getTimeStamp());
+		buffer.putShort(activity.getDeviceId());
+		buffer.putDouble(activity.getValue());
+		send(MPTN.HEADER_TYPE_1, WKPFUtil.WKPF_WRITE_PROPERTY, buffer.array());
 	}
 	
 	public void sendWriteShortProperty(byte port, short wuClassId, byte propertyId, short value, boolean collect) {
 		this.sequence++;
 		ByteBuffer buffer = ByteBuffer.allocate(10); // include dummy piggyback count 0
-		buffer.put(WKPFUtil.WKPF_WRITE_PROPERTY);
-		buffer.put((byte) (this.sequence % 256));
-		buffer.put((byte) (this.sequence / 256));
-		buffer.put(port);
-		buffer.putShort(wuClassId);
-		buffer.put(propertyId);
+		appendMetaData(buffer, port, wuClassId, propertyId);
 		buffer.put(WKPFUtil.WKPF_PROPERTY_TYPE_SHORT);
 		buffer.putShort(value);
 		if (collect) {
 			collector.send(port, (long)this.sequence);
 		}
 		send(MPTN.HEADER_TYPE_1, WKPFUtil.WKPF_WRITE_PROPERTY, buffer.array());
+	}
+	
+	
+	private void appendMetaData(ByteBuffer buffer, byte port, short wuClassId, byte propertyId) {
+		buffer.put(WKPFUtil.WKPF_WRITE_PROPERTY);
+		buffer.put((byte) (this.sequence % 256));
+		buffer.put((byte) (this.sequence / 256));
+		buffer.put(port);
+		buffer.putShort(wuClassId);
+		buffer.put(propertyId);
 	}
 	
 	public void reprogram(byte[] payload) {

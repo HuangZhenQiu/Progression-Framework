@@ -39,6 +39,8 @@ public abstract class LoadGenerator<T> extends TimerTask {
 				sender.sendWriteShortProperty(port, wuclassId, propertyId, (short)value, collect);
 			} else if (type.isAssignableFrom(Location.class)) {
 				sender.sendWriteLocationProperty(port, wuclassId, propertyId, (Location)value, collect);
+			} else if (type.isAssignableFrom(Activity.class)) {
+				sender.sendWriteActivityProperty(port, wuclassId, propertyId, (Activity)value, collect);
 			}
 		}
 	}
@@ -47,6 +49,7 @@ public abstract class LoadGenerator<T> extends TimerTask {
 		private Random random;
 		public RandomByteGenerator(short wuclassId, byte port, byte propertyId, boolean collect) {
 			super(wuclassId, port, propertyId, Byte.class, collect);
+			this.random = new Random();
 		}
 
 		@Override
@@ -59,6 +62,7 @@ public abstract class LoadGenerator<T> extends TimerTask {
 		private Random random;
 		public RandomShortGenerator(short wuclassId, byte port, byte propertyId, boolean collect) {
 			super(wuclassId, port, propertyId, Short.class, collect);
+			this.random = new Random();
 		}
 
 		@Override
@@ -68,13 +72,25 @@ public abstract class LoadGenerator<T> extends TimerTask {
 	}
 	
 	public static class Location {
-		private double x;
-		private double y;
-		private double z;
-		public Location(double x, double y, double z) {
+		private float x;
+		private float y;
+		private float z;
+		public Location(float x, float y, float z) {
 			this.x = x;
 			this.y = y;
 			this.z = z;
+		}
+		
+		public double getX() {
+			return x;
+		}
+		
+		public double getY() {
+			return y;
+		}
+		
+		public double getZ() {
+			return z;
 		}
 	}
 	
@@ -87,7 +103,7 @@ public abstract class LoadGenerator<T> extends TimerTask {
 		@Override
 		public Location nextValue() {
 			Location location = new Location(
-					random.nextDouble(), random.nextDouble(), random.nextDouble());
+					random.nextFloat(), random.nextFloat(), random.nextFloat());
 			return location;
 		}
 	}
@@ -95,10 +111,24 @@ public abstract class LoadGenerator<T> extends TimerTask {
 	public static class Activity {
 		private long timestamp;
 		private short deviceId;
-		private double value;
+		private float value;
 		
-		public Activity() {
-			
+		public Activity(long timestamp, short deviceId, float value) {
+			this.timestamp = timestamp;
+			this.deviceId = deviceId;
+			this.value = value;
+		}
+		
+		public long getTimeStamp() {
+			return timestamp;
+		}
+		
+		public short getDeviceId() {
+			return deviceId;
+		}
+		
+		public float getValue() {
+			return value;
 		}
 	}
 	
@@ -112,8 +142,7 @@ public abstract class LoadGenerator<T> extends TimerTask {
 		
 		@Override
 		public Activity nextValue() {
-			return new Activity();
+			return new Activity(System.currentTimeMillis(), (short)1, 1F);
 		}
-		
 	}
 }

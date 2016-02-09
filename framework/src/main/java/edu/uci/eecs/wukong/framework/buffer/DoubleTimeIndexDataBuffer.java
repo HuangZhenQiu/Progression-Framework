@@ -11,17 +11,18 @@ import org.slf4j.LoggerFactory;
 
 import edu.uci.eecs.wukong.framework.model.NPP;
 
-public final class DoubleTimeIndexDataBuffer<T> {
+public final class DoubleTimeIndexDataBuffer<T, E extends BufferUnit<T>> {
 	private static Logger logger = LoggerFactory.getLogger(DoubleTimeIndexDataBuffer.class);
 	private TimeIndexBuffer indexBuffer;
-	private DataRingBuffer<T> dataBuffer;
+	private DataRingBuffer<T, E> dataBuffer;
 	private BufferIndexer indexer;
+	private Class<E> type;
 	private NPP npp;
 	private int interval; //in seconds
 	
 	private class BufferIndexer extends TimerTask {
-		private DoubleTimeIndexDataBuffer<T> buffer;
-		public BufferIndexer(DoubleTimeIndexDataBuffer<T> buffer) {
+		private DoubleTimeIndexDataBuffer<T, E> buffer;
+		public BufferIndexer(DoubleTimeIndexDataBuffer<T, E> buffer) {
 			this.buffer = buffer;
 		}
 		
@@ -33,10 +34,11 @@ public final class DoubleTimeIndexDataBuffer<T> {
 		
 	}
 	
-	public DoubleTimeIndexDataBuffer(NPP npp, int dataCapacity, int timeUnits, int interval){
+	public DoubleTimeIndexDataBuffer(NPP npp, Class<E> type, int dataCapacity, int timeUnits, int interval){
 		this.npp = npp;
+		this.type = type;
 		this.indexBuffer = new TimeIndexBuffer(timeUnits);
-		this.dataBuffer = new DataRingBuffer<T>(dataCapacity);
+		this.dataBuffer = new DataRingBuffer<T, E>(dataCapacity, type);
 		this.interval = interval;
 		this.indexer = new BufferIndexer(this);
 	}
@@ -76,12 +78,18 @@ public final class DoubleTimeIndexDataBuffer<T> {
 	}
 	
 	
-	public List<DataPoint<Short>> readDataPoint(int units) {
+	public List<DataPoint<T>> readDataPoint(int units) {
 		ByteBuffer data = read(units);
 		int size = data.capacity() / DataRingBuffer.DATA_SIZE;
-		List<DataPoint<Short>> points = new ArrayList<DataPoint<Short>>();
+		List<DataPoint<T>> points = new ArrayList<DataPoint<T>>();
 		while(size > 0) {
-			points.add(new DataPoint<Short>(npp, data.getInt(), data.getShort()));
+			try {
+				BufferUnit<T> unit = (BufferUnit<T>)type.getConstructor().newInstance();
+				unit.parse(data);
+				points.add(new DataPoint<T>(npp, data.getInt(), unit.getValue()));
+			} catch (Exception e) {
+				
+			}
 			size --;
 		}
 		
@@ -100,7 +108,7 @@ public final class DoubleTimeIndexDataBuffer<T> {
 		return this.indexBuffer;
 	}
 	
-	protected DataRingBuffer<T> getDataRingBuffer() {
+	protected DataRingBuffer<T, E> getDataRingBuffer() {
 		return this.dataBuffer;
 	}
 	

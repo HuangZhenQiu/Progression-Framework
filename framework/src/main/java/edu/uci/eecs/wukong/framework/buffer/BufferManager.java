@@ -13,6 +13,8 @@ import org.slf4j.LoggerFactory;
 import edu.uci.eecs.wukong.framework.api.Channelable;
 import edu.uci.eecs.wukong.framework.api.Extension;
 import edu.uci.eecs.wukong.framework.api.metrics.Gauge;
+import edu.uci.eecs.wukong.framework.buffer.BufferUnits.ByteUnit;
+import edu.uci.eecs.wukong.framework.buffer.BufferUnits.ShortUnit;
 import edu.uci.eecs.wukong.framework.channel.Channel;
 import edu.uci.eecs.wukong.framework.model.DataType;
 import edu.uci.eecs.wukong.framework.model.NPP;
@@ -28,7 +30,7 @@ import com.google.common.annotations.VisibleForTesting;
 public class BufferManager {
 	private final static Logger LOGGER = LoggerFactory.getLogger(BufferManager.class);
 	// Map network port property to buffer
-	private Map<NPP, DoubleTimeIndexDataBuffer<?>> bufferMap;
+	private Map<NPP, DoubleTimeIndexDataBuffer<?, ?>> bufferMap;
 	// Map network port property to channel
 	private Map<NPP, Channel<?>> channelMap;
 	// Timer to set index for buffer
@@ -42,7 +44,7 @@ public class BufferManager {
 	}
 	
 	public BufferManager(BufferMetrics metrics) {
-		this.bufferMap = new HashMap<NPP, DoubleTimeIndexDataBuffer<?>>();
+		this.bufferMap = new HashMap<NPP, DoubleTimeIndexDataBuffer<?, ?>>();
 		this.channelMap = new HashMap<NPP, Channel<?>>();
 		this.timer = new Timer();
 		this.metrics = metrics;
@@ -152,8 +154,8 @@ public class BufferManager {
 		if(bufferMap.containsKey(key)) {
 			return false;
 		} 
-		DoubleTimeIndexDataBuffer<Byte> buffer =
-				new DoubleTimeIndexDataBuffer<Byte>(key, capacity, timeUnits, interval);
+		DoubleTimeIndexDataBuffer<Byte, ByteUnit> buffer =
+				new DoubleTimeIndexDataBuffer<Byte, ByteUnit>(key, ByteUnit.class, capacity, timeUnits, interval);
 		
 		bufferMap.put(key, buffer);
 		timer.scheduleAtFixedRate(buffer.getIndexer(), 1000, buffer.getInterval());
@@ -167,8 +169,8 @@ public class BufferManager {
 		if(bufferMap.containsKey(key)) {
 			return false;
 		} 
-		DoubleTimeIndexDataBuffer<Short> buffer =
-				new DoubleTimeIndexDataBuffer<Short>(key, capacity, timeUnits, interval);
+		DoubleTimeIndexDataBuffer<Short, ShortUnit> buffer =
+				new DoubleTimeIndexDataBuffer<Short, ShortUnit>(key, ShortUnit.class, capacity, timeUnits, interval);
 		
 		bufferMap.put(key, buffer);
 		timer.scheduleAtFixedRate(buffer.getIndexer(), 1000, buffer.getInterval());
@@ -243,21 +245,21 @@ public class BufferManager {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public void addData(NPP key, long time, short value) throws IllegalArgumentException {
+	public <T, E extends BufferUnit<T>> void addData(NPP key, long time, T value) throws IllegalArgumentException {
 		if(!bufferMap.containsKey(key)) {
 			LOGGER.error("Try to insert into a buffer doesn't exist:" + key);
 		}
 		
-		DoubleTimeIndexDataBuffer<Short> buffer = (DoubleTimeIndexDataBuffer<Short>) bufferMap.get(key);
+		DoubleTimeIndexDataBuffer<T, E> buffer = (DoubleTimeIndexDataBuffer<T, E>) bufferMap.get(key);
 		buffer.addElement(time, value);
 	}
 	
-	public List<DataPoint<Short>> getData(NPP key, int units) {
+	public <T, E extends BufferUnit<T>> List<DataPoint<T>> getData(NPP key, int units) {
 		if(!bufferMap.containsKey(key)) {
 			throw new IllegalArgumentException("Fetch from a buffer don't exist:" + key);
 		}
-		
-		return bufferMap.get(key).readDataPoint(units);
+		DoubleTimeIndexDataBuffer<T, E> buffer = (DoubleTimeIndexDataBuffer<T, E> )bufferMap.get(key); 
+		return buffer.readDataPoint(units);
 	}
 	
 	/**

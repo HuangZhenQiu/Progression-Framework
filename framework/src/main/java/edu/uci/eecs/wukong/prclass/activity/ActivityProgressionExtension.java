@@ -17,7 +17,7 @@ public class ActivityProgressionExtension extends AbstractProgressionExtension<A
 	implements Executable<Short> {
 	
 	private final static Logger LOGGER = LoggerFactory.getLogger(ActivityProgressionExtension.class);
-	private static final String MODEL_PATH = "";
+	private static final String MODEL_PATH = "/Users/peter/Desktop/Classification/java/model.txt";
 	private static final int PREDICT_PROBABILITY = 1;
 	private svm_model model;
 	public ActivityProgressionExtension(ActivityRecgonitionPrClass plugin) {
@@ -26,15 +26,13 @@ public class ActivityProgressionExtension extends AbstractProgressionExtension<A
 			model = svm.svm_load_model(MODEL_PATH);
 			if (model == null)
 			{
-				LOGGER.error("can't open model file " + MODEL_PATH);
-				System.exit(1);
+				LOGGER.info("can't open model file " + MODEL_PATH);
 			}
 			
 			if(PREDICT_PROBABILITY == 1) {
 				if(svm.svm_check_probability_model(model)==0)
 				{
-					LOGGER.error("Model does not support probabiliy estimates\n");
-					System.exit(1);
+					LOGGER.info("Model does not support probabiliy estimates\n");
 				}
 			} else {
 				if(svm.svm_check_probability_model(model)!=0)
@@ -49,14 +47,16 @@ public class ActivityProgressionExtension extends AbstractProgressionExtension<A
 
 	@Override
 	public void execute(List<Short> features, ExecutionContext context) {
-		svm_node[] x = new svm_node[features.size()];
-		for (int i = 0; i < features.size(); i++) {
-			x[i] = new svm_node();
-			x[i].index = i;
-			x[i].value = features.get(i);
+		if (model != null) {
+			svm_node[] x = new svm_node[features.size()];
+			for (int i = 0; i < features.size(); i++) {
+				x[i] = new svm_node();
+				x[i].index = i;
+				x[i].value = features.get(i);
+			}
+			svm.svm_predict(model, x);
+			this.getPrClass();
 		}
-		svm.svm_predict(model, x);
-		this.getPrClass();
 	}
 
 }

@@ -4,6 +4,9 @@ import java.lang.IllegalArgumentException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
+import edu.uci.eecs.wukong.framework.test.LoadGenerator.Activity;
+import edu.uci.eecs.wukong.framework.test.LoadGenerator.Location;
+
 /**
  * It is a ring buffer implementation on a direct buffer of Java NIO. 
  */
@@ -86,34 +89,26 @@ public class RingBuffer {
 		}
 	}
 	
-	protected void put(int content) {
-		buffer.putInt(header, content);
-	}
-	
-	public synchronized void appendInt(int content) {
-		buffer.putInt(header, content);
-		updateSize(4);
-	}
-	
-	public synchronized void appendShort(short content) {
-		buffer.putShort(header, content);
-		updateSize(2);
-	}
-	
-	public synchronized void appendByte(byte content) {
+	public void appendByte(byte content) {
 		buffer.put(header, content);
 		updateSize(1);
 	}
 	
-	public synchronized void appendLong(long content) {
-		buffer.putLong(header, content);
-		updateSize(8);
+	public void appendShort(short content) {
+		buffer.putShort(header, content);
+		updateSize(2);
 	}
 	
-	public synchronized void appendDouble(double content) {
-		buffer.putDouble(header, content);
-		updateSize(8);
+	public void appendInt(int content) {
+		buffer.putInt(header, content);
+		updateSize(4);
 	}
+	
+	public synchronized void append(byte[] content) {
+		buffer.put(content);
+		updateSize(content.length);
+	}
+	
 	
 	private void updateSize(int length) {
 		header = (header + length) % capacity;

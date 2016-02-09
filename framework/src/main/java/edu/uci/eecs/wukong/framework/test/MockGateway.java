@@ -129,8 +129,8 @@ public class MockGateway implements MPTNMessageListener {
 				sender.reprogram(infusion);
 				
 				/* Schedule load generators  */
-				// schedule();
-				// startLoad();
+				schedule();
+				startLoad();
 			} else if (pack.getType() == MPTN.MPTN_MSQTYPE_FWDREQ) {
 				/* Collect performance data */
 				

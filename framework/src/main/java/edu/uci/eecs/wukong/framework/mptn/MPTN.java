@@ -98,7 +98,12 @@ public class MPTN implements MPTNMessageListener{
 		listeners = new ArrayList<WKPFMessageListener>();
 		this.hasNodeId = false;
 		try {
-			this.serverAddress = InetAddress.getLocalHost().getHostAddress();
+			if (configuration.getProgressionServerIP() != null) {
+				this.serverAddress = configuration.getProgressionServerIP();
+			} else {
+				this.serverAddress = InetAddress.getLocalHost().getHostAddress();
+			}
+			LOGGER.info("Starting progression server MPTN at ip address " + this.serverAddress);
 			this.gatewayClient = new NIOUdpClient(
 					configuration.getGatewayIP(), configuration.getGatewayPort());
 			this.server = new NIOUdpServer(configuration.getProgressionServerPort());

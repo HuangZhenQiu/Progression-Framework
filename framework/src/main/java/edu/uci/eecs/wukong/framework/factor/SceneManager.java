@@ -91,7 +91,9 @@ public class SceneManager {
 		Map<String, BaseFactor> factorMap = new HashMap<String, BaseFactor>();
 		if (subscribedTopics != null) {
 			for(String topic : subscribedTopics) {
-				factorMap.put(topic, factors.get(topic));
+				if (factors.containsKey(topic)) {
+					factorMap.put(topic, factors.get(topic));
+				}
 			}
 		}
 		return new ExecutionContext(factorMap, factorClient);

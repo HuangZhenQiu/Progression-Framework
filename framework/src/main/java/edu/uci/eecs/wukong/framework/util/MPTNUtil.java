@@ -62,7 +62,7 @@ public class MPTNUtil {
 		int result = 0;
 		String[] addresses =  ipstr.split("\\.");
 		for (int i=3; i >=0; i--) {
-			int ip = Integer.parseInt(addresses[i]);
+			int ip = Integer.parseInt(addresses[3 - i]);
 			result |=ip << (i * 8);
 		}
 		

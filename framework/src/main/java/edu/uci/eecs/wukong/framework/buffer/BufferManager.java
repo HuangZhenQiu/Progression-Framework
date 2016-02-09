@@ -234,7 +234,8 @@ public class BufferManager {
 	@SuppressWarnings("unchecked")
 	public void addRealTimeData(NPP key, short value) {
 		if(!channelMap.containsKey(key)) {
-			throw new IllegalArgumentException("Insert into a chanel don't exist:" + key);
+			LOGGER.error("Try to insert into a channel doesn't exist:" + key);
+			return;
 		}
 
 		Channel<Short> channel = (Channel<Short>)channelMap.get(key);
@@ -244,7 +245,7 @@ public class BufferManager {
 	@SuppressWarnings("unchecked")
 	public void addData(NPP key, long time, short value) throws IllegalArgumentException {
 		if(!bufferMap.containsKey(key)) {
-			throw new IllegalArgumentException("Insert into a buffer don't exist:" + key);
+			LOGGER.error("Try to insert into a buffer doesn't exist:" + key);
 		}
 		
 		DoubleTimeIndexDataBuffer<Short> buffer = (DoubleTimeIndexDataBuffer<Short>) bufferMap.get(key);

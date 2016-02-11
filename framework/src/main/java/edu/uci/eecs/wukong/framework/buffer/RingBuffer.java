@@ -65,7 +65,7 @@ public class RingBuffer {
 	 * @param k number of bytes back from header as start position
 	 */
 	public void getByteFromPosition(byte[] dst, int k) {
-		get(dst, (header - k + capacity) & capacity, dst.length);
+		get(dst, (header - k + capacity) % capacity, k);
 	}
 	
 	
@@ -105,7 +105,7 @@ public class RingBuffer {
 	}
 	
 	public void appendInt(int content) {
-		if (header < capacity - 4) {
+		if (header <= capacity - 4) {
 			buffer.putInt(header, content);
 			updateSize(4);
 		} else {

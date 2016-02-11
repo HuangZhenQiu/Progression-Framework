@@ -62,7 +62,7 @@ public class DataRingBufferTest extends TestCase {
 		 assertEquals(shortC, shorts.get(2));
 	}
 	
-	/* public void testShortDataRingBufferBoundary() {
+	public void testShortDataRingBufferBoundary() {
 		DataRingBuffer<Short, ShortUnit> buffer = new DataRingBuffer<Short, ShortUnit> (2, 2, ShortUnit.class);
 		buffer.addElement(System.currentTimeMillis(),  new ShortUnit(shortA));
 		buffer.addElement(System.currentTimeMillis(),  new ShortUnit(shortB));
@@ -70,7 +70,7 @@ public class DataRingBufferTest extends TestCase {
 		 List<Short> shorts = buffer.getElements(2);
 		 assertEquals(shortB, shorts.get(0));
 		 assertEquals(shortC, shorts.get(1));
-	} */
+	}
 	
 	@Test
 	public void testIntegerDataRingBuffer() {

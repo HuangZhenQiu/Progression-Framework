@@ -73,6 +73,5 @@ public class GraphTest extends TestCase {
 		graph.send(nodeA, entityB);
 		assertEquals(1, nodeB.getQueueSize());
 		assertEquals(1, nodeC.getQueueSize());
-		
 	}
 }

@@ -14,7 +14,7 @@ import edu.uci.eecs.wukong.framework.entity.Entity;
  * Abstract class for building up Pipeline. It is responsible for routing entities between extend points.
  *
  */
-public abstract class Graph {
+public class Graph {
 	protected Set<Node> nodes;
 	protected Map<Node, List<Link<? extends Entity>>> outLinks; 
 
@@ -34,6 +34,12 @@ public abstract class Graph {
 		}
 		
 		outLinks.get(link.getSource()).add(link);
+		if (!nodes.contains(link.getSource())) {
+			addNode(link.getSource());
+		}
+		if (!nodes.contains(link.getSink())) {
+			addNode(link.getSink());
+		}
 	}
 	
 	public void send(Node node, Entity entity) {

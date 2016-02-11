@@ -87,6 +87,5 @@ public class MongoDBMonitorService extends TimerTask implements MonitorService {
 				buffer.clear();
 			}
 		}
-		
 	}
 }

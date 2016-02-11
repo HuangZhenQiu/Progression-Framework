@@ -26,6 +26,7 @@ public abstract class SisoOperator<T> extends AbstractOperator<T> {
 	 * @param data
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public abstract T operate(List<DataPoint<T>> data);
+	public abstract T operate(List<DataPoint<T>> data) throws Exception;
 }

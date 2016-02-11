@@ -18,11 +18,11 @@ public class SwitchFeatureExtensionExtension extends FeatureExtractionExtension<
 		List<Operator<?>> operators = new ArrayList<Operator<?>>();
 		
 		// Set operator for plugin property switchInput
-		DefaultOperator<Integer> operator= new DefaultOperator<Integer>();
+		DefaultOperator<Integer> operator= new DefaultOperator<Integer>(Integer.class);
 		operator.addDataSource(1, 0);
 		
 		// Set operator for plugin property temparature
-		AverageOperator<Double> avrOperator = new AverageOperator<Double>();
+		AverageOperator<Double> avrOperator = new AverageOperator<Double>(Double.class);
 		avrOperator.addDataSource(2, 5);
 		
 		operators.add(operator);

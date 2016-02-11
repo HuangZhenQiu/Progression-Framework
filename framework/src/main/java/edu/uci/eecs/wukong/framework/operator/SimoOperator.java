@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import edu.uci.eecs.wukong.framework.buffer.DataPoint;
 
-public abstract class SimoOperator<T> extends AbstractOperator<T> {
+public abstract class SimoOperator<T, E> extends AbstractOperator<T> {
 	private static Logger logger = LoggerFactory.getLogger(SimoOperator.class);
 	
 	protected SimoOperator(Class<T> type) {
@@ -28,5 +28,5 @@ public abstract class SimoOperator<T> extends AbstractOperator<T> {
 	 * 
 	 * @return
 	 */
-	public abstract List<T> operate(List<DataPoint<T>> data);
+	public abstract List<E> operate(List<DataPoint<T>> data);
 }

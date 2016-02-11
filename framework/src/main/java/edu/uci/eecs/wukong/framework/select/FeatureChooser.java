@@ -2,7 +2,6 @@ package edu.uci.eecs.wukong.framework.select;
 
 import edu.uci.eecs.wukong.framework.buffer.BufferManager;
 import edu.uci.eecs.wukong.framework.buffer.DataPoint;
-import edu.uci.eecs.wukong.framework.operator.Operator;
 import edu.uci.eecs.wukong.framework.operator.SisoOperator;
 import edu.uci.eecs.wukong.framework.operator.SimoOperator;
 import edu.uci.eecs.wukong.framework.operator.AbstractOperator;
@@ -15,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.lang.Number;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,18 +44,22 @@ public class FeatureChooser {
 			}
 			
 			if (!dataList.isEmpty()) {
-				if (entry.getKey() instanceof SisoOperator) {
-					SisoOperator<Object> singleOperator = (SisoOperator<Object>) entry.getKey();
-					result.add(singleOperator.operate(dataList.get(0)));
-				} else if (entry.getKey() instanceof MisoOperator ) {
-					MisoOperator<Object> multipleOperator = (MisoOperator<Object>) entry.getKey();
-					result.add(multipleOperator.operate(dataList));
-				} else if (entry.getKey() instanceof MimoOperator) {
-					MimoOperator<Object> mimoOperator = (MimoOperator<Object>) entry.getKey();
-					result.addAll(mimoOperator.operate(dataList));
-				} else if (entry.getKey() instanceof SimoOperator) {
-					SimoOperator<Object> simoOperator = (SimoOperator<Object>) entry.getKey();
-					result.addAll(simoOperator.operate(dataList.get(0)));
+				try {
+					if (entry.getKey() instanceof SisoOperator) {
+						SisoOperator<Object> singleOperator = (SisoOperator<Object>) entry.getKey();
+						result.add(singleOperator.operate(dataList.get(0)));
+					} else if (entry.getKey() instanceof MisoOperator ) {
+						MisoOperator<Object, Object> multipleOperator = (MisoOperator<Object, Object>) entry.getKey();
+						result.add(multipleOperator.operate(dataList));
+					} else if (entry.getKey() instanceof MimoOperator) {
+						MimoOperator<Object, Object> mimoOperator = (MimoOperator<Object, Object>) entry.getKey();
+						result.addAll(mimoOperator.operate(dataList));
+					} else if (entry.getKey() instanceof SimoOperator) {
+						SimoOperator<Object, Object> simoOperator = (SimoOperator<Object, Object>) entry.getKey();
+						result.addAll(simoOperator.operate(dataList.get(0)));
+					}
+				} catch (Exception e) {
+					logger.error("Fail to use operator: " + entry.getKey() + " to fetch data.");
 				}
 			}
 		}

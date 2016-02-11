@@ -4,21 +4,22 @@ import java.util.List;
 
 import edu.uci.eecs.wukong.framework.buffer.DataPoint;
 
-public class MinOperator<T extends Number> extends SisoOperator<Number> {
+public class MinOperator<T extends Number> extends SisoOperator<T> {
 
-	public MinOperator() {
-		super(Number.class);
+	public MinOperator(Class<T> type) {
+		super(type);
 	}
 	
 	@Override
-	public Number operate(List<DataPoint<Number>> data) {
+	public T operate(List<DataPoint<T>> data) throws Exception {
 		// TODO Auto-generated method stub
 		Number min = Double.MAX_VALUE;
-		for (DataPoint<Number> point : data) {
+		for (DataPoint<T> point : data) {
 			if (min.doubleValue() > point.getValue().doubleValue()) {
 				min = point.getValue().doubleValue();
 			}
 		}
-		return min;
+
+		return type.getConstructor(double.class).newInstance(min);
 	}
 }

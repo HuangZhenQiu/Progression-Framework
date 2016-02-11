@@ -19,11 +19,11 @@ public class BufferFeatureExtractionExtension extends
 	@Override
 	public List<Operator> registerOperators() {
 		List<Operator> operators = new ArrayList<Operator> ();
-		MaxOperator<Short> max =  new MaxOperator<Short>();
+		MaxOperator<Short> max =  new MaxOperator<Short>(Short.class);
 		max.addDataSource(1, 5);
 		operators.add(max);
 		
-		MinOperator<Byte> min = new MinOperator<Byte>();
+		MinOperator<Byte> min = new MinOperator<Byte>(Byte.class);
 		min.addDataSource(2, 5);
 		operators.add(min);
 		return operators;

@@ -69,7 +69,7 @@ project(':framework') {
      compile "com.googlecode.protobuf-rpc-pro:protobuf-rpc-pro-duplex:$protobufRpcVersion"
      compile "commons-lang:commons-lang:$commonsLangVersion"
      compile "nz.ac.waikato.cms.weka:weka-dev:$wekaVersion"
-     compile "mockit:jmockit:$mockitVersion"
+     compile "org.mockito:mockito-all:$mockitVersion"
      compile "org.ow2.chameleon.fuchsia.base.philips-hue:org.ow2.chameleon.fuchsia.base.philips-hue.huedsk-bundle:$hueVersion"
      compile "tw.edu.ntu.csie:libsvm:$libsvm"
   }

@@ -19,7 +19,7 @@ ext {
   protobufRpcVersion = "3.2.2"
   commonsLangVersion = "2.6"
   wekaVersion = "3.7.5"
-  mockitVersion = "0.998"
+  mockitoVersion = "1.9.5"
   hueVersion = "0.0.4"
   libsvm = "3.17"
 }

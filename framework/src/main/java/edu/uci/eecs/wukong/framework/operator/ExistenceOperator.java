@@ -11,6 +11,10 @@ import edu.uci.eecs.wukong.framework.buffer.DataPoint;
  */
 public class ExistenceOperator extends SisoOperator<Byte> {
 
+	public ExistenceOperator() {
+		super(Byte.class);
+	}
+
 	@Override
 	public Byte operate(List<DataPoint<Byte>> data) {
 		for (int i = 0; i < data.size(); i++) {

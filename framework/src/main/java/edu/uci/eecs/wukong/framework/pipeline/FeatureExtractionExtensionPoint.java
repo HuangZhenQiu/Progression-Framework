@@ -36,8 +36,8 @@ public class FeatureExtractionExtensionPoint extends ExtensionPoint<FeatureExtra
 			try {
 				Thread.sleep(10000);
 				for (PipelinePrClass prClass : this.extensionMap.keySet()) {
-					List<Number> result = featureChoosers.choose(prClass);
-					FeatureEntity<Number> entity = new FeatureEntity<Number>(prClass);
+					List<Object> result = featureChoosers.choose(prClass);
+					FeatureEntity<Object> entity = new FeatureEntity<Object>(prClass);
 					entity.addFeatures(result);
 					this.send(entity);
 				}

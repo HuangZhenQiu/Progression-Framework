@@ -4,7 +4,11 @@ import java.util.List;
 
 import edu.uci.eecs.wukong.framework.buffer.DataPoint;
 
-public abstract class MisoOperator<T extends Number> extends AbstractOperator<Number> {
+public abstract class MisoOperator<T> extends AbstractOperator<T> {
 	
-	public abstract Number operate(List<List<DataPoint<T>>> data);
+	protected MisoOperator(Class<T> type) {
+		super(type);
+	}
+	
+	public abstract T operate(List<List<DataPoint<T>>> data);
 }

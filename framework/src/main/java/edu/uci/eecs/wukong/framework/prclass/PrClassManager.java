@@ -36,7 +36,7 @@ import org.slf4j.LoggerFactory;
 public class PrClassManager implements PrClassInitListener {
 	private final static Logger LOGGER = LoggerFactory.getLogger(PrClassManager.class);
 	private static final String PLUGIN_DEFINATION_PATH = "plugins.txt";
-	private final static String PLUGIN_PATH = "edu.uci.eecs.wukong.prclass";
+	private static final String PLUGIN_PATH = "edu.uci.eecs.wukong.prclass";
 	private BufferManager bufferManager;
 	private SceneManager contextManager;
 	private PrClassPropertyMonitor propertyMonitor;

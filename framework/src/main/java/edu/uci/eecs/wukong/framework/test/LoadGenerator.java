@@ -92,6 +92,18 @@ public abstract class LoadGenerator<T> extends TimerTask {
 		public float getZ() {
 			return z;
 		}
+		
+		@Override
+		public boolean equals(Object object) {
+			if (object instanceof Location) {
+				Location location = (Location) object;
+				if (location.getX() == this.x && location.getY() == this.y && location.getZ() == this.z) {
+					return true;
+				}
+			}
+			
+			return false;
+		}
 	}
 	
 	public static class RondomLocationGenerator extends LoadGenerator<Location> {
@@ -130,6 +142,20 @@ public abstract class LoadGenerator<T> extends TimerTask {
 		
 		public float getValue() {
 			return value;
+		}
+		
+		@Override
+		public boolean equals(Object object) {
+			if (object instanceof Activity) {
+				Activity activity = (Activity) object;
+				if (this.timestamp == activity.timestamp
+						&& this.deviceId == activity.deviceId
+						&& this.value == activity.getValue()) {
+					return true;
+				}
+			}
+			
+			return false;
 		}
 	}
 	

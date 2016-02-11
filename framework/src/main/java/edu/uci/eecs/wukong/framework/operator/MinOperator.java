@@ -6,6 +6,10 @@ import edu.uci.eecs.wukong.framework.buffer.DataPoint;
 
 public class MinOperator<T extends Number> extends SisoOperator<Number> {
 
+	public MinOperator() {
+		super(Number.class);
+	}
+	
 	@Override
 	public Number operate(List<DataPoint<Number>> data) {
 		// TODO Auto-generated method stub

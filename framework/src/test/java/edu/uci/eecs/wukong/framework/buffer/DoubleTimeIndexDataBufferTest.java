@@ -4,11 +4,14 @@ import junit.framework.TestCase;
 
 import java.util.List;
 
+import org.junit.Test;
+
 import edu.uci.eecs.wukong.framework.buffer.BufferUnits.ShortUnit;
 import edu.uci.eecs.wukong.framework.model.NPP;
 
 public class DoubleTimeIndexDataBufferTest extends TestCase{
 	
+	@Test
 	public void testDoubleTimeIndexDataBuffer() {
 		DoubleTimeIndexDataBuffer<Short, ShortUnit> buffer =
 				new DoubleTimeIndexDataBuffer<Short, ShortUnit>(new NPP(1, (byte)1, (byte)1), ShortUnit.class, 2, 1000, 60, 3);
@@ -23,5 +26,4 @@ public class DoubleTimeIndexDataBufferTest extends TestCase{
 		assertEquals(data.size(), 9);
 		System.out.println(data.toString());
 	}
-
 }

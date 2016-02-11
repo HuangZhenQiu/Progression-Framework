@@ -2,8 +2,11 @@ package edu.uci.eecs.wukong.framework.buffer;
 
 import junit.framework.TestCase;
 import static org.junit.Assert.*;
+
+import org.junit.Test;
 public class RingBufferTest extends TestCase{
 
+	@Test
 	public void testWriteRingBuffer() {
 		RingBuffer buffer = new RingBuffer(4);
 		short a = 0;

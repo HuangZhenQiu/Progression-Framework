@@ -5,9 +5,11 @@ import java.util.HashMap;
 
 public abstract class AbstractOperator<T> implements Operator<T> {
 	protected Map<Integer, Integer> sourceKeys;
+	protected Class<T> type;
 	
-	public AbstractOperator() {
-		sourceKeys = new HashMap<Integer, Integer>();
+	public AbstractOperator(Class<T> type) {
+		this.sourceKeys = new HashMap<Integer, Integer>();
+		this.type = type;
 	}
 	
 	public void addDataSource(Integer key, int interval) {
@@ -16,5 +18,9 @@ public abstract class AbstractOperator<T> implements Operator<T> {
 	
 	public Map<Integer, Integer> bind() {
 		return sourceKeys;
+	}
+	
+	public Class<T> getType() {
+		return this.type;
 	}
 }

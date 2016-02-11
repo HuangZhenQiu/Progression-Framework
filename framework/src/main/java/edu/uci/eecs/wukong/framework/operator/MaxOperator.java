@@ -6,6 +6,10 @@ import edu.uci.eecs.wukong.framework.buffer.DataPoint;
 
 public class MaxOperator<T extends Number> extends SisoOperator<Number> {
 
+	public MaxOperator() {
+		super(Number.class);
+	}
+
 	@Override
 	public Number operate(List<DataPoint<Number>> data) {
 		// TODO Auto-generated method stub

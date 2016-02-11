@@ -22,6 +22,9 @@ public class LocalizationProgressionExtension extends AbstractProgressionExtensi
 	
 	public LocalizationProgressionExtension(LocalizationPrClass plugin) {
 		super(plugin);
+		this.filter = new ParticleFilter(map, this.prClass.getParticleCount(),
+				this.prClass.getSensors() , this.prClass.getMovNoise(),
+				this.prClass.getRotNoise(), this.prClass.getSenseNoise(), this.prClass.getMaxr());
 	}
 
 	@Override

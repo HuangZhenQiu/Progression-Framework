@@ -89,24 +89,35 @@ public class RingBuffer {
 		}
 	}
 	
-	public void appendByte(byte content) {
+	public synchronized void appendByte(byte content) {
 		buffer.put(header, content);
 		updateSize(1);
 	}
 	
-	public void appendShort(short content) {
-		buffer.putShort(header, content);
-		updateSize(2);
+	public synchronized void appendShort(short content) {
+		if (header != capacity - 1) {
+			buffer.putShort(header, content);
+			updateSize(2);
+		} else {
+			appendByte((byte) (content >> 8));
+			appendByte((byte) (content));
+		}
 	}
 	
 	public void appendInt(int content) {
-		buffer.putInt(header, content);
-		updateSize(4);
+		if (header < capacity - 4) {
+			buffer.putInt(header, content);
+			updateSize(4);
+		} else {
+			appendShort((short) (content >> 16));
+			appendShort((short) content);
+		}
 	}
 	
 	public synchronized void append(byte[] content) {
-		buffer.put(content);
-		updateSize(content.length);
+		for (int i = 0; i < content.length; i ++) {
+			appendByte(content[i]);
+		}
 	}
 	
 	

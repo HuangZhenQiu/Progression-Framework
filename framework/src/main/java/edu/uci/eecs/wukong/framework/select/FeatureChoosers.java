@@ -2,7 +2,7 @@ package edu.uci.eecs.wukong.framework.select;
 
 import edu.uci.eecs.wukong.framework.buffer.BufferManager;
 import edu.uci.eecs.wukong.framework.extension.FeatureExtractionExtension;
-import edu.uci.eecs.wukong.framework.operator.Operator;
+import edu.uci.eecs.wukong.framework.operator.AbstractOperator;
 import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
 import edu.uci.eecs.wukong.framework.model.NPP;
 import edu.uci.eecs.wukong.framework.wkpf.WKPF;
@@ -31,9 +31,9 @@ public class FeatureChoosers {
 	@SuppressWarnings("rawtypes")
 	public void addFeatureExtractionExtenshion(FeatureExtractionExtension extention) {
 		PipelinePrClass plugin = extention.getPrClass();
-		Map<Operator<?>, Map<NPP, Integer>> bindMap = new HashMap<Operator<?>, Map<NPP, Integer>> ();
+		Map<AbstractOperator<?>, Map<NPP, Integer>> bindMap = new HashMap<AbstractOperator<?>, Map<NPP, Integer>> ();
 		for (Object object : extention.registerOperators()) {
-			Operator operator = (Operator) object;
+			AbstractOperator operator = (AbstractOperator) object;
 			Map<Integer, Integer>  portToInterval = operator.bind();
 			Map<NPP, Integer> nppMap = new HashMap<NPP, Integer> ();
 			for (Entry<Integer, Integer> entry : portToInterval.entrySet()) {
@@ -48,7 +48,7 @@ public class FeatureChoosers {
 		logger.info("Add Feature Extraction Extension in Feature Choosers for PrClass " + plugin);
 	}
 	
-	public List<Number> choose(PipelinePrClass plugin) throws Exception {
+	public List<Object> choose(PipelinePrClass plugin) throws Exception {
 		if (chooserMap.get(plugin) == null) {
 			logger.error("Fail to choose Feature Chooser for " + plugin.toString());
 			throw new Exception("Fail to choose Feature Chooser for " + plugin.toString());

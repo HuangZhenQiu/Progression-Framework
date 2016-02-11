@@ -6,8 +6,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import edu.uci.eecs.wukong.framework.buffer.DataPoint;
 
-public abstract class SisoOperator<T extends Number> extends AbstractOperator<Number> {
+public abstract class SisoOperator<T> extends AbstractOperator<T> {
 	private static Logger logger = LoggerFactory.getLogger(SisoOperator.class);
+	
+	protected SisoOperator(Class<T> type) {
+		super(type);
+	}
 	
 	@Override
 	public void addDataSource(Integer key, int interval) {

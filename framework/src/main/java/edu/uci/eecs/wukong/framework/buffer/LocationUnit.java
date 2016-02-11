@@ -31,9 +31,9 @@ public class LocationUnit implements BufferUnit<Location> {
 	@Override
 	public byte[] toArray() {
 		ByteBuffer buffer = ByteBuffer.allocate(size());
-		buffer.putFloat(buffer.getFloat());
-		buffer.putFloat(buffer.getFloat());
-		buffer.putFloat(buffer.getFloat());
+		buffer.putFloat(value.getX());
+		buffer.putFloat(value.getY());
+		buffer.putFloat(value.getZ());
 		return buffer.array();
 	}
 

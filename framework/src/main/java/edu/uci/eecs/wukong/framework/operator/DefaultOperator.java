@@ -6,6 +6,10 @@ import edu.uci.eecs.wukong.framework.buffer.DataPoint;
 
 public class DefaultOperator<T extends Number> extends SisoOperator<Number> {
 
+	public DefaultOperator() {
+		super(Number.class);
+	}
+
 	@Override
 	public Number operate(List<DataPoint<Number>> data) {
 		if (data.size() !=0) {

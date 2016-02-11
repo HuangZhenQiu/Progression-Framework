@@ -6,6 +6,10 @@ import edu.uci.eecs.wukong.framework.buffer.DataPoint;
 
 public class AverageOperator<T extends Number> extends SisoOperator<Number> {
 
+	public AverageOperator() {
+		super(Number.class);
+	}
+
 	@Override
 	public Number operate(List<DataPoint<Number>> data) {
 		if (data.size() == 0) {

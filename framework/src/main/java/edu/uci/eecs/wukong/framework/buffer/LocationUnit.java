@@ -15,7 +15,7 @@ public class LocationUnit implements BufferUnit<Location> {
 
 	@Override
 	public int size() {
-		return 12;
+		return 16;
 	}
 
 	@Override

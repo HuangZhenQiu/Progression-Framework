@@ -19,6 +19,7 @@ import edu.uci.eecs.wukong.framework.buffer.BufferManager;
 import edu.uci.eecs.wukong.framework.buffer.BufferUnits.ByteUnit;
 import edu.uci.eecs.wukong.framework.buffer.BufferUnits.ShortUnit;
 import edu.uci.eecs.wukong.framework.buffer.LocationUnit;
+import edu.uci.eecs.wukong.framework.buffer.ResponseUnit;
 import edu.uci.eecs.wukong.framework.model.ComponentMap;
 import edu.uci.eecs.wukong.framework.model.DataType;
 import edu.uci.eecs.wukong.framework.model.Link;
@@ -36,6 +37,7 @@ import edu.uci.eecs.wukong.framework.prclass.PrClassInitListener;
 import edu.uci.eecs.wukong.framework.state.StateUpdateListener;
 import edu.uci.eecs.wukong.framework.property.Activity;
 import edu.uci.eecs.wukong.framework.property.Location;
+import edu.uci.eecs.wukong.framework.property.Response;
 import edu.uci.eecs.wukong.framework.monitor.MonitorListener;
 import edu.uci.eecs.wukong.framework.mptn.MPTN;
 
@@ -204,7 +206,7 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 	 * @param property
 	 * @param value
 	 */
-	public void sendSetProperty(byte portId, String property, Object value) {
+	public void sendSetProperty(byte portId, String property, Object value, int length) {
 		
 		try {
 			if (this.portToWuObjectMap.containsKey(portId)) {
@@ -256,7 +258,7 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 						
 						} else {
 							this.sequence++;
-							ByteBuffer buffer = ByteBuffer.allocate(14+1); // include dummy piggyback count 0
+							ByteBuffer buffer = ByteBuffer.allocate(13 + length); // include dummy piggyback count 0
 							if (destNodeId == 1) {
 								buffer.put(WKPFUtil.MONITORING);
 							} else {
@@ -282,6 +284,12 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 								// Problems: where is value? Refresh_rate should be SHORT which is the same instanceof WKPF_PROPERTY_TYPE_SHORT
 								buffer.put(WKPFUtil.WKPF_PROPERTY_TYPE_REFRESH_RATE);
 								buffer.putShort((Short)value);
+							} else if (value instanceof Location) {
+								
+							} else if (value instanceof Activity) {
+								
+							} else if (value instanceof Response) {
+								
 							}
 							
 							//TODO (Peter Huang) add token mechanism designed by sen.
@@ -445,7 +453,7 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 					location.parse(ByteBuffer.wrap(Arrays.copyOfRange(message, 8, length)));
 					bufferManager.addData(npp, System.currentTimeMillis(), location);
 				} else {
-					LOGGER.error("Broken message for write location property");
+					LOGGER.error("Broken message for writing location property to buffer");
 				}
 			} else if (wuproperty.getType().equals(Activity.class)
 					&& type == WKPFUtil.WKPF_PROPERTY_TYPE_ACTIVITY) {
@@ -455,9 +463,19 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 					activity.parse(ByteBuffer.wrap(Arrays.copyOfRange(message, 8, length)));
 					bufferManager.addData(npp, System.currentTimeMillis(), activity);
 				} else {
-					LOGGER.error("Broken message for write activity property");
+					LOGGER.error("Broken message for writing activity property to buffer");
 				}
-				
+			} else if (wuproperty.getType().equals(Response.class)
+					&& type == WKPFUtil.WKPF_PROPERTY_TYPE_RESPONSE){
+				ResponseUnit response = new ResponseUnit();
+				int length = response.size() + 8;
+				if (message.length == length) {
+					response.parse(ByteBuffer.wrap(Arrays.copyOfRange(message, 8, length)));
+					bufferManager.addData(npp, System.currentTimeMillis(), response);
+				} else {
+					LOGGER.error("Broken message for writing activity property to buffer");
+				}
+
 			} else {
 				LOGGER.error("Unrecgonized write property message type " + type);
 			}
@@ -479,7 +497,7 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 					location.parse(ByteBuffer.wrap(Arrays.copyOfRange(message, 8, length)));
 					bufferManager.addRealTimeData(npp, location.getValue());
 				} else {
-					LOGGER.error("Broken message for write location property");
+					LOGGER.error("Broken message for writing location property into channel");
 				}
 			} else if (wuproperty.getType().equals(Activity.class)
 					&& type == WKPFUtil.WKPF_PROPERTY_TYPE_ACTIVITY) {
@@ -489,8 +507,19 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 					activity.parse(ByteBuffer.wrap(Arrays.copyOfRange(message, 8, length)));
 					bufferManager.addRealTimeData(npp, activity.getValue());
 				} else {
-					LOGGER.error("Broken message for write activity property");
+					LOGGER.error("Broken message for writing activity property into channel");
 				}
+			} else if (wuproperty.getType().equals(Response.class)
+					&& type == WKPFUtil.WKPF_PROPERTY_TYPE_RESPONSE){
+				ResponseUnit response = new ResponseUnit();
+				int length = response.size() + 8;
+				if (message.length == length) {
+					response.parse(ByteBuffer.wrap(Arrays.copyOfRange(message, 8, length)));
+					bufferManager.addRealTimeData(npp, response.getValue());
+				} else {
+					LOGGER.error("Broken message for writing activity property into channel");
+				}
+
 			} else {
 				LOGGER.error("Unrecgonized write property message type " + type);
 			}

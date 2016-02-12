@@ -16,6 +16,7 @@ public class WKPFUtil {
 	public static final byte WKPF_PROPERTY_TYPE_REFRESH_RATE = 2;
 	public static final byte WKPF_PROPERTY_TYPE_LOCATION = 3;
 	public static final byte WKPF_PROPERTY_TYPE_ACTIVITY = 4;
+	public static final byte WKPF_PROPERTY_TYPE_RESPONSE = 5;
 	
 	public static final byte WKPF_REPRG_OPEN                 = 0x10;
 	public static final byte WKPF_REPRG_OPEN_R               = 0x11;

@@ -6,6 +6,9 @@ import edu.uci.eecs.wukong.framework.buffer.BufferManager;
 import edu.uci.eecs.wukong.framework.exception.PluginNotFoundException;
 import edu.uci.eecs.wukong.framework.factor.SceneManager;
 import edu.uci.eecs.wukong.framework.pipeline.Pipeline;
+import edu.uci.eecs.wukong.framework.property.Activity;
+import edu.uci.eecs.wukong.framework.property.Location;
+import edu.uci.eecs.wukong.framework.property.Response;
 import edu.uci.eecs.wukong.framework.model.NPP;
 import edu.uci.eecs.wukong.framework.model.WuClassModel;
 import edu.uci.eecs.wukong.framework.model.WuObjectModel;
@@ -337,8 +340,26 @@ public class PrClassManager implements PrClassInitListener {
 		String name = event.getPropertyName();
 		Object value = event.getNewValue();
 		PipelinePrClass plugin = (PipelinePrClass)event.getSource();
+		int length = 0;
+		if (value instanceof Byte || value instanceof Boolean) {
+			length = 1;
+		} else if (value instanceof Short) {
+			length = 2;
+		} else if (value instanceof Integer) {
+			length = 2;
+		} else if (value instanceof Location) {
+			length = 12;
+		} else if (value instanceof Activity) {
+			length = 14;
+		} else if (value instanceof Response) {
+			length = 4;
+		} else  {
+			LOGGER.info("Stop to update unrecgonized proeprty type: " + Object.class);
+			return;
+		}
+		
 		LOGGER.info("Trigger send set property for " + name + " whose portId is " + plugin.getPortId() + " and value is " + value);
-		wkpf.sendSetProperty(plugin.getPortId(), name, value);
+		wkpf.sendSetProperty(plugin.getPortId(), name, value, length);
 	}
 	
 	

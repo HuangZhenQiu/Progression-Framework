@@ -25,7 +25,7 @@ public class ActivityUnit implements BufferUnit<Activity> {
 
 	@Override
 	public int size() {
-		return 14;
+		return 18;
 	}
 
 	@Override

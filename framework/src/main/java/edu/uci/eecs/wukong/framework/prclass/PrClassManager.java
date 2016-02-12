@@ -27,6 +27,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.StringTokenizer;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.lang.annotation.Annotation;
@@ -53,7 +55,7 @@ public class PrClassManager implements PrClassInitListener {
 	/* Binded WuObjects */
 	private List<WuObjectModel> bindedWuObjects;
 	private WKPF wkpf;
-	private List<String> pluginNames;
+	private Map<String, Integer> pluginsMap;
 	private List<StateUpdateListener> listeners;
 	
 	public PrClassManager(WKPF wkpf, SceneManager contextManager,
@@ -69,7 +71,7 @@ public class PrClassManager implements PrClassInitListener {
 		this.plugins = new ArrayList<PrClass>();
 		this.bindedWuObjects = new ArrayList<WuObjectModel>();
 		this.wkpf = wkpf;
-		this.pluginNames =  new ArrayList<String> ();
+		this.pluginsMap =  new HashMap<String, Integer> ();
 		this.listeners = new ArrayList<StateUpdateListener> ();
 		this.loadPrClassDefinition();
 	}
@@ -106,7 +108,18 @@ public class PrClassManager implements PrClassInitListener {
 			while ((line = reader.readLine()) != null) {
 				line = line.trim();
 				if (line != "") {
-					pluginNames.add(line);
+					StringTokenizer tokenizer = new StringTokenizer(line);
+					if (tokenizer.countTokens() == 2) {
+						try {
+							String pluginName = tokenizer.nextToken();
+							Integer number = Integer.parseInt(tokenizer.nextToken());
+							pluginsMap.put(pluginName, number);
+						} catch (Exception e) {
+							LOGGER.info("Failt to parse the second part of plugin config : " + line);
+						}
+					} else {
+						LOGGER.info("Unrecgonized plugin string format : " + line);
+					}
 				}
 			}
 		} catch (Exception e) {
@@ -124,24 +137,25 @@ public class PrClassManager implements PrClassInitListener {
 	 * @throws Exception
 	 */
 	public void init(StateModel model) throws Exception {
-		for (String pluginName : pluginNames) {
-			String path = PLUGIN_PATH + '.' + pluginName;
+		for (Entry<String, Integer> pluginEntry : pluginsMap.entrySet()) {
+			String path = PLUGIN_PATH + '.' + pluginEntry.getKey();
 			ClassLoader loader = PrClassManager.class.getClassLoader();
 			Class<?> c = loader.loadClass(path);
 			WuClassModel wuClassModel = createWuClassModel(path, c);
 			
 			if (wuClassModel != null) {
 				LOGGER.info("Initialized Wuclass in progression server : " + wuClassModel);
-				
-				// A temporary solution for easier mapping and deployment.
-				// Create an instance for each plugin classes as hard WuClass.
-				Constructor<?> constructor = c.getConstructor(PrClassMetrics.class);
-				PrClass plugin = (PrClass) constructor.newInstance(prClassMetrics);
-				prClassMetrics.addPrClassMeter(plugin);
-				plugins.add(plugin);
-				WuObjectModel wuObjectModel = new WuObjectModel(wuClassModel, plugin);
-				wkpf.addWuObject(plugin.getPortId(), wuObjectModel);
-				LOGGER.info("Registered " + plugin.getName() +  " in progression server on port " + plugin.getPortId());
+				for (int i = 0; i< pluginEntry.getValue(); i++) {
+					// A temporary solution for easier mapping and deployment.
+					// Create an instance for each plugin classes as hard WuClass.
+					Constructor<?> constructor = c.getConstructor(PrClassMetrics.class);
+					PrClass plugin = (PrClass) constructor.newInstance(prClassMetrics);
+					prClassMetrics.addPrClassMeter(plugin);
+					plugins.add(plugin);
+					WuObjectModel wuObjectModel = new WuObjectModel(wuClassModel, plugin);
+					wkpf.addWuObject(plugin.getPortId(), wuObjectModel);
+					LOGGER.info("Registered " + plugin.getName() +  " in progression server on port " + plugin.getPortId());
+				}
 			}
 		}
 		
@@ -348,9 +362,9 @@ public class PrClassManager implements PrClassInitListener {
 		} else if (value instanceof Integer) {
 			length = 2;
 		} else if (value instanceof Location) {
-			length = 12;
+			length = 12 + 4 /* sequence int*/;
 		} else if (value instanceof Activity) {
-			length = 14;
+			length = 14 + 4 /* sequence int */;
 		} else if (value instanceof Response) {
 			length = 4;
 		} else  {

@@ -10,6 +10,7 @@ public class WKPFUtil {
 	
 	/* Virtual and Can create Instance, It should be 3 in the end. Temporarily, we treat it as  */
 	public static final byte PLUGIN_WUCLASS_TYPE = 0; // Need to confirm with Niels
+	public static final int WKPF_WRITE_PROPERTY_LENGTH = 8; // Until type 
 	
 	public static final byte WKPF_PROPERTY_TYPE_SHORT = 0;
 	public static final byte WKPF_PROPERTY_TYPE_BOOLEAN = 1;

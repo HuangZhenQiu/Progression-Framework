@@ -38,8 +38,7 @@ public class Activity {
 			Activity activity = (Activity) object;
 			if (this.timestamp == activity.timestamp
 					&& this.deviceId == activity.deviceId
-					&& this.value == activity.value
-					&& this.sequence == activity.sequence) {
+					&& this.value == activity.value) {
 				return true;
 			}
 		}

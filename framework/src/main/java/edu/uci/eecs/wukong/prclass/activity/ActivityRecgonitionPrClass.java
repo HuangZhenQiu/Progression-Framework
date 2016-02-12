@@ -10,7 +10,7 @@ import edu.uci.eecs.wukong.framework.model.DataType;
 import edu.uci.eecs.wukong.framework.api.Extension;
 import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
 import edu.uci.eecs.wukong.framework.prclass.PrClassMetrics;
-import edu.uci.eecs.wukong.framework.test.LoadGenerator.Activity;
+import edu.uci.eecs.wukong.framework.property.Activity;
 
 @WuClass(id = 10115)
 public class ActivityRecgonitionPrClass extends PipelinePrClass {

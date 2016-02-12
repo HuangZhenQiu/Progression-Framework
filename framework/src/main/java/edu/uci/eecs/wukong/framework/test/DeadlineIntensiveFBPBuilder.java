@@ -3,7 +3,7 @@ package edu.uci.eecs.wukong.framework.test;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.uci.eecs.wukong.framework.test.LoadGenerator.Location;
+import edu.uci.eecs.wukong.framework.property.Location;
 
 /**
  * This FBP builder aims to test the throughput of single localization prclass.

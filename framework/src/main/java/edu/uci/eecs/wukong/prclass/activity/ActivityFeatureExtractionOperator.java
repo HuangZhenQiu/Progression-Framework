@@ -4,7 +4,7 @@ import java.util.List;
 
 import edu.uci.eecs.wukong.framework.buffer.DataPoint;
 import edu.uci.eecs.wukong.framework.operator.SimoOperator;
-import edu.uci.eecs.wukong.framework.test.LoadGenerator.Activity;
+import edu.uci.eecs.wukong.framework.property.Activity;
 
 public class ActivityFeatureExtractionOperator extends SimoOperator<Activity, Double> {
 

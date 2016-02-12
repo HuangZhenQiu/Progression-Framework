@@ -4,9 +4,6 @@ import java.lang.IllegalArgumentException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
-import edu.uci.eecs.wukong.framework.test.LoadGenerator.Activity;
-import edu.uci.eecs.wukong.framework.test.LoadGenerator.Location;
-
 /**
  * It is a ring buffer implementation on a direct buffer of Java NIO. 
  */

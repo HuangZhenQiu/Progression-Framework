@@ -7,8 +7,8 @@ import org.junit.Test;
 import edu.uci.eecs.wukong.framework.buffer.BufferUnits.ByteUnit;
 import edu.uci.eecs.wukong.framework.buffer.BufferUnits.IntUnit;
 import edu.uci.eecs.wukong.framework.buffer.BufferUnits.ShortUnit;
-import edu.uci.eecs.wukong.framework.test.LoadGenerator.Location;
-import edu.uci.eecs.wukong.framework.test.LoadGenerator.Activity;
+import edu.uci.eecs.wukong.framework.property.Location;
+import edu.uci.eecs.wukong.framework.property.Activity;
 
 import junit.framework.TestCase;
 

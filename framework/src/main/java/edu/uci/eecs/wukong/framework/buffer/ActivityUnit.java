@@ -2,7 +2,7 @@ package edu.uci.eecs.wukong.framework.buffer;
 
 import java.nio.ByteBuffer;
 
-import edu.uci.eecs.wukong.framework.test.LoadGenerator.Activity;
+import edu.uci.eecs.wukong.framework.property.Activity;
 
 public class ActivityUnit implements BufferUnit<Activity> {
 	public Activity value;

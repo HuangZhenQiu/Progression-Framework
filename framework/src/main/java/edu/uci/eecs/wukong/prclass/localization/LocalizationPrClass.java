@@ -10,7 +10,8 @@ import edu.uci.eecs.wukong.framework.model.DataType;
 import edu.uci.eecs.wukong.framework.model.PropertyType;
 import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
 import edu.uci.eecs.wukong.framework.prclass.PrClassMetrics;
-import edu.uci.eecs.wukong.framework.test.LoadGenerator.Location;
+import edu.uci.eecs.wukong.framework.property.Location;
+import edu.uci.eecs.wukong.framework.property.Response;
 
 @WuClass(id = 10114)
 public class LocalizationPrClass extends PipelinePrClass{
@@ -27,7 +28,7 @@ public class LocalizationPrClass extends PipelinePrClass{
 	@WuProperty(id = 5, name = "maxr", type = PropertyType.Input, dtype = DataType.Init_Value)
 	private short maxr;
 	@WuProperty(id = 6, name = "output", type = PropertyType.Output)
-	private short output;
+	private Response output;
 	private double[] sensors = {1.0, 1.0, 1.0};
 	
 	public LocalizationPrClass(PrClassMetrics metrics) {
@@ -80,11 +81,11 @@ public class LocalizationPrClass extends PipelinePrClass{
 		this.maxr = maxr;
 	}
 
-	public short getOutput() {
+	public Response getOutput() {
 		return output;
 	}
 
-	public void setOutput(short output) {
+	public void setOutput(Response output) {
 		this.output = output;
 	}
 	

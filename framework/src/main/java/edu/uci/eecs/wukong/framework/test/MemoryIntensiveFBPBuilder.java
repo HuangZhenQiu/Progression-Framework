@@ -3,7 +3,7 @@ package edu.uci.eecs.wukong.framework.test;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.uci.eecs.wukong.framework.test.LoadGenerator.Activity;
+import edu.uci.eecs.wukong.framework.property.Activity;
 
 /**
  * This FBP builder aims to test the response of single activity analysis Prclass.

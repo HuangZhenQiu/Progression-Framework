@@ -2,7 +2,7 @@ package edu.uci.eecs.wukong.framework.buffer;
 
 import java.nio.ByteBuffer;
 
-import edu.uci.eecs.wukong.framework.test.LoadGenerator.Location;
+import edu.uci.eecs.wukong.framework.property.Location;
 
 public class LocationUnit implements BufferUnit<Location> {
 	private Location value;

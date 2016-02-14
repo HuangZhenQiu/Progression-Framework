@@ -12,7 +12,7 @@ import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
 import edu.uci.eecs.wukong.framework.prclass.PrClassMetrics;
 import edu.uci.eecs.wukong.framework.property.Activity;
 
-@WuClass(id = 10115)
+@WuClass(id = 10116)
 public class ActivityRecgonitionPrClass extends PipelinePrClass {
 
 	@WuProperty(id = 0, name = "input", type = PropertyType.Input, dtype = DataType.Buffer)

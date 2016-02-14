@@ -13,7 +13,7 @@ import edu.uci.eecs.wukong.framework.prclass.PrClassMetrics;
 import edu.uci.eecs.wukong.framework.property.Location;
 import edu.uci.eecs.wukong.framework.property.Response;
 
-@WuClass(id = 10114)
+@WuClass(id = 10115)
 public class LocalizationPrClass extends PipelinePrClass{
 	@WuProperty(id = 0, name = "signal", type = PropertyType.Input, dtype = DataType.Channel)
 	private Location signal;

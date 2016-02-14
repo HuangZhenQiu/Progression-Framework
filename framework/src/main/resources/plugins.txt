@@ -15,3 +15,4 @@ occupancy.OccupancyDetection 1
 localization.LocalizationPrClass 8
 activity.ActivityRecgonitionPrClass 1
 simple.SimpleInputPrClass 1
+loadtester.LocalizationLoadTester 8

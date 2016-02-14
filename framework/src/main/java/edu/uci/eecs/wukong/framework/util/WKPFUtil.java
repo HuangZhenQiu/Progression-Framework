@@ -54,8 +54,8 @@ public class WKPFUtil {
 	
 	
 	public static void appendWKPFPacket(ByteBuffer buffer, int sourceId, int destId, byte type, byte[] payload) {
-		MPTNUtil.appendReversedInt(buffer, destId);
-		MPTNUtil.appendReversedInt(buffer, (int) (sourceId & 0xffffffffL));
+		buffer.putInt(destId);
+		buffer.putInt((int) (sourceId & 0xffffffffL));
 		buffer.put(type);
 		if (payload != null) {
 			buffer.put(payload);

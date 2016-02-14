@@ -12,7 +12,7 @@ import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
 import edu.uci.eecs.wukong.framework.property.Response;
 import edu.uci.eecs.wukong.framework.property.Location;
 
-@WuClass(id = 20114)
+@WuClass(id = 20115)
 public class LocalizationLoadTester extends PipelinePrClass {
 	@WuProperty(id = 0, name = "response", type = PropertyType.Input, dtype = DataType.Channel)
 	private Response response;

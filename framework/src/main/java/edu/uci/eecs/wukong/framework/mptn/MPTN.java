@@ -33,6 +33,8 @@ public class MPTN implements MPTNMessageListener{
 	private long longAddress;
 	// local ip address
 	private String serverAddress;
+	// local ip integer
+	private int serverIP;
 	// UUID for node id acquire
 	private byte[] uuid;
 	
@@ -103,6 +105,7 @@ public class MPTN implements MPTNMessageListener{
 			} else {
 				this.serverAddress = InetAddress.getLocalHost().getHostAddress();
 			}
+			this.serverIP = MPTNUtil.IPToInteger(this.serverAddress);
 			LOGGER.info("Starting progression server MPTN at ip address " + this.serverAddress);
 			this.gatewayClient = new NIOUdpClient(
 					configuration.getGatewayIP(), configuration.getGatewayPort());
@@ -182,7 +185,7 @@ public class MPTN implements MPTNMessageListener{
 		int size = payload.length + 20;
 		ByteBuffer buffer = ByteBuffer.allocate(size);
 		appendMPTNHeader(buffer, nodeId, HEADER_TYPE_1, (byte)(payload.length + 9));
-		WKPFUtil.appendWKPFPacket(buffer, (int)longAddress, destId,
+		WKPFUtil.appendWKPFPacket(buffer, serverIP, destId,
 				MPTNUtil.MPTN_MSATYPE_FWDREQ, payload);
 		LOGGER.info(MPTNUtil.toHexString(buffer.array()));
 		gatewayClient.send(buffer.array());

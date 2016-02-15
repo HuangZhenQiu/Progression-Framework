@@ -303,7 +303,7 @@ public class MPTN implements MPTNMessageListener{
 						return WKPFUtil.WKPF_GET_LOCATION;
 					case WKPFUtil.WKPF_SET_LOCATION:
 						fireWKPFSetLocation(wkpfPackage);
-						return  WKPFUtil.WKPF_SET_LOCATION;
+						return WKPFUtil.WKPF_SET_LOCATION;
 					case WKPFUtil.MONITORING:
 						fireWKPFMonitoredData(wkpfPackage);
 						return WKPFUtil.MONITORING;
@@ -353,49 +353,49 @@ public class MPTN implements MPTNMessageListener{
 	}
 	
 	private void fireWKPFGetWuObjectList(WKPFPackage message) {
-		LOGGER.debug("Received get WuObject List message");
+		LOGGER.info("Received get WuObject List message");
 		for (WKPFMessageListener listener : listeners) {
 			listener.onWKPFGetWuObjectList(message.getSourceAddress(), message.getPayload());
 		}
 	}
 	
 	private void fireWKPFReadProperty(WKPFPackage message) {
-		LOGGER.debug("Received read Property message");
+		LOGGER.info("Received read Property message");
 		for (WKPFMessageListener listener : listeners) {
 			listener.onWKPFReadProperty(message.getSourceAddress(), message.getPayload());
 		}
 	}
 	
 	private void fireWKPFWriteProperty(WKPFPackage message) {
-		LOGGER.debug("Received write Property message");
+		LOGGER.info("Received write Property message");
 		for (WKPFMessageListener listener : listeners) {
 			listener.onWKPFWriteProperty(message.getSourceAddress(), message.getPayload());
 		}
 	}
 	
 	private void fireWKPFRequestPropertyInit(WKPFPackage message) {
-		LOGGER.debug("Received Request Property init message");
+		LOGGER.info("Received Request Property init message");
 		for (WKPFMessageListener listener : listeners) {
 			listener.onWKPFRequestPropertyInit(message.getSourceAddress(), message.getPayload());
 		}
 	}
 	
 	private void fireWKPFMonitoredData(WKPFPackage message) {
-		LOGGER.debug("Received Monitored data message");
+		LOGGER.info("Received Monitored data message");
 		for (WKPFMessageListener listener : listeners) {
 			listener.onWKPFMonitoredData(message.getSourceAddress(), message.getPayload());
 		}
 	}
 	
 	private void fireWKPFGetLocation(WKPFPackage message) {
-		LOGGER.debug("Received get location message");
+		LOGGER.info("Received get location message");
 		for (WKPFMessageListener listener : listeners) {
 			listener.onWKPFGetLocation(message.getSourceAddress(), message.getPayload());
 		}
 	}
 	
 	private void fireWKPFSetLocation(WKPFPackage message) {
-		LOGGER.debug("Received set location message");
+		LOGGER.info("Received set location message");
 		for (WKPFMessageListener listener : listeners) {
 			listener.onWKPFSetLocation(message.getSourceAddress(), message.getPayload());
 		}

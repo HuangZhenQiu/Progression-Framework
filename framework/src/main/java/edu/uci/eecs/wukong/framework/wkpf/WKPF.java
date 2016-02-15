@@ -598,20 +598,24 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 	public void onWKPFSetLocation(long sourceId, byte[] message) {
 		// First message, if offset is 0.
 		int chunkSize = 0;
-		if (message[1] == 0) {
-			chunkSize = message[2];
-			length = message[3];
+		if (message[3] == 0) {
+			chunkSize = message[4];
+			length = message[5];
 			locationbuffer = new StringBuffer();
-			for(int index = 4; index < chunkSize + 3; index ++){
-				locationbuffer.append(message[index]);
+			for(int index = 6; index < chunkSize + 6; index ++){
+				if (index < message.length) {
+					locationbuffer.append((char)message[index]);
+				}
 			}
 		} else {
-			chunkSize = message[2];
-			for(int index = 3; index < chunkSize + 3; index ++){
-				locationbuffer.append(message[index]);
+			chunkSize = message[4];
+			for(int index = 5; index < chunkSize + 5; index ++){
+				if (index < message.length) {
+					locationbuffer.append((char)message[index]);
+				}
 			}
 		}
-		if (message[1] + chunkSize == locationbuffer.length()) {
+		if (length == locationbuffer.length()) {
 			location = locationbuffer.toString();
 		}
 		

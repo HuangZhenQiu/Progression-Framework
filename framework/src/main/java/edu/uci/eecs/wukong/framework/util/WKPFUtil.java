@@ -90,10 +90,10 @@ public class WKPFUtil {
 	}
 	
 	public static long getLong(byte[] buffer, int start) {
-		long result = ((buffer[start] + 256) % 256) << 24;
-		result += ((buffer[start + 1] + 256) % 256) << 16;
-		result += ((buffer[start + 2] + 256) % 256) << 8;
-		result += ((buffer[start + 3] + 256) % 256);
+		long result = ((new Long(buffer[start]) + 256) % 256) << 24;
+		result += ((new Long(buffer[start + 1]) + 256) % 256) << 16;
+		result += ((new Long(buffer[start + 2]) + 256) % 256) << 8;
+		result += ((new Long(buffer[start + 3]) + 256) % 256);
 		
 		return result;
 	}
@@ -113,10 +113,10 @@ public class WKPFUtil {
 	}
 	
 	public static long getBigEndianLong(byte[] buffer, int start) {
-		long result = (long)(buffer[start] & 0xff);
-		result += (long)(buffer[start + 1] & 0xff) << 8;
-		result += (long)(buffer[start + 2] & 0xff) << 16;
-		result += (long)(buffer[start + 3] & 0xff) << 24;
+		long result = (new Long(buffer[start]) + 256) % 256;
+		result += ((new Long(buffer[start + 1]) + 256) % 256) << 8;
+		result += ((new Long(buffer[start + 2]) + 256) % 256) << 16;
+		result += ((new Long(buffer[start + 3]) + 256) % 256) << 24;
 		
 		return result;
 	}

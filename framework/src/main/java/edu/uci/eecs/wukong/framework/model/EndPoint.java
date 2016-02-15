@@ -5,10 +5,10 @@ import java.nio.ByteBuffer;
 public class EndPoint {
 	public static int ENDPOINT_LENGTH = 5;
 	/* Network address */
-	private int nodeId;
+	private long nodeId;
 	private byte portId;
 	
-	public EndPoint(int nodeId, byte portId) {
+	public EndPoint(long nodeId, byte portId) {
 		this.nodeId = nodeId;
 		this.portId = portId;
 	}

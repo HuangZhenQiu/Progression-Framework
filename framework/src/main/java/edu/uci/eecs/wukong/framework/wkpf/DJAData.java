@@ -320,7 +320,7 @@ public class DJAData {
 	 *     1 byte port number
 	 */
 	private EndPoint extractEndPoint(int index) {
-		int nodeId = WKPFUtil.getBigEndianInteger(buffer, index);
+		long nodeId = WKPFUtil.getBigEndianLong(buffer, index);
 		return new EndPoint(nodeId, buffer[index + 4]);
 	}
 	

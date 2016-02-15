@@ -81,7 +81,7 @@ public final class DoubleTimeIndexDataBuffer<T, E extends BufferUnit<T>> {
 	
 	public List<DataPoint<T>> readDataPoint(int units) {
 		ByteBuffer data = read(units);
-		int size = data.capacity() / dataBuffer.getUnitSize();
+		int size = data.capacity() / dataBuffer.getUnitLength();
 		List<DataPoint<T>> points = new ArrayList<DataPoint<T>>();
 		while(size > 0) {
 			try {

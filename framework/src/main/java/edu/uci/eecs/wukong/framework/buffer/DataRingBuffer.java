@@ -15,20 +15,21 @@ import org.slf4j.LoggerFactory;
  * @author Peter
  *
  */
-public final class DataRingBuffer<T, E extends BufferUnit<T>> extends RingBuffer {
+public class DataRingBuffer<T, E extends BufferUnit<T>> extends RingBuffer {
 	private static Logger logger = LoggerFactory.getLogger(DataRingBuffer.class);
 	private long initial;
 	private long last;
-	private int unitSize;
+	private int unitLength;
 	private int capacity;
-	private int size;
+	private int unitSize;
 	private Class<E> type;
 	
-	public DataRingBuffer(int capacity, int unitSize, Class<E> type) {
-		super((unitSize + 4) * capacity);
+	public DataRingBuffer(int capacity, int unitLength, Class<E> type) {
+		super((unitLength + 4) * capacity);
 		this.capacity = capacity;
-		this.unitSize = unitSize;
+		this.unitLength = unitLength;
 		this.type = type;
+		this.unitSize = 0;
 		this.initial = 0;
 		this.last = 0;
 	}
@@ -40,13 +41,16 @@ public final class DataRingBuffer<T, E extends BufferUnit<T>> extends RingBuffer
 		
 		if(initial == 0) {
 			initial = time;
+			last = initial;
 		}
 		
 		// Add time deviation
 		this.appendInt((int)(time - last));
 		this.append(value.toArray());
 		this.last = time;
-		this.size = (size ++) % capacity;
+		if (this.unitSize < this.capacity) {
+			this.unitSize += 1;
+		}
 	}
 	
 	public synchronized List<T> getElements(int size) throws RuntimeException{	
@@ -55,7 +59,7 @@ public final class DataRingBuffer<T, E extends BufferUnit<T>> extends RingBuffer
 			throw new RuntimeException("Fail to access size out of capacity");
 		}
 		
-		int elementLength = 4 + unitSize;
+		int elementLength = 4 + unitLength;
 		List<T> elements = new ArrayList<T> ();
 		int totalBytes = size * (elementLength);
 		byte[] bytes = new byte[totalBytes];
@@ -75,12 +79,30 @@ public final class DataRingBuffer<T, E extends BufferUnit<T>> extends RingBuffer
 		return elements;
 	}
 	
-	public int getSize() {
-		return this.size;
+	public synchronized void clear() {
+		this.unitSize = 0;
+		this.initial = 0;
+		this.buffer.clear();
+	}
+	
+	public synchronized boolean isFull() {
+		if (unitSize == capacity) {
+			return true;
+		}
+		
+		return false;
+	}
+	
+	public synchronized boolean isEmpty() {
+		return unitSize == 0 ? true : false;
 	}
 	
 	public int getUnitSize() {
 		return this.unitSize;
+	}
+	
+	public int getUnitLength() {
+		return this.unitLength;
 	}
 	
 	public int getCapacity() {

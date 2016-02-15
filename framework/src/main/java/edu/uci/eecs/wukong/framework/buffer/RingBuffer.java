@@ -137,6 +137,10 @@ public class RingBuffer {
 		return this.size == this.capacity;
 	}
 	
+	public int getSize() {
+		return this.buffer.capacity();
+	}
+	
 	public void clear() {
 		this.buffer.clear();
 		this.header = 0;

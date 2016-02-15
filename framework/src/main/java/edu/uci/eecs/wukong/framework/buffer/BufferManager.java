@@ -79,7 +79,7 @@ public class BufferManager {
 					// Use long address
 					NPP npp = new NPP(mptn.getLongAddress(), model.getPort(), property.getId());
 					if (property.getPtype().equals(PropertyType.Input)
-							&&property.getDtype().equals(DataType.Channel)) {
+							&&property.getDtype().equals(DataType.Channel) && prClass.registerExtension() != null) {
 						for (Extension extension : prClass.registerExtension()) {
 							if (extension instanceof Channelable) {
 								

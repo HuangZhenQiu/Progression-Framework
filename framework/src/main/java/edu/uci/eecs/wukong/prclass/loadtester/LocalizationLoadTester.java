@@ -28,7 +28,7 @@ public class LocalizationLoadTester extends PipelinePrClass {
 	public List<Extension> registerExtension() {
 		List<Extension> extensions = new ArrayList<Extension> ();
 		extensions.add(new LocalizationLoadTestProgressionExtension(this));
-		return null;
+		return extensions;
 	}
 
 	@Override

@@ -37,12 +37,26 @@ public class ParticleFilter {
         rnd=new Random();
         this.particles=new Particle[particlecount];
 		// TODO: initialize particles (uniform distribution over the map)
-
+        double unitHeight =  map.getHeight() / Math.sqrt(particlecount);
+        double unitWidth =  map.getWidth() / Math.sqrt(particlecount);
+        
+        int i = 0;
+        double weight = 1 / particlecount;
+        for (double y = unitHeight / 2; y < map.getHeight(); y += unitHeight) {
+        	for (double x = unitWidth / 2; x < map.getWidth(); x += unitWidth) {
+        		if (i < particlecount) {
+        			this.particles[i] = new Particle(x, y, 0, weight);
+        		}
+        		i++;
+        	}
+        }
     }
 	
 	// this is the main particle filter function that is called after each step
 	public void step(double[] sensorvalues,int action, double value, double noise){
-		// TODO: fill out
+		applyAction(action, value);
+		applyObservation(sensorvalues, noise);
+		this.particles = resample(this.particles, 1.0);
     }
 
 	// apply the transition model to all particles
@@ -68,10 +82,18 @@ public class ParticleFilter {
 
 	// apply the sensor model to all particles
     private void applyObservation(double[] sensorvalues, double noise){
-		// TODO: weight each particle according to observation probability
-
+		double total = 0;
+		for (int i = 0; i < this.particles.length; i++) {
+			double probability = getObservationProbability(sensorvalues, this.particles[i]);
+			this.particles[i].setW(probability);
+			total += probability;
+		}
 		// TODO: normalize weights to 1
-		
+		if (total != 0.0) {
+			for (int i = 0; i < this.particles.length; i++) {
+				this.particles[i].setW(this.particles[i].getW() / total);
+			}
+		}
     }
 
 	// returns P(e|x)

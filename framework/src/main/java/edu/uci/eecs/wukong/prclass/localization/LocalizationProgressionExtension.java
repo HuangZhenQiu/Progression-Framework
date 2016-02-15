@@ -1,5 +1,7 @@
 package edu.uci.eecs.wukong.prclass.localization;
 
+import java.util.Arrays;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,6 +24,13 @@ public class LocalizationProgressionExtension extends AbstractProgressionExtensi
 	
 	public LocalizationProgressionExtension(LocalizationPrClass plugin) {
 		super(plugin);
+		boolean[][] values = new boolean[100][100];
+		for (int i = 0; i < values.length; i ++) {
+			values[i] = new boolean[100];
+			Arrays.fill(values[i], true);
+		}
+		
+		map = new Map(values, 9, 9);
 		this.filter = new ParticleFilter(map, this.prClass.getParticleCount(),
 				this.prClass.getSensors() , this.prClass.getMovNoise(),
 				this.prClass.getRotNoise(), this.prClass.getSenseNoise(), this.prClass.getMaxr());
@@ -32,7 +41,11 @@ public class LocalizationProgressionExtension extends AbstractProgressionExtensi
 		try {
 			Timer timer = this.prClass.getPrClassMetrics().getTimer(this.prClass, this);
 			long start = System.currentTimeMillis();
-			// Do something
+			double[] sensorValues = new double[3];
+			sensorValues[0] = data.getValue().getX();
+			sensorValues[1] = data.getValue().getY();
+			sensorValues[2] = data.getValue().getZ();
+			filter.step(sensorValues, 1, 1, 2);
 			Thread.sleep(2000);
 			long end = System.currentTimeMillis();
 			timer.update(end - start);

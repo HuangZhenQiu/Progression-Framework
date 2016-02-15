@@ -181,20 +181,19 @@ public class MPTN implements MPTNMessageListener{
 	 * @param destId
 	 * @param payload
 	 */
-	public void send(int destId, byte[] payload) {
+	public void send(long destId, byte[] payload) {
 		int size = payload.length + 20;
 		ByteBuffer buffer = ByteBuffer.allocate(size);
 		appendMPTNHeader(buffer, nodeId, HEADER_TYPE_1, (byte)(payload.length + 9));
-		WKPFUtil.appendWKPFPacket(buffer, serverIP, destId,
+		WKPFUtil.appendWKPFPacket(buffer, longAddress, destId,
 				MPTNUtil.MPTN_MSATYPE_FWDREQ, payload);
 		LOGGER.info(MPTNUtil.toHexString(buffer.array()));
 		gatewayClient.send(buffer.array());
 	}
 	
 	private void appendMPTNHeader(ByteBuffer buffer, int nodeId, byte type, byte payload_bytes) {
-		int ipaddress = MPTNUtil.IPToInteger(this.serverAddress);
 		short port = configuration.getProgressionServerPort();
-		MPTNUtil.appendMPTNHeader(buffer, ipaddress, port, nodeId, type, payload_bytes);
+		MPTNUtil.appendMPTNHeader(buffer, serverIP, port, nodeId, type, payload_bytes);
 	}
 
 	public void onMessage(MPTNPackage message) {
@@ -257,7 +256,7 @@ public class MPTN implements MPTNMessageListener{
 	 * 
 	 * @param message
 	 */
-	private void processIDMessage(int address) {
+	private void processIDMessage(long address) {
 		this.longAddress = address;
 		LOGGER.info("Received Long Address from gateway: " + longAddress);
 	}

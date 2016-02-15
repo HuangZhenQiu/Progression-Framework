@@ -5,31 +5,31 @@ import java.util.Arrays;
 import edu.uci.eecs.wukong.framework.util.WKPFUtil;
 
 public class WKPFPackage {
-	private int sourceAddress;
-	private int destAddress;
+	private long sourceAddress;
+	private long destAddress;
 	private byte type;
 	private byte[] payload;
 	
 	public WKPFPackage(byte[] payload) {
-		this.destAddress =  WKPFUtil.getBigEndianInteger(payload, 0);
-		this.sourceAddress = WKPFUtil.getBigEndianInteger(payload, 4);
+		this.destAddress =  WKPFUtil.getLong(payload, 0);
+		this.sourceAddress = WKPFUtil.getLong(payload, 4);
 		this.type = payload[8];
 		this.payload = Arrays.copyOfRange(payload, 9, payload.length);
 	}
 
-	public int getSourceAddress() {
+	public long getSourceAddress() {
 		return sourceAddress;
 	}
 
-	public void setSourceAddress(int sourceAddress) {
+	public void setSourceAddress(long sourceAddress) {
 		this.sourceAddress = sourceAddress;
 	}
 
-	public int getDestAddress() {
+	public long getDestAddress() {
 		return destAddress;
 	}
 
-	public void setDestAddress(int destAddress) {
+	public void setDestAddress(long destAddress) {
 		this.destAddress = destAddress;
 	}
 

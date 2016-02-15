@@ -53,9 +53,17 @@ public class WKPFUtil {
 	public static final byte WKPF_ERROR                   = (byte)0x86;
 	
 	
-	public static void appendWKPFPacket(ByteBuffer buffer, int sourceId, int destId, byte type, byte[] payload) {
-		buffer.putInt(destId);
-		buffer.putInt((int) (sourceId & 0xffffffffL));
+	public static void appendWKPFPacket(ByteBuffer buffer, long sourceId, long destId, byte type, byte[] payload) {
+		// MPTNUtil.appendReversedInt(buffer, destId);
+		// MPTNUtil.appendReversedInt(buffer, (int) (sourceId & 0xffffffffL));
+		buffer.put((byte)(destId >> 24));
+		buffer.put((byte)(destId >> 16));
+		buffer.put((byte)(destId >> 8));
+		buffer.put((byte)(destId >> 0));
+		buffer.put((byte)(sourceId >> 24));
+		buffer.put((byte)(sourceId >> 16));
+		buffer.put((byte)(sourceId >> 8));
+		buffer.put((byte)(sourceId >> 0));
 		buffer.put(type);
 		if (payload != null) {
 			buffer.put(payload);
@@ -81,8 +89,17 @@ public class WKPFUtil {
 		return b;
 	}
 	
+	public static long getLong(byte[] buffer, int start) {
+		long result = ((buffer[start] + 256) % 256) << 24;
+		result += ((buffer[start + 1] + 256) % 256) << 16;
+		result += ((buffer[start + 2] + 256) % 256) << 8;
+		result += ((buffer[start + 3] + 256) % 256);
+		
+		return result;
+	}
+	
 	/**
-	 * Get little endian int from the start index of the buffer
+	 * Get big endian int from the start index of the buffer
 	 * @param start the index of the buffer
 	 * @return the converted int
 	 */

@@ -16,7 +16,6 @@ import edu.uci.eecs.wukong.framework.event.Event;
 import edu.uci.eecs.wukong.framework.event.Event.EventType;
 import edu.uci.eecs.wukong.framework.entity.Entity;
 import edu.uci.eecs.wukong.framework.pipeline.Pipeline;
-import edu.uci.eecs.wukong.framework.pipeline.ProgressionExtensionPoint;
 import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
 import edu.uci.eecs.wukong.framework.extension.AbstractExtension;
 
@@ -67,7 +66,7 @@ public abstract class ExtensionPoint<E extends AbstractExtension<? extends Pipel
 	public synchronized void unregister(E extension) {
 		try {
 			if (extension instanceof Closable) {
-			
+				((Closable) extension).close();
 			}
 			if (extensionMap.containsKey(extension.getPrClass())) {
 				extensionMap.remove(extension.getPrClass());

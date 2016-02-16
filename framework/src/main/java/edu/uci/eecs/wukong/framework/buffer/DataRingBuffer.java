@@ -68,7 +68,7 @@ public class DataRingBuffer<T, E extends BufferUnit<T>> extends RingBuffer {
 			for (int i = 0; i < size; i++) {
 				byte[] data = Arrays.copyOfRange(bytes, 4 + i * elementLength, (i + 1) * elementLength);
 				BufferUnit<T> unit = type.getConstructor().newInstance();
-				unit.parse(ByteBuffer.wrap(data));
+				unit.parse(ByteBuffer.wrap(data), false);
 				elements.add(unit.getValue());
 			}
 		} catch (Exception e) {

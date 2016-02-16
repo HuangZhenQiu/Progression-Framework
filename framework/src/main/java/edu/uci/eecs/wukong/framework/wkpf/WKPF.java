@@ -285,11 +285,19 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 								buffer.put(WKPFUtil.WKPF_PROPERTY_TYPE_REFRESH_RATE);
 								buffer.putShort((Short)value);
 							} else if (value instanceof Location) {
-								
+								Location location = (Location) value;
+								buffer.put(WKPFUtil.WKPF_PROPERTY_TYPE_LOCATION);
+								buffer.put((new LocationUnit(location)).toArray());
+								buffer.putInt(location.getSequence());
 							} else if (value instanceof Activity) {
-								
+								Activity activity = (Activity) value;
+								buffer.put(WKPFUtil.WKPF_PROPERTY_TYPE_ACTIVITY);
+								buffer.put(new ActivityUnit(activity).toArray());
+								buffer.putInt(activity.getSequence());
 							} else if (value instanceof Response) {
-								
+								Response response = (Response) value;
+								buffer.put(WKPFUtil.WKPF_PROPERTY_TYPE_RESPONSE);
+								buffer.putInt(response.getSequence());
 							}
 							
 							//TODO (Peter Huang) add token mechanism designed by sen.
@@ -451,7 +459,7 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 				int length = location.size() + WKPFUtil.WKPF_WRITE_PROPERTY_LENGTH + 4;
 				if (message.length == length) {
 					location.parse(ByteBuffer.wrap(Arrays.copyOfRange(
-							message, WKPFUtil.WKPF_WRITE_PROPERTY_LENGTH, length)));
+							message, WKPFUtil.WKPF_WRITE_PROPERTY_LENGTH, length)), true);
 					bufferManager.addData(npp, System.currentTimeMillis(), location);
 				} else {
 					LOGGER.error("Broken message for writing location property to buffer");
@@ -462,7 +470,7 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 				int length = activity.size() + WKPFUtil.WKPF_WRITE_PROPERTY_LENGTH + 4;
 				if (message.length == length) {
 					activity.parse(ByteBuffer.wrap(Arrays.copyOfRange(
-							message, WKPFUtil.WKPF_WRITE_PROPERTY_LENGTH, length)));
+							message, WKPFUtil.WKPF_WRITE_PROPERTY_LENGTH, length)), true);
 					bufferManager.addData(npp, System.currentTimeMillis(), activity);
 				} else {
 					LOGGER.error("Broken message for writing activity property to buffer");
@@ -473,7 +481,7 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 				int length = response.size() + WKPFUtil.WKPF_WRITE_PROPERTY_LENGTH;
 				if (message.length == length) {
 					response.parse(ByteBuffer.wrap(Arrays.copyOfRange(
-							message, WKPFUtil.WKPF_WRITE_PROPERTY_LENGTH, length)));
+							message, WKPFUtil.WKPF_WRITE_PROPERTY_LENGTH, length)), true);
 					bufferManager.addData(npp, System.currentTimeMillis(), response);
 				} else {
 					LOGGER.error("Broken message for writing activity property to buffer");
@@ -498,7 +506,7 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 				int length = location.size() + WKPFUtil.WKPF_WRITE_PROPERTY_LENGTH + 4;
 				if (message.length == length) {
 					location.parse(ByteBuffer.wrap(Arrays.copyOfRange(
-							message, WKPFUtil.WKPF_WRITE_PROPERTY_LENGTH, length)));
+							message, WKPFUtil.WKPF_WRITE_PROPERTY_LENGTH, length)), true);
 					bufferManager.addRealTimeData(npp, location.getValue());
 				} else {
 					LOGGER.error("Broken message for writing location property into channel");
@@ -509,7 +517,7 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 				int length = activity.size() + WKPFUtil.WKPF_WRITE_PROPERTY_LENGTH + 4;
 				if (message.length == length) {
 					activity.parse(ByteBuffer.wrap(Arrays.copyOfRange(
-							message, WKPFUtil.WKPF_WRITE_PROPERTY_LENGTH, length)));
+							message, WKPFUtil.WKPF_WRITE_PROPERTY_LENGTH, length)), true);
 					bufferManager.addRealTimeData(npp, activity.getValue());
 				} else {
 					LOGGER.error("Broken message for writing activity property into channel");
@@ -520,7 +528,7 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 				int length = response.size() + WKPFUtil.WKPF_WRITE_PROPERTY_LENGTH + 4;
 				if (message.length == length) {
 					response.parse(ByteBuffer.wrap(Arrays.copyOfRange(
-							message, WKPFUtil.WKPF_WRITE_PROPERTY_LENGTH, length)));
+							message, WKPFUtil.WKPF_WRITE_PROPERTY_LENGTH, length)), true);
 					bufferManager.addRealTimeData(npp, response.getValue());
 				} else {
 					LOGGER.error("Broken message for writing activity property into channel");

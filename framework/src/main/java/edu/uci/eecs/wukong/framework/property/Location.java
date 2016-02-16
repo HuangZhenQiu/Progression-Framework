@@ -12,6 +12,13 @@ public class Location {
 		this.z = z;
 	}
 	
+	public Location(float x, float y, float z, int sequence) {
+		this.x = x;
+		this.y = y;
+		this.z = z;
+		this.sequence = sequence;
+	}
+	
 	public float getX() {
 		return x;
 	}

@@ -12,6 +12,13 @@ public class Activity {
 		this.value = value;
 	}
 	
+	public Activity(long timestamp, short deviceId, float value, int sequence) {
+		this.timestamp = timestamp;
+		this.deviceId = deviceId;
+		this.value = value;
+		this.sequence = sequence;
+	}
+	
 	public long getTimeStamp() {
 		return timestamp;
 	}

@@ -4,7 +4,7 @@ import java.nio.ByteBuffer;
 
 public interface BufferUnit<T> {
 
-	public void parse(ByteBuffer buffer);
+	public void parse(ByteBuffer buffer, boolean withSequence);
 	
 	public T getValue();
 	

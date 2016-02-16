@@ -23,7 +23,7 @@ public class BufferUnits {
 		}
 
 		@Override
-		public void parse(ByteBuffer buffer) {
+		public void parse(ByteBuffer buffer, boolean withSequence) {
 			this.value = buffer.get();
 		}
 
@@ -55,7 +55,7 @@ public class BufferUnits {
 		}
 
 		@Override
-		public void parse(ByteBuffer buffer) {
+		public void parse(ByteBuffer buffer, boolean withSequence) {
 			this.value = buffer.getShort();
 		}
 
@@ -87,7 +87,7 @@ public class BufferUnits {
 		}
 		
 		@Override
-		public void parse(ByteBuffer buffer) {
+		public void parse(ByteBuffer buffer, boolean withSequence) {
 			this.value = buffer.getInt();
 		}
 
@@ -119,7 +119,7 @@ public class BufferUnits {
 		}
 		
 		@Override
-		public void parse(ByteBuffer buffer) {
+		public void parse(ByteBuffer buffer, boolean withSequence) {
 			this.value = buffer.getLong();
 		}
 		
@@ -141,7 +141,7 @@ public class BufferUnits {
 		}
 
 		@Override
-		public void parse(ByteBuffer buffer) {
+		public void parse(ByteBuffer buffer, boolean withSequence) {
 			this.value = buffer.getFloat();
 		}
 

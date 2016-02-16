@@ -86,7 +86,7 @@ public final class DoubleTimeIndexDataBuffer<T, E extends BufferUnit<T>> {
 		while(size > 0) {
 			try {
 				BufferUnit<T> unit = (BufferUnit<T>)type.getConstructor().newInstance();
-				unit.parse(data);
+				unit.parse(data, false);
 				points.add(new DataPoint<T>(npp, data.getInt(), unit.getValue()));
 			} catch (Exception e) {
 				

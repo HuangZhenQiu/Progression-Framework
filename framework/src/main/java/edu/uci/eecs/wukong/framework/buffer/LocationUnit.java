@@ -19,8 +19,12 @@ public class LocationUnit implements BufferUnit<Location> {
 	}
 
 	@Override
-	public void parse(ByteBuffer buffer) {
-		value = new Location(buffer.getFloat(), buffer.getFloat(), buffer.getFloat());
+	public void parse(ByteBuffer buffer, boolean withSequence) {
+		if (withSequence) {
+			value = new Location(buffer.getFloat(), buffer.getFloat(), buffer.getFloat(), buffer.getInt());
+		} else {
+			value = new Location(buffer.getFloat(), buffer.getFloat(), buffer.getFloat());
+		}
 	}
 
 	@Override

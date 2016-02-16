@@ -14,8 +14,12 @@ public class ActivityUnit implements BufferUnit<Activity> {
 	}
 
 	@Override
-	public void parse(ByteBuffer buffer) {
-		value = new Activity(buffer.getLong(), buffer.getShort(), buffer.getFloat());
+	public void parse(ByteBuffer buffer, boolean withSequence) { 
+		if (withSequence) {
+			value =  new Activity(buffer.getLong(), buffer.getShort(), buffer.getFloat(), buffer.getInt());
+		} else {
+			value = new Activity(buffer.getLong(), buffer.getShort(), buffer.getFloat());
+		}
 	}
 
 	@Override

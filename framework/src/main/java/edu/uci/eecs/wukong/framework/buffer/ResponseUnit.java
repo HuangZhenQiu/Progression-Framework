@@ -13,7 +13,7 @@ public class ResponseUnit implements BufferUnit<Response> {
 	}
 	
 	@Override
-	public void parse(ByteBuffer buffer) {
+	public void parse(ByteBuffer buffer, boolean withSequence) {
 		value = new Response(buffer.getInt());	
 	}
 

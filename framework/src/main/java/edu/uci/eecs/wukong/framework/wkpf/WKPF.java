@@ -457,7 +457,7 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 					&& type == WKPFUtil.WKPF_PROPERTY_TYPE_LOCATION) {
 				LocationUnit location = new LocationUnit();
 				int length = location.size() + WKPFUtil.WKPF_WRITE_PROPERTY_LENGTH + 4;
-				if (message.length == length) {
+				if (message.length >= length) {
 					location.parse(ByteBuffer.wrap(Arrays.copyOfRange(
 							message, WKPFUtil.WKPF_WRITE_PROPERTY_LENGTH, length)), true);
 					bufferManager.addData(npp, System.currentTimeMillis(), location);
@@ -468,7 +468,7 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 					&& type == WKPFUtil.WKPF_PROPERTY_TYPE_ACTIVITY) {
 				ActivityUnit activity = new ActivityUnit();
 				int length = activity.size() + WKPFUtil.WKPF_WRITE_PROPERTY_LENGTH + 4;
-				if (message.length == length) {
+				if (message.length >= length) {
 					activity.parse(ByteBuffer.wrap(Arrays.copyOfRange(
 							message, WKPFUtil.WKPF_WRITE_PROPERTY_LENGTH, length)), true);
 					bufferManager.addData(npp, System.currentTimeMillis(), activity);
@@ -479,7 +479,7 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 					&& type == WKPFUtil.WKPF_PROPERTY_TYPE_RESPONSE){
 				ResponseUnit response = new ResponseUnit();
 				int length = response.size() + WKPFUtil.WKPF_WRITE_PROPERTY_LENGTH;
-				if (message.length == length) {
+				if (message.length >= length) {
 					response.parse(ByteBuffer.wrap(Arrays.copyOfRange(
 							message, WKPFUtil.WKPF_WRITE_PROPERTY_LENGTH, length)), true);
 					bufferManager.addData(npp, System.currentTimeMillis(), response);
@@ -504,7 +504,7 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 					&& (type == WKPFUtil.WKPF_PROPERTY_TYPE_LOCATION)) {
 				LocationUnit location = new LocationUnit();
 				int length = location.size() + WKPFUtil.WKPF_WRITE_PROPERTY_LENGTH + 4;
-				if (message.length == length) {
+				if (message.length >= length) {
 					location.parse(ByteBuffer.wrap(Arrays.copyOfRange(
 							message, WKPFUtil.WKPF_WRITE_PROPERTY_LENGTH, length)), true);
 					bufferManager.addRealTimeData(npp, location.getValue());
@@ -515,7 +515,7 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 					&& type == WKPFUtil.WKPF_PROPERTY_TYPE_ACTIVITY) {
 				ActivityUnit activity = new ActivityUnit();
 				int length = activity.size() + WKPFUtil.WKPF_WRITE_PROPERTY_LENGTH + 4;
-				if (message.length == length) {
+				if (message.length >= length) {
 					activity.parse(ByteBuffer.wrap(Arrays.copyOfRange(
 							message, WKPFUtil.WKPF_WRITE_PROPERTY_LENGTH, length)), true);
 					bufferManager.addRealTimeData(npp, activity.getValue());
@@ -526,7 +526,7 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 					&& type == WKPFUtil.WKPF_PROPERTY_TYPE_RESPONSE){
 				ResponseUnit response = new ResponseUnit();
 				int length = response.size() + WKPFUtil.WKPF_WRITE_PROPERTY_LENGTH + 4;
-				if (message.length == length) {
+				if (message.length >= length) {
 					response.parse(ByteBuffer.wrap(Arrays.copyOfRange(
 							message, WKPFUtil.WKPF_WRITE_PROPERTY_LENGTH, length)), true);
 					bufferManager.addRealTimeData(npp, response.getValue());

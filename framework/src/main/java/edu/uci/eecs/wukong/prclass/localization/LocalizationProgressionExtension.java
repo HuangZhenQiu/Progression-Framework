@@ -36,8 +36,8 @@ public class LocalizationProgressionExtension extends AbstractProgressionExtensi
 			Arrays.fill(values[i], true);
 		}
 		
-		map = new Map(values, 9, 9);
-		this.filter = new ParticleFilter(map, this.prClass.getParticleCount(),
+		map = new Map(values, 99, 99);
+		filter = new ParticleFilter(map, this.prClass.getParticleCount(),
 				this.prClass.getSensors() , this.prClass.getMovNoise(),
 				this.prClass.getRotNoise(), this.prClass.getSenseNoise(), this.prClass.getMaxr());	
 	}

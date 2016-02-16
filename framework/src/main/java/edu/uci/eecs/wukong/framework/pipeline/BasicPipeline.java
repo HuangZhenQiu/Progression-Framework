@@ -54,18 +54,7 @@ public class BasicPipeline extends Pipeline {
 		if (extensions != null && !extensions.isEmpty()) {
 			for (Extension extension : extensions) {
 				if (extension instanceof AbstractProgressionExtension) {
-					AbstractProgressionExtension<? extends PipelinePrClass> progressionExtension = (AbstractProgressionExtension<? extends PipelinePrClass>) extension;
-					try {
-						// Call the initial function 
-						if (extension instanceof Initiable) {
-							Initiable initiable = (Initiable) extension;
-							initiable.init();
-						}
-						progressionPoint.register(progressionExtension);
-					} catch (Exception e) {
-						LOGGER.info("Fail to register progression extension for plugin "
-							+ progressionExtension.getPrClass() + ", base of exception: " + e.toString());
-					}
+					progressionPoint.register((AbstractProgressionExtension<? extends PipelinePrClass>) extension);
 				} else if (extension instanceof FeatureExtractionExtension) {
 					featureExtractionPoint.register((FeatureExtractionExtension) extension);
 				} else if (extension instanceof LearningExtension) {
@@ -81,18 +70,7 @@ public class BasicPipeline extends Pipeline {
 			for (Extension extension : extensions) {
 				if (extension instanceof AbstractProgressionExtension) {
 					AbstractProgressionExtension<? extends PipelinePrClass> progressionExtension = (AbstractProgressionExtension) extension;
-					try {
-						// Call the close function 
-						if (extension instanceof Closable) {
-							Closable initiable = (Closable) extension;
-							initiable.close();
-						}
-						progressionPoint.unregister((AbstractProgressionExtension) extension);
-					} catch (Exception e) {
-						LOGGER.info("Fail to register progression extension for plugin "
-							+ progressionExtension.getPrClass() + ", base of exception: " + e.toString());
-					}
-					
+					progressionPoint.unregister((AbstractProgressionExtension) extension);
 				} else if (extension instanceof FeatureExtractionExtension) {
 					featureExtractionPoint.unregister((FeatureExtractionExtension) extension);
 				} else if (extension instanceof LearningExtension) {

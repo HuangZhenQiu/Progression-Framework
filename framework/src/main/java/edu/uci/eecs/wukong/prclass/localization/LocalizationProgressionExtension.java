@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import edu.uci.eecs.wukong.framework.api.Channelable;
 import edu.uci.eecs.wukong.framework.api.FactorExecutable;
+import edu.uci.eecs.wukong.framework.api.Initiable;
 import edu.uci.eecs.wukong.framework.api.metrics.Timer;
 import edu.uci.eecs.wukong.framework.extension.AbstractProgressionExtension;
 import edu.uci.eecs.wukong.framework.factor.BaseFactor;
@@ -16,7 +17,7 @@ import edu.uci.eecs.wukong.framework.localization.ParticleFilter;
 import edu.uci.eecs.wukong.framework.localization.Map;
 
 public class LocalizationProgressionExtension extends AbstractProgressionExtension<LocalizationPrClass> implements
-	Channelable<Location>, FactorExecutable {
+	Channelable<Location>, FactorExecutable, Initiable {
 	private final static Logger LOGGER = LoggerFactory.getLogger(LocalizationProgressionExtension.class);
 	private ParticleFilter filter;
 	private Map map;
@@ -24,6 +25,11 @@ public class LocalizationProgressionExtension extends AbstractProgressionExtensi
 	
 	public LocalizationProgressionExtension(LocalizationPrClass plugin) {
 		super(plugin);
+
+	}
+	
+	@Override
+	public void init() {
 		boolean[][] values = new boolean[100][100];
 		for (int i = 0; i < values.length; i ++) {
 			values[i] = new boolean[100];
@@ -33,7 +39,7 @@ public class LocalizationProgressionExtension extends AbstractProgressionExtensi
 		map = new Map(values, 9, 9);
 		this.filter = new ParticleFilter(map, this.prClass.getParticleCount(),
 				this.prClass.getSensors() , this.prClass.getMovNoise(),
-				this.prClass.getRotNoise(), this.prClass.getSenseNoise(), this.prClass.getMaxr());
+				this.prClass.getRotNoise(), this.prClass.getSenseNoise(), this.prClass.getMaxr());	
 	}
 
 	@Override

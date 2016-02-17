@@ -4,6 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import edu.uci.eecs.wukong.framework.annotation.WuTimer;
 import edu.uci.eecs.wukong.framework.api.TimerExecutable;
 import edu.uci.eecs.wukong.framework.api.Channelable;
@@ -15,6 +18,8 @@ import edu.uci.eecs.wukong.framework.property.Response;
 
 public class LocalizationLoadTestProgressionExtension extends AbstractProgressionExtension<LocalizationLoadTester>
 	implements Channelable<Response>, TimerExecutable {
+	private final static Logger LOGGER = LoggerFactory.getLogger(
+			LocalizationLoadTestProgressionExtension.class);
 	private Integer seqno;
 	private Random random;
 	// <sequence, timestamp> Map
@@ -39,11 +44,14 @@ public class LocalizationLoadTestProgressionExtension extends AbstractProgressio
 
 	@Override
 	public void execute(ChannelData<Response> data) {
+		LOGGER.info("Received response from localization prclass");
 		if (seqMap.containsKey(data.getValue().getSequence())) {
 			long timestamp = seqMap.get(data.getValue().getSequence());
 			Timer timer = this.getPrClass().getPrClassMetrics().getTimer(this.prClass, this);
-			timer.update(System.currentTimeMillis() - timestamp);
-		}		
+			long responseTime = System.currentTimeMillis() - timestamp;
+			timer.update(responseTime);
+			LOGGER.info("Response time of localization prclass is: " + responseTime);
+		}
 	}
 
 }

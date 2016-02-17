@@ -13,6 +13,7 @@ import edu.uci.eecs.wukong.framework.extension.AbstractProgressionExtension;
 import edu.uci.eecs.wukong.framework.factor.BaseFactor;
 import edu.uci.eecs.wukong.framework.model.ChannelData;
 import edu.uci.eecs.wukong.framework.property.Location;
+import edu.uci.eecs.wukong.framework.property.Response;
 import edu.uci.eecs.wukong.framework.localization.ParticleFilter;
 import edu.uci.eecs.wukong.framework.localization.Map;
 
@@ -46,17 +47,20 @@ public class LocalizationProgressionExtension extends AbstractProgressionExtensi
 	@Override
 	public void execute(ChannelData<Location> data) {
 		try {
-			Timer timer = this.prClass.getPrClassMetrics().getTimer(this.prClass, this);
 			long start = System.currentTimeMillis();
+			Timer timer = this.prClass.getPrClassMetrics().getTimer(this.prClass, this);
 			double[] sensorValues = new double[3];
 			sensorValues[0] = data.getValue().getX();
 			sensorValues[1] = data.getValue().getY();
 			sensorValues[2] = data.getValue().getZ();
 			filter.step(sensorValues, 1, 1, 2);
-			Thread.sleep(2000);
-			long end = System.currentTimeMillis();
-			timer.update(end - start);
+			long executionTime = System.currentTimeMillis() - start;
+			timer.update(executionTime);
+			LOGGER.info("Localization execution time is : " + (executionTime));
+			Response response = new Response(data.getValue().getSequence());
+			this.prClass.setOutput(response);
 		} catch (Exception e) {
+			e.printStackTrace();
 			LOGGER.error("Fail to execut method triggered by channel: " + e.toString());
 		}
 	}

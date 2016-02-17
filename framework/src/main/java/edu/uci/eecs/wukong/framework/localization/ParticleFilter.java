@@ -115,7 +115,7 @@ public class ParticleFilter {
         int i=0;
         int outindex=0;
         for (int j=0;j<n;j++){
-            while (u[j]>c[i]){
+            while (i < n && u[j]>c[i]){
                 i=i+1;
             }
 

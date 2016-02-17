@@ -16,6 +16,7 @@ import edu.uci.eecs.wukong.framework.extension.AbstractProgressionExtension;
 import edu.uci.eecs.wukong.framework.extension.FeatureExtractionExtension;
 import edu.uci.eecs.wukong.framework.extension.LearningExtension;
 import edu.uci.eecs.wukong.framework.factor.SceneManager;
+import edu.uci.eecs.wukong.framework.model.WuObjectModel;
 import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
 import edu.uci.eecs.wukong.framework.select.FeatureChoosers;
 
@@ -50,9 +51,9 @@ public class BasicPipeline extends Pipeline {
 	}
 	
 	@Override
-	public void registerExtension(List<Extension> extensions) {
-		if (extensions != null && !extensions.isEmpty()) {
-			for (Extension extension : extensions) {
+	public void registerExtension(WuObjectModel model) {
+		if (model.getExtensions() != null && !model.getExtensions().isEmpty()) {
+			for (Extension extension : model.getExtensions()) {
 				if (extension instanceof AbstractProgressionExtension) {
 					progressionPoint.register((AbstractProgressionExtension<? extends PipelinePrClass>) extension);
 				} else if (extension instanceof FeatureExtractionExtension) {
@@ -65,9 +66,9 @@ public class BasicPipeline extends Pipeline {
 	}
 	
 	@Override
-	public void unregisterExtension(List<Extension> extensions) {
-		if (extensions != null && !extensions.isEmpty()) {
-			for (Extension extension : extensions) {
+	public void unregisterExtension(WuObjectModel model) {
+		if (model.getExtensions() != null && !model.getExtensions().isEmpty()) {
+			for (Extension extension : model.getExtensions()) {
 				if (extension instanceof AbstractProgressionExtension) {
 					AbstractProgressionExtension<? extends PipelinePrClass> progressionExtension = (AbstractProgressionExtension) extension;
 					progressionPoint.unregister((AbstractProgressionExtension) extension);

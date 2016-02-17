@@ -13,6 +13,7 @@ import edu.uci.eecs.wukong.framework.graph.ExtensionPoint;
 import edu.uci.eecs.wukong.framework.graph.Graph;
 import edu.uci.eecs.wukong.framework.graph.Link;
 import edu.uci.eecs.wukong.framework.graph.Node;
+import edu.uci.eecs.wukong.framework.model.WuObjectModel;
 
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -58,9 +59,9 @@ public abstract class Pipeline extends Graph implements FactorListener{
 		return sceneManager.getPluginExecutionContext(prClass);
 	}
 	
-	public abstract void registerExtension(List<Extension> extensions);
+	public abstract void registerExtension(WuObjectModel model);
 	
-	public abstract void unregisterExtension(List<Extension> extensions);
+	public abstract void unregisterExtension(WuObjectModel model);
 	
 	public void start() {
 		this.executor = Executors.newFixedThreadPool(nodes.size());

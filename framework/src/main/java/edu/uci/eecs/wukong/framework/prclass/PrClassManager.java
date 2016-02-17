@@ -1,6 +1,7 @@
 package edu.uci.eecs.wukong.framework.prclass;
 
 import edu.uci.eecs.wukong.framework.annotation.WuProperty;
+import edu.uci.eecs.wukong.framework.api.Extension;
 import edu.uci.eecs.wukong.framework.annotation.WuClass;
 import edu.uci.eecs.wukong.framework.buffer.BufferManager;
 import edu.uci.eecs.wukong.framework.exception.PluginNotFoundException;
@@ -239,7 +240,7 @@ public class PrClassManager implements PrClassInitListener {
     			PipelinePrClass pipePrClass = (PipelinePrClass) model.getPrClass();
     			contextManager.unsubscribe(pipePrClass);
     			bufferManager.unbind(model);
-    			pipeline.unregisterExtension(pipePrClass.registerExtension());
+    			pipeline.unregisterExtension(model);
     			LOGGER.info("Finished bind pipeline prclass with context manager, pipeline and property monitor.");
     		} else if (model.getType().getType().equals(PrClass.PrClassType.SIMPLE_PRCLASS)) {
     			bufferManager.unbind(model);
@@ -265,7 +266,7 @@ public class PrClassManager implements PrClassInitListener {
 			PipelinePrClass pipePrClass = (PipelinePrClass) prClass;
 			contextManager.subscribe(pipePrClass, pipePrClass.registerContext());
 			bufferManager.bind(model);
-			pipeline.registerExtension(pipePrClass.registerExtension());
+			pipeline.registerExtension(model);
 			LOGGER.info("Finished bind pipeline prclass with context manager, pipeline and property monitor.");
 		} else if (model.getType().getType().equals(PrClass.PrClassType.SIMPLE_PRCLASS)) {
 			// bind the input property to channels

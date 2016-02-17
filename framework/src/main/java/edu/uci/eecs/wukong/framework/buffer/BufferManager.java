@@ -79,8 +79,8 @@ public class BufferManager {
 					// Use long address
 					NPP npp = new NPP(mptn.getLongAddress(), model.getPort(), property.getId());
 					if (property.getPtype().equals(PropertyType.Input)
-							&&property.getDtype().equals(DataType.Channel) && prClass.registerExtension() != null) {
-						for (Extension extension : prClass.registerExtension()) {
+							&&property.getDtype().equals(DataType.Channel) && model.getExtensions() != null) {
+						for (Extension extension : model.getExtensions()) {
 							if (extension instanceof Channelable) {
 								
 								this.createChannel(npp);
@@ -125,8 +125,7 @@ public class BufferManager {
 					NPP npp = new NPP(mptn.getLongAddress(), model.getPort(), property.getId());
 					if (property.getPtype().equals(PropertyType.Input)
 							&&property.getDtype().equals(DataType.Channel)) {
-						
-						for (Extension extension : prClass.registerExtension()) {
+						for (Extension extension : model.getExtensions()) {
 							if (extension instanceof Channelable) {
 								this.removeChannelListener(npp, (Channelable) extension);
 							}
@@ -144,7 +143,6 @@ public class BufferManager {
 					} 
 				}
 			} else if (classModel.getType().equals(PrClass.PrClassType.SYSTEM_PRCLASS)) {
-				
 			}
 		}
 	}

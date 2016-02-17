@@ -39,7 +39,8 @@ public class LocalizationProgressionExtension extends AbstractProgressionExtensi
 		map = new Map(values, 99, 99);
 		filter = new ParticleFilter(map, this.prClass.getParticleCount(),
 				this.prClass.getSensors() , this.prClass.getMovNoise(),
-				this.prClass.getRotNoise(), this.prClass.getSenseNoise(), this.prClass.getMaxr());	
+				this.prClass.getRotNoise(), this.prClass.getSenseNoise(), this.prClass.getMaxr());
+		LOGGER.info("Filter is initilaized: " + filter);
 	}
 
 	@Override

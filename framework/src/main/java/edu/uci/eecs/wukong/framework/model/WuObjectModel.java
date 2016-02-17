@@ -1,14 +1,22 @@
 package edu.uci.eecs.wukong.framework.model;
 
+import java.util.List;
+
+import edu.uci.eecs.wukong.framework.api.Extension;
 import edu.uci.eecs.wukong.framework.model.WuClassModel;
 import edu.uci.eecs.wukong.framework.prclass.PrClass;
+import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
 
 public class WuObjectModel {
 	private WuClassModel type;
 	private PrClass prClass;
+	private List<Extension> extensions;
 	public WuObjectModel(WuClassModel type, PrClass prClass) {
 		this.prClass = prClass;
 		this.type = type;
+		if (prClass instanceof PipelinePrClass) {
+			this.extensions = ((PipelinePrClass) prClass).registerExtension();
+		}
 	}
 	
 	public byte getPropertyId(String property) {
@@ -21,6 +29,10 @@ public class WuObjectModel {
 	
 	public PrClass getPrClass() {
 		return this.prClass;
+	}
+	
+	public List<Extension> getExtensions() {
+		return this.extensions;
 	}
 	
 	public byte getPort() {

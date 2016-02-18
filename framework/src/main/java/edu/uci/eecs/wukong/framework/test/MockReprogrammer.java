@@ -32,8 +32,8 @@ public class MockReprogrammer {
 			map.addComponent(component);
 		}
 		
-		Component component = map.getComponent(wuclassId);
-		component.addEndPoint(new EndPoint(address, port));
+		// List<Component> component = map.getComponent(wuclassId);
+		// component.addEndPoint(new EndPoint(address, port));
 	}
 	
 	public void addLink(short sourceNodeId, byte spid, short destNodeId, byte dpid) {

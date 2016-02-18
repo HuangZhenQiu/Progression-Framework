@@ -32,7 +32,7 @@ public class LocalizationLoadTestProgressionExtension extends AbstractProgressio
 		this.seqMap = new HashMap<Integer, Long> ();
 	}
 	
-	@WuTimer(interval = 0.1F)
+	@WuTimer(interval = 0.01F)
 	public void execute() {
 		Location location = new Location(random.nextFloat(), random.nextFloat(), random.nextFloat());
 		synchronized (seqno) {

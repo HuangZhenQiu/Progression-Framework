@@ -14,11 +14,11 @@ import edu.uci.eecs.wukong.framework.model.EndPoint;
  */
 public class ComponentMap {
 	private List<Component> components;
-	private Map<Short, Component> componentMap;
+	private Map<Short, List<Component>> componentMap;
 	
 	public ComponentMap() {
 		this.components = new ArrayList<Component> ();
-		this.componentMap = new HashMap<Short, Component> ();
+		this.componentMap = new HashMap<Short, List<Component>> ();
 	}
 	
 	public byte[] toByteArray() {
@@ -54,15 +54,17 @@ public class ComponentMap {
 		return componentMap.containsKey(wuClassId);
 	}
 	
-	public Component getComponent(short wuClassId) {
+	public List<Component> getComponent(short wuClassId) {
 		return componentMap.get(wuClassId);
 	}
 	
 	public void addComponent(Component component) {
+		this.components.add(component);
 		if (!componentMap.containsKey(component.getWuClassId())) {
-			this.components.add(component);
-			this.componentMap.put(component.getWuClassId(), component);
+			List<Component> comList = new ArrayList<Component> ();
+			componentMap.put(component.getWuClassId(), comList);
 		}
+		this.componentMap.get(component.getWuClassId()).add(component);
 	}
 	
 	public long getPrimaryEndPointNodeId(int componentId) {

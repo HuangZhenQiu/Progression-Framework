@@ -303,6 +303,7 @@ public class DJAData {
 				component.addEndPoint(extractEndPoint(start + i * DJAConstants.COMPONENT_END_POINT_RECORD_SIZE));
 			}
 			
+			LOGGER.error("Extracted component : " + component);
 			return component;
 		} catch (Exception e) {
 			LOGGER.error("Error Status : fail to extract component from DJAData");

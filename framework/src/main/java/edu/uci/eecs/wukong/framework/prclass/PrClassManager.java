@@ -279,9 +279,9 @@ public class PrClassManager implements PrClassInitListener {
 	
 	private void bindSimplePrClassTimer(SimplePrClass prclass) {
 		// start timer 
-		int internal = PipelineUtil.getIntervalFromAnnotation(prclass);
+		float internal = PipelineUtil.getIntervalFromAnnotation(prclass);
 		SimpleTimerTask timerTask = new SimpleTimerTask(prclass);
-		timer.scheduleAtFixedRate(timerTask, 0, internal * 1000);
+		timer.scheduleAtFixedRate(timerTask, 0, new Float(internal * 1000).longValue());
 		prClassTimerMap.put(prclass, timerTask);
 		LOGGER.info("Registered Timer Executor for every " + internal + "seconds  for simple prclass "
 				+ prclass.getName() + " of port " + prclass.getPortId());

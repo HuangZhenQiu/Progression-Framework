@@ -15,5 +15,5 @@ import java.lang.annotation.Target;
  */
 public @interface WuTimer {
 	// Timer period in seconds for TimerExecutable interface
-	int interval() default 10;
+	float interval() default 10;
 }

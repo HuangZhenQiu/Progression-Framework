@@ -86,6 +86,7 @@ public class LocalizationPrClass extends PipelinePrClass{
 	}
 
 	public void setOutput(Response output) {
+		this.support.firePropertyChange("response", this.output, output);
 		this.output = output;
 	}
 	

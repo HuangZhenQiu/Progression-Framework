@@ -12,7 +12,7 @@ icsdemo.ICSDemoQPrClass 1
 weather.WeatherPrClass 1
 buffer.BufferEnabledPrClass 1
 occupancy.OccupancyDetection 1
-localization.LocalizationPrClass 8
+localization.LocalizationPrClass 32
 activity.ActivityRecgonitionPrClass 1
 simple.SimpleInputPrClass 1
-loadtester.LocalizationLoadTester 8
+loadtester.LocalizationLoadTester 32

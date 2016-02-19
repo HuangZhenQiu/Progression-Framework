@@ -31,10 +31,10 @@ public class FeatureExtractionExtensionPoint extends ExtensionPoint<FeatureExtra
 	
 	public void run() {
 		logger.info("Feature Extraction Extension Point Starts to Run");
-		// Round Rubin Choose
+		// Round Robin Choose
 		while(true) {
 			try {
-				Thread.sleep(10000);
+				Thread.sleep(1000);
 				for (PipelinePrClass prClass : this.extensionMap.keySet()) {
 					List<Object> result = featureChoosers.choose(prClass);
 					FeatureEntity<Object> entity = new FeatureEntity<Object>(prClass);

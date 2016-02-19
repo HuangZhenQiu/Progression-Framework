@@ -42,8 +42,9 @@ public class ProgressionExtensionPoint extends ExtensionPoint<AbstractProgressio
 	public synchronized void register(AbstractProgressionExtension<? extends PipelinePrClass> extension) {
 		super.register(extension);
 		if (extension instanceof TimerExecutable) {
-			float internal = PipelineUtil.getIntervalFromAnnotation(extension);
-			ProgressionTimerTask timerTask = new ProgressionTimerTask((TimerExecutable)extension);
+			TimerExecutable executable = (TimerExecutable) extension;
+			float internal = PipelineUtil.getIntervalFromMethodAnnotation(executable);
+			ProgressionTimerTask timerTask = new ProgressionTimerTask(executable);
 			timer.scheduleAtFixedRate(timerTask, pluginTaskMap.size() * 20, new Float(internal * 1000).longValue());
 			pluginTaskMap.put(extension.getPrClass(), timerTask);
 			logger.info("Registered Timer Executor for every " + internal + "seconds  for plugin "

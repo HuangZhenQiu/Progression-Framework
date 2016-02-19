@@ -279,7 +279,7 @@ public class PrClassManager implements PrClassInitListener {
 	
 	private void bindSimplePrClassTimer(SimplePrClass prclass) {
 		// start timer 
-		float internal = PipelineUtil.getIntervalFromAnnotation(prclass);
+		float internal = PipelineUtil.getIntervalFromClassAnnotation(prclass);
 		SimpleTimerTask timerTask = new SimpleTimerTask(prclass);
 		timer.scheduleAtFixedRate(timerTask, 0, new Float(internal * 1000).longValue());
 		prClassTimerMap.put(prclass, timerTask);

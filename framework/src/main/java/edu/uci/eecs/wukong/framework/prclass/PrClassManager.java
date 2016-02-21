@@ -15,6 +15,7 @@ import edu.uci.eecs.wukong.framework.model.WuClassModel;
 import edu.uci.eecs.wukong.framework.model.WuObjectModel;
 import edu.uci.eecs.wukong.framework.model.PropertyType;
 import edu.uci.eecs.wukong.framework.model.StateModel;
+import edu.uci.eecs.wukong.framework.util.Configuration;
 import edu.uci.eecs.wukong.framework.util.PipelineUtil;
 import edu.uci.eecs.wukong.framework.wkpf.WKPF;
 import edu.uci.eecs.wukong.framework.state.StateUpdateListener;
@@ -29,6 +30,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
 import java.util.StringTokenizer;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -43,6 +45,7 @@ public class PrClassManager implements PrClassInitListener {
 	private final static Logger LOGGER = LoggerFactory.getLogger(PrClassManager.class);
 	private static final String PLUGIN_DEFINATION_PATH = "plugins.txt";
 	private static final String PLUGIN_PATH = "edu.uci.eecs.wukong.prclass";
+	private static final Configuration configuration = Configuration.getInstance();
 	private BufferManager bufferManager;
 	private SceneManager contextManager;
 	private PrClassPropertyMonitor propertyMonitor;
@@ -281,7 +284,7 @@ public class PrClassManager implements PrClassInitListener {
 		// start timer 
 		float internal = PipelineUtil.getIntervalFromClassAnnotation(prclass);
 		SimpleTimerTask timerTask = new SimpleTimerTask(prclass);
-		timer.scheduleAtFixedRate(timerTask, 0, new Float(internal * 1000).longValue());
+		timer.scheduleAtFixedRate(timerTask, 0, new Float(internal * configuration.getExtensionTimerUnit()).longValue());
 		prClassTimerMap.put(prclass, timerTask);
 		LOGGER.info("Registered Timer Executor for every " + internal + "seconds  for simple prclass "
 				+ prclass.getName() + " of port " + prclass.getPortId());

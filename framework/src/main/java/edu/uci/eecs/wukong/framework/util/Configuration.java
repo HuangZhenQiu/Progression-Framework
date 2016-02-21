@@ -47,6 +47,8 @@ public class Configuration {
 	private static final String DEMO_OUTER_SLIDER_ID = "DEMO.OUTER.SLIDER.ID";
 	private static final String DEMO_WALL_SLIDER_ID = "DEMO.WALL.SLIDER.ID";
 	
+	private static final String EXTENSION_TIMER_UNIT = "EXTENSION.TIMER.UNIT";
+	
 	private static Configuration configuration;
 
 	private static Properties properties = new Properties();
@@ -72,6 +74,10 @@ public class Configuration {
 			configuration = new Configuration();
 		}
 		return configuration;
+	}
+	
+	public Integer getExtensionTimerUnit() {
+		return Integer.parseInt(properties.getProperty(EXTENSION_TIMER_UNIT));
 	}
 	
 	public String getProgressionServerIP() {

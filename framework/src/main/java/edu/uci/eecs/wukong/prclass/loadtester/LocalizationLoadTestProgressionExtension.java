@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import edu.uci.eecs.wukong.framework.annotation.WuTimer;
 import edu.uci.eecs.wukong.framework.api.TimerExecutable;
 import edu.uci.eecs.wukong.framework.api.Channelable;
+import edu.uci.eecs.wukong.framework.api.metrics.Counter;
 import edu.uci.eecs.wukong.framework.api.metrics.Timer;
 import edu.uci.eecs.wukong.framework.extension.AbstractProgressionExtension;
 import edu.uci.eecs.wukong.framework.model.ChannelData;
@@ -51,7 +52,8 @@ public class LocalizationLoadTestProgressionExtension extends AbstractProgressio
 			long responseTime = System.currentTimeMillis() - timestamp;
 			timer.update(responseTime);
 			LOGGER.info("Response time of localization prclass is: " + responseTime);
+			Counter counter = this.prClass.getPrClassMetrics().getCounter(this.prClass, this);
+			counter.inc();
 		}
 	}
-
 }

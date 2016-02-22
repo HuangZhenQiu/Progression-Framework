@@ -14,4 +14,8 @@ public class Response {
 	public void setSequence(int sequence) {
 		this.sequence = sequence;
 	}
+	
+	public String toString() {
+		return "Response[sequence = " + sequence + "]";
+	}
 }

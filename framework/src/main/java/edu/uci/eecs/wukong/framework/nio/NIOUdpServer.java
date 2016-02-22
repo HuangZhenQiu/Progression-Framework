@@ -48,7 +48,7 @@ public class NIOUdpServer implements Runnable {
 			while (true) {
 				try {
 					selector.select();
-					Iterator selectedKeys = selector.selectedKeys().iterator();
+					Iterator<SelectionKey> selectedKeys = selector.selectedKeys().iterator();
 					while (selectedKeys.hasNext()) {
 						SelectionKey key= (SelectionKey) selectedKeys.next();
 						selectedKeys.remove();

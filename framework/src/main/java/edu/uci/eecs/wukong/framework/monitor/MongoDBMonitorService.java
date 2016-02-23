@@ -86,8 +86,10 @@ public class MongoDBMonitorService extends TimerTask implements MonitorService {
 					documents.add(new InsertOneModel<Document>(Document.parse(gson.toJson(model))));
 				}
 				collection.bulkWrite(documents);
-				buffer.clear();
 			}
+			
+			logger.info("Sending " + buffer.size() + " monitored sensor data to mongoDB by bulk writing");
+			buffer.clear();
 		}
 	}
 }

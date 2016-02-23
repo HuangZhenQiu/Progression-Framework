@@ -9,6 +9,8 @@ import com.google.gson.Gson;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.InsertOneModel;
+import com.mongodb.client.model.WriteModel;
 
 import org.bson.Document;
 import org.slf4j.Logger;
@@ -25,7 +27,7 @@ public class MongoDBMonitorService extends TimerTask implements MonitorService {
 	private static long BUFFER_SEND_INTERVAL = 1000 * 30;
 	private MongoClient client;
 	private MongoDatabase database;
-	private MongoCollection collection;
+	private MongoCollection<Document> collection;
 	private List<MonitorDataModel> buffer;
 	private Timer timer;
 	
@@ -79,9 +81,9 @@ public class MongoDBMonitorService extends TimerTask implements MonitorService {
 	public void run() {
 		synchronized (buffer) {
 			if (buffer.size() > 0) {
-				List<Document> documents = new ArrayList<Document>();
+				List<WriteModel<Document>> documents = new ArrayList<WriteModel<Document>>();
 				for (MonitorDataModel model : buffer) {
-					documents.add(Document.parse(gson.toJson(model)));
+					documents.add(new InsertOneModel<Document>(Document.parse(gson.toJson(model))));
 				}
 				collection.bulkWrite(documents);
 				buffer.clear();

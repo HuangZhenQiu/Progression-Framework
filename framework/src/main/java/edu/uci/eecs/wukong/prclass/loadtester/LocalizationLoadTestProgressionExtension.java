@@ -39,6 +39,7 @@ public class LocalizationLoadTestProgressionExtension extends AbstractProgressio
 		synchronized (seqno) {
 			location.setSequence(seqno);
 			seqMap.put(seqno, System.currentTimeMillis());
+			seqno = seqno + 1;
 		}
 		this.prClass.setLocation(location);
 	}
@@ -54,6 +55,7 @@ public class LocalizationLoadTestProgressionExtension extends AbstractProgressio
 			LOGGER.info("Response time of localization prclass is: " + responseTime);
 			Counter counter = this.prClass.getPrClassMetrics().getCounter(this.prClass, this);
 			counter.inc();
+			seqMap.remove(data.getValue().getSequence());
 		}
 	}
 }

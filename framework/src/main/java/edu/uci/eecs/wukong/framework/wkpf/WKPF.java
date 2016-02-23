@@ -12,6 +12,7 @@ import java.util.TreeMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import edu.uci.eecs.wukong.framework.util.Configuration;
 import edu.uci.eecs.wukong.framework.util.MPTNUtil;
 import edu.uci.eecs.wukong.framework.util.WKPFUtil;
 import edu.uci.eecs.wukong.framework.buffer.ActivityUnit;
@@ -440,6 +441,7 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 			LOGGER.error("Can't find WuPropety with propertyId " + propertyId + " for write property command.");
 			return;
 		}
+
 		
 		NPP npp = new NPP(this.mptn.getLongAddress(), port, propertyId);
 		// Put data into write container
@@ -539,6 +541,15 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 			}
 		}
 		
+		if (Configuration.getInstance().isMonitorEnabled()) {
+			int length = (message.length - WKPFUtil.WKPF_WRITE_PROPERTY_LENGTH);
+			byte[] data = Arrays.copyOfRange(message, WKPFUtil.WKPF_WRITE_PROPERTY_LENGTH, length);
+			
+			MonitorDataModel model = new MonitorDataModel(
+					sourceId, wuclassId, port, propertyId, type, length, data, System.currentTimeMillis());
+			this.fireMonitorEvent(model);
+		}
+		
 		//TODO (Peter Huang) return error code, when problem happens
 		ByteBuffer buffer = ByteBuffer.allocate(7);
 		buffer.put(WKPFUtil.WKPF_WRITE_PROPERTY_R);
@@ -583,19 +594,16 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 
 	public void onWKPFMonitoredData(long sourceId, byte[] message) {
 		if (message.length >= 7) {
-			short wuCLassId = WKPFUtil.getBigEndianShort(message, 2);
+			short wuclassId = WKPFUtil.getBigEndianShort(message, 2);
 			byte port = message[4];
-			byte propertyNum = message[5];
+			byte propertyId = message[5];
 			byte type = message[6];
-			short value = 0;
-			if (type == 1) { // Boolean
-				value = message[7];
-			} else {
-				value = WKPFUtil.getBigEndianShort(message, 7);
-			}
+			int length = (message.length - WKPFUtil.WKPF_WRITE_PROPERTY_LENGTH);
+			byte[] data = Arrays.copyOfRange(message, WKPFUtil.WKPF_WRITE_PROPERTY_LENGTH, length);
 			
 			MonitorDataModel model = new MonitorDataModel(
-					sourceId, wuCLassId, port, propertyNum, type, value, System.currentTimeMillis());
+					sourceId, wuclassId, port, propertyId, type, length, data, System.currentTimeMillis());
+
 			metrics.minitorCounter.inc();
 			this.fireMonitorEvent(model);
 		} else {

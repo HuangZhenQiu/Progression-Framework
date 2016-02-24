@@ -35,10 +35,12 @@ public class MonitorManager implements MonitorListener {
 	
 	public void stop() {
 		timer.cancel();
+		timer = new Timer();
 	}
 	
 	public void updatePeriod(long period) {
 		this.timer.cancel();
+		this.timer = new Timer();
 		this.timer.schedule(service, 0, period);
 		this.currentPeriod = period;
 	}
@@ -50,7 +52,7 @@ public class MonitorManager implements MonitorListener {
 	
 	public void close() {
 		timer.cancel();
-		service.close();
+		service.cancel();
 	}
 	
 	public long getCurrentPeriod() {

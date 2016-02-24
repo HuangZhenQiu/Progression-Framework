@@ -52,7 +52,7 @@ public class SystemStates {
 			if (enabled) {
 				monitorManager.start();
 			} else {
-				monitorManager.close();
+				monitorManager.stop();
 			}
 			logger.info("Monitoring state is updated to " + enabled);
 		}

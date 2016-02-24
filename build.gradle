@@ -72,6 +72,10 @@ project(':framework') {
      compile "org.mockito:mockito-all:$mockitoVersion"
      compile "org.ow2.chameleon.fuchsia.base.philips-hue:org.ow2.chameleon.fuchsia.base.philips-hue.huedsk-bundle:$hueVersion"
      compile "tw.edu.ntu.csie:libsvm:$libsvm"
+     compile "org.glassfish.jersey.core:jersey-server:$jerseyServerVersion"
+     compile "org.glassfish.jersey.containers:jersey-container-servlet-core:$jerseyContainerServletCoreVersion"
+     compile "org.glassfish.jersey.media:jersey-media-moxy:$jerseyMediaMoxyVersion"
+     compile "org.glassfish.jersey.containers:jersey-container-jetty-http:$jerseyContainerJettyHttpVersion"
   }
 }
 

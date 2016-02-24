@@ -3,7 +3,7 @@ package edu.uci.eecs.wukong.framework.monitor;
 import edu.uci.eecs.wukong.framework.model.MonitorDataModel;
 import edu.uci.eecs.wukong.framework.util.Configuration;
 
-public class XMPPMonitorService implements MonitorService {
+public class XMPPMonitorService extends MonitorService {
 	private static Configuration configuration = Configuration.getInstance();
 	private static XMPPMonitorService service;
 	
@@ -20,7 +20,7 @@ public class XMPPMonitorService implements MonitorService {
 	}
 	
 	@Override
-	public void init() {
+	public void run() {
 		// TODO Auto-generated method stub
 		
 	}

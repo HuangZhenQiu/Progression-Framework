@@ -16,9 +16,15 @@ import edu.uci.eecs.wukong.framework.factor.FactorClientFactory;
 public class CheckPointManager {
 	private Map<String, CheckpointableModel<?>> modelMap;
 	private FactorClient factorClient;
+	private long currentPeriod;
 	
 	public CheckPointManager() {
 		modelMap = new HashMap<String, CheckpointableModel<?>>();
 		factorClient = FactorClientFactory.getFactorClient();
+		currentPeriod = 1000;
+	}
+	
+	public long getCurrentPeriod() {
+		return this.currentPeriod;
 	}
 }

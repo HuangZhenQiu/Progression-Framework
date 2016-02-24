@@ -5,7 +5,7 @@ ext {
   nettyVersion = "4.0.24.Final"
   protobufVersion = "2.5.0"
   gsonVersion = "2.3.1"
-  jettyVersion = "9.0.0.RC2"
+  jettyVersion = "9.2.3.v20140905"
   httpClientVersion = "4.4"
   commonsClientVersion = "3.1"
   commonsCliVersion = "1.3.1"
@@ -22,4 +22,8 @@ ext {
   mockitoVersion = "1.9.5"
   hueVersion = "0.0.4"
   libsvm = "3.17"
+  jerseyServerVersion = "2.7"
+  jerseyContainerServletCoreVersion = "2.7"
+  jerseyContainerJettyHttpVersion = "2.7"
+  jerseyMediaMoxyVersion = "2.7"
 }

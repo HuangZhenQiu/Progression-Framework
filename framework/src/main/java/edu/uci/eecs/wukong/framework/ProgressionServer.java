@@ -16,6 +16,8 @@ import org.apache.commons.cli.ParseException;
 import edu.uci.eecs.wukong.framework.api.metrics.MetricsReporter;
 import edu.uci.eecs.wukong.framework.buffer.BufferManager;
 import edu.uci.eecs.wukong.framework.buffer.BufferMetrics;
+import edu.uci.eecs.wukong.framework.checkpoint.CheckPointManager;
+import edu.uci.eecs.wukong.framework.jetty.JettyServer;
 import edu.uci.eecs.wukong.framework.metrics.MetricsRegistryHolder;
 import edu.uci.eecs.wukong.framework.metrics.JvmMetrics;
 import edu.uci.eecs.wukong.framework.factor.SceneManager;
@@ -43,11 +45,12 @@ public class ProgressionServer {
 	private static Configuration configuration = Configuration.getInstance();
 	private static boolean isTest = false;
 	private MetricsRegistryHolder registryHolder;
+	private CheckPointManager checkpointManager;
 	private CommunicationServer server;
 	private SceneManager contextManager;
 	private BufferManager bufferManager;
+	private JettyServer jettyServer;
 	private PrClassManager pluginManager;
-	private StateManager stateManager;
 	private MetricsReporter metricsReporter;
 	private MonitorManager monitorManager;
 	private FeatureChoosers featureChoosers;
@@ -55,6 +58,8 @@ public class ProgressionServer {
 	private WKPF wkpf;
 	private JvmMetrics jvmMetrics;
 	private PipelineMetrics pipelineMetrics;
+	private StateManager stateManager;
+	private SystemStates systemStates;
 	
 	public ProgressionServer(PeerInfo peerInfo, boolean isTest) {
 		
@@ -73,9 +78,10 @@ public class ProgressionServer {
 		this.bufferManager = new BufferManager(bufferMetrics);
 		this.contextManager = new SceneManager(factorMetrics);
 		this.wkpf = new WKPF(bufferManager, wkpfMetrics);
-		if (configuration.isMonitorEnabled()) {
-			this.monitorManager = new MonitorManager(wkpf);
-		}
+		this.monitorManager = new MonitorManager(wkpf);
+		this.checkpointManager = new CheckPointManager();
+		this.systemStates = new SystemStates(monitorManager, checkpointManager);
+		this.jettyServer = new JettyServer();
 		this.featureChoosers = new FeatureChoosers(bufferManager, wkpf);
 		this.pipeline = new BasicPipeline(contextManager, featureChoosers, pipelineMetrics);	
 		this.pluginManager = new PrClassManager(wkpf, contextManager, pipeline, bufferManager, prClassMetrics);
@@ -119,6 +125,7 @@ public class ProgressionServer {
 			this.pipelineMetrics.start();
 			this.metricsReporter.register("ProgressionServer" + this.wkpf.getNetworkId(), registryHolder);
 			this.metricsReporter.start();
+			this.jettyServer.start();
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error("Fail to start progression server.");
@@ -129,6 +136,7 @@ public class ProgressionServer {
 		this.server.shutdown();
 		this.pipeline.shutdown();
 		this.wkpf.shutdown();
+		this.jettyServer.shutdown();
 		this.jvmMetrics.stop();
 		this.pipelineMetrics.stop();
 		this.metricsReporter.stop();

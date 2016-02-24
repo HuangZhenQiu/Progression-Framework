@@ -19,17 +19,15 @@ import org.slf4j.LoggerFactory;
 import edu.uci.eecs.wukong.framework.model.MonitorDataModel;
 import edu.uci.eecs.wukong.framework.util.Configuration;
 
-public class MongoDBMonitorService extends TimerTask implements MonitorService {
+public class MongoDBMonitorService extends MonitorService {
 	private static Logger logger = LoggerFactory.getLogger(MongoDBMonitorService.class);
 	private static Configuration configuration = Configuration.getInstance();
 	private static MongoDBMonitorService service;
 	private static Gson gson = new Gson();
-	private static long BUFFER_SEND_INTERVAL = 1000 * 30;
 	private MongoClient client;
 	private MongoDatabase database;
 	private MongoCollection<Document> collection;
 	private List<MonitorDataModel> buffer;
-	private Timer timer;
 	
 	private MongoDBMonitorService() {
 		
@@ -40,7 +38,6 @@ public class MongoDBMonitorService extends TimerTask implements MonitorService {
 			database = client.getDatabase(configuration.getMonitorMongoDataBase());
 			collection = database.getCollection(configuration.getMonitorMongoCollection());
 			buffer = new ArrayList<MonitorDataModel>();
-			timer = new Timer();
 		} else {
 			logger.error("Fail to initialize monitoring service, because of missing mongoDB connection information" 
 					+ " mongoURL = " + configuration.getMonitorMongoURL()
@@ -59,11 +56,6 @@ public class MongoDBMonitorService extends TimerTask implements MonitorService {
 	}
 
 	@Override
-	public void init() {
-		timer.schedule(this, BUFFER_SEND_INTERVAL);
-	}
-
-	@Override
 	public void send(MonitorDataModel model) {
 		if (model != null) {
 			synchronized (buffer) {
@@ -74,7 +66,7 @@ public class MongoDBMonitorService extends TimerTask implements MonitorService {
 
 	@Override
 	public void close() {
-		timer.cancel();
+		client.close();
 	}
 
 	@Override

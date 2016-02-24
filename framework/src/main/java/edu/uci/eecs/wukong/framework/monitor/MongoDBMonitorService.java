@@ -63,14 +63,9 @@ public class MongoDBMonitorService extends MonitorService {
 			}
 		}
 	}
-
+	
 	@Override
-	public void close() {
-		client.close();
-	}
-
-	@Override
-	public void run() {
+	public void bulkPush() {
 		synchronized (buffer) {
 			if (buffer.size() > 0) {
 				List<WriteModel<Document>> documents = new ArrayList<WriteModel<Document>>();
@@ -83,5 +78,10 @@ public class MongoDBMonitorService extends MonitorService {
 			logger.info("Sending " + buffer.size() + " monitored sensor data to mongoDB by bulk writing");
 			buffer.clear();
 		}
+	}
+
+	@Override
+	public void close() {
+		client.close();
 	}
 }

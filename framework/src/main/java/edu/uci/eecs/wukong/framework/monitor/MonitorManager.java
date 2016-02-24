@@ -1,6 +1,7 @@
 package edu.uci.eecs.wukong.framework.monitor;
 
 import java.util.Timer;
+import java.util.TimerTask;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,31 +18,45 @@ public class MonitorManager implements MonitorListener {
 	private Timer timer;
 	private long currentPeriod;
 	private MonitorService service;
+	private MonitoringTask currentTask;
+	
+	public static class MonitoringTask extends TimerTask {
+		private MonitorService service;
+		public MonitoringTask(MonitorService service) {
+			this.service = service;
+		}
+		
+		@Override
+		public void run() {
+			service.bulkPush();
+		}
+	}
 	
 	public MonitorManager(WKPF wkpf) {
 		try { 
 			this.service = MonitorServiceFactory.createMonitorService();
 			this.timer = new Timer();
 			this.currentPeriod = BUFFER_SEND_INTERVAL;
+			this.currentTask = new MonitoringTask(service);
 			wkpf.registerMonitorListener(this);
 		} catch (ServiceInitilizationException e) {
 			logger.error("Fail to initialize monitor manager: " + e.toString());
 		}
 	}
+
 	
 	public void start() {
-		timer.schedule(service, 0, BUFFER_SEND_INTERVAL);
+		timer.schedule(currentTask, 0, BUFFER_SEND_INTERVAL);
 	}
 	
 	public void stop() {
-		timer.cancel();
-		timer = new Timer();
+		currentTask.cancel();
 	}
 	
 	public void updatePeriod(long period) {
-		this.timer.cancel();
-		this.timer = new Timer();
-		this.timer.schedule(service, 0, period);
+		currentTask.cancel();
+		currentTask = new MonitoringTask(service);
+		this.timer.schedule(currentTask, 0, period);
 		this.currentPeriod = period;
 	}
 
@@ -51,8 +66,8 @@ public class MonitorManager implements MonitorListener {
 	}
 	
 	public void close() {
+		stop();
 		timer.cancel();
-		service.cancel();
 	}
 	
 	public long getCurrentPeriod() {

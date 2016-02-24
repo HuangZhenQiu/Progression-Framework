@@ -122,6 +122,7 @@ public class ProgressionServer {
 			this.server.start();
 			this.pipeline.start();
 			this.jvmMetrics.start();
+			this.monitorManager.start();
 			this.pipelineMetrics.start();
 			this.metricsReporter.register("ProgressionServer" + this.wkpf.getNetworkId(), registryHolder);
 			this.metricsReporter.start();
@@ -140,6 +141,7 @@ public class ProgressionServer {
 		this.jvmMetrics.stop();
 		this.pipelineMetrics.stop();
 		this.metricsReporter.stop();
+		this.monitorManager.close();
 	}
 	
 	public void attachShutDownHook() {

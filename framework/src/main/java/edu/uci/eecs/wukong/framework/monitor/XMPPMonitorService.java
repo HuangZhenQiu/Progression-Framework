@@ -18,12 +18,6 @@ public class XMPPMonitorService extends MonitorService {
 		
 		return service;
 	}
-	
-	@Override
-	public void run() {
-		// TODO Auto-generated method stub
-		
-	}
 
 	@Override
 	public void send(MonitorDataModel model) {
@@ -33,6 +27,12 @@ public class XMPPMonitorService extends MonitorService {
 
 	@Override
 	public void close() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void bulkPush() {
 		// TODO Auto-generated method stub
 		
 	}

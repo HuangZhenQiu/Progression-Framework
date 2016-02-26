@@ -39,6 +39,7 @@ public class MonitorManager implements MonitorListener {
 			this.currentPeriod = BUFFER_SEND_INTERVAL;
 			this.currentTask = new MonitoringTask(service);
 			wkpf.registerMonitorListener(this);
+
 		} catch (ServiceInitilizationException e) {
 			logger.error("Fail to initialize monitor manager: " + e.toString());
 		}

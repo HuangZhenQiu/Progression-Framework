@@ -54,7 +54,15 @@ public class ComponentMap {
 		return componentMap.containsKey(wuClassId);
 	}
 	
-	public List<Component> getComponent(short wuClassId) {
+	public Component getComponentById(int id) {
+		if (id < components.size()) {
+			return components.get(id);
+		} else {
+			return null;
+		}
+	}
+	
+	public List<Component> getComponentByWuClassId(short wuClassId) {
 		return componentMap.get(wuClassId);
 	}
 	

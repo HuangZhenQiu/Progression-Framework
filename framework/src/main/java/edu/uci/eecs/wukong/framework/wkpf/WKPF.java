@@ -201,6 +201,17 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 		}
 	}
 	
+	public void sendGetLinkCounter(Long nest, short linkId) {
+		this.sequence ++;
+		ByteBuffer buffer = ByteBuffer.allocate(10);
+		buffer.put(WKPFUtil.WKPF_GET_LINK_COUNTER);
+		buffer.put((byte) (this.sequence % 256));
+		buffer.put((byte) (this.sequence / 256));
+		buffer.put((byte) (linkId % 256));
+		buffer.put((byte) (linkId / 256));
+		mptn.send(nest.intValue(), buffer.array());
+	}
+	
 	/**
 	 * 
 	 * @param pluginId
@@ -720,6 +731,13 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 		metrics.reprogramCommitCounter.inc();
 		mptn.send(MPTNUtil.MPTN_MASTER_ID, buffer.array());
 		djaData.fireUpdateEvent();
+	}
+	
+	public void onWKPFLinkCounterReturn(long sourceId, byte[] message) {
+		short linkId = WKPFUtil.getBigEndianShort(message, 3);
+		short count = WKPFUtil.getBigEndianShort(message, 5);
+		this.linkTable.setCounter(linkId, count);
+		LOGGER.info(String.format("Received count %d for link %d.", count, linkId));
 	}
 	
 	public int getNetworkId() {

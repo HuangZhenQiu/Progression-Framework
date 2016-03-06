@@ -2,7 +2,6 @@ package edu.uci.eecs.wukong.framework.test;
 
 import edu.uci.eecs.wukong.framework.model.Component;
 import edu.uci.eecs.wukong.framework.model.ComponentMap;
-import edu.uci.eecs.wukong.framework.model.EndPoint;
 import edu.uci.eecs.wukong.framework.model.InitValue;
 import edu.uci.eecs.wukong.framework.model.InitValueTable;
 import edu.uci.eecs.wukong.framework.model.Link;
@@ -37,7 +36,7 @@ public class MockReprogrammer {
 	}
 	
 	public void addLink(short sourceNodeId, byte spid, short destNodeId, byte dpid) {
-		Link link = new Link(sourceNodeId, spid, destNodeId, dpid);
+		Link link = new Link(sourceNodeId, spid, destNodeId, dpid, (short)0);
 		linkTable.addLink(link);
 	}
 	

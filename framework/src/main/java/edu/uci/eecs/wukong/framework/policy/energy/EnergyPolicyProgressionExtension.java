@@ -1,0 +1,28 @@
+package edu.uci.eecs.wukong.framework.policy.energy;
+
+import java.util.Iterator;
+
+import edu.uci.eecs.wukong.framework.annotation.WuTimer;
+import edu.uci.eecs.wukong.framework.api.TimerExecutable;
+import edu.uci.eecs.wukong.framework.extension.AbstractProgressionExtension;
+import edu.uci.eecs.wukong.framework.model.Link;
+import edu.uci.eecs.wukong.framework.policy.energy.EnergyPolicyPrClass;
+
+public class EnergyPolicyProgressionExtension extends AbstractProgressionExtension<EnergyPolicyPrClass> implements
+	TimerExecutable {
+
+	public EnergyPolicyProgressionExtension(EnergyPolicyPrClass plugin) {
+		super(plugin);
+	}
+
+	@WuTimer(interval = 60)
+	public void execute() {
+		Iterator<Link> iterator = this.getPrClass().getLinkIterator();
+		short i = 0;
+		while (iterator.hasNext()) {
+			Link link = iterator.next();
+			Long linkSourceAddress = this.prClass.getComponentAddress(link.getSourceId());
+			this.prClass.sendGetLinkCounter(linkSourceAddress, i++);
+		}
+	}
+}

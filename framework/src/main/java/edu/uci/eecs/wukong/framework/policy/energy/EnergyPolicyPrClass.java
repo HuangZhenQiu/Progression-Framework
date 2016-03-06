@@ -1,10 +1,13 @@
 package edu.uci.eecs.wukong.framework.policy.energy;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import edu.uci.eecs.wukong.framework.annotation.WuClass;
 import edu.uci.eecs.wukong.framework.api.Extension;
 import edu.uci.eecs.wukong.framework.prclass.PrClassMetrics;
 import edu.uci.eecs.wukong.framework.prclass.SystemPrClass;
+import edu.uci.eecs.wukong.framework.wkpf.WKPF;
 
 
 /**
@@ -12,23 +15,24 @@ import edu.uci.eecs.wukong.framework.prclass.SystemPrClass;
  * to track the transmission data size of each link of a FBP. If find an imbalance situation of it, then notify master 
  * to re-map the application.
  */
+
+@WuClass(id = 10117)
 public class EnergyPolicyPrClass extends SystemPrClass {
 
-	public EnergyPolicyPrClass(PrClassMetrics metrics) {
-		super("EnergyPolicy", metrics);
+	public EnergyPolicyPrClass(WKPF wkpf, PrClassMetrics metrics) {
+		super("EnergyPolicy", wkpf, metrics);
 		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	public List<Extension> registerExtension() {
-		// TODO Auto-generated method stub
-		return null;
+		List<Extension> extensions = new ArrayList<Extension> ();
+		extensions.add(new EnergyPolicyProgressionExtension(this));
+		return extensions;
 	}
 
 	@Override
 	public List<String> registerContext() {
-		// TODO Auto-generated method stub
 		return null;
 	}
-
 }

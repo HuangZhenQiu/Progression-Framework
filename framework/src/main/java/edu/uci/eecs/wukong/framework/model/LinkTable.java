@@ -4,10 +4,11 @@ import edu.uci.eecs.wukong.framework.model.Link;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class LinkTable {
-	public static int LINK_LENGTH = 6;
+	public static int LINK_LENGTH = 8;
 	private List<Link> links;
 	public LinkTable() {
 		links = new ArrayList<Link> ();
@@ -15,6 +16,16 @@ public class LinkTable {
 	
 	public void addLink(Link link) {
 		this.links.add(link);
+	}
+	
+	public void setCounter(int number, short count) {
+		if (number < links.size()) {
+			links.get(number).setCounter(count);
+		}
+	}
+	
+	public Iterator<Link> getLinkIterator() {
+		return links.listIterator();
 	}
 	
 	public byte[] toByteArray() {

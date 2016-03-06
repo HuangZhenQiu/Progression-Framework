@@ -1,12 +1,12 @@
 package edu.uci.eecs.wukong.framework.prclass;
 
 import edu.uci.eecs.wukong.framework.annotation.WuProperty;
-import edu.uci.eecs.wukong.framework.api.Extension;
 import edu.uci.eecs.wukong.framework.annotation.WuClass;
 import edu.uci.eecs.wukong.framework.buffer.BufferManager;
 import edu.uci.eecs.wukong.framework.exception.PluginNotFoundException;
 import edu.uci.eecs.wukong.framework.factor.SceneManager;
 import edu.uci.eecs.wukong.framework.pipeline.Pipeline;
+import edu.uci.eecs.wukong.framework.prclass.PrClass.PrClassType;
 import edu.uci.eecs.wukong.framework.property.Activity;
 import edu.uci.eecs.wukong.framework.property.Location;
 import edu.uci.eecs.wukong.framework.property.Response;
@@ -44,7 +44,7 @@ import org.slf4j.LoggerFactory;
 public class PrClassManager implements PrClassInitListener {
 	private final static Logger LOGGER = LoggerFactory.getLogger(PrClassManager.class);
 	private static final String PLUGIN_DEFINATION_PATH = "plugins.txt";
-	private static final String PLUGIN_PATH = "edu.uci.eecs.wukong.prclass";
+	// private static final String PLUGIN_PATH = "edu.uci.eecs.wukong.prclass";
 	private static final Configuration configuration = Configuration.getInstance();
 	private BufferManager bufferManager;
 	private SceneManager contextManager;
@@ -59,6 +59,7 @@ public class PrClassManager implements PrClassInitListener {
 	/* Binded WuObjects */
 	private List<WuObjectModel> bindedWuObjects;
 	private WKPF wkpf;
+	/* Name to number of objects*/
 	private Map<String, Integer> pluginsMap;
 	private List<StateUpdateListener> listeners;
 	
@@ -142,18 +143,25 @@ public class PrClassManager implements PrClassInitListener {
 	 */
 	public void init(StateModel model) throws Exception {
 		for (Entry<String, Integer> pluginEntry : pluginsMap.entrySet()) {
-			String path = PLUGIN_PATH + '.' + pluginEntry.getKey();
 			ClassLoader loader = PrClassManager.class.getClassLoader();
-			Class<?> c = loader.loadClass(path);
-			WuClassModel wuClassModel = createWuClassModel(path, c);
+			Class<?> c = loader.loadClass(pluginEntry.getKey());
+			WuClassModel wuClassModel = createWuClassModel(pluginEntry.getKey(), c);
 			
 			if (wuClassModel != null) {
 				LOGGER.info("Initialized Wuclass in progression server : " + wuClassModel);
 				for (int i = 0; i< pluginEntry.getValue(); i++) {
 					// A temporary solution for easier mapping and deployment.
 					// Create an instance for each plugin classes as hard WuClass.
-					Constructor<?> constructor = c.getConstructor(PrClassMetrics.class);
-					PrClass plugin = (PrClass) constructor.newInstance(prClassMetrics);
+					Constructor<?> constructor;
+					PrClass plugin;
+					if (wuClassModel.getType().equals(PrClassType.SYSTEM_PRCLASS)) {
+						constructor = c.getConstructor(WKPF.class, PrClassMetrics.class);
+						plugin = (PrClass) constructor.newInstance(wkpf, prClassMetrics);
+					} else {
+						constructor = c.getConstructor(PrClassMetrics.class);
+						plugin = (PrClass) constructor.newInstance(prClassMetrics);
+					}
+
 					prClassMetrics.addPrClassMeter(plugin);
 					plugins.add(plugin);
 					WuObjectModel wuObjectModel = new WuObjectModel(wuClassModel, plugin);
@@ -249,7 +257,7 @@ public class PrClassManager implements PrClassInitListener {
     			bufferManager.unbind(model);
     			unbindSimplePrClassTimer((SimplePrClass)model.getPrClass());
     		} else if (model.getType().getType().equals(PrClass.PrClassType.SYSTEM_PRCLASS)) {
-    			//TODO (Peter Huang) set the system management related meta data.
+    			pipeline.unregisterExtension(model);
     		}
     	}
 	}
@@ -276,7 +284,8 @@ public class PrClassManager implements PrClassInitListener {
 			bufferManager.bind(model);
 			bindSimplePrClassTimer((SimplePrClass)model.getPrClass());
 		} else if (model.getType().getType().equals(PrClass.PrClassType.SYSTEM_PRCLASS)) {
-			//TODO (Peter Huang) set the system management related meta data.
+			pipeline.registerExtension(model);
+			LOGGER.info("Finished bind system prclass.");
 		}
 	}
 	
@@ -296,39 +305,6 @@ public class PrClassManager implements PrClassInitListener {
 		prClassTimerMap.remove(prclass);
 		LOGGER.info("unRegistered Timer Executor  for simple prclass "
 				+ prclass.getName() + " of port " + prclass.getPortId());
-	}
-	
-	/**
-	 * It is a function for dynamic load a plugin within class path.
-	 * 
-	 * @param name the plugin class name 
-	 * @param appId the application id of FBP
-	 * @param propertyMap  property map
-	 * @throws Exception
-	 */
-	public void registerPlugin(String name, String appId, Map<String,
-			NPP> propertyMap) throws Exception {
-		int pos = name.lastIndexOf('.');
-		String path = "";
-		if (pos == -1) {
-			path = PLUGIN_PATH + '.' + name;
-		} else if (name.substring(0, pos).equals(PLUGIN_PATH)) {
-			throw new PluginNotFoundException("Try to load from wrong plugin path.");
-		}
-		
-		if (!registedClasses.containsKey(name)) {
-			throw new PluginNotFoundException("Try to load unregisted plugin.");
-		}
-		
-		ClassLoader loader = PrClassManager.class.getClassLoader();
-		Class<?> c = loader.loadClass(path);
-		WuClassModel wuClassModel = createWuClassModel(path, c);
-		PipelinePrClass plugin = (PipelinePrClass)c.getConstructor(String.class, String.class).newInstance(name, appId);
-		
-		plugins.add(plugin);
-		WuObjectModel wuObjectModel = new WuObjectModel(wuClassModel, plugin);
-		wkpf.addWuObject(plugin.getPortId(), wuObjectModel);
-		bindPlugin(wuObjectModel);
 	}
 	
 	// bind the update event of out property for plugin.

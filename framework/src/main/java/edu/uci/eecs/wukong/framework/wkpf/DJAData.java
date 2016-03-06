@@ -231,13 +231,15 @@ public class DJAData {
 	 * 1 byte src port number
 	 * 2 byte little endian dest component id
 	 * 1 byte dest port number
+	 * 2 byte counter
 	 */
 	private Link extractLink(int start) {
 		try {
 			short srcComponentId = WKPFUtil.getBigEndianShort(buffer, start);
 			short destComponentId = WKPFUtil.getBigEndianShort(buffer, start + 3);
+			short counter = WKPFUtil.getBigEndianShort(buffer, start + 6);
 			
-			Link link = new Link(srcComponentId, buffer[start + 2], destComponentId, buffer[start + 5]);
+			Link link = new Link(srcComponentId, buffer[start + 2], destComponentId, buffer[start + 5], counter);
 			return link;
 		} catch (Exception e) {
 			LOGGER.error("Error Status : fail to extract link from DJAData");

@@ -49,6 +49,8 @@ public class WKPFUtil {
 	public static final byte WKPF_SET_LOCATION            = (byte)0x9C;
 	public static final byte WKPF_SET_LOCATION_R          = (byte)0x9D;
 	
+	public static final byte WKPF_GET_LINK_COUNTER        = (byte)0xB0;
+	public static final byte WKPF_GET_LINK_COUNTER_R      = (byte)0xB1;
 	public static final byte MONITORING                   = (byte)0xB5;
 	public static final byte WKPF_ERROR                   = (byte)0x86;
 	

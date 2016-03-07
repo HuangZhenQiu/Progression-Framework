@@ -173,7 +173,8 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 	
 	private void initValue(WuObjectModel object, List<InitValue> values) {
 		for (InitValue value : values) {
-			if (componentMap.getWuClassId(value.getComponentId()) == object.getType().getWuClassId()) {
+			if (componentMap.getWuClassId(value.getComponentId()) == object.getType().getWuClassId()
+					&& componentMap.getPrimaryEndPointNodeId(value.getComponentId()) == this.getLongAddress()) {
 				WuPropertyModel property = object.getType().getPropertyModel(value.getPropertyNumber());
 				try {
 					Field field = object.getPrClass().getClass().getDeclaredField(property.getName());

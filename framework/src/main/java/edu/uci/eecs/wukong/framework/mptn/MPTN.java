@@ -311,6 +311,7 @@ public class MPTN implements MPTNMessageListener{
 						LOGGER.info("I dont't want to reboot");
 						return WKPFUtil.WKPF_REPRG_REBOOT;
 					case WKPFUtil.WKPF_WRITE_PROPERTY_R:
+						fireWKPFOnGetLinkCounterReturn(wkpfPackage);
 						return WKPFUtil.WKPF_WRITE_PROPERTY_R;
 					default:
 						LOGGER.error("Received unpexcted WKPF message type " + wkpfPackage);
@@ -398,6 +399,13 @@ public class MPTN implements MPTNMessageListener{
 		LOGGER.info("Received set location message");
 		for (WKPFMessageListener listener : listeners) {
 			listener.onWKPFSetLocation(message.getSourceAddress(), message.getPayload());
+		}
+	}
+	
+	private void fireWKPFOnGetLinkCounterReturn(WKPFPackage message) {
+		LOGGER.info("Received set get link counter message");
+		for (WKPFMessageListener listener : listeners) {
+			listener.onWKPFLinkCounterReturn(message.getSourceAddress(), message.getPayload());
 		}
 	}
 

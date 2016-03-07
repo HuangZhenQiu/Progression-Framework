@@ -440,6 +440,7 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 		short wuclassId = WKPFUtil.getBigEndianShort(message, 4);
 		byte propertyId = message[6];
 		byte type = message[7];
+		int size = 0;
 		
 		WuObjectModel wuobject = portToWuObjectMap.get(Byte.valueOf(port));
 		if (wuobject == null) {
@@ -455,105 +456,79 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 
 		
 		NPP npp = new NPP(this.mptn.getLongAddress(), port, propertyId);
-		// Put data into write container
-		if (wuproperty.getDtype().equals(DataType.Buffer)) {
-			if (wuproperty.getType().equals(Byte.class)
-					&& (type == WKPFUtil.WKPF_PROPERTY_TYPE_BOOLEAN)) {
-				byte value =  message[8];
-				bufferManager.addData(npp, System.currentTimeMillis(), new ByteUnit(value));
-			} else if (wuproperty.getType().equals(Short.class)
-					&& (type == WKPFUtil.WKPF_PROPERTY_TYPE_REFRESH_RATE
-					|| type == WKPFUtil.WKPF_PROPERTY_TYPE_SHORT)) {
-				short value = (short) ((int)(message[8] & 0xff) << 8 + message[9]);
+		int length = WKPFUtil.WKPF_WRITE_PROPERTY_LENGTH;
+		if (wuproperty.getType().equals(Short.class)
+				&& (type == WKPFUtil.WKPF_PROPERTY_TYPE_REFRESH_RATE
+				|| type == WKPFUtil.WKPF_PROPERTY_TYPE_SHORT)) {
+			short value = (short) ((int)(message[8] & 0xff) << 8 + message[9]);
+			if (wuproperty.getDtype().equals(DataType.Channel)) {
+				bufferManager.addRealTimeData(npp, value);
+			} else {
 				bufferManager.addData(npp, System.currentTimeMillis(), new ShortUnit(value));
-			} else if (wuproperty.getType().equals(Location.class)
-					&& type == WKPFUtil.WKPF_PROPERTY_TYPE_LOCATION) {
-				LocationUnit location = new LocationUnit();
-				int length = location.size() + WKPFUtil.WKPF_WRITE_PROPERTY_LENGTH + 4;
-				if (message.length >= length) {
-					location.parse(ByteBuffer.wrap(Arrays.copyOfRange(
-							message, WKPFUtil.WKPF_WRITE_PROPERTY_LENGTH, length)), true);
+			}
+			length += 2;
+		} else if (wuproperty.getType().equals(Boolean.class)
+				&& (type == WKPFUtil.WKPF_PROPERTY_TYPE_BOOLEAN)) {
+			byte value = message[8];
+			if (wuproperty.getDtype().equals(DataType.Channel)) {
+				bufferManager.addRealTimeData(npp, value);
+			} else {
+				bufferManager.addData(npp, System.currentTimeMillis(), new ByteUnit(value));
+			}
+			length += 1;
+		} else if (wuproperty.getType().equals(Location.class)
+				&& (type == WKPFUtil.WKPF_PROPERTY_TYPE_LOCATION)) {
+			LocationUnit location = new LocationUnit();
+			if (message.length >= length) {
+				location.parse(ByteBuffer.wrap(Arrays.copyOfRange(
+						message, WKPFUtil.WKPF_WRITE_PROPERTY_LENGTH, length)), true);
+				length += location.size() + 4;
+				if (wuproperty.getDtype().equals(DataType.Channel)) {
+					bufferManager.addRealTimeData(npp, location);
+				} else {
 					bufferManager.addData(npp, System.currentTimeMillis(), location);
-				} else {
-					LOGGER.error("Broken message for writing location property to buffer");
 				}
-			} else if (wuproperty.getType().equals(Activity.class)
-					&& type == WKPFUtil.WKPF_PROPERTY_TYPE_ACTIVITY) {
-				ActivityUnit activity = new ActivityUnit();
-				int length = activity.size() + WKPFUtil.WKPF_WRITE_PROPERTY_LENGTH + 4;
-				if (message.length >= length) {
-					activity.parse(ByteBuffer.wrap(Arrays.copyOfRange(
-							message, WKPFUtil.WKPF_WRITE_PROPERTY_LENGTH, length)), true);
+			} else {
+				LOGGER.error("Broken message for writing location property into channel");
+			}
+		} else if (wuproperty.getType().equals(Activity.class)
+				&& type == WKPFUtil.WKPF_PROPERTY_TYPE_ACTIVITY) {
+			ActivityUnit activity = new ActivityUnit();
+			if (message.length >= length) {
+				activity.parse(ByteBuffer.wrap(Arrays.copyOfRange(
+						message, WKPFUtil.WKPF_WRITE_PROPERTY_LENGTH, length)), true);
+				length += activity.size() + 4;
+				if (wuproperty.getDtype().equals(DataType.Channel)) {
+					bufferManager.addRealTimeData(npp, activity);
+				} else {
 					bufferManager.addData(npp, System.currentTimeMillis(), activity);
-				} else {
-					LOGGER.error("Broken message for writing activity property to buffer");
 				}
-			} else if (wuproperty.getType().equals(Response.class)
-					&& type == WKPFUtil.WKPF_PROPERTY_TYPE_RESPONSE){
-				ResponseUnit response = new ResponseUnit();
-				int length = response.size() + WKPFUtil.WKPF_WRITE_PROPERTY_LENGTH;
-				if (message.length >= length) {
-					response.parse(ByteBuffer.wrap(Arrays.copyOfRange(
-							message, WKPFUtil.WKPF_WRITE_PROPERTY_LENGTH, length)), true);
+			} else {
+				LOGGER.error("Broken message for writing activity property into channel");
+			}
+		} else if (wuproperty.getType().equals(Response.class)
+				&& type == WKPFUtil.WKPF_PROPERTY_TYPE_RESPONSE){
+			ResponseUnit response = new ResponseUnit();
+			if (message.length >= length) {
+				response.parse(ByteBuffer.wrap(Arrays.copyOfRange(
+						message, WKPFUtil.WKPF_WRITE_PROPERTY_LENGTH, length)), true);
+				length += response.size() + 4;
+				if (wuproperty.getDtype().equals(DataType.Channel)) {
+					bufferManager.addRealTimeData(npp, response);
+				} else {
 					bufferManager.addData(npp, System.currentTimeMillis(), response);
-				} else {
-					LOGGER.error("Broken message for writing activity property to buffer");
 				}
-
 			} else {
-				LOGGER.error("Unrecgonized write property message type " + type);
+				LOGGER.error("Broken message for writing activity property into channel");
 			}
-		} else if (wuproperty.getDtype().equals(DataType.Channel)){
-			if (wuproperty.getType().equals(Short.class)
-					&& (type == WKPFUtil.WKPF_PROPERTY_TYPE_REFRESH_RATE
-					|| type == WKPFUtil.WKPF_PROPERTY_TYPE_SHORT)) {
-				short value = (short) ((int)(message[8] & 0xff) << 8 + message[9]);
-				bufferManager.addRealTimeData(npp, value);
-			} else if (wuproperty.getType().equals(Boolean.class)
-					&& (type == WKPFUtil.WKPF_PROPERTY_TYPE_BOOLEAN)) {
-				byte value = message[8];
-				bufferManager.addRealTimeData(npp, value);
-			} else if (wuproperty.getType().equals(Location.class)
-					&& (type == WKPFUtil.WKPF_PROPERTY_TYPE_LOCATION)) {
-				LocationUnit location = new LocationUnit();
-				int length = location.size() + WKPFUtil.WKPF_WRITE_PROPERTY_LENGTH + 4;
-				if (message.length >= length) {
-					location.parse(ByteBuffer.wrap(Arrays.copyOfRange(
-							message, WKPFUtil.WKPF_WRITE_PROPERTY_LENGTH, length)), true);
-					bufferManager.addRealTimeData(npp, location.getValue());
-				} else {
-					LOGGER.error("Broken message for writing location property into channel");
-				}
-			} else if (wuproperty.getType().equals(Activity.class)
-					&& type == WKPFUtil.WKPF_PROPERTY_TYPE_ACTIVITY) {
-				ActivityUnit activity = new ActivityUnit();
-				int length = activity.size() + WKPFUtil.WKPF_WRITE_PROPERTY_LENGTH + 4;
-				if (message.length >= length) {
-					activity.parse(ByteBuffer.wrap(Arrays.copyOfRange(
-							message, WKPFUtil.WKPF_WRITE_PROPERTY_LENGTH, length)), true);
-					bufferManager.addRealTimeData(npp, activity.getValue());
-				} else {
-					LOGGER.error("Broken message for writing activity property into channel");
-				}
-			} else if (wuproperty.getType().equals(Response.class)
-					&& type == WKPFUtil.WKPF_PROPERTY_TYPE_RESPONSE){
-				ResponseUnit response = new ResponseUnit();
-				int length = response.size() + WKPFUtil.WKPF_WRITE_PROPERTY_LENGTH + 4;
-				if (message.length >= length) {
-					response.parse(ByteBuffer.wrap(Arrays.copyOfRange(
-							message, WKPFUtil.WKPF_WRITE_PROPERTY_LENGTH, length)), true);
-					bufferManager.addRealTimeData(npp, response.getValue());
-				} else {
-					LOGGER.error("Broken message for writing activity property into channel");
-				}
 
-			} else {
-				LOGGER.error("Unrecgonized write property message type " + type);
-			}
+		} else {
+			LOGGER.error("Unrecgonized write property message type " + type);
 		}
 		
-		if (Configuration.getInstance().isMonitorEnabled()) {
-			int length = (message.length - WKPFUtil.WKPF_WRITE_PROPERTY_LENGTH);
+		
+		if (Configuration.getInstance().isMonitorEnabled()
+				&& length > WKPFUtil.WKPF_WRITE_PROPERTY_LENGTH) {
 			byte[] data = Arrays.copyOfRange(message, WKPFUtil.WKPF_WRITE_PROPERTY_LENGTH, length);
 			
 			MonitorDataModel model = new MonitorDataModel(

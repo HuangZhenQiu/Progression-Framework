@@ -23,7 +23,7 @@ public class SimpleInputPrClass extends SimplePrClass {
 	}
 
 	@Override
-	@WuTimer(interval = 1)
+	@WuTimer(interval = 0.1F)
 	public void update() {
 		LOGGER.info("Simple Input PrClass current input value = " + input);
 	}

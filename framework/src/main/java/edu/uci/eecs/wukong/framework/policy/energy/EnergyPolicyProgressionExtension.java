@@ -15,14 +15,16 @@ public class EnergyPolicyProgressionExtension extends AbstractProgressionExtensi
 		super(plugin);
 	}
 
-	@WuTimer(interval = 60)
+	@WuTimer(interval = 1)
 	public void execute() {
 		Iterator<Link> iterator = this.getPrClass().getLinkIterator();
 		short i = 0;
 		while (iterator.hasNext()) {
 			Link link = iterator.next();
 			Long linkSourceAddress = this.prClass.getComponentAddress(link.getSourceId());
-			this.prClass.sendGetLinkCounter(linkSourceAddress, i++);
+			if (linkSourceAddress != -1) {
+				this.prClass.sendGetLinkCounter(linkSourceAddress, i++);
+			}
 		}
 	}
 }

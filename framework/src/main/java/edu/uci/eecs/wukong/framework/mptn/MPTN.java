@@ -273,46 +273,46 @@ public class MPTN implements MPTNMessageListener{
 		if (message.getLength() >= 9) {
 			WKPFPackage wkpfPackage = new WKPFPackage(message.getPayload());
 			if (wkpfPackage.getType() == MPTNUtil.MPTN_MSATYPE_FWDREQ) {
-				switch(wkpfPackage.getPayload()[0]) {
-					case WKPFUtil.WKPF_REPRG_OPEN:
+				switch(wkpfPackage.getPayload()[0] & 0xFF) {
+					case WKPFUtil.WKPF_REPRG_OPEN & 0xFF:
 						fireWKPFRemoteProgramOpen(wkpfPackage);
 						return WKPFUtil.WKPF_REPRG_OPEN;
-					case WKPFUtil.WKPF_REPRG_WRITE:
+					case WKPFUtil.WKPF_REPRG_WRITE & 0xFF:
 						fireWKPFRemoteProgramWrite(wkpfPackage);
 						return WKPFUtil.WKPF_REPRG_WRITE;
-					case WKPFUtil.WKPF_REPRG_COMMIT:
+					case WKPFUtil.WKPF_REPRG_COMMIT & 0xFF:
 						fireWKPFRemoteProgramCommit(wkpfPackage);
 						return WKPFUtil.WKPF_REPRG_COMMIT;
-					case WKPFUtil.WKPF_GET_WUCLASS_LIST:
+					case WKPFUtil.WKPF_GET_WUCLASS_LIST & 0xFF:
 						fireWKPFGetWuClassList(wkpfPackage);
 						return WKPFUtil.WKPF_GET_WUCLASS_LIST;
-					case WKPFUtil.WKPF_GET_WUOBJECT_LIST:
+					case WKPFUtil.WKPF_GET_WUOBJECT_LIST & 0xFF:
 						fireWKPFGetWuObjectList(wkpfPackage);
 						return WKPFUtil.WKPF_GET_WUOBJECT_LIST;
-					case WKPFUtil.WKPF_READ_PROPERTY:
+					case WKPFUtil.WKPF_READ_PROPERTY & 0xFF:
 						fireWKPFReadProperty(wkpfPackage);
 						return WKPFUtil.WKPF_READ_PROPERTY;
-					case WKPFUtil.WKPF_WRITE_PROPERTY:
+					case WKPFUtil.WKPF_WRITE_PROPERTY & 0xFF:
 						fireWKPFWriteProperty(wkpfPackage);
 						return WKPFUtil.WKPF_WRITE_PROPERTY;
-					case WKPFUtil.WKPF_REQUEST_PROPERTY_INIT:
+					case WKPFUtil.WKPF_REQUEST_PROPERTY_INIT & 0xFF:
 						fireWKPFRequestPropertyInit(wkpfPackage);
 						return WKPFUtil.WKPF_REQUEST_PROPERTY_INIT;
-					case WKPFUtil.WKPF_GET_LOCATION:
+					case WKPFUtil.WKPF_GET_LOCATION & 0xFF:
 						fireWKPFGetLocation(wkpfPackage);
 						return WKPFUtil.WKPF_GET_LOCATION;
-					case WKPFUtil.WKPF_SET_LOCATION:
+					case WKPFUtil.WKPF_SET_LOCATION & 0xFF:
 						fireWKPFSetLocation(wkpfPackage);
-						return WKPFUtil.WKPF_SET_LOCATION;
-					case WKPFUtil.MONITORING:
+						return WKPFUtil.WKPF_SET_LOCATION ;
+					case WKPFUtil.MONITORING & 0xFF:
 						fireWKPFMonitoredData(wkpfPackage);
 						return WKPFUtil.MONITORING;
-					case WKPFUtil.WKPF_REPRG_REBOOT:
+					case WKPFUtil.WKPF_REPRG_REBOOT & 0xFF:
 						LOGGER.info("I dont't want to reboot");
 						return WKPFUtil.WKPF_REPRG_REBOOT;
-					case WKPFUtil.WKPF_WRITE_PROPERTY_R:
+					case WKPFUtil.WKPF_GET_LINK_COUNTER_R & 0xFF:
 						fireWKPFOnGetLinkCounterReturn(wkpfPackage);
-						return WKPFUtil.WKPF_WRITE_PROPERTY_R;
+						return WKPFUtil.WKPF_GET_LINK_COUNTER_R;
 					default:
 						LOGGER.error("Received unpexcted WKPF message type " + wkpfPackage);
 				}

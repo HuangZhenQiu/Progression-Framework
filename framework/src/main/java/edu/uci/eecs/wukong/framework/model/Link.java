@@ -14,12 +14,12 @@ public class Link {
 	/* message counter */
 	private short counter;
 	
-	public Link(short sourceId, byte sourcePid, short destId, byte destPid, short counter) {
+	public Link(short sourceId, byte sourcePid, short destId, byte destPid) {
 		this.sourceId = sourceId;
 		this.sourcePid = sourcePid;
 		this.destId = destId;
 		this.destPid = destPid;
-		this.counter = counter;
+		this.counter = 0;
 	}
 	
 	public byte[] toByteArray() {

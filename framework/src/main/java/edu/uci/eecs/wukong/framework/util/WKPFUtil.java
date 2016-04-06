@@ -32,7 +32,8 @@ public class WKPFUtil {
 	public static final byte WKPF_REPROG_TOOLARGE            = 0x02;
 	public static final byte WKPF_REPROG_FAILED              = 0x03;
 	
-	
+	public static final byte WKPF_GET_LINK_COUNTER        = (byte)0x60;
+	public static final byte WKPF_GET_LINK_COUNTER_R      = (byte)0x61;
 	
 	public static final byte WKPF_GET_WUCLASS_LIST        = (byte)0x90;
 	public static final byte WKPF_GET_WUCLASS_LIST_R      = (byte)0x91;
@@ -49,8 +50,6 @@ public class WKPFUtil {
 	public static final byte WKPF_SET_LOCATION            = (byte)0x9C;
 	public static final byte WKPF_SET_LOCATION_R          = (byte)0x9D;
 	
-	public static final byte WKPF_GET_LINK_COUNTER        = (byte)0xB0;
-	public static final byte WKPF_GET_LINK_COUNTER_R      = (byte)0xB1;
 	public static final byte MONITORING                   = (byte)0xB5;
 	public static final byte WKPF_ERROR                   = (byte)0x86;
 	

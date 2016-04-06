@@ -36,7 +36,7 @@ public class MockReprogrammer {
 	}
 	
 	public void addLink(short sourceNodeId, byte spid, short destNodeId, byte dpid) {
-		Link link = new Link(sourceNodeId, spid, destNodeId, dpid, (short)0);
+		Link link = new Link(sourceNodeId, spid, destNodeId, dpid);
 		linkTable.addLink(link);
 	}
 	

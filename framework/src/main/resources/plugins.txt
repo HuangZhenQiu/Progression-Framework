@@ -16,4 +16,3 @@ edu.uci.eecs.wukong.prclass.localization.LocalizationPrClass 32
 edu.uci.eecs.wukong.prclass.activity.ActivityRecgonitionPrClass 1
 edu.uci.eecs.wukong.prclass.simple.SimpleInputPrClass 1
 edu.uci.eecs.wukong.prclass.loadtester.LocalizationLoadTester 32
-edu.uci.eecs.wukong.framework.policy.energy.EnergyPolicyPrClass 1

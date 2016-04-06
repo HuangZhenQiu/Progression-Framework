@@ -17,6 +17,7 @@ import edu.uci.eecs.wukong.framework.model.PropertyType;
 import edu.uci.eecs.wukong.framework.model.StateModel;
 import edu.uci.eecs.wukong.framework.util.Configuration;
 import edu.uci.eecs.wukong.framework.util.PipelineUtil;
+import edu.uci.eecs.wukong.framework.wkpf.RemoteProgrammingListener;
 import edu.uci.eecs.wukong.framework.wkpf.WKPF;
 import edu.uci.eecs.wukong.framework.state.StateUpdateListener;
 
@@ -157,6 +158,8 @@ public class PrClassManager implements PrClassInitListener {
 					if (wuClassModel.getType().equals(PrClassType.SYSTEM_PRCLASS)) {
 						constructor = c.getConstructor(WKPF.class, PrClassMetrics.class);
 						plugin = (PrClass) constructor.newInstance(wkpf, prClassMetrics);
+						// Once there is a remote programming, it will be triggered
+						wkpf.registerRemoteProgrammingListener((RemoteProgrammingListener)plugin);
 					} else {
 						constructor = c.getConstructor(PrClassMetrics.class);
 						plugin = (PrClass) constructor.newInstance(prClassMetrics);

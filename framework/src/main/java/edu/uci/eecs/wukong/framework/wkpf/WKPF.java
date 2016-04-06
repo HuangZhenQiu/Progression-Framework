@@ -127,6 +127,10 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 		this.monitorListeners.add(listener);
 	}
 	
+	public void registerRemoteProgrammingListener(RemoteProgrammingListener listener) {
+		this.djaData.register(listener);
+	}
+	
 	private void fireUpdateEvent() {
 		for (StateUpdateListener listener : stateListeners) {
 			listener.update();
@@ -159,8 +163,10 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 		
 		for (Entry<Byte, Short> entry : wuclassMap.entrySet()) {
 			WuObjectModel object = this.portToWuObjectMap.get(entry.getKey());
-			initValue(object, initValues.getValues());
-			objects.add(object);
+			if (object != null) {
+				initValue(object, initValues.getValues());
+				objects.add(object);
+			}
 		}
 		
 		for (PrClassInitListener listener : listeners) {
@@ -173,8 +179,9 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 	
 	private void initValue(WuObjectModel object, List<InitValue> values) {
 		for (InitValue value : values) {
-			if (componentMap.getWuClassId(value.getComponentId()) == object.getType().getWuClassId()
-					&& componentMap.getPrimaryEndPointNodeId(value.getComponentId()) == this.getLongAddress()) {
+			LOGGER.info("bind componentId " + value.getComponentId() + " of init value" + value);
+			if (componentMap.getPrimaryEndPointNodeId(value.getComponentId()) == this.getLongAddress() &&
+					componentMap.getWuClassId(value.getComponentId()) == object.getType().getWuClassId()) {
 				WuPropertyModel property = object.getType().getPropertyModel(value.getPropertyNumber());
 				try {
 					Field field = object.getPrClass().getClass().getDeclaredField(property.getName());
@@ -454,13 +461,11 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 			LOGGER.error("Can't find WuPropety with propertyId " + propertyId + " for write property command.");
 			return;
 		}
-
 		
 		NPP npp = new NPP(this.mptn.getLongAddress(), port, propertyId);
 		int length = WKPFUtil.WKPF_WRITE_PROPERTY_LENGTH;
-		if (wuproperty.getType().equals(Short.class)
-				&& (type == WKPFUtil.WKPF_PROPERTY_TYPE_REFRESH_RATE
-				|| type == WKPFUtil.WKPF_PROPERTY_TYPE_SHORT)) {
+		if (type == WKPFUtil.WKPF_PROPERTY_TYPE_REFRESH_RATE
+				|| type == WKPFUtil.WKPF_PROPERTY_TYPE_SHORT) {
 			short value = (short) ((int)(message[8] & 0xff) << 8 + message[9]);
 			if (wuproperty.getDtype().equals(DataType.Channel)) {
 				bufferManager.addRealTimeData(npp, value);
@@ -468,8 +473,7 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 				bufferManager.addData(npp, System.currentTimeMillis(), new ShortUnit(value));
 			}
 			length += 2;
-		} else if (wuproperty.getType().equals(Boolean.class)
-				&& (type == WKPFUtil.WKPF_PROPERTY_TYPE_BOOLEAN)) {
+		} else if ((type == WKPFUtil.WKPF_PROPERTY_TYPE_BOOLEAN)) {
 			byte value = message[8];
 			if (wuproperty.getDtype().equals(DataType.Channel)) {
 				bufferManager.addRealTimeData(npp, value);
@@ -477,8 +481,7 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 				bufferManager.addData(npp, System.currentTimeMillis(), new ByteUnit(value));
 			}
 			length += 1;
-		} else if (wuproperty.getType().equals(Location.class)
-				&& (type == WKPFUtil.WKPF_PROPERTY_TYPE_LOCATION)) {
+		} else if (type == WKPFUtil.WKPF_PROPERTY_TYPE_LOCATION) {
 			LocationUnit location = new LocationUnit();
 			if (message.length >= length) {
 				location.parse(ByteBuffer.wrap(Arrays.copyOfRange(
@@ -492,8 +495,7 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 			} else {
 				LOGGER.error("Broken message for writing location property into channel");
 			}
-		} else if (wuproperty.getType().equals(Activity.class)
-				&& type == WKPFUtil.WKPF_PROPERTY_TYPE_ACTIVITY) {
+		} else if (type == WKPFUtil.WKPF_PROPERTY_TYPE_ACTIVITY) {
 			ActivityUnit activity = new ActivityUnit();
 			if (message.length >= length) {
 				activity.parse(ByteBuffer.wrap(Arrays.copyOfRange(
@@ -507,8 +509,7 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 			} else {
 				LOGGER.error("Broken message for writing activity property into channel");
 			}
-		} else if (wuproperty.getType().equals(Response.class)
-				&& type == WKPFUtil.WKPF_PROPERTY_TYPE_RESPONSE){
+		} else if (type == WKPFUtil.WKPF_PROPERTY_TYPE_RESPONSE){
 			ResponseUnit response = new ResponseUnit();
 			if (message.length >= length) {
 				response.parse(ByteBuffer.wrap(Arrays.copyOfRange(

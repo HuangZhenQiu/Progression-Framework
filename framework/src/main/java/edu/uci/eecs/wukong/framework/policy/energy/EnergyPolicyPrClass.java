@@ -4,7 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.uci.eecs.wukong.framework.annotation.WuClass;
+import edu.uci.eecs.wukong.framework.annotation.WuProperty;
 import edu.uci.eecs.wukong.framework.api.Extension;
+import edu.uci.eecs.wukong.framework.model.DataType;
+import edu.uci.eecs.wukong.framework.model.PropertyType;
 import edu.uci.eecs.wukong.framework.prclass.PrClassMetrics;
 import edu.uci.eecs.wukong.framework.prclass.SystemPrClass;
 import edu.uci.eecs.wukong.framework.wkpf.WKPF;
@@ -18,6 +21,8 @@ import edu.uci.eecs.wukong.framework.wkpf.WKPF;
 
 @WuClass(id = 10117)
 public class EnergyPolicyPrClass extends SystemPrClass {
+	@WuProperty(id = 0, name="input", type = PropertyType.Input, dtype = DataType.Channel)
+	private short input;
 
 	public EnergyPolicyPrClass(WKPF wkpf, PrClassMetrics metrics) {
 		super("EnergyPolicy", wkpf, metrics);

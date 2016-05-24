@@ -7,6 +7,8 @@ import org.junit.Test;
 
 import edu.uci.eecs.wukong.framework.buffer.DataPoint;
 import edu.uci.eecs.wukong.framework.model.NPP;
+import edu.uci.eecs.wukong.framework.operator.basic.MaxOperator;
+import edu.uci.eecs.wukong.framework.operator.basic.MinOperator;
 import junit.framework.TestCase;
 
 public class OperatorTest extends TestCase {

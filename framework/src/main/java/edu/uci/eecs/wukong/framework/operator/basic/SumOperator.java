@@ -1,8 +1,9 @@
-package edu.uci.eecs.wukong.framework.operator;
+package edu.uci.eecs.wukong.framework.operator.basic;
 
 import java.util.List;
 
 import edu.uci.eecs.wukong.framework.buffer.DataPoint;
+import edu.uci.eecs.wukong.framework.operator.SisoOperator;
 
 public class SumOperator<T extends Number> extends SisoOperator<Number> {
 	

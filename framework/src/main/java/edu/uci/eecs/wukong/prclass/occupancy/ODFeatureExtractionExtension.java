@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 import edu.uci.eecs.wukong.framework.extension.FeatureExtractionExtension;
 import edu.uci.eecs.wukong.framework.operator.Operator;
-import edu.uci.eecs.wukong.framework.operator.ExistenceOperator;
+import edu.uci.eecs.wukong.framework.operator.basic.ExistenceOperator;
 
 public class ODFeatureExtractionExtension extends FeatureExtractionExtension {
 

@@ -5,8 +5,8 @@ import java.util.ArrayList;
 
 import edu.uci.eecs.wukong.framework.extension.FeatureExtractionExtension;
 import edu.uci.eecs.wukong.framework.operator.Operator;
-import edu.uci.eecs.wukong.framework.operator.MaxOperator;
-import edu.uci.eecs.wukong.framework.operator.MinOperator;
+import edu.uci.eecs.wukong.framework.operator.basic.MaxOperator;
+import edu.uci.eecs.wukong.framework.operator.basic.MinOperator;
 import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
 
 public class BufferFeatureExtractionExtension extends

@@ -15,8 +15,8 @@ import edu.uci.eecs.wukong.framework.buffer.DataPoint;
 import edu.uci.eecs.wukong.framework.model.NPP;
 import edu.uci.eecs.wukong.framework.operator.AbstractOperator;
 import edu.uci.eecs.wukong.framework.operator.AverageOperator;
-import edu.uci.eecs.wukong.framework.operator.MaxOperator;
-import edu.uci.eecs.wukong.framework.operator.MinOperator;
+import edu.uci.eecs.wukong.framework.operator.basic.MaxOperator;
+import edu.uci.eecs.wukong.framework.operator.basic.MinOperator;
 import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
 
 import junit.framework.JUnit4TestAdapter;

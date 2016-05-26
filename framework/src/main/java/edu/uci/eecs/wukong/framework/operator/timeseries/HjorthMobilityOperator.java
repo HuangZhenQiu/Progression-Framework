@@ -7,7 +7,7 @@ import edu.uci.eecs.wukong.framework.operator.SisoOperator;
 
 public class HjorthMobilityOperator extends SisoOperator<Number> {
 
-	protected HjorthMobilityOperator() {
+	public HjorthMobilityOperator() {
 		super(Number.class);
 		// TODO Auto-generated constructor stub
 	}

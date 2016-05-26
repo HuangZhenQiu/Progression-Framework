@@ -7,7 +7,7 @@ import edu.uci.eecs.wukong.framework.operator.SisoOperator;
 
 public class HjorthComplexityOperator extends SisoOperator<Number> {
 
-	protected HjorthComplexityOperator() {
+	public HjorthComplexityOperator() {
 		super(Number.class);
 		// TODO Auto-generated constructor stub
 	}

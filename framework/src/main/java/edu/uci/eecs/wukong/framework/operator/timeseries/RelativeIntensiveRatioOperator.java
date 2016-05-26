@@ -7,7 +7,7 @@ import edu.uci.eecs.wukong.framework.operator.SimoOperator;
 
 public class RelativeIntensiveRatioOperator extends SimoOperator<Number, Number> {
 
-	protected RelativeIntensiveRatioOperator() {
+	public RelativeIntensiveRatioOperator() {
 		super(Number.class);
 		// TODO Auto-generated constructor stub
 	}

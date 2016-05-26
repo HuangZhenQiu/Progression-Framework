@@ -7,7 +7,7 @@ import edu.uci.eecs.wukong.framework.operator.SisoOperator;
 
 public class PetrosianFractalDimensionOperator extends SisoOperator<Number> {
 
-	protected PetrosianFractalDimensionOperator() {
+	public PetrosianFractalDimensionOperator() {
 		super(Number.class);
 		// TODO Auto-generated constructor stub
 	}

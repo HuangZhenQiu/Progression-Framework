@@ -7,7 +7,7 @@ import edu.uci.eecs.wukong.framework.operator.SisoOperator;
 
 public class SpectralEntropyOperator extends SisoOperator<Number> {
 
-	protected SpectralEntropyOperator(Class<Number> type) {
+	public SpectralEntropyOperator(Class<Number> type) {
 		super(type);
 		// TODO Auto-generated constructor stub
 	}

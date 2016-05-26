@@ -7,7 +7,7 @@ import edu.uci.eecs.wukong.framework.operator.SisoOperator;
 
 public class HiguchiFractalDimensionOperator extends SisoOperator<Number> {
 
-	protected HiguchiFractalDimensionOperator() {
+	public HiguchiFractalDimensionOperator() {
 		super(Number.class);
 		// TODO Auto-generated constructor stub
 	}

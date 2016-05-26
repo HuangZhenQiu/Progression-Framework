@@ -7,7 +7,7 @@ import edu.uci.eecs.wukong.framework.operator.SisoOperator;
 
 public class FisherInformationOperator extends SisoOperator<Number> {
 
-	protected FisherInformationOperator() {
+	public FisherInformationOperator() {
 		super(Number.class);
 		// TODO Auto-generated constructor stub
 	}

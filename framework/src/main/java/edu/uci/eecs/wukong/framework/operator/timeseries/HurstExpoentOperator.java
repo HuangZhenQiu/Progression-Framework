@@ -7,7 +7,7 @@ import edu.uci.eecs.wukong.framework.operator.SisoOperator;
 
 public class HurstExpoentOperator extends SisoOperator<Number> {
 
-	protected HurstExpoentOperator() {
+	public HurstExpoentOperator() {
 		super(Number.class);
 		// TODO Auto-generated constructor stub
 	}

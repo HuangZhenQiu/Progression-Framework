@@ -7,7 +7,7 @@ import edu.uci.eecs.wukong.framework.operator.SisoOperator;
 
 public class ApproximateEntropyOperator extends SisoOperator<Number> {
 
-	protected ApproximateEntropyOperator() {
+	public ApproximateEntropyOperator() {
 		super(Number.class);
 		// TODO Auto-generated constructor stub
 	}

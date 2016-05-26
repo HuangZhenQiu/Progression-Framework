@@ -7,7 +7,7 @@ import edu.uci.eecs.wukong.framework.operator.SisoOperator;
 
 public class DetrendedFluctationAnalysisOperator extends SisoOperator<Number> {
 
-	protected DetrendedFluctationAnalysisOperator() {
+	public DetrendedFluctationAnalysisOperator() {
 		super(Number.class);
 		// TODO Auto-generated constructor stub
 	}

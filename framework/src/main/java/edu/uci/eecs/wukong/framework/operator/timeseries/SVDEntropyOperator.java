@@ -7,7 +7,7 @@ import edu.uci.eecs.wukong.framework.operator.SisoOperator;
 
 public class SVDEntropyOperator extends SisoOperator<Number> {
 
-	protected SVDEntropyOperator() {
+	public SVDEntropyOperator() {
 		super(Number.class);
 		// TODO Auto-generated constructor stub
 	}

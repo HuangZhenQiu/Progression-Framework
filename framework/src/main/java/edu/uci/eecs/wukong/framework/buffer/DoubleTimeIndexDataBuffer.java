@@ -18,7 +18,6 @@ public final class DoubleTimeIndexDataBuffer<T, E extends BufferUnit<T>> {
 	private BufferIndexer indexer;
 	private Class<E> type;
 	private NPP npp;
-	private int interval; //in seconds
 	
 	private class BufferIndexer extends TimerTask {
 		private DoubleTimeIndexDataBuffer<T, E> buffer;
@@ -40,7 +39,6 @@ public final class DoubleTimeIndexDataBuffer<T, E extends BufferUnit<T>> {
 		this.type = type;
 		this.indexBuffer = new TimeIndexBuffer(timeUnits);
 		this.dataBuffer = new DataRingBuffer<T, E>(dataCapacity, unitSize, type);
-		this.interval = interval;
 		this.indexer = new BufferIndexer(this);
 	}
 	
@@ -86,8 +84,9 @@ public final class DoubleTimeIndexDataBuffer<T, E extends BufferUnit<T>> {
 		while(size > 0) {
 			try {
 				BufferUnit<T> unit = (BufferUnit<T>)type.getConstructor().newInstance();
+				int timestamp = data.getInt();
 				unit.parse(data, false);
-				points.add(new DataPoint<T>(npp, data.getInt(), unit.getValue()));
+				points.add(new DataPoint<T>(npp, timestamp, unit.getValue()));
 			} catch (Exception e) {
 				
 			}
@@ -95,10 +94,6 @@ public final class DoubleTimeIndexDataBuffer<T, E extends BufferUnit<T>> {
 		}
 		
 		return points;
-	}
-	
-	public int getInterval() {
-		return this.interval;
 	}
 	
 	public BufferIndexer getIndexer() {

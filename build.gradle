@@ -54,6 +54,7 @@ project(':framework') {
      compile "org.apache.httpcomponents:httpclient:$httpClientVersion"
      compile "commons-httpclient:commons-httpclient:$commonsClientVersion"
      compile "commons-cli:commons-cli:$commonsCliVersion"
+     compile "org.apache.commons:commons-math3:$commonsMathVersion"
      compile "com.google.guava:guava:$guavaVersion"
      compile "org.eclipse.jetty.aggregate:jetty-all:$jettyVersion"
      compile "org.slf4j:slf4j-api:$slf4jVersion"

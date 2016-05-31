@@ -23,6 +23,12 @@ public class EEGProgressionExtension extends AbstractProgressionExtension<EEGPrC
 	public void execute(List<Number> data, ExecutionContext context) {
 		// TODO (Mohammed, feed data into your model and make decision)
 		logger.info("EEGProgressionExtension is executed!");
+		StringBuilder builder = new StringBuilder();
+		for (int i = 0; i < data.size(); i++) {
+			builder.append(data.get(i).toString());
+		}
+		
+		logger.info("EEGProgressionExtension recevied wave power " + builder.toString());
 	}
 
 	@Override

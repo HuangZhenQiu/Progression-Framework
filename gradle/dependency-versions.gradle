@@ -9,6 +9,7 @@ ext {
   httpClientVersion = "4.4"
   commonsClientVersion = "3.1"
   commonsCliVersion = "1.3.1"
+  commonsMathVersion = "3.2"
   guavaVersion = "18.0"
   slf4jVersion = "1.7.9"
   smackJavaVersion = "4.1.4"

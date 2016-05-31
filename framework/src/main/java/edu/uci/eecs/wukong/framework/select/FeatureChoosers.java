@@ -7,7 +7,7 @@ import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
 import edu.uci.eecs.wukong.framework.model.NPP;
 import edu.uci.eecs.wukong.framework.wkpf.WKPF;
 
-import java.util.TreeMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -25,17 +25,17 @@ public class FeatureChoosers {
 	public FeatureChoosers(BufferManager bufferManager, WKPF wkpf) {
 		this.bufferManager = bufferManager;
 		this.wkpf = wkpf;
-		this.chooserMap = new TreeMap<PipelinePrClass, FeatureChooser>();
+		this.chooserMap = new HashMap<PipelinePrClass, FeatureChooser>();
 	}
 	
 	@SuppressWarnings("rawtypes")
 	public void addFeatureExtractionExtenshion(FeatureExtractionExtension extention) {
 		PipelinePrClass plugin = extention.getPrClass();
-		Map<AbstractOperator<?>, Map<NPP, Integer>> bindMap = new TreeMap<AbstractOperator<?>, Map<NPP, Integer>> ();
+		Map<AbstractOperator<?>, Map<NPP, Integer>> bindMap = new HashMap<AbstractOperator<?>, Map<NPP, Integer>> ();
 		for (Object object : extention.registerOperators()) {
 			AbstractOperator operator = (AbstractOperator) object;
 			Map<Integer, Integer>  portToInterval = operator.bind();
-			Map<NPP, Integer> nppMap = new TreeMap<NPP, Integer> ();
+			Map<NPP, Integer> nppMap = new HashMap<NPP, Integer> ();
 			for (Entry<Integer, Integer> entry : portToInterval.entrySet()) {
 				NPP npp = new NPP(wkpf.getLongAddress(), plugin.getPortId(), entry.getKey().byteValue());
 				nppMap.put(npp, entry.getValue());

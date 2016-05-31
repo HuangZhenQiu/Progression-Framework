@@ -96,9 +96,11 @@ public class BufferManager {
 					} else if (property.getPtype().equals(PropertyType.Input)
 							&& property.getDtype().equals(DataType.Buffer)) {
 						if (property.getType().equals(short.class)) {
-							createBuffer(npp, ShortUnit.class, 2, 1000, 100, 10);
+							createBuffer(npp, ShortUnit.class, 2, property.getCapacity(),
+									property.getTimeUnit(), property.getInterval());
 						} else if (property.getType().equals(byte.class)) {
-							createBuffer(npp, ByteUnit.class, 1, 1000, 100, 10);
+							createBuffer(npp, ByteUnit.class, 1, property.getCapacity(),
+									property.getTimeUnit(), property.getInterval());
 						}
 					}
 				}
@@ -147,6 +149,18 @@ public class BufferManager {
 		}
 	}
 	
+	
+	/**
+	 * 
+	 * @param npp the key of the property
+	 * @param type the type of value stored in buffer
+	 * @param unitSize the length of data (short 2, boolean 1)
+	 * @param dataCapacity total number of values can be stored
+	 * @param timeUnits time units of the buffer time index
+	 * @param interval the length of interval for each time unit (milliseconds)
+	 * 
+	 * @return whether the buffer is created successfully
+	 */
 	private <T, E extends BufferUnit<T>> boolean createBuffer(NPP key, Class<E> type, int unitSize,
 			int capacity, int timeUnits, int interval) {
 		if(bufferMap.containsKey(key)) {
@@ -157,7 +171,7 @@ public class BufferManager {
 				new DoubleTimeIndexDataBuffer<T, E>(key, type, unitSize, capacity, timeUnits, interval);
 		
 		bufferMap.put(key, buffer);
-		timer.scheduleAtFixedRate(buffer.getIndexer(), 1000, buffer.getInterval());
+		timer.scheduleAtFixedRate(buffer.getIndexer(), 1000, interval);
 		metrics.bufferCounter.set(bufferMap.size());
 		LOGGER.info("Created " + type.getSimpleName() + " Buffer with key : " + key);
 		return true;

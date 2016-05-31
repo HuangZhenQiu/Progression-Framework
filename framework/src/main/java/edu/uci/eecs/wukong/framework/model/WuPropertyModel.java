@@ -10,6 +10,9 @@ public class WuPropertyModel {
 	private Class<?> type;
 	private PropertyType ptype;
 	private DataType dtype;
+	private int capacity;
+	private int interval;
+	private int timeUnit;
 	
 	public WuPropertyModel(byte id, String name, PropertyType pType, DataType dType, Class<?> type) {
 		this.id = id;
@@ -24,6 +27,9 @@ public class WuPropertyModel {
 		this.name = property.name();
 		this.ptype = property.type();
 		this.dtype = property.dtype();
+		this.capacity = property.capacity();
+		this.interval = property.interval();
+		this.timeUnit = property.timeUnit();
 		this.type = type;
 	}
 	
@@ -65,6 +71,30 @@ public class WuPropertyModel {
 
 	public void setType(Class<?> type) {
 		this.type = type;
+	}
+	
+	public int getCapacity() {
+		return capacity;
+	}
+
+	public void setCapacity(int capacity) {
+		this.capacity = capacity;
+	}
+
+	public int getInterval() {
+		return interval;
+	}
+
+	public void setInterval(int interval) {
+		this.interval = interval;
+	}
+
+	public int getTimeUnit() {
+		return timeUnit;
+	}
+
+	public void setTimeUnit(int timeUnit) {
+		this.timeUnit = timeUnit;
 	}
 
 	@Override

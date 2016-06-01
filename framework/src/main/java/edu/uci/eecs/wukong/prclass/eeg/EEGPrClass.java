@@ -3,7 +3,6 @@ package edu.uci.eecs.wukong.prclass.eeg;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.uci.eecs.wukong.framework.annotation.WuBuffer;
 import edu.uci.eecs.wukong.framework.annotation.WuClass;
 import edu.uci.eecs.wukong.framework.annotation.WuProperty;
 import edu.uci.eecs.wukong.framework.api.Extension;
@@ -14,8 +13,7 @@ import edu.uci.eecs.wukong.framework.prclass.PrClassMetrics;
 
 @WuClass(id = 10201)
 public class EEGPrClass extends PipelinePrClass {
-	@WuProperty(name = "raw", id = 0, type = PropertyType.Input, dtype = DataType.Buffer)
-	@WuBuffer(capacity = 2000, interval = 1000, timeUnit = 30)
+	@WuProperty(name = "raw", id = 0, type = PropertyType.Input, dtype = DataType.Buffer, capacity = 2000, interval = 1000, timeUnit = 30)
 	private short raw;
 	@WuProperty(name = "output", id = 1, type = PropertyType.Output)
 	private boolean output;

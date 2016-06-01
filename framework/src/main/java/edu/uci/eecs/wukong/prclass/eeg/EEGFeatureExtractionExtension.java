@@ -17,7 +17,7 @@ public class EEGFeatureExtractionExtension extends FeatureExtractionExtension<EE
 	public List<Operator<?>> registerOperators() {
 		List<Operator<?>> operators = new ArrayList<Operator<?>> ();
 		PowerSpectralIntensityOperator  psi = new PowerSpectralIntensityOperator();
-		psi.addDataSource(0, 3);
+		psi.addDataSource(0, 5);
 		operators.add(psi); 
 		return operators;
 	}

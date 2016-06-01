@@ -27,8 +27,16 @@ public class PowerSpectralIntensityOperator extends SimoOperator<Short, Double> 
 	@Override
 	public List<Double> operate(List<DataPoint<Short>> data) {
 		logger.info("PowerSpectralIntensityOperator is executed");
-		double[] raw = new double[data.size()];
-		for (int i = 0; i < data.size(); i++) {
+		
+		int lastIndex = 0, index = 0, i = 0;
+		while (index < data.size()) {
+			lastIndex = index;
+			index = (int)Math.pow(2.0, i);
+			i++;
+		}
+		
+		double[] raw = new double[lastIndex];
+		for (i = 0; i < lastIndex; i++) {
 			raw[i] = data.get(i).getValue().doubleValue();
 		}
 		

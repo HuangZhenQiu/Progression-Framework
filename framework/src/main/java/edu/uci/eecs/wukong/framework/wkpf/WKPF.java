@@ -466,7 +466,7 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 		int length = WKPFUtil.WKPF_WRITE_PROPERTY_LENGTH;
 		if (type == WKPFUtil.WKPF_PROPERTY_TYPE_REFRESH_RATE
 				|| type == WKPFUtil.WKPF_PROPERTY_TYPE_SHORT) {
-			short value = (short) ((int)(message[8] & 0xff) << 8 + message[9]);
+			short value = (short) (((int)(message[8] & 0xff) << 8) + message[9]);
 			if (wuproperty.getDtype().equals(DataType.Channel)) {
 				bufferManager.addRealTimeData(npp, value);
 			} else {

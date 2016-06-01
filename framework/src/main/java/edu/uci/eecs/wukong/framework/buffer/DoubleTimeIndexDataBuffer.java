@@ -44,12 +44,12 @@ public final class DoubleTimeIndexDataBuffer<T, E extends BufferUnit<T>> {
 	
 	public void addElement(long timestampe,  E value) {
 		this.dataBuffer.addElement(timestampe, value);
-		logger.info("Data Buffer for " + npp + " Header: " + dataBuffer.getHeader());
+		logger.debug("Data Buffer for " + npp + " Header: " + dataBuffer.getHeader() + " value added " + value);
 	}
 	
 	public void addIndex() {
 		indexBuffer.appendIndex(dataBuffer.getHeader());
-		logger.info("Index Buffer " + npp + " Header: " + indexBuffer.getHeader());
+		logger.debug("Index Buffer " + npp + " Header: " + indexBuffer.getHeader());
 	}
 	
 	/**

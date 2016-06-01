@@ -6,7 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import edu.uci.eecs.wukong.framework.buffer.DataPoint;
 
-public abstract class SisoOperator<T> extends AbstractOperator<T> {
+public abstract class SisoOperator<T, E> extends AbstractOperator<T> {
 	private static Logger logger = LoggerFactory.getLogger(SisoOperator.class);
 	
 	protected SisoOperator(Class<T> type) {
@@ -28,5 +28,5 @@ public abstract class SisoOperator<T> extends AbstractOperator<T> {
 	 * @return
 	 * @throws Exception 
 	 */
-	public abstract T operate(List<DataPoint<T>> data) throws Exception;
+	public abstract E operate(List<DataPoint<T>> data) throws Exception;
 }

@@ -5,15 +5,14 @@ import java.util.List;
 import edu.uci.eecs.wukong.framework.buffer.DataPoint;
 import edu.uci.eecs.wukong.framework.operator.SisoOperator;
 
-public class ApproximateEntropyOperator extends SisoOperator<Number> {
+public class ApproximateEntropyOperator extends SisoOperator<Short, Double> {
 
 	public ApproximateEntropyOperator() {
-		super(Number.class);
-		// TODO Auto-generated constructor stub
+		super(Short.class);
 	}
 
 	@Override
-	public Number operate(List<DataPoint<Number>> data) throws Exception {
+	public Double operate(List<DataPoint<Short>> data) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}

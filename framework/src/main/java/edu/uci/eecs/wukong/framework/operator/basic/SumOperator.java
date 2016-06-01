@@ -5,17 +5,17 @@ import java.util.List;
 import edu.uci.eecs.wukong.framework.buffer.DataPoint;
 import edu.uci.eecs.wukong.framework.operator.SisoOperator;
 
-public class SumOperator<T extends Number> extends SisoOperator<Number> {
+public class SumOperator extends SisoOperator<Short, Double> {
 	
 	public SumOperator() {
-		super(Number.class);
+		super(Short.class);
 	}
 
 	@Override
-	public Number operate(List<DataPoint<Number>> data) {
+	public Double operate(List<DataPoint<Short>> data) {
 		// TODO Auto-generated method stub
-		Number number = 0;
-		for (DataPoint<Number> point : data) {
+		Double number = 0d;
+		for (DataPoint<Short> point : data) {
 			number = number.doubleValue() + point.getValue().doubleValue();
 		}
 		

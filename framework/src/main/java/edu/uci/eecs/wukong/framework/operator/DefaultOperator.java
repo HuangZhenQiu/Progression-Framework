@@ -4,14 +4,14 @@ import java.util.List;
 
 import edu.uci.eecs.wukong.framework.buffer.DataPoint;
 
-public class DefaultOperator<T extends Number> extends SisoOperator<T> {
+public class DefaultOperator extends SisoOperator<Short, Short> {
 
-	public DefaultOperator(Class<T> type) {
-		super(type);
+	public DefaultOperator() {
+		super(Short.class);
 	}
 
 	@Override
-	public T operate(List<DataPoint<T>> data) throws Exception {
+	public Short operate(List<DataPoint<Short>> data) throws Exception {
 		if (data.size() !=0) {
 			return data.get(0).getValue();
 		}

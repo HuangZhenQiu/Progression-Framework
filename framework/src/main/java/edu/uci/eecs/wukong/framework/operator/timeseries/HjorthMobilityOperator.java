@@ -1,21 +1,39 @@
 package edu.uci.eecs.wukong.framework.operator.timeseries;
 
 import java.util.List;
+import java.lang.Math;
 
 import edu.uci.eecs.wukong.framework.buffer.DataPoint;
 import edu.uci.eecs.wukong.framework.operator.SisoOperator;
+import edu.uci.eecs.wukong.framework.util.OperatorUtil;
 
-public class HjorthMobilityOperator extends SisoOperator<Number> {
+
+/**
+ * Compute Hjorth mobility of a time series
+ *
+ * @author peter
+ *
+ */
+public class HjorthMobilityOperator extends SisoOperator<Short, Double> {
 
 	public HjorthMobilityOperator() {
-		super(Number.class);
-		// TODO Auto-generated constructor stub
+		super(Short.class);
 	}
 
 	@Override
-	public Number operate(List<DataPoint<Number>> data) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+	public Double operate(List<DataPoint<Short>> data) throws Exception {
+		double[] x = OperatorUtil.extractDoubleValues(data);
+		double[] diff = OperatorUtil.firstOrderDiff(x);
+		double[] d = new double[x.length];
+		d[0] = x[0];
+		for (int i = 0; i < diff.length; i++) {
+			d[i] = diff[i];
+		}
+		
+		int n = data.size();
+		double m2 = OperatorUtil.mean2(d);
+		double tp = OperatorUtil.sum2(x);
+		
+		return Math.sqrt(m2 / tp);
 	}
-
 }

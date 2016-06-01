@@ -28,9 +28,9 @@ public class FeatureChooserTest {
 	private NPP nppA = new NPP(1l, (byte)1, (byte)1);
 	private NPP nppB = new NPP(2l, (byte)2, (byte)2);
 	private NPP nppC = new NPP(3l, (byte)3, (byte)3);
-	private MinOperator<Float> minOperator = new MinOperator<Float>(Float.class);
-	private MaxOperator<Float> maxOperator = new MaxOperator<Float>(Float.class);
-	private AverageOperator<Float> avrOperator = new AverageOperator<Float>(Float.class);
+	private MinOperator minOperator = new MinOperator();
+	private MaxOperator maxOperator = new MaxOperator();
+	private AverageOperator avrOperator = new AverageOperator();
 	private List<DataPoint<Object>> dataListA;
 	private List<DataPoint<Object>> dataListB;
 	private List<DataPoint<Object>> dataListC;

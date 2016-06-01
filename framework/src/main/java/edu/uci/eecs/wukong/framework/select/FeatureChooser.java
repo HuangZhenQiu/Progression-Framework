@@ -46,7 +46,7 @@ public class FeatureChooser {
 			if (!dataList.isEmpty()) {
 				try {
 					if (entry.getKey() instanceof SisoOperator) {
-						SisoOperator<Object> singleOperator = (SisoOperator<Object>) entry.getKey();
+						SisoOperator<Object, Object> singleOperator = (SisoOperator<Object, Object>) entry.getKey();
 						result.add(singleOperator.operate(dataList.get(0)));
 					} else if (entry.getKey() instanceof MisoOperator ) {
 						MisoOperator<Object, Object> multipleOperator = (MisoOperator<Object, Object>) entry.getKey();

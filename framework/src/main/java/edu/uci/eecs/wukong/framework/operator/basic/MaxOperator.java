@@ -5,22 +5,22 @@ import java.util.List;
 import edu.uci.eecs.wukong.framework.buffer.DataPoint;
 import edu.uci.eecs.wukong.framework.operator.SisoOperator;
 
-public class MaxOperator<T extends Number> extends SisoOperator<T> {
+public class MaxOperator extends SisoOperator<Short, Double> {
 
-	public MaxOperator(Class<T> type) {
-		super(type);
+	public MaxOperator() {
+		super(Short.class);
 	}
 
 	@Override
-	public T operate(List<DataPoint<T>> data) throws Exception {
+	public Double operate(List<DataPoint<Short>> data) throws Exception {
 		// TODO Auto-generated method stub
-		Number max = Double.MIN_VALUE;
-		for (DataPoint<T> point : data) {
+		Double max = Double.MIN_VALUE;
+		for (DataPoint<Short> point : data) {
 			if (max.doubleValue() < point.getValue().doubleValue()) {
 				max = point.getValue().doubleValue();
 			}
 		}
 		
-		return type.getConstructor(double.class).newInstance(max);
+		return max;
 	}
 }

@@ -10,7 +10,7 @@ import edu.uci.eecs.wukong.framework.operator.SisoOperator;
  * occupancy.
  *
  */
-public class ExistenceOperator extends SisoOperator<Byte> {
+public class ExistenceOperator extends SisoOperator<Byte, Byte> {
 
 	public ExistenceOperator() {
 		super(Byte.class);

@@ -4,23 +4,23 @@ import java.util.List;
 
 import edu.uci.eecs.wukong.framework.buffer.DataPoint;
 
-public class AverageOperator<T extends Number> extends SisoOperator<T> {
+public class AverageOperator extends SisoOperator<Short, Double> {
 
-	public AverageOperator(Class<T> type) {
-		super(type);
+	public AverageOperator() {
+		super(Short.class);
 	}
 
 	@Override
-	public T operate(List<DataPoint<T>> data) throws Exception {
+	public Double operate(List<DataPoint<Short>> data) throws Exception {
 		if (data.size() == 0) {
-			return type.getConstructor(double.class).newInstance(0.0);
+			return 0.0d;
 		}
 
 		Double avr = new Double(0);
-		for (DataPoint<T> point : data) {
+		for (DataPoint<Short> point : data) {
 			avr += point.getValue().doubleValue();
 		}
 
-		return type.getConstructor(double.class).newInstance(avr/data.size());
+		return avr;
 	}
 }

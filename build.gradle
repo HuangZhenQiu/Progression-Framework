@@ -28,7 +28,7 @@ subprojects {
   }
 }
 
-project(':framework') {
+project(':server') {
   apply plugin: 'java'
 
   task fatJar (type: Jar) {
@@ -82,7 +82,7 @@ project(':framework') {
 
 task copyToBin () {
     copy {
-    	String propSource = "framework/build/libs/framework-all.jar"
+    	String propSource = "server/build/libs/framework-all.jar"
    		String propDest = "bin"
     	from file(propSource)
     	into file(propDest)

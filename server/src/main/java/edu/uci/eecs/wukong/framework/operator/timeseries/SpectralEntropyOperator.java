@@ -23,7 +23,6 @@ public class SpectralEntropyOperator extends SisoOperator<Short, Double> {
 
 	@Override
 	public Double operate(List<DataPoint<Short>> data) throws Exception {
-		double[] x = OperatorUtil.extractDoubleValues(data);
 		List<Double> powerRatio = ratio.operate(data);
 		
 		double spectralEntropy = 0;

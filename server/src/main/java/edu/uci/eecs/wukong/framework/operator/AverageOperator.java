@@ -21,6 +21,6 @@ public class AverageOperator extends SisoOperator<Short, Double> {
 			avr += point.getValue().doubleValue();
 		}
 
-		return avr;
+		return avr / data.size();
 	}
 }

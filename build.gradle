@@ -89,4 +89,4 @@ task copyToBin () {
     }
 }
 
-task buildServer (dependsOn: [':framework:build', ':framework:fatJar', 'copyToBin'])
+task buildServer (dependsOn: [':server:build', ':server:fatJar', 'copyToBin'])

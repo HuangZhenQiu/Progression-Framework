@@ -43,17 +43,17 @@ public class FeatureChooserTest {
 		dataListB = new ArrayList<DataPoint<Object>> ();
 		dataListC = new ArrayList<DataPoint<Object>> ();
 		
-		dataListA.add(new DataPoint<Object>(nppA, 0, 1.0f));
-		dataListA.add(new DataPoint<Object>(nppA, 0, 2.0f));
-		dataListA.add(new DataPoint<Object>(nppA, 0, 3.0f));
+		dataListA.add(new DataPoint<Object>(nppA, 0, (short)1));
+		dataListA.add(new DataPoint<Object>(nppA, 0, (short)2));
+		dataListA.add(new DataPoint<Object>(nppA, 0, (short)3));
 		
-		dataListB.add(new DataPoint<Object>(nppB, 0, 1.0f));
-		dataListB.add(new DataPoint<Object>(nppB, 0, 2.0f));
-		dataListB.add(new DataPoint<Object>(nppB, 0, 3.0f));
+		dataListB.add(new DataPoint<Object>(nppB, 0, (short)1));
+		dataListB.add(new DataPoint<Object>(nppB, 0, (short)2));
+		dataListB.add(new DataPoint<Object>(nppB, 0, (short)3));
 		
-		dataListC.add(new DataPoint<Object>(nppC, 0, 1.0f));
-		dataListC.add(new DataPoint<Object>(nppC, 0, 2.0f));
-		dataListC.add(new DataPoint<Object>(nppC, 0, 3.0f));
+		dataListC.add(new DataPoint<Object>(nppC, 0, (short)1));
+		dataListC.add(new DataPoint<Object>(nppC, 0, (short)2));
+		dataListC.add(new DataPoint<Object>(nppC, 0, (short)3));
 		
 		// Prepare operators
 		minOperator.addDataSource(1, 1);
@@ -84,9 +84,9 @@ public class FeatureChooserTest {
 		FeatureChooser featureChooser = new FeatureChooser(prClass, manager, operators); 
 		List<Object> features = featureChooser.choose();
 		assertEquals(3, features.size());
-		assertEquals(true, features.contains(1.0f));
-		assertEquals(true, features.contains(2.0f));
-		assertEquals(true, features.contains(3.0f));
+		assertEquals(true, features.contains(1.0));
+		assertEquals(true, features.contains(2.0));
+		assertEquals(true, features.contains(3.0));
 	}
 	
 	public static junit.framework.Test suit() {

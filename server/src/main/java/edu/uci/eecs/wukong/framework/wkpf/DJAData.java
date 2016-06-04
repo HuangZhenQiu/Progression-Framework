@@ -13,6 +13,7 @@ import edu.uci.eecs.wukong.framework.model.InitValueTable;
 import edu.uci.eecs.wukong.framework.util.WKPFUtil;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -140,8 +141,9 @@ public class DJAData {
 		LinkTable table = extractLinkTable();
 		ComponentMap map = extractComponentMap();
 		InitValueTable initValue = extractInitValueTable();
+		String appId = extractAppId();
 		for (RemoteProgrammingListener listener : listeners) {
-			listener.update(table, map, initValue);
+			listener.update(table, map, initValue, appId);
 		}
 	}
 	
@@ -283,6 +285,28 @@ public class DJAData {
 	}
 	
 	/**
+	 * 
+	 * @param index
+	 * @return
+	 */
+	private String extractAppId() {
+		access();
+		int index = findFileIndex(DJAConstants.DJ_FILETYPE_APP_ID);
+		if (index == -1) {
+			LOGGER.error("Fail to find application Id in current DJAData");
+			return "";
+		}
+		
+		StringBuilder builder = new StringBuilder();
+		// start of component map
+		int start = index + 3;
+		int length = WKPFUtil.getBigEndianShort(buffer, index);
+		builder.append(Arrays.copyOfRange(buffer, start, start + length));
+		
+		return builder.toString();
+	}
+	
+	/**
 	 * Extract a component from the DJA buffer.
 	 * @return a instance of Component
 	 * 
@@ -310,6 +334,7 @@ public class DJAData {
 		}		
 		return null;
 	}
+	
 	
 	/**
 	 * Extract an Endpoint from the buffer at position index
@@ -396,5 +421,6 @@ public class DJAData {
 		public static final byte DJ_FILETYPE_WKPF_COMPONENT_MAP = 3;
 		public static final byte DJ_FILETYPE_WKPF_INITVALUES_TABLE = 4;
 		public static final byte DJ_FILETYPE_ECOCAST_CAPSULE_BUFFER = 5;
+		public static final byte DJ_FILETYPE_APP_ID = 6;
 	}
 }

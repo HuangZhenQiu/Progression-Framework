@@ -146,7 +146,7 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 	/**
 	 * Called by DJAData after remote programmed by master
 	 */
-	public void update(LinkTable table, ComponentMap map, InitValueTable initValues) {
+	public void update(LinkTable table, ComponentMap map, InitValueTable initValues, String appId) {
 		this.linkTable = table;
 		this.componentMap = map;
 		this.initValues = initValues;

@@ -46,13 +46,13 @@ public abstract class PrClass {
 	protected boolean isTest = false;
 	protected PrClassType type;
 	protected PropertyChangeSupport support;
-	protected ConfigurationManager configManager;
 	protected PrClassMetrics metrics;
 	
 	public static enum PrClassType {
-		SIMPLE_PRCLASS,
-		PIPELINE_PRCLASS,
-		SYSTEM_PRCLASS
+		SIMPLE_PRCLASS, // To access external service
+		PIPELINE_PRCLASS, // To use streaming capability for real-time decision making
+		SYSTEM_PRCLASS, // To use application reconfiguration capability
+		AGENT_PRCLASS // To use predictive mainenance capability for remapping
 	}
 	
 	@VisibleForTesting
@@ -70,7 +70,6 @@ public abstract class PrClass {
 		this.metrics = metrics;
 		this.type = type;
 		this.support = new PropertyChangeSupport(this);
-		this.configManager =  ConfigurationManager.getInstance();
 	}
 	
 	public ConfigurationManager getConfigurationManager() {

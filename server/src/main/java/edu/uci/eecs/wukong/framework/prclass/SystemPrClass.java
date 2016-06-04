@@ -18,6 +18,7 @@ import edu.uci.eecs.wukong.framework.wkpf.WKPF;
  */
 public abstract class SystemPrClass extends PipelinePrClass implements RemoteProgrammingListener  {
 	protected boolean enabled;
+	protected String appId;
 	protected LinkTable linkTable;
 	protected ComponentMap map;
 	protected InitValueTable initValues;
@@ -29,14 +30,11 @@ public abstract class SystemPrClass extends PipelinePrClass implements RemotePro
 		this.enabled = false;
 	}
 	
-	public void remap() {
-		configManager.remapping("");
-	}
-	
-	public void update(LinkTable table, ComponentMap map, InitValueTable initValues) {
+	public void update(LinkTable table, ComponentMap map, InitValueTable initValues, String appId) {
 		this.linkTable = table;
 		this.map = map;
 		this.initValues = initValues;
+		this.appId = appId;
 	}
 	
 	public Iterator<Link> getLinkIterator() {

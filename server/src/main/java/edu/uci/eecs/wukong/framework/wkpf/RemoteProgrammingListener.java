@@ -5,5 +5,5 @@ import edu.uci.eecs.wukong.framework.model.InitValueTable;
 import edu.uci.eecs.wukong.framework.model.LinkTable;
 
 public interface RemoteProgrammingListener {
-	public void update(LinkTable table, ComponentMap map, InitValueTable initValues);
+	public void update(LinkTable table, ComponentMap map, InitValueTable initValues, String appId);
 }

@@ -3,6 +3,7 @@ package edu.uci.eecs.wukong.framework.reconfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
 import com.google.gson.Gson;
 
 import edu.uci.eecs.wukong.framework.entity.ConfigurationReport;
@@ -10,6 +11,7 @@ import edu.uci.eecs.wukong.framework.entity.HueEntity;
 import edu.uci.eecs.wukong.framework.factor.BaseFactor;
 import edu.uci.eecs.wukong.framework.factor.FactorClient;
 import edu.uci.eecs.wukong.framework.factor.FactorClientFactory;
+import edu.uci.eecs.wukong.framework.predict.Predict;
 import edu.uci.eecs.wukong.framework.service.ConfigurationService;
 import edu.uci.eecs.wukong.framework.service.MappingService;
 import edu.uci.eecs.wukong.framework.util.Configuration;
@@ -56,7 +58,7 @@ public class ConfigurationManager{
 		factorClient.publish(topic, factor);
 	}
 	
-	public void remapping(String appId) {
+	public void remapping(String appId, List<Predict> predicts) {
 		try {
 			mappingService.sendMappingMessage(appId);
 		} catch (Exception e) {

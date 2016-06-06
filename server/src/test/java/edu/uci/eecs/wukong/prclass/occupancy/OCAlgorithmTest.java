@@ -1,9 +1,5 @@
 package edu.uci.eecs.wukong.prclass.occupancy;
 
-import edu.uci.eecs.wukong.prclass.occupancy.HMMBasedLearningExtension;
-import edu.uci.eecs.wukong.prclass.occupancy.ODProgressionExtension;
-import edu.uci.eecs.wukong.prclass.occupancy.OccupancyDetection.Occupancy;
-
 import java.io.InputStream;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -12,6 +8,10 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import be.ac.ulg.montefiore.run.jahmm.ObservationDiscrete;
+import edu.uci.eecs.wukong.edge.occupancy.HMMBasedLearningExtension;
+import edu.uci.eecs.wukong.edge.occupancy.ODProgressionExtension;
+import edu.uci.eecs.wukong.edge.occupancy.OccupancyDetection;
+import edu.uci.eecs.wukong.edge.occupancy.OccupancyDetection.Occupancy;
 
 /**
  * A simple test tool to compare the performance of schedule based algorithm and HMM based algorithm.

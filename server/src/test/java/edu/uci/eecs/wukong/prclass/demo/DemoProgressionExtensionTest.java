@@ -4,8 +4,8 @@ import junit.framework.TestCase;
 
 import org.junit.Test;
 
-import edu.uci.eecs.wukong.prclass.demo.DemoFactor;
-import edu.uci.eecs.wukong.prclass.demo.DemoProgressionExtension;
+import edu.uci.eecs.wukong.edge.demo.DemoFactor;
+import edu.uci.eecs.wukong.edge.demo.DemoProgressionExtension;
 
 public class DemoProgressionExtensionTest extends TestCase {
 

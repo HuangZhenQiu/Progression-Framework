@@ -259,6 +259,17 @@ public class OperatorUtil {
 		return result;
 	}
 	
+	public static double[] arrayMinus(double[] a, double b) {
+		assert(a != null);
+		
+		double[] result = new double[a.length];
+		for (int i = 0; i < a.length; i++) {
+			result[i] = a[i] - b;
+		}
+		
+		return result;
+	}
+	
 	public static double[] firstOrderDiff(double[] a) {
 		assert(a != null && a.length >= 2);
 		

@@ -47,6 +47,8 @@ public abstract class PrClass {
 	protected PrClassType type;
 	protected PropertyChangeSupport support;
 	protected PrClassMetrics metrics;
+	protected ConfigurationManager configManager;
+	protected boolean failed;
 	
 	public static enum PrClassType {
 		SIMPLE_PRCLASS, // To access external service
@@ -148,7 +150,15 @@ public abstract class PrClass {
 		return this.metrics;
 	}
 	
-    @Override
+    public boolean isFailed() {
+		return failed;
+	}
+
+	public void setFailed(boolean failed) {
+		this.failed = failed;
+	}
+
+	@Override
 	public String toString() {
     	return "PrClass[name = " + name + ", portId = " + portId + ", type=" + type + "]";
     }

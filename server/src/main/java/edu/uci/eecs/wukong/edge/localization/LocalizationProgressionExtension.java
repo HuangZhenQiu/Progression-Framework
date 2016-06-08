@@ -30,7 +30,7 @@ public class LocalizationProgressionExtension extends AbstractProgressionExtensi
 	}
 	
 	@Override
-	public void init() {
+	public boolean init() {
 		boolean[][] values = new boolean[100][100];
 		for (int i = 0; i < values.length; i ++) {
 			values[i] = new boolean[100];
@@ -42,6 +42,8 @@ public class LocalizationProgressionExtension extends AbstractProgressionExtensi
 				this.prClass.getSensors() , this.prClass.getMovNoise(),
 				this.prClass.getRotNoise(), this.prClass.getSenseNoise(), this.prClass.getMaxr());
 		LOGGER.info("Filter is initilaized: " + filter);
+		
+		return true;
 	}
 
 	@Override

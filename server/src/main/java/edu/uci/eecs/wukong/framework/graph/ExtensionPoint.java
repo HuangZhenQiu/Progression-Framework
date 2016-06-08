@@ -55,6 +55,7 @@ public abstract class ExtensionPoint<E extends AbstractExtension<? extends Pipel
 		} catch (Exception e) {
 			logger.error("Fail to register extension for plugin "
 					+ extension.getPrClass() + ", base of exception: " + e.toString());
+			extension.getPrClass().setFailed(true);
 		}
 	}
 	

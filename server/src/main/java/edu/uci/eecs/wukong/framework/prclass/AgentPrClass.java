@@ -4,16 +4,19 @@ import edu.uci.eecs.wukong.framework.reconfig.ConfigurationManager;
 import edu.uci.eecs.wukong.framework.wkpf.WKPF;
 import edu.uci.eecs.wukong.framework.util.Configuration;
 
+import java.util.List;
+
+import edu.uci.eecs.wukong.framework.predict.Predict;
+
 public abstract class AgentPrClass extends SystemPrClass {
 	private static Configuration configuration = Configuration.getInstance();
-	protected ConfigurationManager configManager;
 	
 	public AgentPrClass(String name, WKPF wkpf, PrClassMetrics metrics) {
 		super(name, wkpf, metrics);
 		this.configManager =  ConfigurationManager.getInstance();
 	}
 
-	public void remap() {
-		configManager.remapping(this.appId);
+	public void remap(List<Predict> predicts) {
+		configManager.remapping(this.appId, predicts);
 	}
 }

@@ -12,12 +12,12 @@ import edu.uci.eecs.wukong.framework.api.TimerExecutable;
 import edu.uci.eecs.wukong.framework.api.Channelable;
 import edu.uci.eecs.wukong.framework.api.metrics.Counter;
 import edu.uci.eecs.wukong.framework.api.metrics.Timer;
-import edu.uci.eecs.wukong.framework.extension.AbstractProgressionExtension;
+import edu.uci.eecs.wukong.framework.extension.AbstractExecutionExtension;
 import edu.uci.eecs.wukong.framework.model.ChannelData;
 import edu.uci.eecs.wukong.framework.property.Location;
 import edu.uci.eecs.wukong.framework.property.Response;
 
-public class LocalizationLoadTestProgressionExtension extends AbstractProgressionExtension<LocalizationLoadTester>
+public class LocalizationLoadTestProgressionExtension extends AbstractExecutionExtension<LocalizationLoadTester>
 	implements Channelable<Response>, TimerExecutable {
 	private final static Logger LOGGER = LoggerFactory.getLogger(
 			LocalizationLoadTestProgressionExtension.class);

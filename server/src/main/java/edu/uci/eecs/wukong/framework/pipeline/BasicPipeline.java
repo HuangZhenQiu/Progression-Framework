@@ -12,7 +12,7 @@ import edu.uci.eecs.wukong.framework.api.Extension;
 import edu.uci.eecs.wukong.framework.api.Initiable;
 import edu.uci.eecs.wukong.framework.entity.FeatureEntity;
 import edu.uci.eecs.wukong.framework.entity.ModelEntity;
-import edu.uci.eecs.wukong.framework.extension.AbstractProgressionExtension;
+import edu.uci.eecs.wukong.framework.extension.AbstractExecutionExtension;
 import edu.uci.eecs.wukong.framework.extension.FeatureExtractionExtension;
 import edu.uci.eecs.wukong.framework.extension.LearningExtension;
 import edu.uci.eecs.wukong.framework.factor.SceneManager;
@@ -54,8 +54,8 @@ public class BasicPipeline extends Pipeline {
 	public void registerExtension(WuObjectModel model) {
 		if (model.getExtensions() != null && !model.getExtensions().isEmpty()) {
 			for (Extension extension : model.getExtensions()) {
-				if (extension instanceof AbstractProgressionExtension) {
-					progressionPoint.register((AbstractProgressionExtension<? extends PipelinePrClass>) extension);
+				if (extension instanceof AbstractExecutionExtension) {
+					progressionPoint.register((AbstractExecutionExtension<? extends PipelinePrClass>) extension);
 				} else if (extension instanceof FeatureExtractionExtension) {
 					featureExtractionPoint.register((FeatureExtractionExtension) extension);
 				} else if (extension instanceof LearningExtension) {
@@ -69,9 +69,9 @@ public class BasicPipeline extends Pipeline {
 	public void unregisterExtension(WuObjectModel model) {
 		if (model.getExtensions() != null && !model.getExtensions().isEmpty()) {
 			for (Extension extension : model.getExtensions()) {
-				if (extension instanceof AbstractProgressionExtension) {
-					AbstractProgressionExtension<? extends PipelinePrClass> progressionExtension = (AbstractProgressionExtension) extension;
-					progressionPoint.unregister((AbstractProgressionExtension) extension);
+				if (extension instanceof AbstractExecutionExtension) {
+					AbstractExecutionExtension<? extends PipelinePrClass> progressionExtension = (AbstractExecutionExtension) extension;
+					progressionPoint.unregister((AbstractExecutionExtension) extension);
 				} else if (extension instanceof FeatureExtractionExtension) {
 					featureExtractionPoint.unregister((FeatureExtractionExtension) extension);
 				} else if (extension instanceof LearningExtension) {

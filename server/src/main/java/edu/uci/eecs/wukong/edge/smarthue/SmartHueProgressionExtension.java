@@ -6,11 +6,11 @@ import edu.uci.eecs.wukong.framework.api.Activatable;
 import edu.uci.eecs.wukong.framework.api.Executable;
 import edu.uci.eecs.wukong.framework.api.ExecutionContext;
 import edu.uci.eecs.wukong.framework.api.Channelable;
-import edu.uci.eecs.wukong.framework.extension.AbstractProgressionExtension;
+import edu.uci.eecs.wukong.framework.extension.AbstractExecutionExtension;
 import edu.uci.eecs.wukong.framework.model.ChannelData;
 import edu.uci.eecs.wukong.framework.regression.LinearRegression;
 
-public class SmartHueProgressionExtension extends AbstractProgressionExtension<SmartHue> implements
+public class SmartHueProgressionExtension extends AbstractExecutionExtension<SmartHue> implements
 	Activatable, Executable, Channelable{
 	private LinearRegression regression = null;
 	private double indoorLightness;  // Latest Avr

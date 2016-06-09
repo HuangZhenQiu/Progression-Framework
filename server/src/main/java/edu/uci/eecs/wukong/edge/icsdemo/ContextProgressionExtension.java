@@ -1,6 +1,6 @@
 package edu.uci.eecs.wukong.edge.icsdemo;
 
-import edu.uci.eecs.wukong.framework.extension.AbstractProgressionExtension;
+import edu.uci.eecs.wukong.framework.extension.AbstractExecutionExtension;
 import edu.uci.eecs.wukong.framework.factor.BaseFactor;
 import edu.uci.eecs.wukong.framework.api.FactorExecutable;
 
@@ -13,7 +13,7 @@ import edu.uci.eecs.wukong.framework.api.Channelable;
 import edu.uci.eecs.wukong.framework.model.ChannelData;
 import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
 
-public class ContextProgressionExtension extends AbstractProgressionExtension<PipelinePrClass> implements FactorExecutable, Channelable<Short> {
+public class ContextProgressionExtension extends AbstractExecutionExtension<PipelinePrClass> implements FactorExecutable, Channelable<Short> {
 	private static Logger logger = LoggerFactory.getLogger(ContextProgressionExtension.class);
 	private PreferenceTable preferenceTable = new PreferenceTable();
 	private ContextTable contextTable = new ContextTable();

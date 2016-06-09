@@ -12,11 +12,11 @@ import edu.uci.eecs.wukong.framework.api.TimerExecutable;
 import edu.uci.eecs.wukong.edge.occupancy.OccupancyDetection;
 import edu.uci.eecs.wukong.framework.annotation.WuTimer;
 import edu.uci.eecs.wukong.framework.buffer.RingBuffer;
-import edu.uci.eecs.wukong.framework.extension.AbstractProgressionExtension;
+import edu.uci.eecs.wukong.framework.extension.AbstractExecutionExtension;
 
 import com.google.common.annotations.VisibleForTesting;
 
-public class ODProgressionExtension extends AbstractProgressionExtension
+public class ODProgressionExtension extends AbstractExecutionExtension
 	implements Executable, TimerExecutable {
 	private OccupancyDetection oc;
 	private RingBuffer buffer;

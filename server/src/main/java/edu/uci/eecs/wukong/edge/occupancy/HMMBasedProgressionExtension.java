@@ -9,9 +9,9 @@ import edu.uci.eecs.wukong.edge.occupancy.OccupancyDetection.Occupancy;
 import edu.uci.eecs.wukong.framework.api.Activatable;
 import edu.uci.eecs.wukong.framework.api.Executable;
 import edu.uci.eecs.wukong.framework.api.ExecutionContext;
-import edu.uci.eecs.wukong.framework.extension.AbstractProgressionExtension;
+import edu.uci.eecs.wukong.framework.extension.AbstractExecutionExtension;
 
-public class HMMBasedProgressionExtension extends AbstractProgressionExtension<OccupancyDetection> 
+public class HMMBasedProgressionExtension extends AbstractExecutionExtension<OccupancyDetection> 
 	implements Executable, Activatable{
 	private boolean isActivated;
 	private Hmm<ObservationDiscrete<Occupancy>> hmm;

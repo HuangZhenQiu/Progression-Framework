@@ -1,10 +1,10 @@
 package edu.uci.eecs.wukong.framework.policy.ft;
 
 import edu.uci.eecs.wukong.framework.api.Channelable;
-import edu.uci.eecs.wukong.framework.extension.AbstractProgressionExtension;
+import edu.uci.eecs.wukong.framework.extension.AbstractExecutionExtension;
 import edu.uci.eecs.wukong.framework.model.ChannelData;
 
-public class FaultTolerantProgressionExtenson extends AbstractProgressionExtension<FaultTolerantPolicyPrClass>
+public class FaultTolerantProgressionExtenson extends AbstractExecutionExtension<FaultTolerantPolicyPrClass>
 	implements Channelable {
 
 	public FaultTolerantProgressionExtenson(FaultTolerantPolicyPrClass plugin) {

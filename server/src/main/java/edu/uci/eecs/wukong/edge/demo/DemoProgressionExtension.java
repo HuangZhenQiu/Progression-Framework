@@ -30,13 +30,13 @@ import edu.uci.eecs.wukong.framework.entity.ConfigurationCommand;
 import edu.uci.eecs.wukong.framework.entity.ConfigurationEntity;
 import edu.uci.eecs.wukong.framework.entity.FeatureEntity;
 import edu.uci.eecs.wukong.framework.entity.HueEntity;
-import edu.uci.eecs.wukong.framework.extension.ProgressionExtension;
+import edu.uci.eecs.wukong.framework.extension.ExecutionExtension;
 import edu.uci.eecs.wukong.framework.factor.BaseFactor;
 import edu.uci.eecs.wukong.framework.util.Configuration;
 import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
 import edu.uci.eecs.wukong.framework.reconfig.ConfigurationManager.ConfigurationType;
 
-public class DemoProgressionExtension extends ProgressionExtension<FeatureEntity, DemoPrClass> {
+public class DemoProgressionExtension extends ExecutionExtension<FeatureEntity, DemoPrClass> {
 	private static Logger logger = LoggerFactory.getLogger(DemoProgressionExtension.class);
 	private static Configuration configuration = Configuration.getInstance();
 	private static String KICHEN_SLIDER_COMPONENT_ID = configuration.getKichenSliderId(); // 3, 4, 5

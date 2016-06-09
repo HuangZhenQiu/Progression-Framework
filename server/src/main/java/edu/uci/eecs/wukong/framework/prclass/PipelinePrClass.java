@@ -6,7 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import edu.uci.eecs.wukong.framework.api.Extension;
-import edu.uci.eecs.wukong.framework.extension.AbstractProgressionExtension;
+import edu.uci.eecs.wukong.framework.extension.AbstractExecutionExtension;
 
 import com.google.common.annotations.VisibleForTesting;
 
@@ -42,10 +42,10 @@ public abstract class PipelinePrClass extends PrClass {
 	
 	public abstract List<String> registerContext();
 	
-	public AbstractProgressionExtension<?> getProgressionExtension() {
+	public AbstractExecutionExtension<?> getProgressionExtension() {
 		for(Extension extension : registerExtension()) {
-			if (extension instanceof AbstractProgressionExtension) {
-				return (AbstractProgressionExtension<?>) extension;
+			if (extension instanceof AbstractExecutionExtension) {
+				return (AbstractExecutionExtension<?>) extension;
 			}
 		}
 		

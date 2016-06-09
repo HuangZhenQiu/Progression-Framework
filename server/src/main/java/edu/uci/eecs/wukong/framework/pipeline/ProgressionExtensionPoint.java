@@ -16,7 +16,7 @@ import edu.uci.eecs.wukong.framework.entity.ModelEntity;
 import edu.uci.eecs.wukong.framework.entity.FeatureEntity;
 import edu.uci.eecs.wukong.framework.event.Event;
 import edu.uci.eecs.wukong.framework.extension.AbstractExtension;
-import edu.uci.eecs.wukong.framework.extension.AbstractProgressionExtension;
+import edu.uci.eecs.wukong.framework.extension.AbstractExecutionExtension;
 import edu.uci.eecs.wukong.framework.factor.BaseFactor;
 import edu.uci.eecs.wukong.framework.factor.FactorListener;
 import edu.uci.eecs.wukong.framework.graph.ExtensionPoint;
@@ -24,7 +24,7 @@ import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
 import edu.uci.eecs.wukong.framework.util.Configuration;
 import edu.uci.eecs.wukong.framework.util.PipelineUtil;
 
-public class ProgressionExtensionPoint extends ExtensionPoint<AbstractProgressionExtension<? extends PipelinePrClass>>
+public class ProgressionExtensionPoint extends ExtensionPoint<AbstractExecutionExtension<? extends PipelinePrClass>>
 	implements FactorListener, Runnable {
 	private static Logger logger = LoggerFactory.getLogger(ProgressionExtensionPoint.class);
 	private static Configuration configuration = Configuration.getInstance();
@@ -39,7 +39,7 @@ public class ProgressionExtensionPoint extends ExtensionPoint<AbstractProgressio
 	}
 	
 	@Override
-	public synchronized void register(AbstractProgressionExtension<? extends PipelinePrClass> extension) {
+	public synchronized void register(AbstractExecutionExtension<? extends PipelinePrClass> extension) {
 		super.register(extension);
 		if (extension instanceof TimerExecutable) {
 			TimerExecutable executable = (TimerExecutable) extension;
@@ -57,7 +57,7 @@ public class ProgressionExtensionPoint extends ExtensionPoint<AbstractProgressio
 	}
 	
 	@Override
-	public synchronized void unregister(AbstractProgressionExtension<? extends PipelinePrClass> extension) {
+	public synchronized void unregister(AbstractExecutionExtension<? extends PipelinePrClass> extension) {
 		super.unregister(extension);
 		// Cancel the timer taks for the plugin
 		pluginTaskMap.get(extension.getPrClass()).cancel();
@@ -81,9 +81,9 @@ public class ProgressionExtensionPoint extends ExtensionPoint<AbstractProgressio
 	}
 	
 	private class FactorTask implements Runnable{
-		private AbstractProgressionExtension extension;
+		private AbstractExecutionExtension extension;
 		private BaseFactor currentContext;
-		public FactorTask(AbstractProgressionExtension<? extends PipelinePrClass> extension, BaseFactor context) {
+		public FactorTask(AbstractExecutionExtension<? extends PipelinePrClass> extension, BaseFactor context) {
 			this.extension = extension;
 			this.currentContext = context;
 		}
@@ -112,8 +112,8 @@ public class ProgressionExtensionPoint extends ExtensionPoint<AbstractProgressio
 					if(factor != null) {
 						logger.info("Progression Extension Point is polling new context:" + factor.toString());
 						for(Map.Entry<PipelinePrClass, AbstractExtension<? extends PipelinePrClass>> entry : this.extensionMap.entrySet()) {
-							AbstractProgressionExtension<? extends PipelinePrClass> extension =
-									(AbstractProgressionExtension<? extends PipelinePrClass>) entry.getValue();
+							AbstractExecutionExtension<? extends PipelinePrClass> extension =
+									(AbstractExecutionExtension<? extends PipelinePrClass>) entry.getValue();
 							if (extension instanceof FactorExecutable) {
 								if (extension.isSubcribedTopic(factor.getTopicId())) {
 									this.executor.execute(new FactorTask(extension, factor));
@@ -123,8 +123,8 @@ public class ProgressionExtensionPoint extends ExtensionPoint<AbstractProgressio
 					}
 				} else if (event.getType().equals(Event.EventType.MODEL)) {
 					ModelEntity modelEntity = (ModelEntity) event.getData();
-					AbstractProgressionExtension<? extends PipelinePrClass> extension =
-							(AbstractProgressionExtension<? extends PipelinePrClass>) this.extensionMap.get(modelEntity.getPrClass());
+					AbstractExecutionExtension<? extends PipelinePrClass> extension =
+							(AbstractExecutionExtension<? extends PipelinePrClass>) this.extensionMap.get(modelEntity.getPrClass());
 					if (extension != null && extension instanceof Activatable) {
 						((Activatable)extension).activate(modelEntity.getModel());
 						extension.getPrClass().setOnline(true);
@@ -133,8 +133,8 @@ public class ProgressionExtensionPoint extends ExtensionPoint<AbstractProgressio
 					}
 				} else if (event.getType().equals(Event.EventType.FEATURE)) {
 					FeatureEntity featureEntity = (FeatureEntity) event.getData();
-					AbstractProgressionExtension<? extends PipelinePrClass> extension =
-							(AbstractProgressionExtension<? extends PipelinePrClass>) this.extensionMap.get(featureEntity.getPrClass());
+					AbstractExecutionExtension<? extends PipelinePrClass> extension =
+							(AbstractExecutionExtension<? extends PipelinePrClass>) this.extensionMap.get(featureEntity.getPrClass());
 					if (extension != null && extension instanceof Executable) {
 						((Executable)extension).execute(featureEntity.getFeatures(), this.pipeline.getCurrentContext(featureEntity.getPrClass()));
 					} else {

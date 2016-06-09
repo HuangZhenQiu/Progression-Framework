@@ -7,10 +7,10 @@ import org.slf4j.LoggerFactory;
 
 import edu.uci.eecs.wukong.framework.api.ExecutionContext;
 import edu.uci.eecs.wukong.framework.api.Executable;
-import edu.uci.eecs.wukong.framework.extension.AbstractProgressionExtension;
+import edu.uci.eecs.wukong.framework.extension.AbstractExecutionExtension;
 import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
 
-public class BufferProgressionExtension extends AbstractProgressionExtension implements Executable {
+public class BufferProgressionExtension extends AbstractExecutionExtension implements Executable {
 	private static Logger logger = LoggerFactory.getLogger(BufferProgressionExtension.class);
 	public BufferProgressionExtension(PipelinePrClass plugin) {
 		super(plugin);

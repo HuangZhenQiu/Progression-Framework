@@ -7,13 +7,13 @@ import org.slf4j.LoggerFactory;
 
 import edu.uci.eecs.wukong.framework.api.Executable;
 import edu.uci.eecs.wukong.framework.api.ExecutionContext;
-import edu.uci.eecs.wukong.framework.extension.AbstractProgressionExtension;
+import edu.uci.eecs.wukong.framework.extension.AbstractExecutionExtension;
 
 import libsvm.svm_model;
 import libsvm.svm_node;
 import libsvm.svm;
 
-public class ActivityProgressionExtension extends AbstractProgressionExtension<ActivityRecgonitionPrClass>
+public class ActivityProgressionExtension extends AbstractExecutionExtension<ActivityRecgonitionPrClass>
 	implements Executable<Short> {
 	
 	private final static Logger LOGGER = LoggerFactory.getLogger(ActivityProgressionExtension.class);

@@ -9,7 +9,7 @@ import edu.uci.eecs.wukong.framework.api.Channelable;
 import edu.uci.eecs.wukong.framework.api.FactorExecutable;
 import edu.uci.eecs.wukong.framework.api.Initiable;
 import edu.uci.eecs.wukong.framework.api.metrics.Timer;
-import edu.uci.eecs.wukong.framework.extension.AbstractProgressionExtension;
+import edu.uci.eecs.wukong.framework.extension.AbstractExecutionExtension;
 import edu.uci.eecs.wukong.framework.factor.BaseFactor;
 import edu.uci.eecs.wukong.framework.model.ChannelData;
 import edu.uci.eecs.wukong.framework.property.Location;
@@ -17,7 +17,7 @@ import edu.uci.eecs.wukong.framework.property.Response;
 import edu.uci.eecs.wukong.framework.localization.ParticleFilter;
 import edu.uci.eecs.wukong.framework.localization.Map;
 
-public class LocalizationProgressionExtension extends AbstractProgressionExtension<LocalizationPrClass> implements
+public class LocalizationProgressionExtension extends AbstractExecutionExtension<LocalizationPrClass> implements
 	Channelable<Location>, FactorExecutable, Initiable {
 	private final static Logger LOGGER = LoggerFactory.getLogger(LocalizationProgressionExtension.class);
 	private ParticleFilter filter;

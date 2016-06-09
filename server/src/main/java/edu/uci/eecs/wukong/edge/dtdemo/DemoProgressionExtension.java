@@ -5,11 +5,11 @@ import java.util.List;
 import weka.classifiers.trees.M5P;
 import edu.uci.eecs.wukong.framework.api.ExecutionContext;
 import edu.uci.eecs.wukong.framework.entity.ConfigurationCommand;
-import edu.uci.eecs.wukong.framework.extension.ProgressionExtension;
+import edu.uci.eecs.wukong.framework.extension.ExecutionExtension;
 import edu.uci.eecs.wukong.framework.factor.BaseFactor;
 
 
-public class DemoProgressionExtension extends ProgressionExtension<DemoFeatureEntity, DemoPrClass> {
+public class DemoProgressionExtension extends ExecutionExtension<DemoFeatureEntity, DemoPrClass> {
 	private M5P model;
 	
 	public DemoProgressionExtension(DemoPrClass plugin) {

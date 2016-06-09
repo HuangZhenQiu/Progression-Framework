@@ -8,13 +8,13 @@ import org.slf4j.LoggerFactory;
 import edu.uci.eecs.wukong.framework.api.Executable;
 import edu.uci.eecs.wukong.framework.api.ExecutionContext;
 import edu.uci.eecs.wukong.framework.api.Initiable;
-import edu.uci.eecs.wukong.framework.extension.AbstractProgressionExtension;
+import edu.uci.eecs.wukong.framework.extension.AbstractExecutionExtension;
 
 import libsvm.svm_model;
 import libsvm.svm;
 import libsvm.svm_node;
 
-public class EEGProgressionExtension extends AbstractProgressionExtension<EEGPrClass> implements
+public class EEGProgressionExtension extends AbstractExecutionExtension<EEGPrClass> implements
 	Executable<Number>, Initiable {
 	private static Logger logger = LoggerFactory.getLogger(EEGProgressionExtension.class);
 	private static String MODEL_PATH = "";

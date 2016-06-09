@@ -8,13 +8,13 @@ import org.slf4j.LoggerFactory;
 
 import edu.uci.eecs.wukong.framework.api.Channelable;
 import edu.uci.eecs.wukong.framework.api.FactorExecutable;
-import edu.uci.eecs.wukong.framework.extension.AbstractProgressionExtension;
+import edu.uci.eecs.wukong.framework.extension.AbstractExecutionExtension;
 import edu.uci.eecs.wukong.framework.factor.BaseFactor;
 import edu.uci.eecs.wukong.framework.factor.UserFactor;
 import edu.uci.eecs.wukong.framework.model.ChannelData;
 import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
 
-public class SwitchProgressionExtension extends AbstractProgressionExtension
+public class SwitchProgressionExtension extends AbstractExecutionExtension
 	implements FactorExecutable, Channelable {
 	private static Logger logger = LoggerFactory.getLogger(SwitchProgressionExtension.class);
 	// User ID to threshold Map

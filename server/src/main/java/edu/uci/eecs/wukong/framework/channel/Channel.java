@@ -19,7 +19,7 @@ import edu.uci.eecs.wukong.framework.model.NPP;
 import edu.uci.eecs.wukong.framework.model.ChannelData;
 import edu.uci.eecs.wukong.framework.model.WuObjectModel;
 import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
-import edu.uci.eecs.wukong.framework.extension.AbstractProgressionExtension;
+import edu.uci.eecs.wukong.framework.extension.AbstractExecutionExtension;
 
 /**
  * Channel is used to store real-time data for user's action signal from device.
@@ -75,7 +75,7 @@ public class Channel<T> {
 	
 	public synchronized void addListener(Channelable<T> listener) {
 		// Channel will be used only for progression extenson for now.
-		if (listener instanceof AbstractProgressionExtension) {
+		if (listener instanceof AbstractExecutionExtension) {
 			this.listeners.add(listener);
 		}
 	}

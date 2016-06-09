@@ -46,8 +46,8 @@ public class Configuration {
 	private static final String DEMO_TABLE_SLIDER_ID = "DEMO.TABLE.SLIDER.ID";
 	private static final String DEMO_OUTER_SLIDER_ID = "DEMO.OUTER.SLIDER.ID";
 	private static final String DEMO_WALL_SLIDER_ID = "DEMO.WALL.SLIDER.ID";
-	
 	private static final String EXTENSION_TIMER_UNIT = "EXTENSION.TIMER.UNIT";
+	private static String progressionHome = "";
 	
 	private static Configuration configuration;
 
@@ -55,8 +55,8 @@ public class Configuration {
 
 	private Configuration() {
 		Map<String, String> env = System.getenv();
-		String home = env.get(Constants.Path.PROGRESSION_HOME);
-		String configPath = home + "/config/" + CONFIG_PATH;
+		progressionHome = env.get(Constants.Path.PROGRESSION_HOME);
+		String configPath = progressionHome + "/config/" + CONFIG_PATH;
 		try {
 			File configFile = new File(configPath);
 			//InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(configPath);
@@ -74,6 +74,10 @@ public class Configuration {
 			configuration = new Configuration();
 		}
 		return configuration;
+	}
+	
+	public String getProgressionHome() {
+		return progressionHome;
 	}
 	
 	public Integer getExtensionTimerUnit() {

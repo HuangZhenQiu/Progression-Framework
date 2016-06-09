@@ -134,7 +134,7 @@ class svm_predict {
 		int i, predict_probability=0;
         	svm_print_string = svm_print_stdout;
 
-   long startTime=System.currentTimeMillis();   //��ȡ��ʼʱ�� 
+        long startTime=System.currentTimeMillis();
 		// parse options
 		for(i=0;i<argv.length;i++)
 		{

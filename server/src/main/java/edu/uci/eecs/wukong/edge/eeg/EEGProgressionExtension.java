@@ -44,7 +44,7 @@ public class EEGProgressionExtension extends AbstractProgressionExtension<EEGPrC
 		logger.info("EEGProgressionExtension recevied wave power " + builder.toString());
 		double probability = svm.svm_predict(model, nodes);
 		if (probability > 0.6) {
-			//TODO update the output value
+			this.getPrClass().setOutput(true);
 		}
 	}
 

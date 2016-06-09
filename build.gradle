@@ -82,7 +82,7 @@ project(':server') {
 
 task copyToBin () {
     copy {
-    	String propSource = "server/build/libs/framework-all.jar"
+    	String propSource = "server/build/libs/server-all.jar"
    		String propDest = "bin"
     	from file(propSource)
     	into file(propDest)

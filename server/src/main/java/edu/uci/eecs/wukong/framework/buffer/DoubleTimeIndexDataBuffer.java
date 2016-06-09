@@ -65,7 +65,7 @@ public final class DoubleTimeIndexDataBuffer<T, E extends BufferUnit<T>> {
 			byte[] buf =  new byte[size];
 			this.dataBuffer.get(buf, start, size);
 			return ByteBuffer.wrap(buf);
-		} else { //
+		} else if (start < this.dataBuffer.getCapacity()) { //
 			int firstSize = this.dataBuffer.getCapacity() - 1 - start;
 			byte[] firstBuf = new byte[firstSize];
 			byte[] secondBuf = new byte[start];
@@ -74,6 +74,9 @@ public final class DoubleTimeIndexDataBuffer<T, E extends BufferUnit<T>> {
 			
 			return ByteBuffer.wrap(ArrayUtils.addAll(firstBuf, secondBuf));
 		}
+		
+		// No Date inside
+		return ByteBuffer.allocate(0);
 	}
 	
 	

@@ -29,7 +29,7 @@ public class SwitchPrClass extends PipelinePrClass {
 		List<Extension> extensions = new ArrayList<Extension>();
 		extensions.add(new SwitchFeatureExtensionExtension(this));
 		extensions.add(new SwitchLearningExtension(this));
-		extensions.add(new SwitchProgressionExtension(this));
+		extensions.add(new SwitchExecutionExtension(this));
 		return extensions;
 	}
 	

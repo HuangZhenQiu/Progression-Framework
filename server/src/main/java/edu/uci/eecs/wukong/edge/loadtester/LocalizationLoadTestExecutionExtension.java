@@ -17,16 +17,16 @@ import edu.uci.eecs.wukong.framework.model.ChannelData;
 import edu.uci.eecs.wukong.framework.property.Location;
 import edu.uci.eecs.wukong.framework.property.Response;
 
-public class LocalizationLoadTestProgressionExtension extends AbstractExecutionExtension<LocalizationLoadTester>
+public class LocalizationLoadTestExecutionExtension extends AbstractExecutionExtension<LocalizationLoadTester>
 	implements Channelable<Response>, TimerExecutable {
 	private final static Logger LOGGER = LoggerFactory.getLogger(
-			LocalizationLoadTestProgressionExtension.class);
+			LocalizationLoadTestExecutionExtension.class);
 	private Integer seqno;
 	private Random random;
 	// <sequence, timestamp> Map
 	private Map<Integer, Long> seqMap; 
 
-	public LocalizationLoadTestProgressionExtension(LocalizationLoadTester loadTester) {
+	public LocalizationLoadTestExecutionExtension(LocalizationLoadTester loadTester) {
 		super(loadTester);
 		this.seqno = 0;
 		this.random = new Random();

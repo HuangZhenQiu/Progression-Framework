@@ -9,11 +9,11 @@ import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class TestPropertyProgressionExtension extends AbstractExecutionExtension 
+public class TestPropertyExecutionExtension extends AbstractExecutionExtension 
 	implements TimerExecutable {
-	private static Logger logger = LoggerFactory.getLogger(TestPropertyProgressionExtension.class);
+	private static Logger logger = LoggerFactory.getLogger(TestPropertyExecutionExtension.class);
 
-	public TestPropertyProgressionExtension(PipelinePrClass plugin) {
+	public TestPropertyExecutionExtension(PipelinePrClass plugin) {
 		super(plugin);
 	}
 

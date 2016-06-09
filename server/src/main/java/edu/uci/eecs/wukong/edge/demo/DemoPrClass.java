@@ -17,7 +17,7 @@ public class DemoPrClass extends PipelinePrClass {
 	
 	public List<Extension> registerExtension() {
 		List<Extension> extensions = new ArrayList<Extension>();
-		extensions.add(new DemoProgressionExtension(this));
+		extensions.add(new DemoExecutionExtension(this));
 		return extensions;
 	}
 	

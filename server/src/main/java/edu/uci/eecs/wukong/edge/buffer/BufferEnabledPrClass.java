@@ -28,7 +28,7 @@ public class BufferEnabledPrClass extends PipelinePrClass {
 	public List<Extension> registerExtension() {
 		List<Extension> extensions = new ArrayList<Extension> ();
 		extensions.add(new BufferFeatureExtractionExtension(this));
-		extensions.add(new BufferProgressionExtension(this));
+		extensions.add(new BufferExecutionExtension(this));
 		return extensions;
 	}
 

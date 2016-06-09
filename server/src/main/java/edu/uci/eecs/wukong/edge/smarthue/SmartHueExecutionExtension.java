@@ -10,7 +10,7 @@ import edu.uci.eecs.wukong.framework.extension.AbstractExecutionExtension;
 import edu.uci.eecs.wukong.framework.model.ChannelData;
 import edu.uci.eecs.wukong.framework.regression.LinearRegression;
 
-public class SmartHueProgressionExtension extends AbstractExecutionExtension<SmartHue> implements
+public class SmartHueExecutionExtension extends AbstractExecutionExtension<SmartHue> implements
 	Activatable, Executable, Channelable{
 	private LinearRegression regression = null;
 	private double indoorLightness;  // Latest Avr
@@ -18,7 +18,7 @@ public class SmartHueProgressionExtension extends AbstractExecutionExtension<Sma
 	private double targetLightness;
 	private short controllerIndex;
 
-	public SmartHueProgressionExtension(SmartHue plugin) {
+	public SmartHueExecutionExtension(SmartHue plugin) {
 		super(plugin);
 	}
 

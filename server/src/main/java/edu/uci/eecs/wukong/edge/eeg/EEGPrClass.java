@@ -27,7 +27,7 @@ public class EEGPrClass extends PipelinePrClass {
 	public List<Extension> registerExtension() {
 		List<Extension> extensions = new ArrayList<Extension> ();
 		extensions.add(new EEGFeatureExtractionExtension(this));
-		extensions.add(new EEGProgressionExtension(this));
+		extensions.add(new EEGExecutionExtension(this));
 		return extensions;
 	}
 

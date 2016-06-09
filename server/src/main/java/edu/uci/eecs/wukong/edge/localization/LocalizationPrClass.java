@@ -38,7 +38,7 @@ public class LocalizationPrClass extends PipelinePrClass{
 	@Override
 	public List<Extension> registerExtension() {
 		List<Extension> extensions = new ArrayList<Extension>();
-		extensions.add(new LocalizationProgressionExtension(this));
+		extensions.add(new LocalizationExecutionExtension(this));
 		return extensions;
 	}
 

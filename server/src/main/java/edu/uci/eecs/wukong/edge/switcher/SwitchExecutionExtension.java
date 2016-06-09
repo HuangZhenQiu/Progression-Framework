@@ -14,13 +14,13 @@ import edu.uci.eecs.wukong.framework.factor.UserFactor;
 import edu.uci.eecs.wukong.framework.model.ChannelData;
 import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
 
-public class SwitchProgressionExtension extends AbstractExecutionExtension
+public class SwitchExecutionExtension extends AbstractExecutionExtension
 	implements FactorExecutable, Channelable {
-	private static Logger logger = LoggerFactory.getLogger(SwitchProgressionExtension.class);
+	private static Logger logger = LoggerFactory.getLogger(SwitchExecutionExtension.class);
 	// User ID to threshold Map
 	private Map<String, Double> userThresholdMap;
 	
-	public SwitchProgressionExtension(PipelinePrClass plugin){
+	public SwitchExecutionExtension(PipelinePrClass plugin){
 		super(plugin);
 		this.userThresholdMap = new HashMap<String, Double>();
 		//Add predefined rules map here.

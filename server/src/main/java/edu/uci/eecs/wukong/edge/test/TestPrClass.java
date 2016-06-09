@@ -24,7 +24,7 @@ public class TestPrClass extends PipelinePrClass {
 	@Override
 	public List<Extension> registerExtension() {
 		List<Extension> extensions = new ArrayList<Extension>();
-		extensions.add(new TestPropertyProgressionExtension(this));
+		extensions.add(new TestPropertyExecutionExtension(this));
 		return extensions;
 	}
 

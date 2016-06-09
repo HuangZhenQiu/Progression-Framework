@@ -11,12 +11,12 @@ import edu.uci.eecs.wukong.framework.api.Executable;
 import edu.uci.eecs.wukong.framework.api.ExecutionContext;
 import edu.uci.eecs.wukong.framework.extension.AbstractExecutionExtension;
 
-public class HMMBasedProgressionExtension extends AbstractExecutionExtension<OccupancyDetection> 
+public class HMMBasedExecutionExtension extends AbstractExecutionExtension<OccupancyDetection> 
 	implements Executable, Activatable{
 	private boolean isActivated;
 	private Hmm<ObservationDiscrete<Occupancy>> hmm;
 	
-	public HMMBasedProgressionExtension(OccupancyDetection plugin) {
+	public HMMBasedExecutionExtension(OccupancyDetection plugin) {
 		super(plugin);
 		this.isActivated = false;
 	}

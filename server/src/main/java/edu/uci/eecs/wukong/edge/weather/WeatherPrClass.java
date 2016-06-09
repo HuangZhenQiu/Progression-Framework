@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import edu.uci.eecs.wukong.framework.api.Extension;
 import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
 import edu.uci.eecs.wukong.framework.prclass.PrClassMetrics;
-import edu.uci.eecs.wukong.edge.weather.WeatherProgressionExtension;
+import edu.uci.eecs.wukong.edge.weather.WeatherExecutionExtension;
 import edu.uci.eecs.wukong.framework.annotation.WuClass;
 import edu.uci.eecs.wukong.framework.annotation.WuProperty;
 import edu.uci.eecs.wukong.framework.model.PropertyType;
@@ -27,7 +27,7 @@ public class WeatherPrClass extends PipelinePrClass {
 	@Override
 	public List<Extension> registerExtension() {
 		List<Extension> extensions = new ArrayList<Extension>();
-		extensions.add(new WeatherProgressionExtension(this));
+		extensions.add(new WeatherExecutionExtension(this));
 		return extensions;
 	}
 

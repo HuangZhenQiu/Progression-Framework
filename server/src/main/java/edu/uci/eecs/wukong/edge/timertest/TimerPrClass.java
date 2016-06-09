@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.uci.eecs.wukong.framework.api.Extension;
-import edu.uci.eecs.wukong.edge.timertest.TimerTestProgressionExtension;
+import edu.uci.eecs.wukong.edge.timertest.TimerTestExecutionExtension;
 import edu.uci.eecs.wukong.framework.annotation.WuClass;
 import edu.uci.eecs.wukong.framework.annotation.WuProperty;
 import edu.uci.eecs.wukong.framework.model.DataType;
@@ -33,7 +33,7 @@ public class TimerPrClass extends PipelinePrClass{
 	@Override
 	public List<Extension> registerExtension() {
 		List<Extension> extensions = new ArrayList<Extension> ();
-		extensions.add(new TimerTestProgressionExtension(this));
+		extensions.add(new TimerTestExecutionExtension(this));
 		return extensions;
 	}
 

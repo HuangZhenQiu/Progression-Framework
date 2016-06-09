@@ -13,15 +13,15 @@ import edu.uci.eecs.wukong.framework.api.Channelable;
 import edu.uci.eecs.wukong.framework.model.ChannelData;
 import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
 
-public class ContextProgressionExtension extends AbstractExecutionExtension<PipelinePrClass> implements FactorExecutable, Channelable<Short> {
-	private static Logger logger = LoggerFactory.getLogger(ContextProgressionExtension.class);
+public class ContextExecutionExtension extends AbstractExecutionExtension<PipelinePrClass> implements FactorExecutable, Channelable<Short> {
+	private static Logger logger = LoggerFactory.getLogger(ContextExecutionExtension.class);
 	private PreferenceTable preferenceTable = new PreferenceTable();
 	private ContextTable contextTable = new ContextTable();
 	private String currentContext = null;
 	private short currentUser = 0;
 	private PipelinePrClass icsDemoPlugin;
 	
-	public ContextProgressionExtension(PipelinePrClass plugin) {
+	public ContextExecutionExtension(PipelinePrClass plugin) {
 		super(plugin);
 		icsDemoPlugin = plugin;
 	}

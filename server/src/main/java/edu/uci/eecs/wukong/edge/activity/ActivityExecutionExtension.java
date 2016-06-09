@@ -13,14 +13,14 @@ import libsvm.svm_model;
 import libsvm.svm_node;
 import libsvm.svm;
 
-public class ActivityProgressionExtension extends AbstractExecutionExtension<ActivityRecgonitionPrClass>
+public class ActivityExecutionExtension extends AbstractExecutionExtension<ActivityRecgonitionPrClass>
 	implements Executable<Short> {
 	
-	private final static Logger LOGGER = LoggerFactory.getLogger(ActivityProgressionExtension.class);
+	private final static Logger LOGGER = LoggerFactory.getLogger(ActivityExecutionExtension.class);
 	private static final String MODEL_PATH = "/Users/peter/Desktop/Classification/java/model.txt";
 	private static final int PREDICT_PROBABILITY = 1;
 	private svm_model model;
-	public ActivityProgressionExtension(ActivityRecgonitionPrClass plugin) {
+	public ActivityExecutionExtension(ActivityRecgonitionPrClass plugin) {
 		super(plugin);
 		try {
 			model = svm.svm_load_model(MODEL_PATH);

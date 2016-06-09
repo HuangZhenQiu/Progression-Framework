@@ -10,9 +10,9 @@ import edu.uci.eecs.wukong.framework.api.Executable;
 import edu.uci.eecs.wukong.framework.extension.AbstractExecutionExtension;
 import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
 
-public class BufferProgressionExtension extends AbstractExecutionExtension implements Executable {
-	private static Logger logger = LoggerFactory.getLogger(BufferProgressionExtension.class);
-	public BufferProgressionExtension(PipelinePrClass plugin) {
+public class BufferExecutionExtension extends AbstractExecutionExtension<BufferEnabledPrClass> implements Executable {
+	private static Logger logger = LoggerFactory.getLogger(BufferExecutionExtension.class);
+	public BufferExecutionExtension(BufferEnabledPrClass plugin) {
 		super(plugin);
 	}
 

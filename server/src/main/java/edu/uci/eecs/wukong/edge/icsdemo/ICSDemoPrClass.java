@@ -3,7 +3,7 @@ package edu.uci.eecs.wukong.edge.icsdemo;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.uci.eecs.wukong.edge.icsdemo.ContextProgressionExtension;
+import edu.uci.eecs.wukong.edge.icsdemo.ContextExecutionExtension;
 import edu.uci.eecs.wukong.framework.annotation.WuClass;
 import edu.uci.eecs.wukong.framework.annotation.WuProperty;
 import edu.uci.eecs.wukong.framework.api.Extension;
@@ -33,7 +33,7 @@ public class ICSDemoPrClass extends PipelinePrClass {
 	@Override
 	public List<Extension> registerExtension() {
 		List<Extension> extensions = new ArrayList<Extension>();
-		extensions.add(new ContextProgressionExtension(this));
+		extensions.add(new ContextExecutionExtension(this));
 		return extensions;
 	}
 

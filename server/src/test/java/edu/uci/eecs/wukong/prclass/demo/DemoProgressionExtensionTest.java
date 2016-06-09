@@ -5,13 +5,13 @@ import junit.framework.TestCase;
 import org.junit.Test;
 
 import edu.uci.eecs.wukong.edge.demo.DemoFactor;
-import edu.uci.eecs.wukong.edge.demo.DemoProgressionExtension;
+import edu.uci.eecs.wukong.edge.demo.DemoExecutionExtension;
 
 public class DemoProgressionExtensionTest extends TestCase {
 
 	@Test
 	public void testEnterRoom() {
-		DemoProgressionExtension extension = new DemoProgressionExtension(null);
+		DemoExecutionExtension extension = new DemoExecutionExtension(null);
 		DemoFactor context1 =  new DemoFactor(0,0,0,0,0,0);
 		context1.setTimestamp(1000000);
 		DemoFactor context2 =  new DemoFactor(0,1,0,0,0,0);
@@ -22,7 +22,7 @@ public class DemoProgressionExtensionTest extends TestCase {
 	
 	@Test
 	public void testStayAtKichenNotLongEnough() {
-		DemoProgressionExtension extension = new DemoProgressionExtension(null);
+		DemoExecutionExtension extension = new DemoExecutionExtension(null);
 		DemoFactor context1 =  new DemoFactor(0,0,3,0,0,0);
 		context1.setTimestamp(1000000);
 		DemoFactor context2 =  new DemoFactor(0,0,3,0,0,0);
@@ -33,7 +33,7 @@ public class DemoProgressionExtensionTest extends TestCase {
 	
 	@Test
 	public void testStayAtKichen() {
-		DemoProgressionExtension extension = new DemoProgressionExtension(null);
+		DemoExecutionExtension extension = new DemoExecutionExtension(null);
 		DemoFactor context1 =  new DemoFactor(0,0,3,0,0,0);
 		context1.setTimestamp(1000000);
 		DemoFactor context2 =  new DemoFactor(0,0,3,0,0,0);

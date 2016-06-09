@@ -14,13 +14,13 @@ import libsvm.svm_model;
 import libsvm.svm;
 import libsvm.svm_node;
 
-public class EEGProgressionExtension extends AbstractExecutionExtension<EEGPrClass> implements
+public class EEGExecutionExtension extends AbstractExecutionExtension<EEGPrClass> implements
 	Executable<Number>, Initiable {
-	private static Logger logger = LoggerFactory.getLogger(EEGProgressionExtension.class);
+	private static Logger logger = LoggerFactory.getLogger(EEGExecutionExtension.class);
 	private static String MODEL_PATH = "";
 	private svm_model model = null;
 
-	public EEGProgressionExtension(EEGPrClass plugin) {
+	public EEGExecutionExtension(EEGPrClass plugin) {
 		super(plugin);
 	}
 

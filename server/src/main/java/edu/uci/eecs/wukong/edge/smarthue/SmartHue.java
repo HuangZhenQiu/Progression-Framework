@@ -35,7 +35,7 @@ public class SmartHue extends PipelinePrClass {
 		List<Extension> extensions = new ArrayList<Extension> ();
 		extensions.add(new SmartHueFeatureExtractionExtension(this));
 		extensions.add(new SmartHueLearningExtension(this));
-		extensions.add(new SmartHueProgressionExtension(this));
+		extensions.add(new SmartHueExecutionExtension(this));
 		return extensions;
 	}
 

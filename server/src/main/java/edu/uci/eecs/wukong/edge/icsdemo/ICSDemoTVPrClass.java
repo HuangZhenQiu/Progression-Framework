@@ -27,7 +27,7 @@ public class ICSDemoTVPrClass extends PipelinePrClass {
 	@Override
 	public List<Extension> registerExtension() {
 		List<Extension> extensions = new ArrayList<Extension>();
-		extensions.add(new ContextProgressionExtension(this));
+		extensions.add(new ContextExecutionExtension(this));
 		return extensions;
 	}
 

@@ -8,12 +8,12 @@ import edu.uci.eecs.wukong.framework.api.TimerExecutable;
 import edu.uci.eecs.wukong.framework.extension.AbstractExecutionExtension;
 import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
 
-public class TimerTestProgressionExtension extends AbstractExecutionExtension
+public class TimerTestExecutionExtension extends AbstractExecutionExtension
 		implements TimerExecutable {
-	private static Logger logger = LoggerFactory.getLogger(TimerTestProgressionExtension.class);
+	private static Logger logger = LoggerFactory.getLogger(TimerTestExecutionExtension.class);
 	private short number = 0; 
 	
-	public TimerTestProgressionExtension(PipelinePrClass prClass) {
+	public TimerTestExecutionExtension(PipelinePrClass prClass) {
 		super(prClass);
 	}
 

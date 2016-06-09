@@ -63,7 +63,7 @@ public class ActivityRecgonitionPrClass extends PipelinePrClass {
 	public List<Extension> registerExtension() {
 		List<Extension> extensions = new ArrayList<Extension> ();
 		extensions.add(new ActivityFeatureExtractionExtension(this));
-		extensions.add(new ActivityProgressionExtension(this));	
+		extensions.add(new ActivityExecutionExtension(this));	
 		return extensions;
 	}
 

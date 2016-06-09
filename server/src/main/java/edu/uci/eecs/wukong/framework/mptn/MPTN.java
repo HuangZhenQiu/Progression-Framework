@@ -308,7 +308,7 @@ public class MPTN implements MPTNMessageListener{
 						fireWKPFMonitoredData(wkpfPackage);
 						return WKPFUtil.MONITORING;
 					case WKPFUtil.WKPF_REPRG_REBOOT & 0xFF:
-						LOGGER.info("I dont't want to reboot");
+						LOGGER.debug("I dont't want to reboot");
 						return WKPFUtil.WKPF_REPRG_REBOOT;
 					case WKPFUtil.WKPF_GET_LINK_COUNTER_R & 0xFF:
 						fireWKPFOnGetLinkCounterReturn(wkpfPackage);
@@ -347,63 +347,63 @@ public class MPTN implements MPTNMessageListener{
 	}
 	
 	private void fireWKPFGetWuClassList(WKPFPackage message) {
-		LOGGER.info("Received get Wuclass List message");
+		LOGGER.debug("Received get Wuclass List message");
 		for (WKPFMessageListener listener : listeners) {
 			listener.onWKPFGetWuClassList(message.getSourceAddress(), message.getPayload());
 		}
 	}
 	
 	private void fireWKPFGetWuObjectList(WKPFPackage message) {
-		LOGGER.info("Received get WuObject List message");
+		LOGGER.debug("Received get WuObject List message");
 		for (WKPFMessageListener listener : listeners) {
 			listener.onWKPFGetWuObjectList(message.getSourceAddress(), message.getPayload());
 		}
 	}
 	
 	private void fireWKPFReadProperty(WKPFPackage message) {
-		LOGGER.info("Received read Property message");
+		LOGGER.debug("Received read Property message");
 		for (WKPFMessageListener listener : listeners) {
 			listener.onWKPFReadProperty(message.getSourceAddress(), message.getPayload());
 		}
 	}
 	
 	private void fireWKPFWriteProperty(WKPFPackage message) {
-		LOGGER.info("Received write Property message");
+		LOGGER.debug("Received write Property message");
 		for (WKPFMessageListener listener : listeners) {
 			listener.onWKPFWriteProperty(message.getSourceAddress(), message.getPayload());
 		}
 	}
 	
 	private void fireWKPFRequestPropertyInit(WKPFPackage message) {
-		LOGGER.info("Received Request Property init message");
+		LOGGER.debug("Received Request Property init message");
 		for (WKPFMessageListener listener : listeners) {
 			listener.onWKPFRequestPropertyInit(message.getSourceAddress(), message.getPayload());
 		}
 	}
 	
 	private void fireWKPFMonitoredData(WKPFPackage message) {
-		LOGGER.info("Received Monitored data message");
+		LOGGER.debug("Received Monitored data message");
 		for (WKPFMessageListener listener : listeners) {
 			listener.onWKPFMonitoredData(message.getSourceAddress(), message.getPayload());
 		}
 	}
 	
 	private void fireWKPFGetLocation(WKPFPackage message) {
-		LOGGER.info("Received get location message");
+		LOGGER.debug("Received get location message");
 		for (WKPFMessageListener listener : listeners) {
 			listener.onWKPFGetLocation(message.getSourceAddress(), message.getPayload());
 		}
 	}
 	
 	private void fireWKPFSetLocation(WKPFPackage message) {
-		LOGGER.info("Received set location message");
+		LOGGER.debug("Received set location message");
 		for (WKPFMessageListener listener : listeners) {
 			listener.onWKPFSetLocation(message.getSourceAddress(), message.getPayload());
 		}
 	}
 	
 	private void fireWKPFOnGetLinkCounterReturn(WKPFPackage message) {
-		LOGGER.info("Received set get link counter message");
+		LOGGER.debug("Received set get link counter message");
 		for (WKPFMessageListener listener : listeners) {
 			listener.onWKPFLinkCounterReturn(message.getSourceAddress(), message.getPayload());
 		}

@@ -86,7 +86,7 @@ public class BufferManager {
 								this.createChannel(npp);
 								Channelable<?> channelable = (Channelable<?>)extension;
 								this.addChannelListener(npp, channelable);
-								LOGGER.info("Added channel for PrClass " + classModel.getWuClassId());
+								LOGGER.debug("Added channel for PrClass " + classModel.getWuClassId());
 							} else {
 								LOGGER.error("PrClass define input property "
 										+ property.getName()
@@ -173,7 +173,7 @@ public class BufferManager {
 		bufferMap.put(key, buffer);
 		timer.scheduleAtFixedRate(buffer.getIndexer(), 1000, interval);
 		metrics.bufferCounter.set(bufferMap.size());
-		LOGGER.info("Created " + type.getSimpleName() + " Buffer with key : " + key);
+		LOGGER.debug("Created " + type.getSimpleName() + " Buffer with key : " + key);
 		return true;
 	}
 	
@@ -185,7 +185,7 @@ public class BufferManager {
 		Channel<T> channel = new Channel<T>(key);
 		channelMap.put(key, channel);
 		metrics.bufferCounter.set(channelMap.size());
-		LOGGER.info("Created Channel with key : " + key);
+		LOGGER.debug("Created Channel with key : " + key);
 		return true;
 	}
 	
@@ -206,7 +206,7 @@ public class BufferManager {
 		
 		Channel<?> channel = channelMap.get(key);
 		channel.addField(fieldName, model);
-		LOGGER.info("Added channel hook for " + fieldName + " PrClass " + model);
+		LOGGER.debug("Added channel hook for " + fieldName + " PrClass " + model);
 		return true;
 	}
 	
@@ -217,7 +217,7 @@ public class BufferManager {
 		
 		Channel<?> channel = channelMap.get(key);
 		channel.removeField(fieldName, model);
-		LOGGER.info("Removed channel for PrClass " + fieldName + " PrClass " + model);
+		LOGGER.debug("Removed channel for PrClass " + fieldName + " PrClass " + model);
 		return true;
 	}
 	

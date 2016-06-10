@@ -103,13 +103,13 @@ public class ExecutionExtensionPoint extends ExtensionPoint<AbstractExecutionExt
 	}
 	
 	public void run() {
-		logger.info("Progression Extension Point Starts to Run");
+		logger.debug("Execution Extension Point Starts to Run");
 		Event event = eventQueue.poll();
 		if (event != null) {
 			if (event.getType().equals(Event.EventType.FACTOR)) {
 				BaseFactor factor = (BaseFactor)event.getData();
 				if(factor != null) {
-					logger.info("Progression Extension Point is polling new context:" + factor.toString());
+					logger.info("Execution Extension Point is polling new context:" + factor.toString());
 					for(Map.Entry<PipelinePrClass, AbstractExtension<? extends PipelinePrClass>> entry : this.extensionMap.entrySet()) {
 						AbstractExecutionExtension<? extends PipelinePrClass> extension =
 								(AbstractExecutionExtension<? extends PipelinePrClass>) entry.getValue();

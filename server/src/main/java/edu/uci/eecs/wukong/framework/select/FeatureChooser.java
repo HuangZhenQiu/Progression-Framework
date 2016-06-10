@@ -64,7 +64,7 @@ public class FeatureChooser {
 			}
 		}
 		
-		logger.info("Choosed features for PrClass : " + prClass);
+		logger.debug("Choosed features for PrClass : " + prClass);
 		return result;
 	}
 }

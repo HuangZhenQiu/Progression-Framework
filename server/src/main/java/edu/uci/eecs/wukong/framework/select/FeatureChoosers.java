@@ -45,7 +45,7 @@ public class FeatureChoosers {
 		
 		FeatureChooser chooser = new FeatureChooser(extention.getPrClass(), bufferManager, bindMap);
 		chooserMap.put(plugin, chooser);
-		logger.info("Add Feature Extraction Extension in Feature Choosers for PrClass " + plugin);
+		logger.debug("Add Feature Extraction Extension in Feature Choosers for PrClass " + plugin);
 	}
 	
 	public List<Object> choose(PipelinePrClass plugin) throws Exception {

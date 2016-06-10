@@ -18,6 +18,10 @@ import edu.uci.eecs.wukong.framework.model.WuObjectModel;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +34,7 @@ public abstract class Pipeline extends Graph implements FactorListener{
 	protected ConfigurationManager configurationManager;
 	protected BufferManager bufferManager;
 	protected FeatureChoosers featureChoosers;
-	protected ExecutorService executor;
+	protected ScheduledExecutorService executor;
 	protected PipelineMetrics pipelineMetrics;
 	
 	@VisibleForTesting
@@ -64,9 +68,9 @@ public abstract class Pipeline extends Graph implements FactorListener{
 	public abstract void unregisterExtension(WuObjectModel model);
 	
 	public void start() {
-		this.executor = Executors.newFixedThreadPool(nodes.size());
+		this.executor =  Executors.newScheduledThreadPool(nodes.size());
 		for (Node node : nodes) {
-			executor.execute(node);
+			executor.scheduleAtFixedRate(node, 0, 100, TimeUnit.MILLISECONDS);
 		}
 		
 		LOGGER.info("Progression Pipeline get started.");

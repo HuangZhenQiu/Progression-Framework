@@ -37,14 +37,16 @@ public class LearningExtensionPoint extends ExtensionPoint<LearningExtension<? e
 		
 		public void run() {
 			try {
-				if (!extension.getPrClass().isOnline() && !extension.isReady()) {
-					if (event.getType().equals(Event.EventType.FEATURE)) {
-						FeatureEntity entity = (FeatureEntity) event.getData();
-						extension.apply(entity.getFeatures(), contexts);
-						// Remove from 
-						if (extension.isReady()) {
-							Object object= extension.train();
-							send(new ModelEntity(extension.getPrClass(), object));
+				while (true) {
+					if (!extension.getPrClass().isOnline() && !extension.isReady()) {
+						if (event.getType().equals(Event.EventType.FEATURE)) {
+							FeatureEntity entity = (FeatureEntity) event.getData();
+							extension.apply(entity.getFeatures(), contexts);
+							// Remove from 
+							if (extension.isReady()) {
+								Object object= extension.train();
+								send(new ModelEntity(extension.getPrClass(), object));
+							}
 						}
 					}
 				}

@@ -98,7 +98,7 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 	}
 	
 	public void start(StateModel model) {
-		LOGGER.info("Start to initilize WPKF");
+		LOGGER.debug("Start to initilize WPKF");
 		// Update the network information
 		mptn.start(model);
 		bufferManager.setMPTN(mptn);
@@ -108,7 +108,7 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 			this.location = model.getLocation();
 		}
 		fireUpdateEvent();
-		LOGGER.info("Finished initilize WPKF");
+		LOGGER.debug("Finished initilize WPKF");
 	}
 	
 	public void shutdown() {
@@ -179,7 +179,7 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 	
 	private void initValue(WuObjectModel object, List<InitValue> values) {
 		for (InitValue value : values) {
-			LOGGER.info("bind componentId " + value.getComponentId() + " of init value" + value);
+			LOGGER.debug("bind componentId " + value.getComponentId() + " of init value" + value);
 			if (componentMap.getPrimaryEndPointNodeId(value.getComponentId()) == this.getLongAddress() &&
 					componentMap.getWuClassId(value.getComponentId()) == object.getType().getWuClassId()) {
 				WuPropertyModel property = object.getType().getPropertyModel(value.getPropertyNumber());
@@ -329,7 +329,7 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 							
 							mptn.send((int)destNodeId, buffer.array());
 							metrics.setPropertyCounter.inc();
-							LOGGER.info("Send set property message to destination : " + destNodeId + " with data " + MPTNUtil.toHexString(buffer.array()));
+							LOGGER.debug("Send set property message to destination : " + destNodeId + " with data " + MPTNUtil.toHexString(buffer.array()));
 
 						}
 					}
@@ -402,7 +402,7 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 		if (messageNumber > totalLength) {
 			LOGGER.error("Message number larger than expected.");
 		} else {
-			LOGGER.info("Message number is: " + messageNumber);
+			LOGGER.debug("Message number is: " + messageNumber);
 		}
 
 		int startAtWuobjectIndex = messageNumber * WKPFUtil.DEFAULT_OBJECT_NUMBER;
@@ -714,7 +714,7 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 		short linkId = WKPFUtil.getBigEndianShort(message, 3);
 		short count = WKPFUtil.getBigEndianShort(message, 5);
 		this.linkTable.setCounter(linkId, count);
-		LOGGER.info(String.format("Received count %d for link %d.", count, linkId));
+		LOGGER.debug(String.format("Received count %d for link %d.", count, linkId));
 	}
 	
 	public int getNetworkId() {

@@ -122,7 +122,7 @@ public class DJAData {
 		System.arraycopy(data, 0, buffer, start, data.length);
 		pos += data.length;
 		
-		LOGGER.error("Appended data into DJAData, next pos is " + pos);
+		LOGGER.debug("Appended data into DJAData, next pos is " + pos);
 		return true;
 	}
 	
@@ -160,7 +160,7 @@ public class DJAData {
 		int index = findFileIndex(DJAConstants.DJ_FILETYPE_WKPF_INITVALUES_TABLE);
 		InitValueTable table = new InitValueTable();
 		if (index == -1) {
-			LOGGER.info("There is no init value table  in current DJAData.");
+			LOGGER.error("There is no init value table  in current DJAData.");
 			return table;
 		}
 		
@@ -176,7 +176,7 @@ public class DJAData {
 			offset = value.getLength();
 		}
 		
-		LOGGER.info("Extracted init value table information from DJAData: " + table.toString());
+		LOGGER.debug("Extracted init value table information from DJAData: " + table.toString());
 		return table;
 	}
 	
@@ -221,7 +221,7 @@ public class DJAData {
 			table.addLink(link);
 		}
 		
-		LOGGER.info("Extracted link table information from DJAData: " + table.toString());
+		LOGGER.debug("Extracted link table information from DJAData: " + table.toString());
 		return table;
 	}
 	
@@ -272,7 +272,7 @@ public class DJAData {
 		int size = WKPFUtil.getBigEndianShort(buffer, start);
 		// start of component offset table;
 		int offsetStart = index + 5;
-		LOGGER.info("Start index of component map : " + start);
+		LOGGER.debug("Start index of component map : " + start);
 		for (int i = 0; i < size; i++) {
 			// the offset relative to the start of component map
 			int componentOffset = WKPFUtil.getBigEndianShort(buffer, offsetStart + i * 2);
@@ -280,7 +280,7 @@ public class DJAData {
 			componentMap.addComponent(extractComponent(start + componentOffset));
 		}
 		
-		LOGGER.info("Extracted component map information from DJAData: " + componentMap.toString());
+		LOGGER.debug("Extracted component map information from DJAData: " + componentMap.toString());
 		return componentMap;
 	}
 	
@@ -327,7 +327,7 @@ public class DJAData {
 				component.addEndPoint(extractEndPoint(start + i * DJAConstants.COMPONENT_END_POINT_RECORD_SIZE));
 			}
 			
-			LOGGER.error("Extracted component : " + component);
+			LOGGER.debug("Extracted component : " + component);
 			return component;
 		} catch (Exception e) {
 			LOGGER.error("Error Status : fail to extract component from DJAData");

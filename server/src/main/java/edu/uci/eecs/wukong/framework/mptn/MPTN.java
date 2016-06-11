@@ -187,7 +187,7 @@ public class MPTN implements MPTNMessageListener{
 		appendMPTNHeader(buffer, nodeId, HEADER_TYPE_1, (byte)(payload.length + 9));
 		WKPFUtil.appendWKPFPacket(buffer, longAddress, destId,
 				MPTNUtil.MPTN_MSATYPE_FWDREQ, payload);
-		LOGGER.info(MPTNUtil.toHexString(buffer.array()));
+		LOGGER.debug(MPTNUtil.toHexString(buffer.array()));
 		gatewayClient.send(buffer.array());
 	}
 	

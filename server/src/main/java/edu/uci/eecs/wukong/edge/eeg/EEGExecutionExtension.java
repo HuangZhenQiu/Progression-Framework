@@ -23,6 +23,7 @@ public class EEGExecutionExtension extends AbstractExecutionExtension<EEGPrClass
 	private static Logger logger = LoggerFactory.getLogger(EEGExecutionExtension.class);
 	private static String MODEL_PATH = configuration.getProgressionHome() + "/tool/svm/eeg/model.txt";
 	private svm_model model = null;
+	private double[] labelProbabilities = new double[2];
 
 	public EEGExecutionExtension(EEGPrClass plugin) {
 		super(plugin);
@@ -41,15 +42,13 @@ public class EEGExecutionExtension extends AbstractExecutionExtension<EEGPrClass
 		nodes[0].index = 0;
 		nodes[0].value = (double)data.get(0);
 		nodes[1] = new svm_node();
-		nodes[1].index = 0;
+		nodes[1].index = 1;
 		nodes[1].value = (double)data.get(1);
 		
 		
 		logger.info("EEGProgressionExtension recevied wave power " + builder.toString());
-		double probability = svm.svm_predict(model, nodes);
-		if (probability > 0.6) {
-			this.getPrClass().setOutput(true);
-		}
+		double probability = svm.svm_predict_probability(model, nodes, labelProbabilities);
+		logger.info("Label 0: " + labelProbabilities[0] + " and Label 1: " + labelProbabilities[1]);
 	}
 
 	@Override

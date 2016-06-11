@@ -104,42 +104,46 @@ public class ExecutionExtensionPoint extends ExtensionPoint<AbstractExecutionExt
 	
 	public void run() {
 		logger.debug("Execution Extension Point Starts to Run");
-		Event event = eventQueue.poll();
-		if (event != null) {
-			if (event.getType().equals(Event.EventType.FACTOR)) {
-				BaseFactor factor = (BaseFactor)event.getData();
-				if(factor != null) {
-					logger.info("Execution Extension Point is polling new context:" + factor.toString());
-					for(Map.Entry<PipelinePrClass, AbstractExtension<? extends PipelinePrClass>> entry : this.extensionMap.entrySet()) {
-						AbstractExecutionExtension<? extends PipelinePrClass> extension =
-								(AbstractExecutionExtension<? extends PipelinePrClass>) entry.getValue();
-						if (extension instanceof FactorExecutable) {
-							if (extension.isSubcribedTopic(factor.getTopicId())) {
-								this.executor.execute(new FactorTask(extension, factor));
+		try {
+			Event event = eventQueue.poll();
+			if (event != null) {
+				if (event.getType().equals(Event.EventType.FACTOR)) {
+					BaseFactor factor = (BaseFactor)event.getData();
+					if(factor != null) {
+						logger.info("Execution Extension Point is polling new context:" + factor.toString());
+						for(Map.Entry<PipelinePrClass, AbstractExtension<? extends PipelinePrClass>> entry : this.extensionMap.entrySet()) {
+							AbstractExecutionExtension<? extends PipelinePrClass> extension =
+									(AbstractExecutionExtension<? extends PipelinePrClass>) entry.getValue();
+							if (extension instanceof FactorExecutable) {
+								if (extension.isSubcribedTopic(factor.getTopicId())) {
+									this.executor.execute(new FactorTask(extension, factor));
+								}
 							}
 						}
 					}
-				}
-			} else if (event.getType().equals(Event.EventType.MODEL)) {
-				ModelEntity modelEntity = (ModelEntity) event.getData();
-				AbstractExecutionExtension<? extends PipelinePrClass> extension =
-						(AbstractExecutionExtension<? extends PipelinePrClass>) this.extensionMap.get(modelEntity.getPrClass());
-				if (extension != null && extension instanceof Activatable) {
-					((Activatable)extension).activate(modelEntity.getModel());
-					extension.getPrClass().setOnline(true);
-				} else {
-					logger.error("Progression extension is not found for prClass :" + modelEntity.getPrClass());
-				}
-			} else if (event.getType().equals(Event.EventType.FEATURE)) {
-				FeatureEntity featureEntity = (FeatureEntity) event.getData();
-				AbstractExecutionExtension<? extends PipelinePrClass> extension =
-						(AbstractExecutionExtension<? extends PipelinePrClass>) this.extensionMap.get(featureEntity.getPrClass());
-				if (extension != null && extension instanceof Executable) {
-					((Executable)extension).execute(featureEntity.getFeatures(), this.pipeline.getCurrentContext(featureEntity.getPrClass()));
-				} else {
-					logger.error("Progression extension is not found for prClass :" + featureEntity.getPrClass());
+				} else if (event.getType().equals(Event.EventType.MODEL)) {
+					ModelEntity modelEntity = (ModelEntity) event.getData();
+					AbstractExecutionExtension<? extends PipelinePrClass> extension =
+							(AbstractExecutionExtension<? extends PipelinePrClass>) this.extensionMap.get(modelEntity.getPrClass());
+					if (extension != null && extension instanceof Activatable) {
+						((Activatable)extension).activate(modelEntity.getModel());
+						extension.getPrClass().setOnline(true);
+					} else {
+						logger.error("Progression extension is not found for prClass :" + modelEntity.getPrClass());
+					}
+				} else if (event.getType().equals(Event.EventType.FEATURE)) {
+					FeatureEntity featureEntity = (FeatureEntity) event.getData();
+					AbstractExecutionExtension<? extends PipelinePrClass> extension =
+							(AbstractExecutionExtension<? extends PipelinePrClass>) this.extensionMap.get(featureEntity.getPrClass());
+					if (extension != null && extension instanceof Executable) {
+						((Executable)extension).execute(featureEntity.getFeatures(), this.pipeline.getCurrentContext(featureEntity.getPrClass()));
+					} else {
+						logger.error("Progression extension is not found for prClass :" + featureEntity.getPrClass());
+					}
 				}
 			}
+		} catch (Exception e) {
+			logger.error("Error in Exection Extend Point " + e.toString());
 		}
 	}
 	

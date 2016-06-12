@@ -5,7 +5,7 @@ import java.util.List;
 
 import edu.uci.eecs.wukong.framework.extension.FeatureExtractionExtension;
 import edu.uci.eecs.wukong.framework.operator.Operator;
-import edu.uci.eecs.wukong.framework.operator.timeseries.PowerSpectralIntensityOperator;
+import edu.uci.eecs.wukong.framework.operator.timeseries.RelativeIntensiveRatioOperator;
 
 public class EEGFeatureExtractionExtension extends FeatureExtractionExtension<EEGPrClass> {
 
@@ -16,7 +16,7 @@ public class EEGFeatureExtractionExtension extends FeatureExtractionExtension<EE
 	@Override
 	public List<Operator<?>> registerOperators() {
 		List<Operator<?>> operators = new ArrayList<Operator<?>> ();
-		PowerSpectralIntensityOperator  psi = new PowerSpectralIntensityOperator();
+		RelativeIntensiveRatioOperator  psi = new RelativeIntensiveRatioOperator();
 		psi.addDataSource(0, 5);
 		operators.add(psi); 
 		return operators;

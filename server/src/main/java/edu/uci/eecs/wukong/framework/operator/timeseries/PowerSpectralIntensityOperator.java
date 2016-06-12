@@ -16,7 +16,7 @@ import edu.uci.eecs.wukong.framework.operator.SimoOperator;
 public class PowerSpectralIntensityOperator extends SimoOperator<Short, Double> {
 	private static Logger logger = LoggerFactory.getLogger(PowerSpectralIntensityOperator.class);
 	private double[] bands = { 0.5, 4, 7, 12, 30 };
-	private double frequency = 100;
+	private double frequency = 1024;
 	private FastFourierTransformer fft = new FastFourierTransformer(DftNormalization.STANDARD);
 
 	public PowerSpectralIntensityOperator() {

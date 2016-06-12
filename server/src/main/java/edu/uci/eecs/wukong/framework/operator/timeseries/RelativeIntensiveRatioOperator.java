@@ -17,7 +17,7 @@ import edu.uci.eecs.wukong.framework.util.OperatorUtil;
 public class RelativeIntensiveRatioOperator extends SimoOperator<Short, Double> {
 	private static Logger logger = LoggerFactory.getLogger(RelativeIntensiveRatioOperator.class);
 	private double[] bands = {0.5, 4, 7, 12, 30};
-	private double frequency = 100;
+	private double frequency = 1024;
 	private FastFourierTransformer fft = new FastFourierTransformer(DftNormalization.STANDARD);
 	
 	public RelativeIntensiveRatioOperator() {

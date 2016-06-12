@@ -16,12 +16,21 @@ import edu.uci.eecs.wukong.framework.util.Configuration;
 import libsvm.svm_model;
 import libsvm.svm;
 import libsvm.svm_node;
-
+/**
+ * 
+ * https://www.csie.ntu.edu.tw/~r94100/libsvm-2.8/README
+ * 
+ * In this model, 0 represents eye close, 1 represents eye open.
+ * 
+ * @author peter
+ *
+ */
 public class EEGExecutionExtension extends AbstractExecutionExtension<EEGPrClass> implements
 	Executable<Number>, Initiable {
 	private static Configuration configuration = Configuration.getInstance();
 	private static Logger logger = LoggerFactory.getLogger(EEGExecutionExtension.class);
 	private static String MODEL_PATH = configuration.getProgressionHome() + "/tool/svm/eeg/model.txt";
+	private static String DATA_PATH = configuration.getProgressionHome() + "/tool/svm/eeg/train.txt";
 	private svm_model model = null;
 	private double[] labelProbabilities = new double[2];
 
@@ -32,23 +41,27 @@ public class EEGExecutionExtension extends AbstractExecutionExtension<EEGPrClass
 	@Override
 	public void execute(List<Number> data, ExecutionContext context) {
 		logger.info("EEGProgressionExtension is executed!");
-		StringBuilder builder = new StringBuilder();
-		svm_node[] nodes = new svm_node[2];
-		for (int i = 0; i < data.size(); i++) {
-			builder.append(data.get(i).toString());
+		if (data.size() == 4) {
+			StringBuilder builder = new StringBuilder();
+			svm_node[] nodes = new svm_node[2];
+			for (int i = 0; i < data.size(); i++) {
+				builder.append(data.get(i).toString());
+				nodes[i] = new svm_node();
+				nodes[i].index = i;
+				nodes[0].value = (double)data.get(i);
+			}
+			
+			logger.info("EEGProgressionExtension recevied wave power " + builder.toString());
+			double probability = svm.svm_predict_probability(model, nodes, labelProbabilities);
+			logger.info("Label 0: " + labelProbabilities[0] + " and Label 1: " + labelProbabilities[1]);
+			// 0.0 represents close
+			if (probability == 0.0) {
+				logger.info("Set output to true, when eye close");
+				this.prClass.setOutput(true);
+			} else {
+				this.prClass.setOutput(false);
+			}
 		}
-		
-		nodes[0] = new svm_node();
-		nodes[0].index = 0;
-		nodes[0].value = (double)data.get(0);
-		nodes[1] = new svm_node();
-		nodes[1].index = 1;
-		nodes[1].value = (double)data.get(1);
-		
-		
-		logger.info("EEGProgressionExtension recevied wave power " + builder.toString());
-		double probability = svm.svm_predict_probability(model, nodes, labelProbabilities);
-		logger.info("Label 0: " + labelProbabilities[0] + " and Label 1: " + labelProbabilities[1]);
 	}
 
 	@Override
@@ -70,24 +83,35 @@ public class EEGExecutionExtension extends AbstractExecutionExtension<EEGPrClass
 	 */
 	private void testClassification() {
 		try {
-			File file = new File(MODEL_PATH);
+			File file = new File(DATA_PATH);
 			BufferedReader reader =  new BufferedReader(new FileReader(file));
 			String line = reader.readLine();
-			svm_node[] nodes = new svm_node[2];
-			nodes[0] = new svm_node();
-			nodes[1] = new svm_node();
-			nodes[0].index = 0;
-			nodes[1].index = 1;
-
+			svm_node[] nodes = new svm_node[4];
+			for (int i = 0; i < nodes.length; i++) {
+				nodes[i] = new svm_node();
+				nodes[i].index = i;
+			}
+			
+		    int[] labels = new int[2];
+		    svm.svm_get_labels(model,labels);
 			while (line!= null && !line.isEmpty()) {
+				System.out.println(line);
 				String[] features =  line.split(" ");
-				if (features.length > 2) {
-					String[] alpha = features[1].split(":");
-					String[] beta = features[2].split(":");
-					if (alpha.length == 2 && beta.length == 2) {
-						nodes[0].value = Double.parseDouble(alpha[1]);
-						nodes[1].value = Double.parseDouble(beta[1]);
-						System.out.println(svm.svm_predict(model, nodes));
+				if (features.length >= 2) {
+					for (int i = 0; i < nodes.length; i++) {
+						nodes[i].value = 0;
+					}
+					
+					for (int i = 1; i < features.length; i++) {
+						String[] value = features[i].split(":");
+						int index = Integer.parseInt(value[0]);
+						nodes[index].value = Double.parseDouble(value[1]);
+					}
+
+					System.out.println(svm.svm_predict(model, nodes));
+					svm.svm_predict_probability(model, nodes, labelProbabilities);
+					for (int i = 0; i < labels.length; i++) {
+						System.out.println("Label " + labels[i] + ": " + labelProbabilities[i]);
 					}
 				}
 				line = reader.readLine();

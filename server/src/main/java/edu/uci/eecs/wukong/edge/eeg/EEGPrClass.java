@@ -39,7 +39,7 @@ public class EEGPrClass extends PipelinePrClass {
 	
 	public void setOutput(boolean output) {
 		if (output != this.output) {
-			this.support.firePropertyChange("ouput", this.output, output);
+			this.support.firePropertyChange("output", this.output, output);
 			this.output = output;
 		}
 	}

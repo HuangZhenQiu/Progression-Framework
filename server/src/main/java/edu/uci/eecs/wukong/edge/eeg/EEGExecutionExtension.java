@@ -43,19 +43,19 @@ public class EEGExecutionExtension extends AbstractExecutionExtension<EEGPrClass
 		logger.info("EEGProgressionExtension is executed!");
 		if (data.size() == 4) {
 			StringBuilder builder = new StringBuilder();
-			svm_node[] nodes = new svm_node[2];
+			svm_node[] nodes = new svm_node[4];
 			for (int i = 0; i < data.size(); i++) {
 				builder.append(data.get(i).toString());
 				nodes[i] = new svm_node();
 				nodes[i].index = i;
-				nodes[0].value = (double)data.get(i);
+				nodes[i].value = (double)data.get(i);
 			}
 			
 			logger.info("EEGProgressionExtension recevied wave power " + builder.toString());
 			double probability = svm.svm_predict_probability(model, nodes, labelProbabilities);
 			logger.info("Label 0: " + labelProbabilities[0] + " and Label 1: " + labelProbabilities[1]);
 			// 0.0 represents close
-			if (probability == 0.0) {
+			if (labelProbabilities[0] >= 0.88) {
 				logger.info("Set output to true, when eye close");
 				this.prClass.setOutput(true);
 			} else {

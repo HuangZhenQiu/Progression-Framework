@@ -33,6 +33,7 @@ public class BufferManager {
 	private Map<NPP, DoubleTimeIndexDataBuffer<?, ?>> bufferMap;
 	// Map network port property to channel
 	private Map<NPP, Channel<?>> channelMap;
+	
 	// Timer to set index for buffer
 	private Timer timer;
 	private MPTN mptn;

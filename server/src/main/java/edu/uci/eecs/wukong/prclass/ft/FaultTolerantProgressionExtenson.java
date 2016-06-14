@@ -1,4 +1,4 @@
-package edu.uci.eecs.wukong.framework.policy.ft;
+package edu.uci.eecs.wukong.prclass.ft;
 
 import edu.uci.eecs.wukong.framework.api.Channelable;
 import edu.uci.eecs.wukong.framework.extension.AbstractExecutionExtension;

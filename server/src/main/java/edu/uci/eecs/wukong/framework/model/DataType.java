@@ -14,6 +14,7 @@ package edu.uci.eecs.wukong.framework.model;
 public enum DataType {
     Channel("Channel"),
     Buffer("Buffer"),
+    SystemBuffer("SystemBuffer"),
     WindowableBuffer("WindowableBuffer"),
     Init_Value("Init_Value"),
     Byte("Byte"),

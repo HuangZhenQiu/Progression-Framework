@@ -1,5 +1,6 @@
-package edu.uci.eecs.wukong.edge.occupancy;
+package edu.uci.eecs.wukong.prclass.occupancy;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import be.ac.ulg.montefiore.run.jahmm.ObservationDiscrete;
@@ -47,7 +48,10 @@ public class OccupancyDetection extends PipelinePrClass {
 
 	@Override
 	public List<Extension> registerExtension() {
-		return null;
+		List<Extension> extensions = new ArrayList<Extension> ();
+		extensions.add(new ODFeatureExtractionExtension(this));
+		extensions.add(new ODProgressionExtension(this));
+		return extensions;
 	}
 
 	@Override

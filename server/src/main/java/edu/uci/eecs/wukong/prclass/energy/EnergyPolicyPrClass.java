@@ -1,4 +1,4 @@
-package edu.uci.eecs.wukong.framework.policy.energy;
+package edu.uci.eecs.wukong.prclass.energy;
 
 import java.util.ArrayList;
 import java.util.List;

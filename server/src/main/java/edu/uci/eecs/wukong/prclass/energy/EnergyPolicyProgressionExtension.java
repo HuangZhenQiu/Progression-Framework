@@ -1,4 +1,4 @@
-package edu.uci.eecs.wukong.framework.policy.energy;
+package edu.uci.eecs.wukong.prclass.energy;
 
 import java.util.Iterator;
 
@@ -6,7 +6,7 @@ import edu.uci.eecs.wukong.framework.annotation.WuTimer;
 import edu.uci.eecs.wukong.framework.api.TimerExecutable;
 import edu.uci.eecs.wukong.framework.extension.AbstractExecutionExtension;
 import edu.uci.eecs.wukong.framework.model.Link;
-import edu.uci.eecs.wukong.framework.policy.energy.EnergyPolicyPrClass;
+import edu.uci.eecs.wukong.prclass.energy.EnergyPolicyPrClass;
 
 public class EnergyPolicyProgressionExtension extends AbstractExecutionExtension<EnergyPolicyPrClass> implements
 	TimerExecutable {

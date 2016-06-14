@@ -1,4 +1,4 @@
-package edu.uci.eecs.wukong.edge.occupancy;
+package edu.uci.eecs.wukong.prclass.occupancy;
 
 import java.lang.Comparable;
 import java.util.List;
@@ -9,10 +9,10 @@ import java.time.LocalDateTime;
 import edu.uci.eecs.wukong.framework.api.Executable;
 import edu.uci.eecs.wukong.framework.api.ExecutionContext;
 import edu.uci.eecs.wukong.framework.api.TimerExecutable;
-import edu.uci.eecs.wukong.edge.occupancy.OccupancyDetection;
 import edu.uci.eecs.wukong.framework.annotation.WuTimer;
 import edu.uci.eecs.wukong.framework.buffer.RingBuffer;
 import edu.uci.eecs.wukong.framework.extension.AbstractExecutionExtension;
+import edu.uci.eecs.wukong.prclass.occupancy.OccupancyDetection;
 
 import com.google.common.annotations.VisibleForTesting;
 

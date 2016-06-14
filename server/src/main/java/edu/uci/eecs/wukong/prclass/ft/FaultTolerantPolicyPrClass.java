@@ -1,5 +1,6 @@
-package edu.uci.eecs.wukong.framework.policy.ft;
+package edu.uci.eecs.wukong.prclass.ft;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import edu.uci.eecs.wukong.framework.api.Extension;
@@ -38,8 +39,9 @@ public class FaultTolerantPolicyPrClass extends SystemPrClass {
 
 	@Override
 	public List<Extension> registerExtension() {
-		// TODO Auto-generated method stub
-		return null;
+		List<Extension> extensions = new ArrayList<Extension> ();
+		extensions.add(new FaultTolerantProgressionExtenson(this));
+		return extensions;
 	}
 
 	@Override

@@ -1,4 +1,4 @@
-package edu.uci.eecs.wukong.edge.occupancy;
+package edu.uci.eecs.wukong.prclass.occupancy;
 
 import java.util.List;
 import java.util.ArrayList;

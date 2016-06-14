@@ -1,15 +1,15 @@
-package edu.uci.eecs.wukong.edge.occupancy;
+package edu.uci.eecs.wukong.prclass.occupancy;
 
 import java.util.List;
 
 import be.ac.ulg.montefiore.run.jahmm.Hmm;
 import be.ac.ulg.montefiore.run.jahmm.ObservationDiscrete;
-import edu.uci.eecs.wukong.edge.occupancy.OccupancyDetection;
-import edu.uci.eecs.wukong.edge.occupancy.OccupancyDetection.Occupancy;
 import edu.uci.eecs.wukong.framework.api.Activatable;
 import edu.uci.eecs.wukong.framework.api.Executable;
 import edu.uci.eecs.wukong.framework.api.ExecutionContext;
 import edu.uci.eecs.wukong.framework.extension.AbstractExecutionExtension;
+import edu.uci.eecs.wukong.prclass.occupancy.OccupancyDetection;
+import edu.uci.eecs.wukong.prclass.occupancy.OccupancyDetection.Occupancy;
 
 public class HMMBasedExecutionExtension extends AbstractExecutionExtension<OccupancyDetection> 
 	implements Executable, Activatable{

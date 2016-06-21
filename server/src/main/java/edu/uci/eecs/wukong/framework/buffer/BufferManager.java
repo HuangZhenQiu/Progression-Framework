@@ -15,7 +15,7 @@ import edu.uci.eecs.wukong.framework.api.Extension;
 import edu.uci.eecs.wukong.framework.api.metrics.Gauge;
 import edu.uci.eecs.wukong.framework.buffer.BufferUnits.ByteUnit;
 import edu.uci.eecs.wukong.framework.buffer.BufferUnits.ShortUnit;
-import edu.uci.eecs.wukong.framework.channel.Channel;
+import edu.uci.eecs.wukong.framework.channel.BasicChannel;
 import edu.uci.eecs.wukong.framework.model.DataType;
 import edu.uci.eecs.wukong.framework.model.NPP;
 import edu.uci.eecs.wukong.framework.model.PropertyType;
@@ -32,7 +32,7 @@ public class BufferManager {
 	// Map network port property to buffer
 	private Map<NPP, DoubleTimeIndexDataBuffer<?, ?>> bufferMap;
 	// Map network port property to channel
-	private Map<NPP, Channel<?>> channelMap;
+	private Map<NPP, BasicChannel<?>> channelMap;
 	
 	// Timer to set index for buffer
 	private Timer timer;
@@ -46,7 +46,7 @@ public class BufferManager {
 	
 	public BufferManager(BufferMetrics metrics) {
 		this.bufferMap = new HashMap<NPP, DoubleTimeIndexDataBuffer<?, ?>>();
-		this.channelMap = new HashMap<NPP, Channel<?>>();
+		this.channelMap = new HashMap<NPP, BasicChannel<?>>();
 		this.timer = new Timer();
 		this.metrics = metrics;
 		this.timer.schedule(new BufferMetricsTask(), 0, 10 * 1000);
@@ -183,7 +183,7 @@ public class BufferManager {
 			return false;
 		}
 		
-		Channel<T> channel = new Channel<T>(key);
+		BasicChannel<T> channel = new BasicChannel<T>(key);
 		channelMap.put(key, channel);
 		metrics.bufferCounter.set(channelMap.size());
 		LOGGER.debug("Created Channel with key : " + key);
@@ -195,7 +195,7 @@ public class BufferManager {
 			return false;
 		}
 		
-		Channel<T> channel = (Channel<T>)channelMap.get(key);
+		BasicChannel<T> channel = (BasicChannel<T>)channelMap.get(key);
 		channel.addListener(listener);
 		return true;
 	}
@@ -205,7 +205,7 @@ public class BufferManager {
 			return false;
 		}
 		
-		Channel<?> channel = channelMap.get(key);
+		BasicChannel<?> channel = channelMap.get(key);
 		channel.addField(fieldName, model);
 		LOGGER.debug("Added channel hook for " + fieldName + " PrClass " + model);
 		return true;
@@ -216,7 +216,7 @@ public class BufferManager {
 			return false;
 		}
 		
-		Channel<?> channel = channelMap.get(key);
+		BasicChannel<?> channel = channelMap.get(key);
 		channel.removeField(fieldName, model);
 		LOGGER.debug("Removed channel for PrClass " + fieldName + " PrClass " + model);
 		return true;
@@ -227,7 +227,7 @@ public class BufferManager {
 			return false;
 		}
 		
-		Channel<?> channel = channelMap.get(key);
+		BasicChannel<?> channel = channelMap.get(key);
 		channel.removeListener(listener);
 		return true;
 	}
@@ -239,7 +239,7 @@ public class BufferManager {
 			return;
 		}
 
-		Channel<T> channel = (Channel<T>)channelMap.get(key);
+		BasicChannel<T> channel = (BasicChannel<T>)channelMap.get(key);
 		channel.append(value);
 	}
 	

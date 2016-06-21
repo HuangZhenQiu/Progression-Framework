@@ -155,9 +155,10 @@ public class PrClassManager implements PrClassInitListener {
 					// Create an instance for each plugin classes as hard WuClass.
 					Constructor<?> constructor;
 					PrClass plugin;
-					if (wuClassModel.getType().equals(PrClassType.SYSTEM_PRCLASS)) {
-						constructor = c.getConstructor(WKPF.class, PrClassMetrics.class);
-						plugin = (PrClass) constructor.newInstance(wkpf, prClassMetrics);
+					if (wuClassModel.getType().equals(PrClassType.SYSTEM_PRCLASS)
+							|| wuClassModel.getType().equals(PrClassType.AGENT_PRCLASS)) {
+						constructor = c.getConstructor(Poller.class, PrClassMetrics.class);
+						plugin = (PrClass) constructor.newInstance(new Poller(wkpf), prClassMetrics);
 						// Once there is a remote programming, it will be triggered
 						wkpf.registerRemoteProgrammingListener((RemoteProgrammingListener)plugin);
 					} else {

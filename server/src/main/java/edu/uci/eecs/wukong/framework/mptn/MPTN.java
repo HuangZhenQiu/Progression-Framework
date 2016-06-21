@@ -313,6 +313,8 @@ public class MPTN implements MPTNMessageListener{
 					case WKPFUtil.WKPF_GET_LINK_COUNTER_R & 0xFF:
 						fireWKPFOnGetLinkCounterReturn(wkpfPackage);
 						return WKPFUtil.WKPF_GET_LINK_COUNTER_R;
+					case WKPFUtil.WKPF_GET_DEVICE_STATUS_R & 0xFF:
+						
 					default:
 						LOGGER.error("Received unpexcted WKPF message type " + wkpfPackage);
 				}
@@ -403,9 +405,16 @@ public class MPTN implements MPTNMessageListener{
 	}
 	
 	private void fireWKPFOnGetLinkCounterReturn(WKPFPackage message) {
-		LOGGER.debug("Received set get link counter message");
+		LOGGER.debug("Received get link counter message");
 		for (WKPFMessageListener listener : listeners) {
 			listener.onWKPFLinkCounterReturn(message.getSourceAddress(), message.getPayload());
+		}
+	}
+	
+	private void fireWKPFOnGetDeviceStatusReturn(WKPFPackage message) {
+		LOGGER.debug("Received get device status message");
+		for (WKPFMessageListener listener : listeners) {
+			listener.onWKPFDeviceStatusReturn(message.getSourceAddress(), message.getPayload());
 		}
 	}
 

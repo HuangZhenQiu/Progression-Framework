@@ -5,8 +5,10 @@ import java.util.List;
 
 import be.ac.ulg.montefiore.run.jahmm.ObservationDiscrete;
 import edu.uci.eecs.wukong.framework.api.Extension;
-import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
+import edu.uci.eecs.wukong.framework.prclass.AgentPrClass;
+import edu.uci.eecs.wukong.framework.prclass.Poller;
 import edu.uci.eecs.wukong.framework.prclass.PrClassMetrics;
+import edu.uci.eecs.wukong.framework.wkpf.WKPF;
 import edu.uci.eecs.wukong.framework.annotation.WuClass;
 import edu.uci.eecs.wukong.framework.annotation.WuProperty;
 import edu.uci.eecs.wukong.framework.model.DataType;
@@ -14,7 +16,7 @@ import edu.uci.eecs.wukong.framework.model.PropertyType;
 
 import com.google.common.annotations.VisibleForTesting;
 @WuClass(id = 10113)
-public class OccupancyDetection extends PipelinePrClass {
+public class OccupancyDetection extends AgentPrClass {
 	@WuProperty(name = "pir", id = 0, type = PropertyType.Input, dtype = DataType.Buffer)
 	private byte pir;
 	@WuProperty(name = "days", id = 1, type = PropertyType.Input, dtype = DataType.Init_Value)
@@ -36,14 +38,14 @@ public class OccupancyDetection extends PipelinePrClass {
 	
 	@VisibleForTesting
 	public OccupancyDetection(short days, short topK, short interval) {
-		super("OccupancyDetection", true);
+		super("OccupancyDetection", null, null);
 		this.days = days;
 		this.topK = topK;
 		this.interval = interval;
 	}
 
-	public OccupancyDetection(PrClassMetrics metrics) {
-		super("OccupancyDetection", metrics);
+	public OccupancyDetection(Poller poller, PrClassMetrics metrics) {
+		super("OccupancyDetection", poller, metrics);
 	}
 
 	@Override

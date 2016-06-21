@@ -25,4 +25,6 @@ public interface WKPFMessageListener {
 	public void onWKPFRemoteProgramCommit(long sourceId, byte[] message);
 	
 	public void onWKPFLinkCounterReturn(long sourceId, byte[] message);
+	
+	public void onWKPFDeviceStatusReturn(long sourceId, byte[] message);
 }

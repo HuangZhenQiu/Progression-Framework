@@ -34,6 +34,8 @@ public class WKPFUtil {
 	
 	public static final byte WKPF_GET_LINK_COUNTER        = (byte)0x60;
 	public static final byte WKPF_GET_LINK_COUNTER_R      = (byte)0x61;
+	public static final byte WKPF_GET_DEVICE_STATUS       = (byte)0x62;
+	public static final byte WKPF_GET_DEVICE_STATUS_R     = (byte)0x63;
 	
 	public static final byte WKPF_GET_WUCLASS_LIST        = (byte)0x90;
 	public static final byte WKPF_GET_WUCLASS_LIST_R      = (byte)0x91;

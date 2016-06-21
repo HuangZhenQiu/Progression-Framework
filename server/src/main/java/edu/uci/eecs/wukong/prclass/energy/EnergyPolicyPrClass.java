@@ -9,7 +9,8 @@ import edu.uci.eecs.wukong.framework.api.Extension;
 import edu.uci.eecs.wukong.framework.model.DataType;
 import edu.uci.eecs.wukong.framework.model.PropertyType;
 import edu.uci.eecs.wukong.framework.prclass.PrClassMetrics;
-import edu.uci.eecs.wukong.framework.prclass.SystemPrClass;
+import edu.uci.eecs.wukong.framework.prclass.AgentPrClass;
+import edu.uci.eecs.wukong.framework.prclass.Poller;
 import edu.uci.eecs.wukong.framework.wkpf.WKPF;
 
 
@@ -20,12 +21,12 @@ import edu.uci.eecs.wukong.framework.wkpf.WKPF;
  */
 
 @WuClass(id = 10117)
-public class EnergyPolicyPrClass extends SystemPrClass {
-	@WuProperty(id = 0, name="input", type = PropertyType.Input, dtype = DataType.Channel)
-	private short input;
+public class EnergyPolicyPrClass extends AgentPrClass {
+	@WuProperty(id = 0, name="input", type = PropertyType.Input, dtype = DataType.GlobalChannel)
+	private int input; //first short represent linkId second short represent counter value
 
-	public EnergyPolicyPrClass(WKPF wkpf, PrClassMetrics metrics) {
-		super("EnergyPolicy", wkpf, metrics);
+	public EnergyPolicyPrClass(Poller poller, PrClassMetrics metrics) {
+		super("EnergyPolicy", poller, metrics);
 		// TODO Auto-generated constructor stub
 	}
 

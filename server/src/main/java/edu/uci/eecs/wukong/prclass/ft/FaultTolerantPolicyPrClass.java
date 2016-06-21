@@ -7,6 +7,7 @@ import edu.uci.eecs.wukong.framework.api.Extension;
 import edu.uci.eecs.wukong.framework.annotation.WuProperty;
 import edu.uci.eecs.wukong.framework.model.DataType;
 import edu.uci.eecs.wukong.framework.model.PropertyType;
+import edu.uci.eecs.wukong.framework.prclass.Poller;
 import edu.uci.eecs.wukong.framework.prclass.PrClassMetrics;
 import edu.uci.eecs.wukong.framework.prclass.SystemPrClass;
 import edu.uci.eecs.wukong.framework.wkpf.WKPF;
@@ -29,11 +30,11 @@ import edu.uci.eecs.wukong.framework.wkpf.WKPF;
  */
 public class FaultTolerantPolicyPrClass extends SystemPrClass {
 
-	@WuProperty(name = "heartBeat", id = 0, type = PropertyType.Input, dtype = DataType.Channel)
-	private short heartBeat;
+	@WuProperty(name = "heartBeat", id = 0, type = PropertyType.Input, dtype = DataType.GlobalChannel)
+	private byte heartBeat;
 
-	public FaultTolerantPolicyPrClass(WKPF wkpf, PrClassMetrics metrics) {
-		super("FaultTolerantPolicy", wkpf, metrics);
+	public FaultTolerantPolicyPrClass(Poller poller, PrClassMetrics metrics) {
+		super("FaultTolerantPolicy", poller, metrics);
 		// TODO Auto-generated constructor stub
 	}
 

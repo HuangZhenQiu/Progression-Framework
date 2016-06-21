@@ -13,7 +13,7 @@ import edu.uci.eecs.wukong.framework.wkpf.WKPF;
 /**
  * SystemPrClass provides an interface for managing FBP with monitoring capability.
  * 
- * @author peterhuang
+ * @author peter huang
  * 
  */
 public abstract class SystemPrClass extends PipelinePrClass implements RemoteProgrammingListener  {
@@ -22,11 +22,11 @@ public abstract class SystemPrClass extends PipelinePrClass implements RemotePro
 	protected LinkTable linkTable;
 	protected ComponentMap map;
 	protected InitValueTable initValues;
-	protected WKPF wkpf;
+	protected Poller poller;
 	
-	public SystemPrClass(String name, WKPF wkpf, PrClassMetrics metrics) {
+	public SystemPrClass(String name, Poller poller, PrClassMetrics metrics) {
 		super(name, PrClass.PrClassType.SYSTEM_PRCLASS, metrics);
-		this.wkpf = wkpf;
+		this.poller = poller;
 		this.enabled = false;
 	}
 	
@@ -41,10 +41,6 @@ public abstract class SystemPrClass extends PipelinePrClass implements RemotePro
 		return this.linkTable.getLinkIterator();
 	}
 	
-	public void sendGetLinkCounter(Long address, short linkId) {
-		this.wkpf.sendGetLinkCounter(address, linkId);
-	}
-	
 	public Long getComponentAddress(int componentId) {
 		Component component = this.map.getComponentById(componentId);
 		if (component != null) {
@@ -52,6 +48,10 @@ public abstract class SystemPrClass extends PipelinePrClass implements RemotePro
 		} else {
 			return -1L;
 		}
+	}
+	
+	public Poller getPoller() {
+		return this.poller;
 	}
 	
 	public InitValueTable getInitValueTable() {

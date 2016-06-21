@@ -11,8 +11,8 @@ import edu.uci.eecs.wukong.framework.predict.Predict;
 public abstract class AgentPrClass extends SystemPrClass {
 	private static Configuration configuration = Configuration.getInstance();
 	
-	public AgentPrClass(String name, WKPF wkpf, PrClassMetrics metrics) {
-		super(name, wkpf, metrics);
+	public AgentPrClass(String name, Poller poller, PrClassMetrics metrics) {
+		super(name, poller, metrics);
 		this.configManager =  ConfigurationManager.getInstance();
 	}
 

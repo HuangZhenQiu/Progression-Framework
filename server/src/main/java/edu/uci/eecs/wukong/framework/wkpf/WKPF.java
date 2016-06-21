@@ -209,7 +209,7 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 		}
 	}
 	
-	public void sendGetLinkCounter(Long nest, short linkId) {
+	public void sendGetLinkCounter(Long dest, short linkId) {
 		this.sequence ++;
 		ByteBuffer buffer = ByteBuffer.allocate(10);
 		buffer.put(WKPFUtil.WKPF_GET_LINK_COUNTER);
@@ -217,7 +217,16 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 		buffer.put((byte) (this.sequence / 256));
 		buffer.put((byte) (linkId % 256));
 		buffer.put((byte) (linkId / 256));
-		mptn.send(nest.intValue(), buffer.array());
+		mptn.send(dest.intValue(), buffer.array());
+	}
+	
+	public void sendGetDeviceStatus(Long dest) {
+		this.sequence ++;
+		ByteBuffer buffer = ByteBuffer.allocate(8);
+		buffer.put(WKPFUtil.WKPF_GET_DEVICE_STATUS);
+		buffer.put((byte) (this.sequence % 256));
+		buffer.put((byte) (this.sequence / 256));
+		mptn.send(dest.intValue(), buffer.array());
 	}
 	
 	/**
@@ -715,6 +724,11 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 		short count = WKPFUtil.getBigEndianShort(message, 5);
 		this.linkTable.setCounter(linkId, count);
 		LOGGER.debug(String.format("Received count %d for link %d.", count, linkId));
+	}
+	
+	public void onWKPFDeviceStatusReturn(long sourceId, byte[] message) {
+		byte status = message[3];
+		LOGGER.debug(String.format("Received status %d for device %d.", status, sourceId));
 	}
 	
 	public int getNetworkId() {

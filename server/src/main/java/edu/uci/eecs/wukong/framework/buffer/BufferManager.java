@@ -84,15 +84,13 @@ public class BufferManager {
 		if (model.isValid()) {
 			WuClassModel classModel = model.getType();
 			if (classModel.getType().equals(PrClass.PrClassType.PIPELINE_PRCLASS)) {
-				PipelinePrClass prClass =  (PipelinePrClass) model.getPrClass();
 				for (WuPropertyModel property : classModel.getProperties()) {
 					// Use long address
 					NPP npp = new NPP(mptn.getLongAddress(), model.getPort(), property.getId());
 					if (property.getPtype().equals(PropertyType.Input)
-							&&property.getDtype().equals(DataType.Channel) && model.getExtensions() != null) {
+							&& property.getDtype().equals(DataType.Channel) && model.getExtensions() != null) {
 						for (Extension extension : model.getExtensions()) {
 							if (extension instanceof Channelable) {
-								
 								this.createChannel(npp);
 								Channelable<?> channelable = (Channelable<?>)extension;
 								this.addChannelListener(npp, channelable);
@@ -123,7 +121,28 @@ public class BufferManager {
 					} 					
 				}
 			} else if (classModel.getType().equals(PrClass.PrClassType.SYSTEM_PRCLASS)) {
-				
+				for (WuPropertyModel property : classModel.getProperties()) {
+					// Use long address
+					NPP npp = new NPP(mptn.getLongAddress(), model.getPort(), property.getId());
+					if (property.getPtype().equals(PropertyType.Input)
+							&& property.getDtype().equals(DataType.GlobalChannel) && model.getExtensions() != null) {
+						for (Extension extension : model.getExtensions()) {
+							if (extension instanceof Channelable) {
+								this.createGlobalChannel(property.getMtype());
+								Channelable<?> channelable = (Channelable<?>)extension;
+								this.addGlobalChannelListener(property.getMtype(), channelable);
+								LOGGER.debug("Added channel for PrClass " + classModel.getWuClassId());
+							} else {
+								LOGGER.error("PrClass define input property "
+										+ property.getName()
+										+ " with type channle, but didn't implement Channelable interface");
+							}
+						}
+					} else if (property.getPtype().equals(PropertyType.Input)
+							&& property.getDtype().equals(DataType.SystemBuffer)) {
+						createSystemBuffer(property.getStype());
+					}
+				}
 			}
 		}
 	}
@@ -177,13 +196,49 @@ public class BufferManager {
 			return false;
 		} 
 		
-		DoubleTimeIndexDataBuffer<T, E> buffer =
-				new DoubleTimeIndexDataBuffer<T, E>(key, type, unitSize, capacity, timeUnits, interval);
+		BasicDoubleTimeIndexDataBuffer<T, E> buffer =
+				new BasicDoubleTimeIndexDataBuffer<T, E>(key, type, unitSize, capacity, timeUnits, interval);
 		
 		bufferMap.put(key, buffer);
 		timer.scheduleAtFixedRate(buffer.getIndexer(), 1000, interval);
 		metrics.bufferCounter.set(bufferMap.size());
 		LOGGER.debug("Created " + type.getSimpleName() + " Buffer with key : " + key);
+		return true;
+	}
+	
+	/**
+	 * Create system buffer in the buffer manager. The unitSize, capacity, timeUnits and interval
+	 * are predefined by system.
+	 * 
+	 * 
+	 * @param key SensorType 
+	 * @param type the buffer unit type
+	 * @return
+	 */
+	private boolean createSystemBuffer(SensorType key) {
+		if (this.systemBufferMap.containsKey(key)) {
+			return false;
+		}
+		
+		SystemDoubleTimeIndexDataBuffer buffer =
+				new SystemDoubleTimeIndexDataBuffer(key, SensorDataUnit.class, 8, 10000, 1000, 1000);
+		
+		systemBufferMap.put(key, buffer);
+		timer.scheduleAtFixedRate(buffer.getIndexer(), 1000, 1000);
+		metrics.bufferCounter.set(bufferMap.size());
+		LOGGER.debug("Created System Buffer with key : " + key);
+		return true;
+	}
+	
+	private <T> boolean createGlobalChannel(WKPFMessageType type) {
+		if (this.globalChannelMap.containsKey(type)) {
+			return false;
+		}
+		
+		GlobalChannel<T> globalChannel = new GlobalChannel<T>(type);
+		this.globalChannelMap.put(type, globalChannel);
+		metrics.bufferCounter.set(channelMap.size());
+		LOGGER.debug("Created Channel with wkpf message type : " + type.name());
 		return true;
 	}
 	
@@ -205,6 +260,15 @@ public class BufferManager {
 		}
 		
 		BasicChannel<T> channel = (BasicChannel<T>)channelMap.get(key);
+		channel.addListener(listener);
+		return true;
+	}
+	
+	public <T> boolean addGlobalChannelListener(WKPFMessageType type, Channelable<T> listener) {
+		if (!globalChannelMap.containsKey(type)){
+			return false;
+		}
+		GlobalChannel<T> channel = (GlobalChannel<T>)globalChannelMap.get(type);
 		channel.addListener(listener);
 		return true;
 	}
@@ -255,12 +319,14 @@ public class BufferManager {
 	@SuppressWarnings("unchecked")
 	public <T> void addGlobalRealTimeData(NPP key, WKPFMessageType type, T value) {
 		if(!channelMap.containsKey(key)) {
-			LOGGER.error("Try to insert into a channel doesn't exist:" + key);
+			// LOGGER.error("Try to insert into a channel doesn't exist:" + key);
 			return;
 		}
 
 		GlobalChannel<T> channel = (GlobalChannel<T>)this.globalChannelMap.get(type);
-		channel.append(key, type, value);
+		if (channel != null) {
+			channel.append(key, type, value);
+		}
 	}
 	
 	@SuppressWarnings("unchecked")

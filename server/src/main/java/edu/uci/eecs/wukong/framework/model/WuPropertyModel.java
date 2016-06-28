@@ -10,23 +10,20 @@ public class WuPropertyModel {
 	private Class<?> type;
 	private PropertyType ptype;
 	private DataType dtype;
+	private SensorType stype;
+	private WKPFMessageType mtype;
 	private int capacity;
 	private int interval;
 	private int timeUnit;
-	
-	public WuPropertyModel(byte id, String name, PropertyType pType, DataType dType, Class<?> type) {
-		this.id = id;
-		this.name = name;
-		this.ptype = pType;
-		this.dtype = dType;
-		this.type = type;
-	}
+
 	
 	public WuPropertyModel(WuProperty property, Class<?> type) {
 		this.id = property.id();
 		this.name = property.name();
 		this.ptype = property.type();
 		this.dtype = property.dtype();
+		this.stype = property.stype();
+		this.mtype = property.mType();
 		this.capacity = property.capacity();
 		this.interval = property.interval();
 		this.timeUnit = property.timeUnit();
@@ -73,6 +70,22 @@ public class WuPropertyModel {
 		this.type = type;
 	}
 	
+	public SensorType getStype() {
+		return stype;
+	}
+
+	public void setStype(SensorType stype) {
+		this.stype = stype;
+	}
+
+	public WKPFMessageType getMtype() {
+		return mtype;
+	}
+
+	public void setMtype(WKPFMessageType mtype) {
+		this.mtype = mtype;
+	}
+
 	public int getCapacity() {
 		return capacity;
 	}
@@ -105,7 +118,9 @@ public class WuPropertyModel {
 					&& this.name.equals(model.name)
 					&& this.ptype.equals(model.ptype)
 					&& this.dtype.equals(model.dtype)
-					&& this.type.equals(model.type)) {
+					&& this.type.equals(model.type)
+					&& this.stype.equals(model.stype)
+					&& this.mtype.equals(model.mtype)) {
 				return true;
 			}
 		}
@@ -120,6 +135,8 @@ public class WuPropertyModel {
 		code = code * base + name.hashCode();
 		code = code * base + ptype.hashCode();
 		code = code * base + dtype.hashCode();
+		code = code * base + stype.hashCode();
+		code = code * base + mtype.hashCode();
 		code = code * base + type.hashCode();
 		return code;
 	}

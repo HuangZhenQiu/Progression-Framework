@@ -1,6 +1,5 @@
 package edu.uci.eecs.wukong.framework.buffer;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.TimerTask;
 import java.nio.ByteBuffer;
@@ -9,15 +8,13 @@ import org.apache.commons.lang.ArrayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import edu.uci.eecs.wukong.framework.model.NPP;
-
-public final class DoubleTimeIndexDataBuffer<T, E extends BufferUnit<T>> {
+public abstract class DoubleTimeIndexDataBuffer<T, E extends BufferUnit<T>> {
 	private static Logger logger = LoggerFactory.getLogger(DoubleTimeIndexDataBuffer.class);
-	private TimeIndexBuffer indexBuffer;
-	private DataRingBuffer<T, E> dataBuffer;
-	private BufferIndexer indexer;
-	private Class<E> type;
-	private NPP npp;
+	protected TimeIndexBuffer indexBuffer;
+	protected DataRingBuffer<T, E> dataBuffer;
+	protected BufferIndexer indexer;
+	protected Class<E> type;
+
 	
 	private class BufferIndexer extends TimerTask {
 		private DoubleTimeIndexDataBuffer<T, E> buffer;
@@ -33,23 +30,24 @@ public final class DoubleTimeIndexDataBuffer<T, E extends BufferUnit<T>> {
 		
 	}
 	
-	public DoubleTimeIndexDataBuffer(NPP npp, Class<E> type, int unitSize,
+	public DoubleTimeIndexDataBuffer(Class<E> type, int unitSize,
 			int dataCapacity, int timeUnits, int interval){
-		this.npp = npp;
 		this.type = type;
 		this.indexBuffer = new TimeIndexBuffer(timeUnits);
 		this.dataBuffer = new DataRingBuffer<T, E>(dataCapacity, unitSize, type);
 		this.indexer = new BufferIndexer(this);
 	}
 	
+	public abstract String getKey();
+	
 	public void addElement(long timestampe,  E value) {
 		this.dataBuffer.addElement(timestampe, value);
-		logger.debug("Data Buffer for " + npp + " Header: " + dataBuffer.getHeader() + " value added " + value);
+		logger.debug("Data Buffer for " + getKey() + " Header: " + dataBuffer.getHeader() + " value added " + value);
 	}
 	
 	public void addIndex() {
 		indexBuffer.appendIndex(dataBuffer.getHeader());
-		logger.debug("Index Buffer " + npp + " Header: " + indexBuffer.getHeader());
+		logger.debug("Index Buffer " + getKey() + " Header: " + indexBuffer.getHeader());
 	}
 	
 	/**
@@ -79,25 +77,8 @@ public final class DoubleTimeIndexDataBuffer<T, E extends BufferUnit<T>> {
 		return ByteBuffer.allocate(0);
 	}
 	
-	
-	public List<DataPoint<T>> readDataPoint(int units) {
-		ByteBuffer data = read(units);
-		int size = data.capacity() / dataBuffer.getUnitLength();
-		List<DataPoint<T>> points = new ArrayList<DataPoint<T>>();
-		while(size > 0) {
-			try {
-				BufferUnit<T> unit = (BufferUnit<T>)type.getConstructor().newInstance();
-				int timestamp = data.getInt();
-				unit.parse(data, false);
-				points.add(new DataPoint<T>(npp, timestamp, unit.getValue()));
-			} catch (Exception e) {
-				
-			}
-			size --;
-		}
-		
-		return points;
-	}
+	public abstract List<DataPoint<T>> readDataPoint(int units);
+
 	
 	public BufferIndexer getIndexer() {
 		return this.indexer;

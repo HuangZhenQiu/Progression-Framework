@@ -13,9 +13,9 @@ import edu.uci.eecs.wukong.framework.model.WKPFMessageType;
  * 
  */
 public class GlobalChannel<T> extends Channel<T>{
-	private byte type;
+	private WKPFMessageType type;
 	
-	public GlobalChannel(byte messageType) {
+	public GlobalChannel(WKPFMessageType messageType) {
 		this.type = messageType;
 	}
 

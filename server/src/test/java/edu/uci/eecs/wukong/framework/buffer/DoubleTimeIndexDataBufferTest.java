@@ -13,8 +13,8 @@ public class DoubleTimeIndexDataBufferTest extends TestCase{
 	
 	@Test
 	public void testDoubleTimeIndexDataBuffer() {
-		DoubleTimeIndexDataBuffer<Short, ShortUnit> buffer =
-				new DoubleTimeIndexDataBuffer<Short, ShortUnit>(new NPP(1, (byte)1, (byte)1), ShortUnit.class, 2, 1000, 60, 3);
+		BasicDoubleTimeIndexDataBuffer<Short, ShortUnit> buffer =
+				new BasicDoubleTimeIndexDataBuffer<Short, ShortUnit>(new NPP(1, (byte)1, (byte)1), ShortUnit.class, 2, 1000, 60, 3);
 		for(int i=0; i< 60; i++) {
 			buffer.addElement(100000 + 3 * i, new ShortUnit(new Integer(i).shortValue()));
 			buffer.addElement(100000 + 3 * i + 1, new ShortUnit(new Integer(i + 1).shortValue()));

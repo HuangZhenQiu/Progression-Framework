@@ -20,6 +20,10 @@ public class SensorData {
 		this.value = value;
 	}
 	
+	public NPP getNPP() {
+		return new NPP(nodeId, propertyId, portId);
+	}
+	
 	public int getNodeId() {
 		return nodeId;
 	}

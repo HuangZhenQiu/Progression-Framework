@@ -288,6 +288,7 @@ public class PrClassManager implements PrClassInitListener {
 			bufferManager.bind(model);
 			bindSimplePrClassTimer((SimplePrClass)model.getPrClass());
 		} else if (model.getType().getType().equals(PrClass.PrClassType.SYSTEM_PRCLASS)) {
+			bufferManager.bind(model);
 			pipeline.registerExtension(model);
 			LOGGER.info("Finished bind system prclass.");
 		}

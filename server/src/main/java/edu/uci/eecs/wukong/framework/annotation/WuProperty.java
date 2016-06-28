@@ -7,6 +7,7 @@ import java.lang.annotation.Target;
 
 import edu.uci.eecs.wukong.framework.model.PropertyType;
 import edu.uci.eecs.wukong.framework.model.SensorType;
+import edu.uci.eecs.wukong.framework.model.WKPFMessageType;
 import edu.uci.eecs.wukong.framework.model.DataType;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
@@ -23,6 +24,9 @@ public @interface WuProperty {
 	
 	// Define the data type of the input property, either buffer or channel
 	DataType dtype() default DataType.Channel;
+	
+	// Define the message type of the input global channel, only used when data type is global channel
+	WKPFMessageType mType() default WKPFMessageType.GetDeviceStatusReturn;
 	
 	// Define the category of sensor, only used when data type is SystemBuffer
 	SensorType stype() default SensorType.Default;

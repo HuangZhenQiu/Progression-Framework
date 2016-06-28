@@ -6,6 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import edu.uci.eecs.wukong.framework.model.PropertyType;
+import edu.uci.eecs.wukong.framework.model.SensorType;
 import edu.uci.eecs.wukong.framework.model.DataType;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
@@ -22,6 +23,9 @@ public @interface WuProperty {
 	
 	// Define the data type of the input property, either buffer or channel
 	DataType dtype() default DataType.Channel;
+	
+	// Define the category of sensor, only used when data type is SystemBuffer
+	SensorType stype() default SensorType.Default;
 	
 	// Defines the size of buffer, only used for buffer typed input property
 	int capacity() default 1000;

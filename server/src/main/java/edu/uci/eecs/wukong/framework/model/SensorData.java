@@ -13,6 +13,13 @@ public class SensorData {
 	private byte portId;
 	private short value;
 	
+	public SensorData(int nodeId, byte propertyId, byte portId, short value) {
+		this.nodeId = nodeId;
+		this.propertyId = propertyId;
+		this.portId = portId;
+		this.value = value;
+	}
+	
 	public int getNodeId() {
 		return nodeId;
 	}

@@ -66,6 +66,7 @@ public class DataRingBuffer<T, E extends BufferUnit<T>> extends RingBuffer {
 		this.getByteFromPosition(bytes, totalBytes);
 		try {
 			for (int i = 0; i < size; i++) {
+				// We already escape the time stamp deviation here
 				byte[] data = Arrays.copyOfRange(bytes, 4 + i * elementLength, (i + 1) * elementLength);
 				BufferUnit<T> unit = type.getConstructor().newInstance();
 				unit.parse(ByteBuffer.wrap(data), false);

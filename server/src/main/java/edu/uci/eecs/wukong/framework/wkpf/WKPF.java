@@ -33,6 +33,7 @@ import edu.uci.eecs.wukong.framework.model.WuClassModel;
 import edu.uci.eecs.wukong.framework.model.WuObjectModel;
 import edu.uci.eecs.wukong.framework.model.WuPropertyModel;
 import edu.uci.eecs.wukong.framework.model.StateModel;
+import edu.uci.eecs.wukong.framework.model.WKPFMessageType;
 import edu.uci.eecs.wukong.framework.model.MonitorDataModel;
 import edu.uci.eecs.wukong.framework.prclass.PrClassInitListener;
 import edu.uci.eecs.wukong.framework.state.StateUpdateListener;
@@ -226,6 +227,43 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 		buffer.put(WKPFUtil.WKPF_GET_DEVICE_STATUS);
 		buffer.put((byte) (this.sequence % 256));
 		buffer.put((byte) (this.sequence / 256));
+		mptn.send(dest.intValue(), buffer.array());
+	}
+	
+	public void sendSetLock(Long dest, short linkId) {
+		this.sequence ++;
+		ByteBuffer buffer = ByteBuffer.allocate(10);
+		buffer.put(WKPFUtil.WKPF_SET_LOCK);
+		buffer.put((byte) (this.sequence % 256));
+		buffer.put((byte) (this.sequence / 256));
+		buffer.put((byte) (linkId % 256));
+		buffer.put((byte) (linkId / 256));
+		mptn.send(dest.intValue(), buffer.array());
+	}
+	
+	public void sendChangeLink(Long dest, short linkId, short componentId, short endpointId) {
+		this.sequence ++;
+		ByteBuffer buffer = ByteBuffer.allocate(14);
+		buffer.put(WKPFUtil.WKPF_CHANGE_LINK);
+		buffer.put((byte) (this.sequence % 256));
+		buffer.put((byte) (this.sequence / 256));
+		buffer.put((byte) (linkId % 256));
+		buffer.put((byte) (linkId / 256));
+		buffer.put((byte) (componentId % 256));
+		buffer.put((byte) (componentId / 256));
+		buffer.put((byte) (endpointId % 256));
+		buffer.put((byte) (endpointId / 256));
+		mptn.send(dest.intValue(), buffer.array());
+	}
+	
+	public void sendReleaseLock(Long dest, short linkId) {
+		this.sequence ++;
+		ByteBuffer buffer = ByteBuffer.allocate(10);
+		buffer.put(WKPFUtil.WKPF_RELEASE_LOCK);
+		buffer.put((byte) (this.sequence % 256));
+		buffer.put((byte) (this.sequence / 256));
+		buffer.put((byte) (linkId % 256));
+		buffer.put((byte) (linkId / 256));
 		mptn.send(dest.intValue(), buffer.array());
 	}
 	
@@ -729,6 +767,32 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 	public void onWKPFDeviceStatusReturn(long sourceId, byte[] message) {
 		byte status = message[3];
 		LOGGER.debug(String.format("Received status %d for device %d.", status, sourceId));
+		NPP npp = new NPP(sourceId, (byte)0, (byte)0);
+		bufferManager.addGlobalRealTimeData(npp, WKPFMessageType.GetDeviceStatusReturn, status);
+	}
+	
+	public void onWKPFSetLockReturn(long sourceId, byte[] message) {
+		short linkId = WKPFUtil.getBigEndianShort(message, 3);
+		byte status = message[5];
+		LOGGER.debug(String.format("Received set lock status %d for link %d.", status, linkId));
+		NPP npp = new NPP(sourceId, (byte)0, (byte)0);
+		bufferManager.addGlobalRealTimeData(npp, WKPFMessageType.SetLockReturn, status);
+	}
+	
+	public void onWKPFChangeLinkReturn(long sourceId, byte[] message) {
+		short linkId = WKPFUtil.getBigEndianShort(message, 3);
+		byte status = message[5];
+		LOGGER.debug(String.format("Received change link status %d for link %d.", status, linkId));
+		NPP npp = new NPP(sourceId, (byte)0, (byte)0);
+		bufferManager.addGlobalRealTimeData(npp, WKPFMessageType.ChangeLinkReturn, status);
+	}
+	
+	public void onWKPFReleaseLockReturn(long sourceId, byte[] message) {
+		short linkId = WKPFUtil.getBigEndianShort(message, 3);
+		byte status = message[5];
+		LOGGER.debug(String.format("Received release lock status %d for link %d.", status, linkId));
+		NPP npp = new NPP(sourceId, (byte)0, (byte)0);
+		bufferManager.addGlobalRealTimeData(npp, WKPFMessageType.ReleaseLockReturn, status);
 	}
 	
 	public int getNetworkId() {

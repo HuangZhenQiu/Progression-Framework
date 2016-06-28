@@ -16,9 +16,12 @@ import edu.uci.eecs.wukong.framework.api.metrics.Gauge;
 import edu.uci.eecs.wukong.framework.buffer.BufferUnits.ByteUnit;
 import edu.uci.eecs.wukong.framework.buffer.BufferUnits.ShortUnit;
 import edu.uci.eecs.wukong.framework.channel.BasicChannel;
+import edu.uci.eecs.wukong.framework.channel.GlobalChannel;
 import edu.uci.eecs.wukong.framework.model.DataType;
 import edu.uci.eecs.wukong.framework.model.NPP;
 import edu.uci.eecs.wukong.framework.model.PropertyType;
+import edu.uci.eecs.wukong.framework.model.SensorType;
+import edu.uci.eecs.wukong.framework.model.WKPFMessageType;
 import edu.uci.eecs.wukong.framework.model.WuClassModel;
 import edu.uci.eecs.wukong.framework.model.WuObjectModel;
 import edu.uci.eecs.wukong.framework.model.WuPropertyModel;
@@ -31,8 +34,12 @@ public class BufferManager {
 	private final static Logger LOGGER = LoggerFactory.getLogger(BufferManager.class);
 	// Map network port property to buffer
 	private Map<NPP, DoubleTimeIndexDataBuffer<?, ?>> bufferMap;
+	// Map sensor type to system buffers
+	private Map<SensorType, DoubleTimeIndexDataBuffer<?, ?>> systemBufferMap;
 	// Map network port property to channel
 	private Map<NPP, BasicChannel<?>> channelMap;
+	// Map WKPF Message Type to channel
+	private Map<WKPFMessageType, GlobalChannel<?>> globalChannelMap;
 	
 	// Timer to set index for buffer
 	private Timer timer;
@@ -46,7 +53,9 @@ public class BufferManager {
 	
 	public BufferManager(BufferMetrics metrics) {
 		this.bufferMap = new HashMap<NPP, DoubleTimeIndexDataBuffer<?, ?>>();
+		this.systemBufferMap = new HashMap<SensorType, DoubleTimeIndexDataBuffer<?, ?>>();
 		this.channelMap = new HashMap<NPP, BasicChannel<?>>();
+		this.globalChannelMap = new HashMap<WKPFMessageType, GlobalChannel<?>>();
 		this.timer = new Timer();
 		this.metrics = metrics;
 		this.timer.schedule(new BufferMetricsTask(), 0, 10 * 1000);
@@ -241,6 +250,17 @@ public class BufferManager {
 
 		BasicChannel<T> channel = (BasicChannel<T>)channelMap.get(key);
 		channel.append(value);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public <T> void addGlobalRealTimeData(NPP key, WKPFMessageType type, T value) {
+		if(!channelMap.containsKey(key)) {
+			LOGGER.error("Try to insert into a channel doesn't exist:" + key);
+			return;
+		}
+
+		GlobalChannel<T> channel = (GlobalChannel<T>)this.globalChannelMap.get(type);
+		channel.append(key, type, value);
 	}
 	
 	@SuppressWarnings("unchecked")

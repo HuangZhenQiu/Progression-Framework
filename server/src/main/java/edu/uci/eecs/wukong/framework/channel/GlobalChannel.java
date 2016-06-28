@@ -3,6 +3,7 @@ package edu.uci.eecs.wukong.framework.channel;
 import edu.uci.eecs.wukong.framework.api.Channelable;
 import edu.uci.eecs.wukong.framework.model.ChannelData;
 import edu.uci.eecs.wukong.framework.model.NPP;
+import edu.uci.eecs.wukong.framework.model.WKPFMessageType;
 
 /**
  * GlobalChannel is to receive real-time message of particular WKPF type
@@ -18,7 +19,7 @@ public class GlobalChannel<T> extends Channel<T>{
 		this.type = messageType;
 	}
 
-	public void append(NPP npp, T data) {
+	public void append(NPP npp, WKPFMessageType type, T data) {
 		ChannelData<T> channelData = new ChannelData<T>(npp, data);
 		for (Channelable<T> listener : listeners) {
 			listener.execute(channelData);

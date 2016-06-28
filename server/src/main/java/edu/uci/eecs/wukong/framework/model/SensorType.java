@@ -1,6 +1,8 @@
 package edu.uci.eecs.wukong.framework.model;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -30,10 +32,22 @@ public enum SensorType {
 	static {
 		wuClassMap.put(1001, LightSensor);
 		wuClassMap.put(1003, PIRSensor);
-		wuClassMap.put(1005, value)
+		wuClassMap.put(1013, TemperatureSensor);
+		wuClassMap.put(1005, HumiditySensor);
+		wuClassMap.put(1007, MagneticSensor);
+		wuClassMap.put(1008, PressureSensor);
+		wuClassMap.put(1009, GhSensor);
+		wuClassMap.put(1010, IrSensor);
+		wuClassMap.put(1011, UltrasoundSensor);
+		wuClassMap.put(1014, SoundSensor);
+		wuClassMap.put(1015, TouchSensor);
 	}
 	
-	private SensorType lookUpSensorType(Integer wuClassId) {
+	public List<SensorType> getAllTypes() {
+		return new ArrayList(wuClassMap.values());
+	}
+	
+	public SensorType lookUpSensorType(Integer wuClassId) {
 		if (wuClassMap.containsKey(wuClassId)) {
 			return wuClassMap.get(wuClassId);
 		}

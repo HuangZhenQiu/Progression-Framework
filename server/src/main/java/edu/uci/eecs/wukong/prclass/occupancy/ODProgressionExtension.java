@@ -16,8 +16,8 @@ import edu.uci.eecs.wukong.prclass.occupancy.OccupancyDetection;
 
 import com.google.common.annotations.VisibleForTesting;
 
-public class ODProgressionExtension extends AbstractExecutionExtension
-	implements Executable, TimerExecutable {
+public class ODProgressionExtension extends AbstractExecutionExtension<OccupancyDetection>
+	implements Executable<Byte>, TimerExecutable {
 	private OccupancyDetection oc;
 	private RingBuffer buffer;
 	private PriorityQueue<DaySlots> queue;
@@ -52,7 +52,7 @@ public class ODProgressionExtension extends AbstractExecutionExtension
 	 * 
 	 */
 	@Override
-	public void execute(List data, ExecutionContext context) {
+	public void execute(List<Byte> data, ExecutionContext context) {
 		if (data != null && !data.isEmpty()) {
 			byte occupancy = (Byte) data.get(0);
 			buffer.appendByte(occupancy);
@@ -83,7 +83,10 @@ public class ODProgressionExtension extends AbstractExecutionExtension
 				DaySlots daySlots = new DaySlots(slots, distance);
 				queue.add(daySlots);
 			}
-			predict(slotsUtilNow + 1);
+			boolean occupancy = predict(slotsUtilNow + 1);
+			if (occupancy == false) {
+				// trigger re-mapping for user absent mode
+			}
 		}
 	}
 	

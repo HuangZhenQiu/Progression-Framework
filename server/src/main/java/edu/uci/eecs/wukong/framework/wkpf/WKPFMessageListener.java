@@ -27,4 +27,10 @@ public interface WKPFMessageListener {
 	public void onWKPFLinkCounterReturn(long sourceId, byte[] message);
 	
 	public void onWKPFDeviceStatusReturn(long sourceId, byte[] message);
+	
+	public void onWKPFSetLockReturn(long sourceId, byte[] message);
+	
+	public void onWKPFChangeLinkReturn(long sourceId, byte[] message);
+	
+	public void onWKPFReleaseLockReturn(long sourceId, byte[] message);
 }

@@ -17,7 +17,7 @@ import edu.uci.eecs.wukong.framework.model.PropertyType;
 import com.google.common.annotations.VisibleForTesting;
 @WuClass(id = 10113)
 public class OccupancyDetection extends AgentPrClass {
-	@WuProperty(name = "pir", id = 0, type = PropertyType.Input, dtype = DataType.Buffer)
+	@WuProperty(name = "pir", id = 0, type = PropertyType.Input, dtype = DataType.SystemBuffer)
 	private byte pir;
 	@WuProperty(name = "days", id = 1, type = PropertyType.Input, dtype = DataType.Init_Value)
 	private short days;

@@ -314,6 +314,10 @@ public class MPTN implements MPTNMessageListener{
 						fireWKPFOnGetLinkCounterReturn(wkpfPackage);
 						return WKPFUtil.WKPF_GET_LINK_COUNTER_R;
 					case WKPFUtil.WKPF_GET_DEVICE_STATUS_R & 0xFF:
+						fireWKPFOnGetDeviceStatusReturn(wkpfPackage);
+						return WKPFUtil.WKPF_GET_DEVICE_STATUS_R;
+					case WKPFUtil.WKPF_SET_LOCK_R:
+						
 						
 					default:
 						LOGGER.error("Received unpexcted WKPF message type " + wkpfPackage);
@@ -415,6 +419,27 @@ public class MPTN implements MPTNMessageListener{
 		LOGGER.debug("Received get device status message");
 		for (WKPFMessageListener listener : listeners) {
 			listener.onWKPFDeviceStatusReturn(message.getSourceAddress(), message.getPayload());
+		}
+	}
+	
+	private void fireWKPFOnSetLockReturn(WKPFPackage message) {
+		LOGGER.debug("Received set lock return message");
+		for (WKPFMessageListener listener : listeners) {
+			listener.onWKPFSetLockReturn(message.getSourceAddress(), message.getPayload());
+		}
+	}
+	
+	private void fireWKPFOnChangeLinkReturn(WKPFPackage message) {
+		LOGGER.debug("Received change link return");
+		for (WKPFMessageListener listener : listeners) {
+			listener.onWKPFChangeLinkReturn(message.getSourceAddress(), message.getPayload());
+		}
+	}
+	
+	private void fireWKPFOnReleaseLinkReturn(WKPFPackage message) {
+		LOGGER.debug("Received release lock return");
+		for (WKPFMessageListener listener : listeners) {
+			listener.onWKPFReleaseLockReturn(message.getSourceAddress(), message.getPayload());
 		}
 	}
 

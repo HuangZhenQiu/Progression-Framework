@@ -3,9 +3,9 @@ package edu.uci.eecs.wukong.framework.extension;
 import java.util.List;
 
 import edu.uci.eecs.wukong.framework.api.ExecutionContext;
-import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
+import edu.uci.eecs.wukong.framework.prclass.EdgePrClass;
 
-public abstract class LearningExtension<F extends Number, T extends PipelinePrClass> extends AbstractExtension<T> {
+public abstract class LearningExtension<F extends Number, T extends EdgePrClass> extends AbstractExtension<T> {
 	public static final String LEARNING_PREFIX = "learning";
 	private boolean ready;
 	

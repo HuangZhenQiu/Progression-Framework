@@ -8,19 +8,19 @@ import edu.uci.eecs.wukong.framework.annotation.WuProperty;
 import edu.uci.eecs.wukong.framework.model.PropertyType;
 import edu.uci.eecs.wukong.framework.model.DataType;
 import edu.uci.eecs.wukong.framework.api.Extension;
-import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
+import edu.uci.eecs.wukong.framework.prclass.EdgePrClass;
 import edu.uci.eecs.wukong.framework.prclass.PrClassMetrics;
 import edu.uci.eecs.wukong.framework.property.Activity;
 
 @WuClass(id = 10116)
-public class ActivityRecgonitionPrClass extends PipelinePrClass {
+public class ActivityRecgonitionEdgeClass extends EdgePrClass {
 
 	@WuProperty(id = 0, name = "input", type = PropertyType.Input, dtype = DataType.Buffer)
 	private Activity input;
 	@WuProperty(id = 1, name = "output", type = PropertyType.Output)
 	private short output;
 	
-	public ActivityRecgonitionPrClass(PrClassMetrics metrics) {
+	public ActivityRecgonitionEdgeClass(PrClassMetrics metrics) {
 		super("ActivityRecgonition", metrics);
 	}
 	

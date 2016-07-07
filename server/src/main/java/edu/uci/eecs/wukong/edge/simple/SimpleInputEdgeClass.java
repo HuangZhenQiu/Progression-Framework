@@ -12,12 +12,12 @@ import edu.uci.eecs.wukong.framework.prclass.PrClassMetrics;
 import edu.uci.eecs.wukong.framework.prclass.SimplePrClass;
 
 @WuClass(id = 10114)
-public class SimpleInputPrClass extends SimplePrClass {
-	private final static Logger LOGGER = LoggerFactory.getLogger(SimpleInputPrClass.class);
+public class SimpleInputEdgeClass extends SimplePrClass {
+	private final static Logger LOGGER = LoggerFactory.getLogger(SimpleInputEdgeClass.class);
 	@WuProperty(id = 0, name="input", type = PropertyType.Input, dtype = DataType.Channel)
 	private short input;
 	
-	public SimpleInputPrClass(PrClassMetrics metrics) {
+	public SimpleInputEdgeClass(PrClassMetrics metrics) {
 		super("SimpleInputPrClass", metrics);
 		// TODO Auto-generated constructor stub
 	}

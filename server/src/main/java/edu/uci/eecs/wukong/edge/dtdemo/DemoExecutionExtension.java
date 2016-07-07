@@ -9,10 +9,10 @@ import edu.uci.eecs.wukong.framework.extension.ExecutionExtension;
 import edu.uci.eecs.wukong.framework.factor.BaseFactor;
 
 
-public class DemoExecutionExtension extends ExecutionExtension<DemoFeatureEntity, DemoPrClass> {
+public class DemoExecutionExtension extends ExecutionExtension<DemoFeatureEntity, DemoEdgeClass> {
 	private M5P model;
 	
-	public DemoExecutionExtension(DemoPrClass plugin) {
+	public DemoExecutionExtension(DemoEdgeClass plugin) {
 		super(plugin);
 	}
 	

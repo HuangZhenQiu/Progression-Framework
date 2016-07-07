@@ -17,14 +17,14 @@ import edu.uci.eecs.wukong.framework.property.Response;
 import edu.uci.eecs.wukong.framework.localization.ParticleFilter;
 import edu.uci.eecs.wukong.framework.localization.Map;
 
-public class LocalizationExecutionExtension extends AbstractExecutionExtension<LocalizationPrClass> implements
+public class LocalizationExecutionExtension extends AbstractExecutionExtension<LocalizationEdgeClass> implements
 	Channelable<Location>, FactorExecutable, Initiable {
 	private final static Logger LOGGER = LoggerFactory.getLogger(LocalizationExecutionExtension.class);
 	private ParticleFilter filter;
 	private Map map;
 	private boolean inited = false;
 	
-	public LocalizationExecutionExtension(LocalizationPrClass plugin) {
+	public LocalizationExecutionExtension(LocalizationEdgeClass plugin) {
 		super(plugin);
 
 	}

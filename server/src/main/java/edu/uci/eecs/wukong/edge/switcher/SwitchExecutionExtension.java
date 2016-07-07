@@ -12,7 +12,7 @@ import edu.uci.eecs.wukong.framework.extension.AbstractExecutionExtension;
 import edu.uci.eecs.wukong.framework.factor.BaseFactor;
 import edu.uci.eecs.wukong.framework.factor.UserFactor;
 import edu.uci.eecs.wukong.framework.model.ChannelData;
-import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
+import edu.uci.eecs.wukong.framework.prclass.EdgePrClass;
 
 public class SwitchExecutionExtension extends AbstractExecutionExtension
 	implements FactorExecutable, Channelable {
@@ -20,7 +20,7 @@ public class SwitchExecutionExtension extends AbstractExecutionExtension
 	// User ID to threshold Map
 	private Map<String, Double> userThresholdMap;
 	
-	public SwitchExecutionExtension(PipelinePrClass plugin){
+	public SwitchExecutionExtension(EdgePrClass plugin){
 		super(plugin);
 		this.userThresholdMap = new HashMap<String, Double>();
 		//Add predefined rules map here.
@@ -39,7 +39,7 @@ public class SwitchExecutionExtension extends AbstractExecutionExtension
 			UserFactor userContext = (UserFactor)context;
 			Double threshold = userThresholdMap.get(userContext.getUid());
 			if(threshold != null) {	
-				SwitchPrClass plugin =  (SwitchPrClass)this.getPrClass();
+				SwitchEdgeClass plugin =  (SwitchEdgeClass)this.getPrClass();
 				plugin.setThreshold(threshold);
 			}
 		}

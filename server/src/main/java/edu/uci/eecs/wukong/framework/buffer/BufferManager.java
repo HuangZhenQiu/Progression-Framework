@@ -26,7 +26,7 @@ import edu.uci.eecs.wukong.framework.model.WuClassModel;
 import edu.uci.eecs.wukong.framework.model.WuObjectModel;
 import edu.uci.eecs.wukong.framework.model.WuPropertyModel;
 import edu.uci.eecs.wukong.framework.mptn.MPTN;
-import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
+import edu.uci.eecs.wukong.framework.prclass.EdgePrClass;
 import edu.uci.eecs.wukong.framework.prclass.PrClass;
 
 import com.google.common.annotations.VisibleForTesting;
@@ -151,7 +151,7 @@ public class BufferManager {
 		if (model.isValid()) {
 			WuClassModel classModel = model.getType();
 			if (classModel.getType().equals(PrClass.PrClassType.PIPELINE_PRCLASS)) {
-				PipelinePrClass prClass =  (PipelinePrClass) model.getPrClass();
+				EdgePrClass prClass =  (EdgePrClass) model.getPrClass();
 				for (WuPropertyModel property : classModel.getProperties()) {
 					NPP npp = new NPP(mptn.getLongAddress(), model.getPort(), property.getId());
 					if (property.getPtype().equals(PropertyType.Input)

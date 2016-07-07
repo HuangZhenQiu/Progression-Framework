@@ -79,7 +79,7 @@ public abstract class PrClass {
 	}
 	
 	public boolean isInitialized() {
-		Annotation[] annotations = PipelinePrClass.class.getAnnotations();
+		Annotation[] annotations = EdgePrClass.class.getAnnotations();
 		for (Annotation annotation : annotations) {
 			if (annotation.annotationType().equals(WuProperty.class)) {
 				WuProperty wuProperty = (WuProperty) annotation;

@@ -7,9 +7,9 @@ import edu.uci.eecs.wukong.framework.extension.FeatureExtractionExtension;
 import edu.uci.eecs.wukong.framework.operator.Operator;
 import edu.uci.eecs.wukong.framework.operator.timeseries.RelativeIntensiveRatioOperator;
 
-public class EEGFeatureExtractionExtension extends FeatureExtractionExtension<EEGPrClass> {
+public class EEGFeatureExtractionExtension extends FeatureExtractionExtension<EEGEdgeClass> {
 
-	public EEGFeatureExtractionExtension(EEGPrClass plugin) {
+	public EEGFeatureExtractionExtension(EEGEdgeClass plugin) {
 		super(plugin);
 	}
 

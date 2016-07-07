@@ -6,13 +6,13 @@ import org.slf4j.LoggerFactory;
 import edu.uci.eecs.wukong.framework.entity.FeatureEntity;
 import edu.uci.eecs.wukong.framework.extension.FeatureExtractionExtension;
 import edu.uci.eecs.wukong.framework.graph.ExtensionPoint;
-import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
+import edu.uci.eecs.wukong.framework.prclass.EdgePrClass;
 import edu.uci.eecs.wukong.framework.util.Configuration;
 import edu.uci.eecs.wukong.framework.select.FeatureChoosers;
 
 import java.util.List;
 
-public class FeatureExtractionExtensionPoint extends ExtensionPoint<FeatureExtractionExtension<? extends PipelinePrClass>> {
+public class FeatureExtractionExtensionPoint extends ExtensionPoint<FeatureExtractionExtension<? extends EdgePrClass>> {
 	private static Logger logger = LoggerFactory.getLogger(ExecutionExtensionPoint.class);
 	private static Configuration configuration = Configuration.getInstance();
 	private FeatureChoosers featureChoosers; 
@@ -23,7 +23,7 @@ public class FeatureExtractionExtensionPoint extends ExtensionPoint<FeatureExtra
 	}
 
 	@Override
-	public synchronized void register(FeatureExtractionExtension<? extends PipelinePrClass> extension) {
+	public synchronized void register(FeatureExtractionExtension<? extends EdgePrClass> extension) {
 		super.register(extension);
 		featureChoosers.addFeatureExtractionExtenshion(extension);
 		logger.info("Add Feature Extraction Extension for " + extension.getPrClass());
@@ -35,7 +35,7 @@ public class FeatureExtractionExtensionPoint extends ExtensionPoint<FeatureExtra
 		while(true) {
 			try {
 				Thread.sleep(1000);
-				for (PipelinePrClass prClass : this.extensionMap.keySet()) {
+				for (EdgePrClass prClass : this.extensionMap.keySet()) {
 					List<Object> result = featureChoosers.choose(prClass);
 					FeatureEntity<Object> entity = new FeatureEntity<Object>(prClass);
 					entity.addFeatures(result);

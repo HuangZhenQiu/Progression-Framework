@@ -20,26 +20,26 @@ import edu.uci.eecs.wukong.framework.extension.AbstractExecutionExtension;
 import edu.uci.eecs.wukong.framework.factor.BaseFactor;
 import edu.uci.eecs.wukong.framework.factor.FactorListener;
 import edu.uci.eecs.wukong.framework.graph.ExtensionPoint;
-import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
+import edu.uci.eecs.wukong.framework.prclass.EdgePrClass;
 import edu.uci.eecs.wukong.framework.util.Configuration;
 import edu.uci.eecs.wukong.framework.util.PipelineUtil;
 
-public class ExecutionExtensionPoint extends ExtensionPoint<AbstractExecutionExtension<? extends PipelinePrClass>>
+public class ExecutionExtensionPoint extends ExtensionPoint<AbstractExecutionExtension<? extends EdgePrClass>>
 	implements FactorListener, Runnable {
 	private static Logger logger = LoggerFactory.getLogger(ExecutionExtensionPoint.class);
 	private static Configuration configuration = Configuration.getInstance();
-	private Map<PipelinePrClass, TimerTask> pluginTaskMap;
+	private Map<EdgePrClass, TimerTask> pluginTaskMap;
 	private Timer timer;
 
 	
 	public ExecutionExtensionPoint(Pipeline pipeline) {
 		super(pipeline);
-		this.pluginTaskMap = new HashMap<PipelinePrClass, TimerTask>();
+		this.pluginTaskMap = new HashMap<EdgePrClass, TimerTask>();
 		this.timer = new Timer(true);
 	}
 	
 	@Override
-	public synchronized void register(AbstractExecutionExtension<? extends PipelinePrClass> extension) {
+	public synchronized void register(AbstractExecutionExtension<? extends EdgePrClass> extension) {
 		super.register(extension);
 		if (extension instanceof TimerExecutable) {
 			TimerExecutable executable = (TimerExecutable) extension;
@@ -57,7 +57,7 @@ public class ExecutionExtensionPoint extends ExtensionPoint<AbstractExecutionExt
 	}
 	
 	@Override
-	public synchronized void unregister(AbstractExecutionExtension<? extends PipelinePrClass> extension) {
+	public synchronized void unregister(AbstractExecutionExtension<? extends EdgePrClass> extension) {
 		super.unregister(extension);
 		// Cancel the timer taks for the plugin
 		pluginTaskMap.get(extension.getPrClass()).cancel();
@@ -83,7 +83,7 @@ public class ExecutionExtensionPoint extends ExtensionPoint<AbstractExecutionExt
 	private class FactorTask implements Runnable{
 		private AbstractExecutionExtension extension;
 		private BaseFactor currentContext;
-		public FactorTask(AbstractExecutionExtension<? extends PipelinePrClass> extension, BaseFactor context) {
+		public FactorTask(AbstractExecutionExtension<? extends EdgePrClass> extension, BaseFactor context) {
 			this.extension = extension;
 			this.currentContext = context;
 		}
@@ -111,9 +111,9 @@ public class ExecutionExtensionPoint extends ExtensionPoint<AbstractExecutionExt
 					BaseFactor factor = (BaseFactor)event.getData();
 					if(factor != null) {
 						logger.info("Execution Extension Point is polling new context:" + factor.toString());
-						for(Map.Entry<PipelinePrClass, AbstractExtension<? extends PipelinePrClass>> entry : this.extensionMap.entrySet()) {
-							AbstractExecutionExtension<? extends PipelinePrClass> extension =
-									(AbstractExecutionExtension<? extends PipelinePrClass>) entry.getValue();
+						for(Map.Entry<EdgePrClass, AbstractExtension<? extends EdgePrClass>> entry : this.extensionMap.entrySet()) {
+							AbstractExecutionExtension<? extends EdgePrClass> extension =
+									(AbstractExecutionExtension<? extends EdgePrClass>) entry.getValue();
 							if (extension instanceof FactorExecutable) {
 								if (extension.isSubcribedTopic(factor.getTopicId())) {
 									this.executor.execute(new FactorTask(extension, factor));
@@ -123,8 +123,8 @@ public class ExecutionExtensionPoint extends ExtensionPoint<AbstractExecutionExt
 					}
 				} else if (event.getType().equals(Event.EventType.MODEL)) {
 					ModelEntity modelEntity = (ModelEntity) event.getData();
-					AbstractExecutionExtension<? extends PipelinePrClass> extension =
-							(AbstractExecutionExtension<? extends PipelinePrClass>) this.extensionMap.get(modelEntity.getPrClass());
+					AbstractExecutionExtension<? extends EdgePrClass> extension =
+							(AbstractExecutionExtension<? extends EdgePrClass>) this.extensionMap.get(modelEntity.getPrClass());
 					if (extension != null && extension instanceof Activatable) {
 						((Activatable)extension).activate(modelEntity.getModel());
 						extension.getPrClass().setOnline(true);
@@ -133,8 +133,8 @@ public class ExecutionExtensionPoint extends ExtensionPoint<AbstractExecutionExt
 					}
 				} else if (event.getType().equals(Event.EventType.FEATURE)) {
 					FeatureEntity featureEntity = (FeatureEntity) event.getData();
-					AbstractExecutionExtension<? extends PipelinePrClass> extension =
-							(AbstractExecutionExtension<? extends PipelinePrClass>) this.extensionMap.get(featureEntity.getPrClass());
+					AbstractExecutionExtension<? extends EdgePrClass> extension =
+							(AbstractExecutionExtension<? extends EdgePrClass>) this.extensionMap.get(featureEntity.getPrClass());
 					if (extension != null && extension instanceof Executable) {
 						((Executable)extension).execute(featureEntity.getFeatures(), this.pipeline.getCurrentContext(featureEntity.getPrClass()));
 					} else {

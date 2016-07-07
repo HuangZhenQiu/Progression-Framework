@@ -9,11 +9,11 @@ import edu.uci.eecs.wukong.framework.annotation.WuProperty;
 import edu.uci.eecs.wukong.framework.api.Extension;
 import edu.uci.eecs.wukong.framework.model.DataType;
 import edu.uci.eecs.wukong.framework.model.PropertyType;
-import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
+import edu.uci.eecs.wukong.framework.prclass.EdgePrClass;
 import edu.uci.eecs.wukong.framework.prclass.PrClassMetrics;
 
 @WuClass(id = 10003)
-public class ICSDemoPrClass extends PipelinePrClass {
+public class ICSDemoEdgeClass extends EdgePrClass {
 	
 	@WuProperty(name = "uid", id = 0, type = PropertyType.Input, dtype = DataType.Channel)
 	private short uid;
@@ -25,7 +25,7 @@ public class ICSDemoPrClass extends PipelinePrClass {
 	private short light;
 	
 
-	public ICSDemoPrClass(PrClassMetrics metrics) {
+	public ICSDemoEdgeClass(PrClassMetrics metrics) {
 		super("ICSDemoPrClass", metrics);
 		// TODO Auto-generated constructor stub
 	}

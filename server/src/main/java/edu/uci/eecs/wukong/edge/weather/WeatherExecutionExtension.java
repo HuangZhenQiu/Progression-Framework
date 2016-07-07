@@ -9,9 +9,9 @@ import edu.uci.eecs.wukong.framework.util.Configuration;
 
 public class WeatherExecutionExtension extends AbstractExecutionExtension implements Initiable, TimerExecutable {
 	private WeatherService service;
-	private WeatherPrClass prClass;
+	private WeatherEdgeClass prClass;
 	
-	public WeatherExecutionExtension (WeatherPrClass prClass) {
+	public WeatherExecutionExtension (WeatherEdgeClass prClass) {
 		super(prClass);
 		this.prClass = prClass;
 	}

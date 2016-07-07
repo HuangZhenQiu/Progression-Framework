@@ -5,12 +5,12 @@ import java.util.List;
 
 import edu.uci.eecs.wukong.framework.extension.FeatureExtractionExtension;
 import edu.uci.eecs.wukong.framework.operator.Operator;
-import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
+import edu.uci.eecs.wukong.framework.prclass.EdgePrClass;
 
 public class DemoFeatureExtension extends FeatureExtractionExtension {
 
 	
-	public DemoFeatureExtension(PipelinePrClass plugin) {
+	public DemoFeatureExtension(EdgePrClass plugin) {
 		super(plugin);
 		// TODO Auto-generated constructor stub
 	}

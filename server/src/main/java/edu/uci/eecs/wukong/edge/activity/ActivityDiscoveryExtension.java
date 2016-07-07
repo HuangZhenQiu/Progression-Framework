@@ -5,9 +5,9 @@ import java.util.List;
 import edu.uci.eecs.wukong.framework.api.ExecutionContext;
 import edu.uci.eecs.wukong.framework.extension.LearningExtension;
 
-public class ActivityDiscoveryExtension extends LearningExtension<Double, ActivityRecgonitionPrClass> {
+public class ActivityDiscoveryExtension extends LearningExtension<Double, ActivityRecgonitionEdgeClass> {
 
-	public ActivityDiscoveryExtension(ActivityRecgonitionPrClass plugin) {
+	public ActivityDiscoveryExtension(ActivityRecgonitionEdgeClass plugin) {
 		super(plugin);
 		// TODO Auto-generated constructor stub
 	}

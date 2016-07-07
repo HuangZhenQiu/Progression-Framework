@@ -8,7 +8,7 @@ import org.apache.commons.lang.ArrayUtils;
 
 import java.awt.geom.Point2D;
 
-public class ICSDemoHuePrClass {
+public class ICSDemoHueEdgeClass {
 	
 	private short hue;
 	private short saturation;
@@ -29,12 +29,12 @@ public class ICSDemoHuePrClass {
 		};
 
 	
-	public ICSDemoHuePrClass() {
+	public ICSDemoHueEdgeClass() {
 //		super("ICSDemoHuePrClass");
 		// TODO Auto-generated constructor stub
 	}
 
-	public ICSDemoHuePrClass(String name, String modelID) {
+	public ICSDemoHueEdgeClass(String name, String modelID) {
 //		super(name);
 		switch(modelID){
 			case "LCT001":

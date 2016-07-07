@@ -43,7 +43,7 @@ public class PrClassPropertyMonitor {
 		}
 	}
 	
-	public void remove(PipelinePrClass plugin) {
+	public void remove(EdgePrClass plugin) {
 		monitoredProperties.remove(plugin);
 	}
 }

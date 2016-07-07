@@ -35,7 +35,7 @@ import edu.uci.eecs.wukong.framework.factor.BaseFactor;
 import edu.uci.eecs.wukong.framework.util.Configuration;
 import edu.uci.eecs.wukong.framework.reconfig.ConfigurationManager.ConfigurationType;
 
-public class DemoExecutionExtension extends ExecutionExtension<FeatureEntity, DemoPrClass> {
+public class DemoExecutionExtension extends ExecutionExtension<FeatureEntity, DemoEdgeClass> {
 	private static Logger logger = LoggerFactory.getLogger(DemoExecutionExtension.class);
 	private static Configuration configuration = Configuration.getInstance();
 	private static String KICHEN_SLIDER_COMPONENT_ID = configuration.getKichenSliderId(); // 3, 4, 5
@@ -49,7 +49,7 @@ public class DemoExecutionExtension extends ExecutionExtension<FeatureEntity, De
 	private DemoFactor lastContext = null;
 	private static long lastTime = 0;
 	
-	public DemoExecutionExtension(DemoPrClass plugin) {
+	public DemoExecutionExtension(DemoEdgeClass plugin) {
 		super(plugin);
 	}
 

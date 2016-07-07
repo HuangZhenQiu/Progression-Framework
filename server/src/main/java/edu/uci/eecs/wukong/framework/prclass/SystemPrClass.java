@@ -1,6 +1,8 @@
 package edu.uci.eecs.wukong.framework.prclass;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import edu.uci.eecs.wukong.framework.model.Component;
 import edu.uci.eecs.wukong.framework.model.ComponentMap;
@@ -8,7 +10,6 @@ import edu.uci.eecs.wukong.framework.model.InitValueTable;
 import edu.uci.eecs.wukong.framework.model.Link;
 import edu.uci.eecs.wukong.framework.model.LinkTable;
 import edu.uci.eecs.wukong.framework.wkpf.RemoteProgrammingListener;
-import edu.uci.eecs.wukong.framework.wkpf.WKPF;
 
 /**
  * SystemPrClass provides an interface for managing FBP with monitoring capability.
@@ -16,7 +17,7 @@ import edu.uci.eecs.wukong.framework.wkpf.WKPF;
  * @author peter huang
  * 
  */
-public abstract class SystemPrClass extends PipelinePrClass implements RemoteProgrammingListener  {
+public abstract class SystemPrClass extends EdgePrClass implements RemoteProgrammingListener  {
 	protected boolean enabled;
 	protected String appId;
 	protected LinkTable linkTable;
@@ -39,6 +40,15 @@ public abstract class SystemPrClass extends PipelinePrClass implements RemotePro
 	
 	public Iterator<Link> getLinkIterator() {
 		return this.linkTable.getLinkIterator();
+	}
+	
+	public List<Long> getAllComponentAddress() {
+		List<Long> addresses = new ArrayList<Long> ();
+		for (int i = 0; i < map.length(); i++){
+			addresses.add(getComponentAddress(i));
+		}
+		
+		return addresses;
 	}
 	
 	public Long getComponentAddress(int componentId) {

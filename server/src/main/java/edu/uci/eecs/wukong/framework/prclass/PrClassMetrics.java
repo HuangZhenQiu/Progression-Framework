@@ -29,8 +29,8 @@ public class PrClassMetrics extends MetricsHelper {
 			prClassTimers.put(timerName, newTimer(timerName));
 			String counterName = buildMetricsName(prClass, null, COUNTER);
 			prClassCounters.put(counterName, newCounter(counterName));
-		} else if (prClass instanceof PipelinePrClass) {
-			PipelinePrClass pipelinePrClass = (PipelinePrClass)prClass;
+		} else if (prClass instanceof EdgePrClass) {
+			EdgePrClass pipelinePrClass = (EdgePrClass)prClass;
 			if (pipelinePrClass.registerExtension() != null) {
 				for (Extension extension : pipelinePrClass.registerExtension()) {
 					String timerName = buildMetricsName(prClass, extension, TIMER);

@@ -21,20 +21,20 @@ import com.google.common.annotations.VisibleForTesting;
  * @author peterhuang
  *
  */
-public abstract class PipelinePrClass extends PrClass {
-	private final static Logger LOGGER = LoggerFactory.getLogger(PipelinePrClass.class);
+public abstract class EdgePrClass extends PrClass {
+	private final static Logger LOGGER = LoggerFactory.getLogger(EdgePrClass.class);
 	
 	@VisibleForTesting
-	public PipelinePrClass(String name, boolean isTest) {
+	public EdgePrClass(String name, boolean isTest) {
 		super(name);
 	}
 	
-	protected PipelinePrClass(String name, PrClassMetrics metrics) {
+	protected EdgePrClass(String name, PrClassMetrics metrics) {
 		super(name, false, false, PrClass.PrClassType.PIPELINE_PRCLASS, metrics);
 		
 	}
 	
-	protected PipelinePrClass(String name, PrClass.PrClassType type, PrClassMetrics metrics) {
+	protected EdgePrClass(String name, PrClass.PrClassType type, PrClassMetrics metrics) {
 		super(name, false, false, type, metrics);
 	}
 

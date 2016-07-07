@@ -8,13 +8,13 @@ import edu.uci.eecs.wukong.framework.annotation.WuProperty;
 import edu.uci.eecs.wukong.framework.api.Extension;
 import edu.uci.eecs.wukong.framework.model.DataType;
 import edu.uci.eecs.wukong.framework.model.PropertyType;
-import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
+import edu.uci.eecs.wukong.framework.prclass.EdgePrClass;
 import edu.uci.eecs.wukong.framework.prclass.PrClassMetrics;
 import edu.uci.eecs.wukong.framework.property.Location;
 import edu.uci.eecs.wukong.framework.property.Response;
 
 @WuClass(id = 10115)
-public class LocalizationPrClass extends PipelinePrClass{
+public class LocalizationEdgeClass extends EdgePrClass{
 	@WuProperty(id = 0, name = "signal", type = PropertyType.Input, dtype = DataType.Channel)
 	private Location signal;
 	@WuProperty(id = 1, name = "particleCount", type = PropertyType.Input, dtype = DataType.Init_Value)
@@ -31,7 +31,7 @@ public class LocalizationPrClass extends PipelinePrClass{
 	private Response output;
 	private double[] sensors = {1.0, 1.0, 1.0};
 	
-	public LocalizationPrClass(PrClassMetrics metrics) {
+	public LocalizationEdgeClass(PrClassMetrics metrics) {
 		super("LocalizationPrClass", metrics);
 	}
 

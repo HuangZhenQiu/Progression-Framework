@@ -17,14 +17,14 @@ import edu.uci.eecs.wukong.framework.operator.AbstractOperator;
 import edu.uci.eecs.wukong.framework.operator.AverageOperator;
 import edu.uci.eecs.wukong.framework.operator.basic.MaxOperator;
 import edu.uci.eecs.wukong.framework.operator.basic.MinOperator;
-import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
+import edu.uci.eecs.wukong.framework.prclass.EdgePrClass;
 
 import junit.framework.JUnit4TestAdapter;
 
 public class FeatureChooserTest {
 	private Map<AbstractOperator<?>, Map<NPP, Integer>> operators;
 	private BufferManager manager;
-	private PipelinePrClass prClass;
+	private EdgePrClass prClass;
 	private NPP nppA = new NPP(1l, (byte)1, (byte)1);
 	private NPP nppB = new NPP(2l, (byte)2, (byte)2);
 	private NPP nppC = new NPP(3l, (byte)3, (byte)3);
@@ -73,7 +73,7 @@ public class FeatureChooserTest {
 		operators.put(avrOperator, avrMap);
 		
 		manager = Mockito.mock(BufferManager.class);
-		prClass = Mockito.mock(PipelinePrClass.class);
+		prClass = Mockito.mock(EdgePrClass.class);
 	}
 	
 	@Test

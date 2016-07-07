@@ -5,7 +5,7 @@ import java.util.List;
 import edu.uci.eecs.wukong.framework.api.Extension;
 import edu.uci.eecs.wukong.framework.model.WuClassModel;
 import edu.uci.eecs.wukong.framework.prclass.PrClass;
-import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
+import edu.uci.eecs.wukong.framework.prclass.EdgePrClass;
 
 public class WuObjectModel {
 	private WuClassModel type;
@@ -14,8 +14,8 @@ public class WuObjectModel {
 	public WuObjectModel(WuClassModel type, PrClass prClass) {
 		this.prClass = prClass;
 		this.type = type;
-		if (prClass instanceof PipelinePrClass) {
-			this.extensions = ((PipelinePrClass) prClass).registerExtension();
+		if (prClass instanceof EdgePrClass) {
+			this.extensions = ((EdgePrClass) prClass).registerExtension();
 		}
 	}
 	

@@ -7,11 +7,11 @@ import edu.uci.eecs.wukong.framework.annotation.WuClass;
 import edu.uci.eecs.wukong.framework.annotation.WuProperty;
 import edu.uci.eecs.wukong.framework.api.Extension;
 import edu.uci.eecs.wukong.framework.model.PropertyType;
-import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
+import edu.uci.eecs.wukong.framework.prclass.EdgePrClass;
 import edu.uci.eecs.wukong.framework.prclass.PrClassMetrics;
 
 @WuClass(id = 9007)
-public class ICSDemoTVPrClass extends PipelinePrClass {
+public class ICSDemoTVEdgeClass extends EdgePrClass {
 
 	@WuProperty(name = "tv_onoff", id = 0, type = PropertyType.Output)
 	private short tv_onoff;
@@ -19,7 +19,7 @@ public class ICSDemoTVPrClass extends PipelinePrClass {
 	@WuProperty(name = "tv_mute", id = 1, type = PropertyType.Output)
 	private short tv_mute;
 	
-	public ICSDemoTVPrClass(PrClassMetrics metrics) {
+	public ICSDemoTVEdgeClass(PrClassMetrics metrics) {
 		super("ICSDemoTVPrClass", metrics);
 		// TODO Auto-generated constructor stub
 	}

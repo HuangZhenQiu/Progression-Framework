@@ -7,17 +7,17 @@ import edu.uci.eecs.wukong.framework.annotation.WuClass;
 import edu.uci.eecs.wukong.framework.annotation.WuProperty;
 import edu.uci.eecs.wukong.framework.api.Extension;
 import edu.uci.eecs.wukong.framework.model.PropertyType;
-import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
+import edu.uci.eecs.wukong.framework.prclass.EdgePrClass;
 import edu.uci.eecs.wukong.framework.prclass.PrClassMetrics;
 
-@WuClass(id = 9009)
-public class ICSDemoQPrClass extends PipelinePrClass {
+@WuClass(id = 9005)
+public class ICSDemoAromaEdgeClass extends EdgePrClass {
 
-	@WuProperty(name = "question", id = 0, type = PropertyType.Output)
-	private boolean question;
+	@WuProperty(name = "aroma_onoff", id = 0, type = PropertyType.Output)
+	private short aroma_onoff;
 	
-	public ICSDemoQPrClass(PrClassMetrics metrics) {
-		super("ICSDemoQPrClass", metrics);
+	public ICSDemoAromaEdgeClass(PrClassMetrics metrics) {
+		super("ICSDemoAromaPrClass", metrics);
 		// TODO Auto-generated constructor stub
 	}
 
@@ -35,13 +35,14 @@ public class ICSDemoQPrClass extends PipelinePrClass {
 		return topics;
 	}
 
-	public boolean getQuestion() {
-		return question;
+	public short getAromaOnOff() {
+		return aroma_onoff;
 	}
 
-	public void setQuestion(boolean question) {
-		this.support.firePropertyChange("question", this.question, question);
-		this.question = question;
+	public void setAromaOnOff(short aroma_onoff) {
+		if(aroma_onoff > 1 || aroma_onoff < 0) return;
+		this.support.firePropertyChange("aroma_onoff", this.aroma_onoff, aroma_onoff);
+		this.aroma_onoff = aroma_onoff;
 	}
 
 }

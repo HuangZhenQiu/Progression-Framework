@@ -7,7 +7,7 @@ import edu.uci.eecs.wukong.framework.operator.SimoOperator;
 import edu.uci.eecs.wukong.framework.operator.AbstractOperator;
 import edu.uci.eecs.wukong.framework.operator.MimoOperator;
 import edu.uci.eecs.wukong.framework.operator.MisoOperator;
-import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
+import edu.uci.eecs.wukong.framework.prclass.EdgePrClass;
 import edu.uci.eecs.wukong.framework.model.NPP;
 
 import java.util.ArrayList;
@@ -24,11 +24,11 @@ import org.slf4j.LoggerFactory;
  */
 public class FeatureChooser {
 	private static Logger logger = LoggerFactory.getLogger(FeatureChooser.class);
-	private PipelinePrClass prClass;
+	private EdgePrClass prClass;
 	private BufferManager bufferManager;
 	private Map<AbstractOperator<?>, Map<NPP, Integer>> operaters;
 	
-	public FeatureChooser(PipelinePrClass prClass, BufferManager bufferManager, Map<AbstractOperator<?>, Map<NPP, Integer>>  operaters) {
+	public FeatureChooser(EdgePrClass prClass, BufferManager bufferManager, Map<AbstractOperator<?>, Map<NPP, Integer>>  operaters) {
 		this.bufferManager = bufferManager;
 		this.operaters = operaters;
 		this.prClass = prClass;

@@ -8,11 +8,11 @@ import edu.uci.eecs.wukong.framework.annotation.WuProperty;
 import edu.uci.eecs.wukong.framework.api.Extension;
 import edu.uci.eecs.wukong.framework.model.DataType;
 import edu.uci.eecs.wukong.framework.model.PropertyType;
-import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
+import edu.uci.eecs.wukong.framework.prclass.EdgePrClass;
 import edu.uci.eecs.wukong.framework.prclass.PrClassMetrics;;
 
 @WuClass(id = 10114)
-public class SmartHue extends PipelinePrClass {
+public class SmartHue extends EdgePrClass {
 	protected static String LOCATION_TOPIC = "location";
 	protected static String GESTURE_TOPIC = "gesture";
 	@WuProperty(name = "outdoorLightness", id = 0, type = PropertyType.Input, dtype = DataType.Buffer)

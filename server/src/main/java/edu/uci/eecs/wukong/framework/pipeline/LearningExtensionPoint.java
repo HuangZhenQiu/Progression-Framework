@@ -11,11 +11,11 @@ import edu.uci.eecs.wukong.framework.extension.LearningExtension;
 import edu.uci.eecs.wukong.framework.factor.BaseFactor;
 import edu.uci.eecs.wukong.framework.factor.FactorListener;
 import edu.uci.eecs.wukong.framework.graph.ExtensionPoint;
-import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
+import edu.uci.eecs.wukong.framework.prclass.EdgePrClass;
 import edu.uci.eecs.wukong.framework.util.Configuration;
 
 @SuppressWarnings("rawtypes")
-public class LearningExtensionPoint extends ExtensionPoint<LearningExtension<? extends Number, ? extends PipelinePrClass>>
+public class LearningExtensionPoint extends ExtensionPoint<LearningExtension<? extends Number, ? extends EdgePrClass>>
 	implements FactorListener, Runnable{
 	
 	private static Logger logger = LoggerFactory.getLogger(LearningExtensionPoint.class);
@@ -26,7 +26,7 @@ public class LearningExtensionPoint extends ExtensionPoint<LearningExtension<? e
 	}
 
 	private class LearningTask implements Runnable{
-		private LearningExtension<?, ? extends PipelinePrClass> extension;
+		private LearningExtension<?, ? extends EdgePrClass> extension;
 		private Event event;
 		private ExecutionContext contexts;
 		public LearningTask(LearningExtension extension, Event event, ExecutionContext context) {

@@ -25,7 +25,7 @@ import libsvm.svm_node;
  * @author peter
  *
  */
-public class EEGExecutionExtension extends AbstractExecutionExtension<EEGPrClass> implements
+public class EEGExecutionExtension extends AbstractExecutionExtension<EEGEdgeClass> implements
 	Executable<Number>, Initiable {
 	private static Configuration configuration = Configuration.getInstance();
 	private static Logger logger = LoggerFactory.getLogger(EEGExecutionExtension.class);
@@ -34,7 +34,7 @@ public class EEGExecutionExtension extends AbstractExecutionExtension<EEGPrClass
 	private svm_model model = null;
 	private double[] labelProbabilities = new double[2];
 
-	public EEGExecutionExtension(EEGPrClass plugin) {
+	public EEGExecutionExtension(EEGEdgeClass plugin) {
 		super(plugin);
 	}
 

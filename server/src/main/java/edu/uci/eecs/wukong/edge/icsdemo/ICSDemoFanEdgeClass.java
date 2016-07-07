@@ -7,11 +7,11 @@ import edu.uci.eecs.wukong.framework.annotation.WuClass;
 import edu.uci.eecs.wukong.framework.annotation.WuProperty;
 import edu.uci.eecs.wukong.framework.api.Extension;
 import edu.uci.eecs.wukong.framework.model.PropertyType;
-import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
+import edu.uci.eecs.wukong.framework.prclass.EdgePrClass;
 import edu.uci.eecs.wukong.framework.prclass.PrClassMetrics;
 
 @WuClass(id = 9004)
-public class ICSDemoFanPrClass extends PipelinePrClass {
+public class ICSDemoFanEdgeClass extends EdgePrClass {
 
 	@WuProperty(name = "fan_onoff", id = 0, type = PropertyType.Output)
 	private short fan_onoff;
@@ -20,7 +20,7 @@ public class ICSDemoFanPrClass extends PipelinePrClass {
 	@WuProperty(name = "fan_rotation", id = 2, type = PropertyType.Output)
 	private short fan_rotation;
 	
-	public ICSDemoFanPrClass(PrClassMetrics metrics) {
+	public ICSDemoFanEdgeClass(PrClassMetrics metrics) {
 		super("ICSDemoFanPrClass", metrics);
 		// TODO Auto-generated constructor stub
 	}

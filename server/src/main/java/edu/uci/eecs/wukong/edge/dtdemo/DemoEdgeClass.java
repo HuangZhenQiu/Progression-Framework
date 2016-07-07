@@ -3,12 +3,12 @@ package edu.uci.eecs.wukong.edge.dtdemo;
 import java.util.List;
 
 import edu.uci.eecs.wukong.framework.api.Extension;
-import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
+import edu.uci.eecs.wukong.framework.prclass.EdgePrClass;
 import edu.uci.eecs.wukong.framework.prclass.PrClassMetrics;
 
-public class DemoPrClass extends PipelinePrClass {
+public class DemoEdgeClass extends EdgePrClass {
 
-	protected DemoPrClass(PrClassMetrics metrics) {
+	protected DemoEdgeClass(PrClassMetrics metrics) {
 		super("DemoPrClass", metrics);
 	}
 

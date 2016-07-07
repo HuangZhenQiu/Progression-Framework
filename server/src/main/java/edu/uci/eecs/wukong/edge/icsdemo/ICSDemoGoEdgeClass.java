@@ -8,11 +8,11 @@ import edu.uci.eecs.wukong.framework.annotation.WuProperty;
 import edu.uci.eecs.wukong.framework.api.Extension;
 import edu.uci.eecs.wukong.framework.model.DataType;
 import edu.uci.eecs.wukong.framework.model.PropertyType;
-import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
+import edu.uci.eecs.wukong.framework.prclass.EdgePrClass;
 import edu.uci.eecs.wukong.framework.prclass.PrClassMetrics;
 
-@WuClass(id = 9001)
-public class ICSDemoBloomPrClass extends PipelinePrClass {
+@WuClass(id = 9002)
+public class ICSDemoGoEdgeClass extends EdgePrClass {
 	
 	@WuProperty(name = "hue", id = 0, type = PropertyType.Output, dtype = DataType.Short)
 	private short hue;
@@ -27,11 +27,11 @@ public class ICSDemoBloomPrClass extends PipelinePrClass {
 	@WuProperty(name = "on_off", id = 5, type = PropertyType.Output, dtype = DataType.Short)
 	private short on_off;
 	
-	private ICSDemoHuePrClass hueObj;
+	private ICSDemoHueEdgeClass hueObj;
 
-	public ICSDemoBloomPrClass(PrClassMetrics metrics) {
-		super("ICSDemoBloomPrClass", metrics);
-		hueObj = new ICSDemoHuePrClass("ICSDemoBloomPrClass", "LCT001");
+	public ICSDemoGoEdgeClass(PrClassMetrics metrics) {
+		super("ICSDemoGoPrClass", metrics);
+		hueObj = new ICSDemoHueEdgeClass("ICSDemoGoPrClass", "LLC020");
 		// TODO Auto-generated constructor stub
 	}
 	
@@ -118,3 +118,4 @@ public class ICSDemoBloomPrClass extends PipelinePrClass {
 		this.on_off = on_off;
 	}
 }
+

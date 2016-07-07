@@ -6,9 +6,9 @@ import java.util.ArrayList;
 import edu.uci.eecs.wukong.framework.operator.Operator;
 import edu.uci.eecs.wukong.framework.extension.FeatureExtractionExtension;
 
-public class ActivityFeatureExtractionExtension extends FeatureExtractionExtension<ActivityRecgonitionPrClass> {
+public class ActivityFeatureExtractionExtension extends FeatureExtractionExtension<ActivityRecgonitionEdgeClass> {
 
-	public ActivityFeatureExtractionExtension(ActivityRecgonitionPrClass plugin) {
+	public ActivityFeatureExtractionExtension(ActivityRecgonitionEdgeClass plugin) {
 		super(plugin);
 		// TODO Auto-generated constructor stub
 	}

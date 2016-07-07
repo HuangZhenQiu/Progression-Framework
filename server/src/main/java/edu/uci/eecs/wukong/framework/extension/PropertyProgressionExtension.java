@@ -6,10 +6,10 @@ import edu.uci.eecs.wukong.framework.api.Executable;
 import edu.uci.eecs.wukong.framework.api.ExecutionContext;
 import edu.uci.eecs.wukong.framework.api.TimerExecutable;
 import edu.uci.eecs.wukong.framework.factor.BaseFactor;
-import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
+import edu.uci.eecs.wukong.framework.prclass.EdgePrClass;
 
 import java.util.List;
-public abstract class PropertyProgressionExtension<T extends PipelinePrClass> extends AbstractExecutionExtension<T> 
+public abstract class PropertyProgressionExtension<T extends EdgePrClass> extends AbstractExecutionExtension<T> 
 	implements Activatable, Executable, FactorExecutable, TimerExecutable{
 	
 	public PropertyProgressionExtension(T plugin) {

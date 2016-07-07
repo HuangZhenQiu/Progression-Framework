@@ -11,17 +11,17 @@ import edu.uci.eecs.wukong.edge.icsdemo.ContextTable;
 import edu.uci.eecs.wukong.edge.icsdemo.PreferenceTable;
 import edu.uci.eecs.wukong.framework.api.Channelable;
 import edu.uci.eecs.wukong.framework.model.ChannelData;
-import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
+import edu.uci.eecs.wukong.framework.prclass.EdgePrClass;
 
-public class ContextExecutionExtension extends AbstractExecutionExtension<PipelinePrClass> implements FactorExecutable, Channelable<Short> {
+public class ContextExecutionExtension extends AbstractExecutionExtension<EdgePrClass> implements FactorExecutable, Channelable<Short> {
 	private static Logger logger = LoggerFactory.getLogger(ContextExecutionExtension.class);
 	private PreferenceTable preferenceTable = new PreferenceTable();
 	private ContextTable contextTable = new ContextTable();
 	private String currentContext = null;
 	private short currentUser = 0;
-	private PipelinePrClass icsDemoPlugin;
+	private EdgePrClass icsDemoPlugin;
 	
-	public ContextExecutionExtension(PipelinePrClass plugin) {
+	public ContextExecutionExtension(EdgePrClass plugin) {
 		super(plugin);
 		icsDemoPlugin = plugin;
 	}
@@ -34,52 +34,52 @@ public class ContextExecutionExtension extends AbstractExecutionExtension<Pipeli
 			icsContext = preferenceTable.lookup(icsContext);
 			logger.info("After lookup"+icsContext.getContext());
 
-			if (icsDemoPlugin instanceof ICSDemoFloorlampPrClass){
+			if (icsDemoPlugin instanceof ICSDemoFloorlampEdgeClass){
 				if(icsContext.Floorlamp == 1){
-					((ICSDemoFloorlampPrClass)icsDemoPlugin).setColorFromRGB(icsContext.Floorlamp_R, icsContext.Floorlamp_G, icsContext.Floorlamp_B);
-					((ICSDemoFloorlampPrClass)icsDemoPlugin).setBrightness(icsContext.Floorlamp_Lux);
+					((ICSDemoFloorlampEdgeClass)icsDemoPlugin).setColorFromRGB(icsContext.Floorlamp_R, icsContext.Floorlamp_G, icsContext.Floorlamp_B);
+					((ICSDemoFloorlampEdgeClass)icsDemoPlugin).setBrightness(icsContext.Floorlamp_Lux);
 				}
-				((ICSDemoFloorlampPrClass)icsDemoPlugin).setOnOff(icsContext.Floorlamp);
-			} else if (icsDemoPlugin instanceof ICSDemoGoPrClass){
+				((ICSDemoFloorlampEdgeClass)icsDemoPlugin).setOnOff(icsContext.Floorlamp);
+			} else if (icsDemoPlugin instanceof ICSDemoGoEdgeClass){
 				if(icsContext.Go == 1){
-					((ICSDemoGoPrClass)icsDemoPlugin).setColorFromRGB(icsContext.Go_R, icsContext.Go_G, icsContext.Go_B);
-					((ICSDemoGoPrClass)icsDemoPlugin).setBrightness(icsContext.Go_Lux);
+					((ICSDemoGoEdgeClass)icsDemoPlugin).setColorFromRGB(icsContext.Go_R, icsContext.Go_G, icsContext.Go_B);
+					((ICSDemoGoEdgeClass)icsDemoPlugin).setBrightness(icsContext.Go_Lux);
 				}
-				((ICSDemoGoPrClass)icsDemoPlugin).setOnOff(icsContext.Go);
-			} else if (icsDemoPlugin instanceof ICSDemoBloomPrClass){
+				((ICSDemoGoEdgeClass)icsDemoPlugin).setOnOff(icsContext.Go);
+			} else if (icsDemoPlugin instanceof ICSDemoBloomEdgeClass){
 				if(icsContext.Bloom == 1){
-					((ICSDemoBloomPrClass)icsDemoPlugin).setColorFromRGB(icsContext.Bloom_R, icsContext.Bloom_G, icsContext.Bloom_B);
-					((ICSDemoBloomPrClass)icsDemoPlugin).setBrightness(icsContext.Bloom_Lux);
+					((ICSDemoBloomEdgeClass)icsDemoPlugin).setColorFromRGB(icsContext.Bloom_R, icsContext.Bloom_G, icsContext.Bloom_B);
+					((ICSDemoBloomEdgeClass)icsDemoPlugin).setBrightness(icsContext.Bloom_Lux);
 				}
-				((ICSDemoBloomPrClass)icsDemoPlugin).setOnOff(icsContext.Bloom);
-			} else if (icsDemoPlugin instanceof ICSDemoStripPrClass){
+				((ICSDemoBloomEdgeClass)icsDemoPlugin).setOnOff(icsContext.Bloom);
+			} else if (icsDemoPlugin instanceof ICSDemoStripEdgeClass){
 				if(icsContext.Strip == 1){
-					((ICSDemoStripPrClass)icsDemoPlugin).setColorFromRGB(icsContext.Strip_R, icsContext.Strip_G, icsContext.Strip_B);
-					((ICSDemoStripPrClass)icsDemoPlugin).setBrightness(icsContext.Strip_Lux);
+					((ICSDemoStripEdgeClass)icsDemoPlugin).setColorFromRGB(icsContext.Strip_R, icsContext.Strip_G, icsContext.Strip_B);
+					((ICSDemoStripEdgeClass)icsDemoPlugin).setBrightness(icsContext.Strip_Lux);
 				}
-				((ICSDemoStripPrClass)icsDemoPlugin).setOnOff(icsContext.Strip);
-			} else if (icsDemoPlugin instanceof ICSDemoFanPrClass){
+				((ICSDemoStripEdgeClass)icsDemoPlugin).setOnOff(icsContext.Strip);
+			} else if (icsDemoPlugin instanceof ICSDemoFanEdgeClass){
 				if(icsContext.Fan == 1){
-					((ICSDemoFanPrClass)icsDemoPlugin).setFanSpeed(icsContext.Fan_Speed);
-					((ICSDemoFanPrClass)icsDemoPlugin).setFanRotation(icsContext.Fan_Rotate);
+					((ICSDemoFanEdgeClass)icsDemoPlugin).setFanSpeed(icsContext.Fan_Speed);
+					((ICSDemoFanEdgeClass)icsDemoPlugin).setFanRotation(icsContext.Fan_Rotate);
 				} 
-				((ICSDemoFanPrClass)icsDemoPlugin).setFanOnOff(icsContext.Fan);
-			} else if (icsDemoPlugin instanceof ICSDemoMusicPrClass){
+				((ICSDemoFanEdgeClass)icsDemoPlugin).setFanOnOff(icsContext.Fan);
+			} else if (icsDemoPlugin instanceof ICSDemoMusicEdgeClass){
 				if(icsContext.Music == 1){
-					((ICSDemoMusicPrClass)icsDemoPlugin).setMusicGenre(icsContext.Music_Type);
-					((ICSDemoMusicPrClass)icsDemoPlugin).setSpeakerVolume(icsContext.Music_Vol);
+					((ICSDemoMusicEdgeClass)icsDemoPlugin).setMusicGenre(icsContext.Music_Type);
+					((ICSDemoMusicEdgeClass)icsDemoPlugin).setSpeakerVolume(icsContext.Music_Vol);
 				}
-				((ICSDemoMusicPrClass)icsDemoPlugin).setSpeakerOnOff(icsContext.Fan);
-			} else if (icsDemoPlugin instanceof ICSDemoAromaPrClass){
-				((ICSDemoAromaPrClass)icsDemoPlugin).setAromaOnOff(icsContext.Mist);
-			} else if (icsDemoPlugin instanceof ICSDemoTVPrClass){
+				((ICSDemoMusicEdgeClass)icsDemoPlugin).setSpeakerOnOff(icsContext.Fan);
+			} else if (icsDemoPlugin instanceof ICSDemoAromaEdgeClass){
+				((ICSDemoAromaEdgeClass)icsDemoPlugin).setAromaOnOff(icsContext.Mist);
+			} else if (icsDemoPlugin instanceof ICSDemoTVEdgeClass){
 				if(icsContext.TV == 1){
-					((ICSDemoTVPrClass)icsDemoPlugin).setTVMute(icsContext.TV_Mute);
+					((ICSDemoTVEdgeClass)icsDemoPlugin).setTVMute(icsContext.TV_Mute);
 				}
-				((ICSDemoTVPrClass)icsDemoPlugin).setTVOnOff(icsContext.TV);
-			} else if (icsDemoPlugin instanceof ICSDemoQPrClass){
+				((ICSDemoTVEdgeClass)icsDemoPlugin).setTVOnOff(icsContext.TV);
+			} else if (icsDemoPlugin instanceof ICSDemoQEdgeClass){
 				if(icsContext.Command_Mode != 3){
-					((ICSDemoQPrClass)icsDemoPlugin).setQuestion(icsContext.isConflict());
+					((ICSDemoQEdgeClass)icsDemoPlugin).setQuestion(icsContext.isConflict());
 				}
 			} 
 		}

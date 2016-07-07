@@ -188,7 +188,7 @@ public class PrClassManager implements PrClassInitListener {
 			return null;
 		}
 		
-		if (PipelinePrClass.class.isAssignableFrom(c)
+		if (EdgePrClass.class.isAssignableFrom(c)
 				|| SimplePrClass.class.isAssignableFrom(c)
 				|| SystemPrClass.class.isAssignableFrom(c)) {
 			PrClass.PrClassType type = null;
@@ -196,7 +196,7 @@ public class PrClassManager implements PrClassInitListener {
 				type = PrClass.PrClassType.SIMPLE_PRCLASS;
 			} else if (SystemPrClass.class.isAssignableFrom(c)) {
 				type = PrClass.PrClassType.SYSTEM_PRCLASS;
-			} else if(PipelinePrClass.class.isAssignableFrom(c)) {
+			} else if(EdgePrClass.class.isAssignableFrom(c)) {
 				type = PrClass.PrClassType.PIPELINE_PRCLASS;
 			}
 			
@@ -252,7 +252,7 @@ public class PrClassManager implements PrClassInitListener {
 	public void unbindPlugins() {
     	for (WuObjectModel model  : bindedWuObjects) {
     		if (model.getType().getType().equals(PrClass.PrClassType.PIPELINE_PRCLASS)) {
-    			PipelinePrClass pipePrClass = (PipelinePrClass) model.getPrClass();
+    			EdgePrClass pipePrClass = (EdgePrClass) model.getPrClass();
     			contextManager.unsubscribe(pipePrClass);
     			bufferManager.unbind(model);
     			pipeline.unregisterExtension(model);
@@ -278,7 +278,7 @@ public class PrClassManager implements PrClassInitListener {
 		bindPropertyUpdateEvent(prClass);
 		
 		if (model.getType().getType().equals(PrClass.PrClassType.PIPELINE_PRCLASS)) {
-			PipelinePrClass pipePrClass = (PipelinePrClass) prClass;
+			EdgePrClass pipePrClass = (EdgePrClass) prClass;
 			contextManager.subscribe(pipePrClass, pipePrClass.registerContext());
 			bufferManager.bind(model);
 			pipeline.registerExtension(model);
@@ -338,7 +338,7 @@ public class PrClassManager implements PrClassInitListener {
 	public void updateProperty(PropertyChangeEvent event) {
 		String name = event.getPropertyName();
 		Object value = event.getNewValue();
-		PipelinePrClass plugin = (PipelinePrClass)event.getSource();
+		EdgePrClass plugin = (EdgePrClass)event.getSource();
 		int length = 0;
 		if (value instanceof Byte || value instanceof Boolean) {
 			length = 1;

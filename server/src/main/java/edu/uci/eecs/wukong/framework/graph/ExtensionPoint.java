@@ -16,7 +16,7 @@ import edu.uci.eecs.wukong.framework.event.Event;
 import edu.uci.eecs.wukong.framework.event.Event.EventType;
 import edu.uci.eecs.wukong.framework.entity.Entity;
 import edu.uci.eecs.wukong.framework.pipeline.Pipeline;
-import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
+import edu.uci.eecs.wukong.framework.prclass.EdgePrClass;
 import edu.uci.eecs.wukong.framework.extension.AbstractExtension;
 
 /**
@@ -26,9 +26,9 @@ import edu.uci.eecs.wukong.framework.extension.AbstractExtension;
  *
  * @param <E> Type extends AbstractExtension
  */
-public abstract class ExtensionPoint<E extends AbstractExtension<? extends PipelinePrClass>> extends Node {
+public abstract class ExtensionPoint<E extends AbstractExtension<? extends EdgePrClass>> extends Node {
 	private static Logger logger = LoggerFactory.getLogger(ExtensionPoint.class);
-	protected Map<PipelinePrClass, AbstractExtension<?>> extensionMap;
+	protected Map<EdgePrClass, AbstractExtension<?>> extensionMap;
 	protected PriorityBlockingQueue<Event<?>> eventQueue;
 	protected ExecutorService executor;
 	protected Pipeline pipeline;
@@ -37,7 +37,7 @@ public abstract class ExtensionPoint<E extends AbstractExtension<? extends Pipel
 		super(pipeline);
 		this.executor = Executors.newFixedThreadPool(5);
 		this.eventQueue = new PriorityBlockingQueue<Event<?>>();
-		this.extensionMap = new HashMap<PipelinePrClass, AbstractExtension<?>>();
+		this.extensionMap = new HashMap<EdgePrClass, AbstractExtension<?>>();
 		this.pipeline = pipeline;
 	}
 	

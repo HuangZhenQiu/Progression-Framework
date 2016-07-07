@@ -9,7 +9,7 @@ import edu.uci.eecs.wukong.framework.annotation.WuClass;
 import edu.uci.eecs.wukong.framework.annotation.WuProperty;
 import edu.uci.eecs.wukong.framework.model.DataType;
 import edu.uci.eecs.wukong.framework.model.PropertyType;
-import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
+import edu.uci.eecs.wukong.framework.prclass.EdgePrClass;
 import edu.uci.eecs.wukong.framework.prclass.PrClassMetrics;
 
 
@@ -21,12 +21,12 @@ import edu.uci.eecs.wukong.framework.prclass.PrClassMetrics;
  */
 
 @WuClass(id = 10002)
-public class TimerPrClass extends PipelinePrClass{
+public class TimerEdgeClass extends EdgePrClass{
 	
 	@WuProperty(name = "output", id = 0, type = PropertyType.Output, dtype = DataType.Short)
 	private short output;
 	
-	public TimerPrClass(PrClassMetrics metrics) {
+	public TimerEdgeClass(PrClassMetrics metrics) {
 		super("TimerPrClass", metrics);
 	}
 

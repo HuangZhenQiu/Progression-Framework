@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.google.common.annotations.VisibleForTesting;
 
 import edu.uci.eecs.wukong.framework.api.ExecutionContext;
-import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
+import edu.uci.eecs.wukong.framework.prclass.EdgePrClass;
 import edu.uci.eecs.wukong.framework.xmpp.XMPPFactorListener;
 
 import java.util.ArrayList;
@@ -26,7 +26,7 @@ public class SceneManager {
 	private static Logger logger = LoggerFactory.getLogger(SceneManager.class);
 	private static Gson gson = new Gson();
 	private static String TEST_FACTOR = "test";
-	private Map<PipelinePrClass, List<String>> pluginContextMap;
+	private Map<EdgePrClass, List<String>> pluginContextMap;
 	private ConcurrentMap<String, BaseFactor> factors;
 	private FactorClient factorClient;
 	private Set<String> topicFilterSet;
@@ -40,7 +40,7 @@ public class SceneManager {
 	}
 
 	public SceneManager(FactorMetrics metrics) {
-		this.pluginContextMap = new HashMap<PipelinePrClass, List<String>>();
+		this.pluginContextMap = new HashMap<EdgePrClass, List<String>>();
 		this.factors = new ConcurrentHashMap<String, BaseFactor>();
 		this.listeners = new ArrayList<FactorListener>();
 		this.factorClient = FactorClientFactory.getFactorClient();
@@ -64,7 +64,7 @@ public class SceneManager {
 		factorClient.subscribe(TEST_FACTOR, factorClientListener);
 	}
 	
-	public void subscribe(PipelinePrClass plugin, List<String> topics) {
+	public void subscribe(EdgePrClass plugin, List<String> topics) {
 		if (topics != null) {
 			for (String topic : topics) {
 				if(!topicFilterSet.contains(topic)) {
@@ -80,13 +80,13 @@ public class SceneManager {
 		}
 	}
 	
-	public void unsubscribe(PipelinePrClass plugin) {
+	public void unsubscribe(EdgePrClass plugin) {
 		if (pluginContextMap.containsKey(plugin)) {
 			pluginContextMap.remove(plugin);
 		}
 	}
 	
-	public synchronized ExecutionContext getPluginExecutionContext(PipelinePrClass plugin) {
+	public synchronized ExecutionContext getPluginExecutionContext(EdgePrClass plugin) {
 		List<String> subscribedTopics = pluginContextMap.get(plugin);
 		Map<String, BaseFactor> factorMap = new HashMap<String, BaseFactor>();
 		if (subscribedTopics != null) {

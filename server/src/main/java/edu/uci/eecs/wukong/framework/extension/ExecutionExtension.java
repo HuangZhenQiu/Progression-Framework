@@ -4,10 +4,10 @@ import edu.uci.eecs.wukong.framework.api.ExecutionContext;
 import edu.uci.eecs.wukong.framework.entity.ConfigurationCommand;
 import edu.uci.eecs.wukong.framework.entity.FeatureEntity;
 import edu.uci.eecs.wukong.framework.factor.BaseFactor;
-import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
+import edu.uci.eecs.wukong.framework.prclass.EdgePrClass;
 
 import java.util.List;
-public abstract class ExecutionExtension<T extends FeatureEntity, F extends PipelinePrClass> extends AbstractExecutionExtension<F> {
+public abstract class ExecutionExtension<T extends FeatureEntity, F extends EdgePrClass> extends AbstractExecutionExtension<F> {
 	private Object model;
 
 	public ExecutionExtension(F plugin) {

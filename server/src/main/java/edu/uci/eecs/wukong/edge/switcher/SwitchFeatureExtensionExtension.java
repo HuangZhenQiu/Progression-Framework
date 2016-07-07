@@ -8,8 +8,8 @@ import edu.uci.eecs.wukong.framework.operator.AverageOperator;
 import edu.uci.eecs.wukong.framework.operator.DefaultOperator;
 import edu.uci.eecs.wukong.framework.operator.Operator;
 
-public class SwitchFeatureExtensionExtension extends FeatureExtractionExtension<SwitchPrClass> {
-	public SwitchFeatureExtensionExtension(SwitchPrClass plugin) {
+public class SwitchFeatureExtensionExtension extends FeatureExtractionExtension<SwitchEdgeClass> {
+	public SwitchFeatureExtensionExtension(SwitchEdgeClass plugin) {
 		super(plugin);
 		// TODO Auto-generated constructor stub
 	}

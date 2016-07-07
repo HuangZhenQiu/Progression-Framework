@@ -4,7 +4,7 @@ import edu.uci.eecs.wukong.framework.entity.Entity;
 import edu.uci.eecs.wukong.framework.graph.ExtensionPoint;
 import edu.uci.eecs.wukong.framework.graph.Graph;
 import edu.uci.eecs.wukong.framework.pipeline.Pipeline;
-import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
+import edu.uci.eecs.wukong.framework.prclass.EdgePrClass;
 import junit.framework.TestCase;
 
 import org.junit.Test;
@@ -18,14 +18,14 @@ public class GraphTest extends TestCase {
 	
 	private static class EntityA extends Entity {
 
-		public EntityA(PipelinePrClass prClass) {
+		public EntityA(EdgePrClass prClass) {
 			super(prClass);
 		}
 	}
 	
 	private static class EntityB extends Entity {
 
-		public EntityB(PipelinePrClass prClass) {
+		public EntityB(EdgePrClass prClass) {
 			super(prClass);
 		}
 	}

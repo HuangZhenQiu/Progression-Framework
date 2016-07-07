@@ -14,7 +14,7 @@ import edu.uci.eecs.wukong.framework.extension.FeatureExtractionExtension;
 import edu.uci.eecs.wukong.framework.extension.LearningExtension;
 import edu.uci.eecs.wukong.framework.factor.SceneManager;
 import edu.uci.eecs.wukong.framework.model.WuObjectModel;
-import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
+import edu.uci.eecs.wukong.framework.prclass.EdgePrClass;
 import edu.uci.eecs.wukong.framework.select.FeatureChoosers;
 
 public class BasicPipeline extends Pipeline {
@@ -52,7 +52,7 @@ public class BasicPipeline extends Pipeline {
 		if (model.getExtensions() != null && !model.getExtensions().isEmpty()) {
 			for (Extension extension : model.getExtensions()) {
 				if (extension instanceof AbstractExecutionExtension) {
-					progressionPoint.register((AbstractExecutionExtension<? extends PipelinePrClass>) extension);
+					progressionPoint.register((AbstractExecutionExtension<? extends EdgePrClass>) extension);
 				} else if (extension instanceof FeatureExtractionExtension) {
 					featureExtractionPoint.register((FeatureExtractionExtension) extension);
 				} else if (extension instanceof LearningExtension) {
@@ -67,7 +67,7 @@ public class BasicPipeline extends Pipeline {
 		if (model.getExtensions() != null && !model.getExtensions().isEmpty()) {
 			for (Extension extension : model.getExtensions()) {
 				if (extension instanceof AbstractExecutionExtension) {
-					AbstractExecutionExtension<? extends PipelinePrClass> progressionExtension = (AbstractExecutionExtension) extension;
+					AbstractExecutionExtension<? extends EdgePrClass> progressionExtension = (AbstractExecutionExtension) extension;
 					progressionPoint.unregister((AbstractExecutionExtension) extension);
 				} else if (extension instanceof FeatureExtractionExtension) {
 					featureExtractionPoint.unregister((FeatureExtractionExtension) extension);

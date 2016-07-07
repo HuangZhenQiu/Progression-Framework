@@ -2,7 +2,7 @@ package edu.uci.eecs.wukong.framework.pipeline;
 
 import edu.uci.eecs.wukong.framework.extension.SequenceProcessExtension;
 import edu.uci.eecs.wukong.framework.graph.ExtensionPoint;
-import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
+import edu.uci.eecs.wukong.framework.prclass.EdgePrClass;
 
 
 /**
@@ -13,7 +13,7 @@ import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
  * @author peter
  *
  */
-public class SequenceProcessExtensionPoint extends ExtensionPoint<SequenceProcessExtension<? extends PipelinePrClass>> {
+public class SequenceProcessExtensionPoint extends ExtensionPoint<SequenceProcessExtension<? extends EdgePrClass>> {
 
 	public SequenceProcessExtensionPoint(Pipeline pipeline) {
 		super(pipeline);

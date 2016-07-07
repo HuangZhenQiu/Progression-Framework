@@ -8,16 +8,16 @@ import edu.uci.eecs.wukong.framework.annotation.WuProperty;
 import edu.uci.eecs.wukong.framework.annotation.WuClass;
 import edu.uci.eecs.wukong.framework.model.DataType;
 import edu.uci.eecs.wukong.framework.model.PropertyType;
-import edu.uci.eecs.wukong.framework.prclass.PipelinePrClass;
+import edu.uci.eecs.wukong.framework.prclass.EdgePrClass;
 import edu.uci.eecs.wukong.framework.prclass.PrClassMetrics;
 
 @WuClass(id = 10002)
-public class TestPrClass extends PipelinePrClass {
+public class TestEdgeClass extends EdgePrClass {
 
 	@WuProperty(id = 0, type = PropertyType.Input, dtype = DataType.Buffer)
 	private short testProperty;
 	
-	public TestPrClass(PrClassMetrics metrics) {
+	public TestEdgeClass(PrClassMetrics metrics) {
 		super("Test", metrics);
 	}
 

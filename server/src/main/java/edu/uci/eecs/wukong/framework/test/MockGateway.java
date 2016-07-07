@@ -13,6 +13,7 @@ import edu.uci.eecs.wukong.framework.util.MPTNUtil;
 import java.net.InetAddress;
 import java.net.Inet4Address;
 import java.net.NetworkInterface;
+import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.List;
@@ -61,7 +62,7 @@ public class MockGateway implements MPTNMessageListener {
 	}
 
 	@Override
-	public void onMessage(MPTNPackage mptnPackage) {
+	public void onMessage(SocketAddress remoteAddress, MPTNPackage mptnPackage) {
 		try {
 			LOGGER.info("Get packet " + MPTNUtil.toHexString(mptnPackage.getPayload()));
 					

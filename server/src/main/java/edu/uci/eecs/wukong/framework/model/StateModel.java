@@ -1,6 +1,6 @@
 package edu.uci.eecs.wukong.framework.model;
 
-import edu.uci.eecs.wukong.framework.prclass.PrClassManager;
+import edu.uci.eecs.wukong.framework.prclass.PluginManager;
 import edu.uci.eecs.wukong.framework.wkpf.WKPF;
 
 import java.util.List;
@@ -14,7 +14,7 @@ public class StateModel {
 	private ComponentMap componentMap;
 	private List<WuObjectModel> bindedWuObject;
 	
-	public StateModel(WKPF wkpf, PrClassManager manager) {
+	public StateModel(WKPF wkpf, PluginManager manager) {
 		this.nodeId = wkpf.getNetworkId();
 		this.longAddress = wkpf.getLongAddress();
 		if (wkpf.getUUID() != null) {

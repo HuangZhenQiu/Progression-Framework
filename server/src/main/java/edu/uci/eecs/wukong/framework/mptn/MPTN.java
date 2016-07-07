@@ -1,9 +1,13 @@
 package edu.uci.eecs.wukong.framework.mptn;
 
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.slf4j.Logger;
@@ -24,7 +28,12 @@ import com.google.common.annotations.VisibleForTesting;
 public class MPTN implements MPTNMessageListener{
 	private final static Logger LOGGER = LoggerFactory.getLogger(MPTN.class);
 	private final static Configuration configuration = Configuration.getInstance();	
+	// Used for edge server;
 	private NIOUdpClient gatewayClient;
+	// Default Gateway Address;
+	private SocketAddress defaultAddress;
+	// Used for progression server, map node Id with gateway socket address
+	private Map<Long, SocketAddress> idGatewayMap;
 	private NIOUdpServer server;
 	private boolean hasNodeId;
 	// Address for communication between IP device with gateway
@@ -37,6 +46,8 @@ public class MPTN implements MPTNMessageListener{
 	private int serverIP;
 	// UUID for node id acquire
 	private byte[] uuid;
+	// Progression or Edge
+	private boolean progression;
 	
 	private List<WKPFMessageListener> listeners;
 	public static int MPTN_HEADER_LENGTH = 9;
@@ -95,26 +106,38 @@ public class MPTN implements MPTNMessageListener{
 	public int GWIDREQ_PAYLOAD_LEN = 16;
 	public int IDREQ_PAYLOAD_LEN = 16;
 	
-	public MPTN() {
-		
-		listeners = new ArrayList<WKPFMessageListener>();
-		this.hasNodeId = false;
-		try {
-			if (configuration.getProgressionServerIP() != null) {
-				this.serverAddress = configuration.getProgressionServerIP();
-			} else {
-				this.serverAddress = InetAddress.getLocalHost().getHostAddress();
+	public MPTN(boolean progression) {
+		this.progression = progression;
+		this.listeners = new ArrayList<WKPFMessageListener>();
+		this.idGatewayMap = new HashMap<Long, SocketAddress> ();
+		this.defaultAddress =
+				new InetSocketAddress(configuration.getGatewayIP(), configuration.getGatewayPort());
+		if (!progression) {
+			this.hasNodeId = false;
+			try {
+				if (configuration.getProgressionServerIP() != null) {
+					this.serverAddress = configuration.getProgressionServerIP();
+				} else {
+					this.serverAddress = InetAddress.getLocalHost().getHostAddress();
+				}
+				this.serverIP = MPTNUtil.IPToInteger(this.serverAddress);
+				LOGGER.info("Starting progression server MPTN at ip address " + this.serverAddress);
+				this.gatewayClient = new NIOUdpClient(
+						configuration.getGatewayIP(), configuration.getGatewayPort());
+			} catch (Exception e) {
+				e.printStackTrace();
+				LOGGER.error(e.toString());
 			}
-			this.serverIP = MPTNUtil.IPToInteger(this.serverAddress);
-			LOGGER.info("Starting progression server MPTN at ip address " + this.serverAddress);
-			this.gatewayClient = new NIOUdpClient(
-					configuration.getGatewayIP(), configuration.getGatewayPort());
-			this.server = new NIOUdpServer(configuration.getProgressionServerPort());
-			this.server.addMPTNMessageListener(this);
-		} catch (Exception e) {
-			e.printStackTrace();
-			LOGGER.error(e.toString());
+		} else {
+			// If it is progression server, its node Id is 1 by default
+			// So that it can receive all of the monitoring data.
+			this.hasNodeId = true;
+			this.nodeId = 1;
+			this.longAddress = 1;
 		}
+		
+		this.server = new NIOUdpServer(configuration.getProgressionServerPort());
+		this.server.addMPTNMessageListener(this);
 	}
 	
 	public void start(StateModel model) {
@@ -122,19 +145,21 @@ public class MPTN implements MPTNMessageListener{
 			Thread serverThread = new Thread(server);
 			serverThread.start();
 			Thread.sleep(1000);
-			if (model == null || model.getNodeId() == null
-					|| model.getLongAddress() == null || model.getUuid() == null) {
-				info();
-				while (!hasNodeId) {
-					Thread.sleep(1000);
+			if (!progression) {
+				if (model == null || model.getNodeId() == null
+						|| model.getLongAddress() == null || model.getUuid() == null) {
+					info();
+					while (!hasNodeId) {
+						Thread.sleep(1000);
+					}
+					acquireID();
+				} else {
+					this.nodeId = model.getNodeId();
+					this.longAddress = model.getLongAddress();
+					this.uuid = model.getUuid().getBytes();
 				}
-				acquireID();
-			} else {
-				this.nodeId = model.getNodeId();
-				this.longAddress = model.getLongAddress();
-				this.uuid = model.getUuid().getBytes();
+				this.hasNodeId = true;
 			}
-			this.hasNodeId = true;
 		} catch (Exception e) {
 			e.printStackTrace();
 			LOGGER.error("Fail to start MPTN");
@@ -142,8 +167,10 @@ public class MPTN implements MPTNMessageListener{
 	}
 	
 	public void shutdown() {
-		gatewayClient.shutdown();
 		server.shutdown();
+		if (!progression) {
+			gatewayClient.shutdown();
+		}
 	}
 	
 	public void register(WKPFMessageListener listener) {
@@ -188,7 +215,17 @@ public class MPTN implements MPTNMessageListener{
 		WKPFUtil.appendWKPFPacket(buffer, longAddress, destId,
 				MPTNUtil.MPTN_MSATYPE_FWDREQ, payload);
 		LOGGER.debug(MPTNUtil.toHexString(buffer.array()));
-		gatewayClient.send(buffer.array());
+		
+		if (!progression) {
+			// edge server send message to its connected gateway
+			gatewayClient.send(buffer.array());
+		} else {
+			if (idGatewayMap.containsKey(destId)) {
+				server.send(idGatewayMap.get(destId), buffer);
+			} else {
+				server.send(defaultAddress, buffer);
+			}
+		}
 	}
 	
 	private void appendMPTNHeader(ByteBuffer buffer, int nodeId, byte type, byte payload_bytes) {
@@ -196,10 +233,10 @@ public class MPTN implements MPTNMessageListener{
 		MPTNUtil.appendMPTNHeader(buffer, serverIP, port, nodeId, type, payload_bytes);
 	}
 
-	public void onMessage(MPTNPackage message) {
+	public void onMessage(SocketAddress remoteAddress, MPTNPackage message) {
 		if (validateMPTNHeader(message)) {
 			if (message.getType() == HEADER_TYPE_1) { 
-				processFWDMessage(message);
+				processFWDMessage(remoteAddress, message);
 			} else if (message.getType() == HEADER_TYPE_2){
 				if (message.getLength() == 1) {
 					processInfoMessage(message.getPayload()[0]);
@@ -269,9 +306,13 @@ public class MPTN implements MPTNMessageListener{
 	 * @param message WKPF Message
 	 */
 	@VisibleForTesting
-	public byte processFWDMessage(MPTNPackage message) {
+	public byte processFWDMessage(SocketAddress remoteAddress, MPTNPackage message) {
 		if (message.getLength() >= 9) {
 			WKPFPackage wkpfPackage = new WKPFPackage(message.getPayload());
+			if (!idGatewayMap.containsKey(wkpfPackage.getSourceAddress())) {
+				idGatewayMap.put(wkpfPackage.getSourceAddress(), remoteAddress);
+			}
+			
 			if (wkpfPackage.getType() == MPTNUtil.MPTN_MSATYPE_FWDREQ) {
 				switch(wkpfPackage.getPayload()[0] & 0xFF) {
 					case WKPFUtil.WKPF_REPRG_OPEN & 0xFF:

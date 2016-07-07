@@ -35,7 +35,7 @@ import edu.uci.eecs.wukong.framework.model.WuPropertyModel;
 import edu.uci.eecs.wukong.framework.model.StateModel;
 import edu.uci.eecs.wukong.framework.model.WKPFMessageType;
 import edu.uci.eecs.wukong.framework.model.MonitorDataModel;
-import edu.uci.eecs.wukong.framework.prclass.PrClassInitListener;
+import edu.uci.eecs.wukong.framework.prclass.PluginInitListener;
 import edu.uci.eecs.wukong.framework.state.StateUpdateListener;
 import edu.uci.eecs.wukong.framework.property.Activity;
 import edu.uci.eecs.wukong.framework.property.Location;
@@ -72,21 +72,22 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 	private LinkTable linkTable = null;
 	private InitValueTable initValues = null;
 	private BufferManager bufferManager;
-	private List<PrClassInitListener> listeners;
+	private List<PluginInitListener> listeners;
 	private List<StateUpdateListener> stateListeners;
 	private List<MonitorListener> monitorListeners;
 	private WKPFMetrics metrics;
+	private boolean progression;
 
 	@VisibleForTesting
-	public WKPF(BufferManager bufferManager) {
-		this(bufferManager, null);
+	public WKPF(BufferManager bufferManager, boolean progression) {
+		this(bufferManager, null, progression);
 	}
 	
-	public WKPF(BufferManager bufferManager, WKPFMetrics metrics) {
+	public WKPF(BufferManager bufferManager, WKPFMetrics metrics, boolean progression) {
 		this.wuclasses = new ArrayList<WuClassModel> ();
 		this.portToWuObjectMap = new TreeMap<Byte, WuObjectModel> ();
-		this.listeners = new ArrayList<PrClassInitListener> ();
-		this.mptn = new MPTN();
+		this.listeners = new ArrayList<PluginInitListener> ();
+		this.mptn = new MPTN(progression);
 		this.mptn.register(this);
 		this.djaData = new DJAData();
 		this.djaData.register(this);
@@ -94,6 +95,7 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 		this.monitorListeners = new ArrayList<MonitorListener> ();
 		this.bufferManager = bufferManager;
 		this.metrics = metrics;
+		this.progression = progression;
 		// Intial default location
 		this.location = "/WuKong";
 	}
@@ -116,7 +118,7 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 		mptn.shutdown();
 	}
 	
-	public void register(PrClassInitListener listener) {
+	public void register(PluginInitListener listener) {
 		this.listeners.add(listener);
 	}
 	
@@ -170,7 +172,7 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 			}
 		}
 		
-		for (PrClassInitListener listener : listeners) {
+		for (PluginInitListener listener : listeners) {
 			listener.bindPlugins(objects);
 		}
 		
@@ -820,5 +822,13 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 	
 	public String getLocation() {
 		return this.location;
+	}
+	
+	public boolean isProgression() {
+		return progression;
+	}
+
+	public void setProgression(boolean progression) {
+		this.progression = progression;
 	}
 }

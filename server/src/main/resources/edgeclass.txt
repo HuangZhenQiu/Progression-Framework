@@ -11,7 +11,6 @@ edu.uci.eecs.wukong.edge.icsdemo.ICSDemoTVEdgeClass 1
 edu.uci.eecs.wukong.edge.icsdemo.ICSDemoQEdgeClass 1
 edu.uci.eecs.wukong.edge.weather.WeatherEdgeClass 1
 edu.uci.eecs.wukong.edge.buffer.BufferEnabledEdgeClass 1
-edu.uci.eecs.wukong.edge.occupancy.OccupancyDetection 1
 edu.uci.eecs.wukong.edge.localization.LocalizationEdgeClass 32
 edu.uci.eecs.wukong.edge.activity.ActivityRecgonitionEdgeClass 1
 edu.uci.eecs.wukong.edge.simple.SimpleInputEdgeClass 1

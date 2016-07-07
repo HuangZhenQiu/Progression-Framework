@@ -3,14 +3,12 @@ package edu.uci.eecs.wukong.framework.prclass;
 import edu.uci.eecs.wukong.framework.annotation.WuProperty;
 import edu.uci.eecs.wukong.framework.annotation.WuClass;
 import edu.uci.eecs.wukong.framework.buffer.BufferManager;
-import edu.uci.eecs.wukong.framework.exception.PluginNotFoundException;
 import edu.uci.eecs.wukong.framework.factor.SceneManager;
 import edu.uci.eecs.wukong.framework.pipeline.Pipeline;
 import edu.uci.eecs.wukong.framework.prclass.PrClass.PrClassType;
 import edu.uci.eecs.wukong.framework.property.Activity;
 import edu.uci.eecs.wukong.framework.property.Location;
 import edu.uci.eecs.wukong.framework.property.Response;
-import edu.uci.eecs.wukong.framework.model.NPP;
 import edu.uci.eecs.wukong.framework.model.WuClassModel;
 import edu.uci.eecs.wukong.framework.model.WuObjectModel;
 import edu.uci.eecs.wukong.framework.model.PropertyType;
@@ -42,9 +40,8 @@ import java.lang.reflect.Field;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class PrClassManager implements PrClassInitListener {
-	private final static Logger LOGGER = LoggerFactory.getLogger(PrClassManager.class);
-	private static final String PLUGIN_DEFINATION_PATH = "plugins.txt";
+public class PluginManager implements PluginInitListener {
+	private final static Logger LOGGER = LoggerFactory.getLogger(PluginManager.class);
 	// private static final String PLUGIN_PATH = "edu.uci.eecs.wukong.prclass";
 	private static final Configuration configuration = Configuration.getInstance();
 	private BufferManager bufferManager;
@@ -64,8 +61,8 @@ public class PrClassManager implements PrClassInitListener {
 	private Map<String, Integer> pluginsMap;
 	private List<StateUpdateListener> listeners;
 	
-	public PrClassManager(WKPF wkpf, SceneManager contextManager,
-			Pipeline pipeline, BufferManager bufferManager, PrClassMetrics prClassMetrics) {
+	public PluginManager(WKPF wkpf, SceneManager contextManager,
+			Pipeline pipeline, BufferManager bufferManager, PrClassMetrics prClassMetrics, boolean progression) {
 		this.bufferManager = bufferManager;
 		this.contextManager = contextManager;
 		this.pipeline = pipeline;
@@ -79,7 +76,11 @@ public class PrClassManager implements PrClassInitListener {
 		this.wkpf = wkpf;
 		this.pluginsMap =  new HashMap<String, Integer> ();
 		this.listeners = new ArrayList<StateUpdateListener> ();
-		this.loadPrClassDefinition();
+		if (!progression) {
+			this.loadPluginDefinition(configuration.getEdgeClassPath());
+		} else {
+			this.loadPluginDefinition(configuration.getPrClassPath());
+		}
 	}
 	
 	private class SimpleTimerTask extends TimerTask {
@@ -105,9 +106,9 @@ public class PrClassManager implements PrClassInitListener {
 		}
  	}
 	
-	private void loadPrClassDefinition() {
+	private void loadPluginDefinition(String path) {
 		try {
-			InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(PLUGIN_DEFINATION_PATH);
+			InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(path);
 			InputStreamReader streamReader = new InputStreamReader(inputStream);
 			BufferedReader reader = new BufferedReader(streamReader);
 			String line = null;
@@ -129,7 +130,7 @@ public class PrClassManager implements PrClassInitListener {
 				}
 			}
 		} catch (Exception e) {
-			System.out.println("Plugin Definition File '" + PLUGIN_DEFINATION_PATH + "' not found in the classpath");
+			System.out.println("Plugin Definition File '" + path + "' not found in the classpath");
 			System.exit(-1);
 		}
 	}
@@ -144,7 +145,7 @@ public class PrClassManager implements PrClassInitListener {
 	 */
 	public void init(StateModel model) throws Exception {
 		for (Entry<String, Integer> pluginEntry : pluginsMap.entrySet()) {
-			ClassLoader loader = PrClassManager.class.getClassLoader();
+			ClassLoader loader = PluginManager.class.getClassLoader();
 			Class<?> c = loader.loadClass(pluginEntry.getKey());
 			WuClassModel wuClassModel = createWuClassModel(pluginEntry.getKey(), c);
 			

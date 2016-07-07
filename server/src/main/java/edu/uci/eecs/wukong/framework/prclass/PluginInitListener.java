@@ -14,7 +14,7 @@ import edu.uci.eecs.wukong.framework.model.WuObjectModel;
  * @author Peter
  *
  */
-public interface PrClassInitListener {
+public interface PluginInitListener {
 	
 	public void bindPlugins(List<WuObjectModel> plugins);
 	

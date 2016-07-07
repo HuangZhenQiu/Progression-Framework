@@ -28,7 +28,7 @@ import edu.uci.eecs.wukong.framework.model.StateModel;
 import edu.uci.eecs.wukong.framework.pipeline.BasicPipeline;
 import edu.uci.eecs.wukong.framework.pipeline.Pipeline;
 import edu.uci.eecs.wukong.framework.pipeline.PipelineMetrics;
-import edu.uci.eecs.wukong.framework.prclass.PrClassManager;
+import edu.uci.eecs.wukong.framework.prclass.PluginManager;
 import edu.uci.eecs.wukong.framework.prclass.PrClassMetrics;
 import edu.uci.eecs.wukong.framework.select.FeatureChoosers;
 import edu.uci.eecs.wukong.framework.state.StateManager;
@@ -44,13 +44,14 @@ public class ProgressionServer {
 	private static Logger logger = LoggerFactory.getLogger(ProgressionServer.class);
 	private static Configuration configuration = Configuration.getInstance();
 	private static boolean isTest = false;
+	private static boolean isProgression = false;
 	private MetricsRegistryHolder registryHolder;
 	private CheckPointManager checkpointManager;
 	private CommunicationServer server;
 	private SceneManager contextManager;
 	private BufferManager bufferManager;
 	private JettyServer jettyServer;
-	private PrClassManager pluginManager;
+	private PluginManager pluginManager;
 	private MetricsReporter metricsReporter;
 	private MonitorManager monitorManager;
 	private FeatureChoosers featureChoosers;
@@ -61,7 +62,7 @@ public class ProgressionServer {
 	private StateManager stateManager;
 	private SystemStates systemStates;
 	
-	public ProgressionServer(PeerInfo peerInfo, boolean isTest) {
+	public ProgressionServer(PeerInfo peerInfo, boolean isTest, boolean progression) {
 		
 		if (isTest) {
 			logger.info("Starting server in test model");
@@ -77,14 +78,14 @@ public class ProgressionServer {
 		PrClassMetrics prClassMetrics = new PrClassMetrics(this.registryHolder);
 		this.bufferManager = new BufferManager(bufferMetrics);
 		this.contextManager = new SceneManager(factorMetrics);
-		this.wkpf = new WKPF(bufferManager, wkpfMetrics);
+		this.wkpf = new WKPF(bufferManager, wkpfMetrics, progression);
 		this.monitorManager = new MonitorManager(wkpf);
 		this.checkpointManager = new CheckPointManager();
 		this.systemStates = new SystemStates(monitorManager, checkpointManager);
 		this.jettyServer = new JettyServer();
 		this.featureChoosers = new FeatureChoosers(bufferManager, wkpf);
 		this.pipeline = new BasicPipeline(contextManager, featureChoosers, pipelineMetrics);	
-		this.pluginManager = new PrClassManager(wkpf, contextManager, pipeline, bufferManager, prClassMetrics);
+		this.pluginManager = new PluginManager(wkpf, contextManager, pipeline, bufferManager, prClassMetrics, progression);
 		this.stateManager = new StateManager(wkpf, pluginManager);
 		this.wkpf.register(pluginManager);
 	}
@@ -166,6 +167,7 @@ public class ProgressionServer {
 	public static void main(String[] args) {
 		Options options = new Options();
 		options.addOption("t", "test", false, "Run in test mode");
+		options.addOption("p", "progression", false, "Run as progression server");
 		CommandLineParser parser = new DefaultParser();
 		
 		try {
@@ -173,9 +175,12 @@ public class ProgressionServer {
 			if (cmd.hasOption("t")) {
 				isTest = true;
 			}
+			if (cmd.hasOption("p")) {
+				isProgression = true;
+			}
 			checkPath();
 			PeerInfo peerInfo = new PeerInfo("localhost", 10000);
-			ProgressionServer server = new ProgressionServer(peerInfo, isTest);
+			ProgressionServer server = new ProgressionServer(peerInfo, isTest, isProgression);
 			server.start();
 			server.attachShutDownHook();
 			

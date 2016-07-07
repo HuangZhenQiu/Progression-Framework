@@ -4,13 +4,20 @@ import edu.uci.eecs.wukong.framework.mptn.MPTNMessageListener;
 import edu.uci.eecs.wukong.framework.util.MPTNUtil;
 
 import java.io.IOException;
+import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
-import java.nio.channels.DatagramChannel;
+import java.net.Socket;
+import java.net.SocketAddress;
+import java.nio.channels.SocketChannel;
+import java.nio.channels.ServerSocketChannel;
+import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -23,13 +30,16 @@ public class NIOUdpServer implements Runnable {
 	private static int THREAD_POOL_SIZE = 10;
 	private int port;
 	private Selector selector;
-	private DatagramChannel channel;
+	private ServerSocketChannel serverChannel;
+	private SocketChannel clientChannel;
 	private List<MPTNMessageListener> listeners;
+	private Map<SocketAddress, SocketChannel> activeChannels;
 	private ExecutorService executorService = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
 	
 	public NIOUdpServer(int port) {
 		this.port = port;
 		this.listeners = new ArrayList<MPTNMessageListener>();
+		this.activeChannels = new HashMap<SocketAddress, SocketChannel> ();
 	}
 	
 	public void addMPTNMessageListener(MPTNMessageListener listener) {
@@ -39,11 +49,11 @@ public class NIOUdpServer implements Runnable {
 	public void run() {
 		try {
 			selector = Selector.open();
-			channel = DatagramChannel.open();
+			serverChannel = ServerSocketChannel.open();
 			InetSocketAddress address = new InetSocketAddress(port);
-			channel.socket().bind(address);
-			channel.configureBlocking(false);
-			SelectionKey clientKey = channel.register(selector, SelectionKey.OP_READ);
+			serverChannel.bind(address);
+			serverChannel.configureBlocking(false);
+			SelectionKey clientKey = serverChannel.register(selector, SelectionKey.OP_READ | SelectionKey.OP_ACCEPT);
 			clientKey.attach(new ChannelAttachment());
 			while (true) {
 				try {
@@ -60,13 +70,13 @@ public class NIOUdpServer implements Runnable {
 						// We only read from the channel;
 						synchronized (key) { 
 							if (key.isReadable()) {
-								channel = (DatagramChannel) key.channel();
-								ChannelAttachment attachment = (ChannelAttachment)key.attachment();
-								attachment.setAddress(channel.receive(attachment.getBuffer()));
-								attachment.getBuffer().flip();
-								executorService.execute(
-										new EventHandleThread(MPTNUtil.deepCopy(attachment.getBuffer()), listeners));
-								attachment.getBuffer().clear();
+								read(key);
+							}
+							
+							if ((key.readyOps() & SelectionKey.OP_ACCEPT) ==
+							   SelectionKey.OP_ACCEPT) {
+							   // Accept the incoming connection.
+								accept(key);
 							}
 						}
 					}
@@ -81,10 +91,52 @@ public class NIOUdpServer implements Runnable {
 		}
 	}
 	
+	public void send(SocketAddress address, ByteBuffer data) {
+		try {
+			if (activeChannels.containsKey(address)) {
+				SocketChannel channel = activeChannels.get(address);
+				if (!channel.isOpen()) {
+					// Reconnect the channel
+					channel.connect(address);
+					activeChannels.put(address, channel);
+				}
+			} else {
+				// If it is a address not in the active channels, it is the default gateway address.
+				SocketChannel channel = SocketChannel.open(address);
+				activeChannels.put(address, channel);
+			}
+			activeChannels.get(address).write(data);
+		} catch (Exception e) {
+			logger.error("Fail to send message to address: " + address);
+		}
+	}
+	
+	private void accept(SelectionKey key) throws IOException {
+		ServerSocketChannel serverChannel = (ServerSocketChannel) key.channel();
+		SocketChannel channel = serverChannel.accept();
+		channel.configureBlocking(false);
+		Socket socket = channel.socket();
+
+		SocketAddress remoteAddr = socket.getRemoteSocketAddress();
+		System.out.println("Connected to: " + remoteAddr);
+		channel.register(this.selector, SelectionKey.OP_READ);
+	}
+	
+	private void read(SelectionKey key) throws IOException {
+		SocketChannel channel = (SocketChannel) key.channel();
+		ChannelAttachment attachment = (ChannelAttachment)key.attachment();
+		channel.read(attachment.getBuffer());
+		attachment.getBuffer().flip();
+		executorService.execute(
+				new EventHandleThread(channel.getRemoteAddress(),
+						MPTNUtil.deepCopy(attachment.getBuffer()), listeners));
+		attachment.getBuffer().clear();
+	}
+	
 	public void shutdown() {
 		try {
 			selector.close();
-			channel.close();
+			serverChannel.close();
 			executorService.shutdown();
 		} catch (IOException e) {
 			logger.error(e.toString());

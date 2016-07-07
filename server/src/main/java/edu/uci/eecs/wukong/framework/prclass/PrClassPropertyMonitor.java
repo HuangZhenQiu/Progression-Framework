@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 
 public class PrClassPropertyMonitor {
 	private static Logger logger = LoggerFactory.getLogger(PrClassPropertyMonitor.class);
-	private PrClassManager manager;
+	private PluginManager manager;
 	private Map<PrClass, List<String>> monitoredProperties;
 	
 	private PropertyChangeListener listener = new PropertyChangeListener() {
@@ -22,7 +22,7 @@ public class PrClassPropertyMonitor {
 		 }
 	};
 	
-	public PrClassPropertyMonitor(PrClassManager manager) {
+	public PrClassPropertyMonitor(PluginManager manager) {
 		this.manager = manager;
 		this.monitoredProperties = new HashMap<PrClass, List<String>>();
 	}

@@ -1,0 +1,3 @@
+edu.uci.eecs.wukong.prclass.occupancy.OccupancyDetection 1
+edu.uci.eecs.wukong.prclass.ft.FaultTolerantPolicyPrClass 1
+edu.uci.eecs.wukong.prclass.energy.EnergyPolicyPrClass 1

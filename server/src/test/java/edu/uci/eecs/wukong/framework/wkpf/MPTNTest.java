@@ -14,7 +14,7 @@ import junit.framework.TestCase;
 public class MPTNTest extends TestCase {
 	private static final int SOURCE_IP = 1;
 	private static final int DEST_IP = 2;
-	private MPTN mptn = new MPTN();
+	private MPTN mptn = new MPTN(false);
 
 	@Test
 	public void testHandleWritePropertyMessage() throws Exception {
@@ -28,6 +28,6 @@ public class MPTNTest extends TestCase {
 		buffer.flip();
 		MPTNPackage mptnPackage = new MPTNPackage(12);
 		mptnPackage.setPayload(buffer.array());
-		assertEquals(WKPFUtil.WKPF_WRITE_PROPERTY, mptn.processFWDMessage(mptnPackage));
+		assertEquals(WKPFUtil.WKPF_WRITE_PROPERTY, mptn.processFWDMessage(null, mptnPackage));
 	}
 }

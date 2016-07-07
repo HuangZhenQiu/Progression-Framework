@@ -9,6 +9,8 @@ import com.google.common.io.Files;
 
 public class Configuration {
 	private static final String CONFIG_PATH = "config.properties";
+	private static final String PRCLASS_PATH = "PRCLASS.PATH";
+	private static final String EDGECLASS_PATH = "EDGECLASS.PATH";
 	private static final String XMPP_SERVER_NAME  = "XMPP.SERVER.NAME";
 	private static final String XMPP_ADDRESS = "XMPP.ADDRESS";
 	private static final String XMPP_PORT = "XMPP.PORT";
@@ -78,6 +80,14 @@ public class Configuration {
 	
 	public String getProgressionHome() {
 		return progressionHome;
+	}
+	
+	public String getPrClassPath() {
+		return properties.getProperty(PRCLASS_PATH);
+	}
+	
+	public String getEdgeClassPath() {
+		return properties.getProperty(EDGECLASS_PATH);
 	}
 	
 	public Integer getExtensionTimerUnit() {

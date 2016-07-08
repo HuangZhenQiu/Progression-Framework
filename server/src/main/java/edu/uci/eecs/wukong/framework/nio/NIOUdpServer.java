@@ -11,6 +11,7 @@ import java.net.SocketAddress;
 import java.nio.channels.SocketChannel;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.ByteBuffer;
+import java.nio.channels.DatagramChannel;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.util.ArrayList;
@@ -30,16 +31,15 @@ public class NIOUdpServer implements Runnable {
 	private static int THREAD_POOL_SIZE = 10;
 	private int port;
 	private Selector selector;
-	private ServerSocketChannel serverChannel;
-	private SocketChannel clientChannel;
+	private DatagramChannel serverChannel;
 	private List<MPTNMessageListener> listeners;
-	private Map<SocketAddress, SocketChannel> activeChannels;
+	private Map<SocketAddress, DatagramChannel> activeChannels;
 	private ExecutorService executorService = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
 	
 	public NIOUdpServer(int port) {
 		this.port = port;
 		this.listeners = new ArrayList<MPTNMessageListener>();
-		this.activeChannels = new HashMap<SocketAddress, SocketChannel> ();
+		this.activeChannels = new HashMap<SocketAddress, DatagramChannel> ();
 	}
 	
 	public void addMPTNMessageListener(MPTNMessageListener listener) {
@@ -49,11 +49,11 @@ public class NIOUdpServer implements Runnable {
 	public void run() {
 		try {
 			selector = Selector.open();
-			serverChannel = ServerSocketChannel.open();
+			serverChannel = DatagramChannel.open();
 			InetSocketAddress address = new InetSocketAddress(port);
 			serverChannel.socket().bind(address);
 			serverChannel.configureBlocking(false);
-			serverChannel.register(selector, SelectionKey.OP_ACCEPT);
+			serverChannel.register(selector, SelectionKey.OP_READ, new ChannelAttachment());
 			while (true) {
 				try {
 					selector.select();
@@ -68,16 +68,13 @@ public class NIOUdpServer implements Runnable {
 						
 						// We only read from the channel;
 						synchronized (key) { 
+							
 							if (key.isReadable()) {
 								read(key);
 							}
-							
-							if (key.isAcceptable()) {
-							   // Accept the incoming connection.
-								accept(key);
-							}
 						}
 					}
+					
 					
 				} catch (IOException e) {
 					logger.error(e.toString());
@@ -92,7 +89,7 @@ public class NIOUdpServer implements Runnable {
 	public void send(SocketAddress address, ByteBuffer data) {
 		try {
 			if (activeChannels.containsKey(address)) {
-				SocketChannel channel = activeChannels.get(address);
+				DatagramChannel channel = activeChannels.get(address);
 				if (!channel.isOpen()) {
 					// Reconnect the channel
 					channel.connect(address);
@@ -100,7 +97,8 @@ public class NIOUdpServer implements Runnable {
 				}
 			} else {
 				// If it is a address not in the active channels, it is the default gateway address.
-				SocketChannel channel = SocketChannel.open(address);
+				DatagramChannel channel = DatagramChannel.open();
+				channel.bind(address);
 				activeChannels.put(address, channel);
 			}
 			activeChannels.get(address).write(data);
@@ -109,22 +107,16 @@ public class NIOUdpServer implements Runnable {
 		}
 	}
 	
-	private void accept(SelectionKey key) throws IOException {
-		ServerSocketChannel serverChannel = (ServerSocketChannel) key.channel();
-		SocketChannel channel = serverChannel.accept();
-		channel.configureBlocking(false);
-		Socket socket = channel.socket();
-
-		SocketAddress remoteAddr = socket.getRemoteSocketAddress();
-		System.out.println("Connected to: " + remoteAddr);
-		channel.register(this.selector, SelectionKey.OP_READ, new ChannelAttachment());
-	}
-	
 	private void read(SelectionKey key) throws IOException {
-		SocketChannel channel = (SocketChannel) key.channel();
+		DatagramChannel channel = (DatagramChannel) key.channel();
 		ChannelAttachment attachment = (ChannelAttachment)key.attachment();
-		channel.read(attachment.getBuffer());
+		attachment.setAddress(channel.receive(attachment.getBuffer()));
 		attachment.getBuffer().flip();
+		DatagramSocket socket = channel.socket();
+		SocketAddress remoteAddr = socket.getRemoteSocketAddress();
+		if (activeChannels.containsKey(remoteAddr)) {
+			activeChannels.put(remoteAddr, channel);
+		}
 		executorService.execute(
 				new EventHandleThread(channel.getRemoteAddress(),
 						MPTNUtil.deepCopy(attachment.getBuffer()), listeners));

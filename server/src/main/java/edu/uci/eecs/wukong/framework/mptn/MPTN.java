@@ -138,13 +138,13 @@ public class MPTN implements MPTNMessageListener{
 		
 		this.server = new NIOUdpServer(configuration.getProgressionServerPort());
 		this.server.addMPTNMessageListener(this);
+		Thread serverThread = new Thread(server);
+		serverThread.start();
+		
 	}
 	
 	public void start(StateModel model) {
 		try {
-			Thread serverThread = new Thread(server);
-			serverThread.start();
-			Thread.sleep(1000);
 			if (!progression) {
 				if (model == null || model.getNodeId() == null
 						|| model.getLongAddress() == null || model.getUuid() == null) {

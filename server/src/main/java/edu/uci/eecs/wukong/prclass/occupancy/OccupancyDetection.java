@@ -18,13 +18,13 @@ import com.google.common.annotations.VisibleForTesting;
 @WuClass(id = 10113)
 public class OccupancyDetection extends AgentPrClass {
 	@WuProperty(name = "pir", id = 0, type = PropertyType.Input, dtype = DataType.SystemBuffer)
-	private byte pir;
+	private byte pir = 1;
 	@WuProperty(name = "days", id = 1, type = PropertyType.Input, dtype = DataType.Init_Value)
-	private short days;
+	private short days = 30;
 	@WuProperty(name = "topK", id = 2, type = PropertyType.Input, dtype = DataType.Init_Value)
-	private short topK;
+	private short topK = 5;
 	@WuProperty(name = "interval", id = 3, type = PropertyType.Input, dtype = DataType.Init_Value)
-	private short interval;
+	private short interval = 10;
 	@WuProperty(name = "occupancy", id = 4, type = PropertyType.Output)
 	private boolean occupancy;
 	

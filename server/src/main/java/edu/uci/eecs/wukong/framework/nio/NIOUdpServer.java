@@ -51,10 +51,9 @@ public class NIOUdpServer implements Runnable {
 			selector = Selector.open();
 			serverChannel = ServerSocketChannel.open();
 			InetSocketAddress address = new InetSocketAddress(port);
-			serverChannel.bind(address);
+			serverChannel.socket().bind(address);
 			serverChannel.configureBlocking(false);
-			SelectionKey clientKey = serverChannel.register(selector, SelectionKey.OP_READ | SelectionKey.OP_ACCEPT);
-			clientKey.attach(new ChannelAttachment());
+			serverChannel.register(selector, SelectionKey.OP_ACCEPT);
 			while (true) {
 				try {
 					selector.select();
@@ -73,8 +72,7 @@ public class NIOUdpServer implements Runnable {
 								read(key);
 							}
 							
-							if ((key.readyOps() & SelectionKey.OP_ACCEPT) ==
-							   SelectionKey.OP_ACCEPT) {
+							if (key.isAcceptable()) {
 							   // Accept the incoming connection.
 								accept(key);
 							}
@@ -119,7 +117,7 @@ public class NIOUdpServer implements Runnable {
 
 		SocketAddress remoteAddr = socket.getRemoteSocketAddress();
 		System.out.println("Connected to: " + remoteAddr);
-		channel.register(this.selector, SelectionKey.OP_READ);
+		channel.register(this.selector, SelectionKey.OP_READ, new ChannelAttachment());
 	}
 	
 	private void read(SelectionKey key) throws IOException {

@@ -1,6 +1,8 @@
 ### Start the server at particular IP and port ###
 PROGRESSION.SERVER.IP = 169.234.16.0
 PROGRESSION.SERVER.PORT = 9000
+PRCLASS.PATH = prclass.txt
+EDGECLASS.PATH = edgeclass.txt
 
 ### XMPP server connection information ###
 XMPP.ADDRESS = 127.0.0.1

@@ -3,16 +3,21 @@ package edu.uci.eecs.wukong.framework.service;
 import java.io.IOException;
 import java.io.InterruptedIOException;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import javax.net.ssl.SSLException;
 
 import org.apache.commons.httpclient.ConnectTimeoutException;
 import org.apache.commons.httpclient.HttpStatus;
+import org.apache.http.NameValuePair;
 import org.apache.http.Consts;
 import org.apache.http.HttpEntityEnclosingRequest;
 import org.apache.http.HttpRequest;
 import org.apache.http.StatusLine;
 import org.apache.http.client.HttpRequestRetryHandler;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.methods.HttpPost;
@@ -24,14 +29,18 @@ import org.apache.http.util.EntityUtils;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.protocol.HttpContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.gson.Gson;
+
 public abstract class AbstractHttpService {
 	private final static Logger LOGGER = LoggerFactory.getLogger(AbstractHttpService.class);
 	private final static String CONTENT_TYPE_VALUE = "application/json";
+	private Gson gson = new Gson();
 	private String name;
 	private String ip;
 	private String port;
@@ -92,20 +101,20 @@ public abstract class AbstractHttpService {
 				.setConnectionManager(connectionManager).build();
 	}
 	
-	protected String send(HttpRequestBase method, String content) {
-		method.setHeader(HTTP.CONTENT_TYPE, CONTENT_TYPE_VALUE);
-		if (content != null) {
-			if (method instanceof HttpPost) {
-				HttpPost post = (HttpPost) method;
-				StringEntity se = new StringEntity(content, ContentType.create(CONTENT_TYPE_VALUE, Consts.UTF_8));
-				post.setEntity(se);
+	protected String send(HttpPost post, Map<String, Object> parameters) {
+		post.setHeader(HTTP.CONTENT_TYPE, CONTENT_TYPE_VALUE);
+		if (parameters != null && parameters.size() > 0) {
+			try {
+				post.setEntity(new StringEntity(gson.toJson(parameters)));
+			} catch (Exception e) {
+				LOGGER.error("Can't encode post parameters: " + e.toString());
 			}
 		}
+		
 		CloseableHttpResponse response = null;
 		try {
-			response = client.execute(method);
+			response = client.execute(post);
 			HttpEntity entity = response.getEntity();
-			StatusLine statusLine = response.getStatusLine();
 			int statusCode = response.getStatusLine().getStatusCode();
 			if (statusCode == HttpStatus.SC_OK) {
 				return EntityUtils.toString(entity, "UTF-8");

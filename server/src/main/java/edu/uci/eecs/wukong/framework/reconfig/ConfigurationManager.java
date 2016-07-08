@@ -37,12 +37,12 @@ public class ConfigurationManager{
 	}
 	
 	private ConfigurationManager() {
-		ConfigurationService masterClient = new ConfigurationService(
+		this.masterConfig = new ConfigurationService(
 				"Master", configuration.getMasterAddress(), configuration.getMasterPort(), "configuration");
-		ConfigurationService hueClient = new ConfigurationService(
+		this.HueService = new ConfigurationService(
 				"Hue", configuration.getHueAddress(), configuration.getHuePort(), "api/newdeveloper/lights/1/state" /** temporary **/);
-		MappingService mappingService = new  MappingService(
-				"Map", configuration.getMasterAddress(), configuration.getMasterPort(), "map");
+		this.mappingService = new  MappingService(
+				"Map", configuration.getMasterAddress(), configuration.getMasterPort(), "applications");
 		this.factorClient = FactorClientFactory.getFactorClient();
 	}
 	
@@ -60,7 +60,7 @@ public class ConfigurationManager{
 	
 	public void remapping(String appId, List<Predict> predicts) {
 		try {
-			mappingService.sendMappingMessage(appId);
+			mappingService.sendMappingMessage(appId, predicts);
 		} catch (Exception e) {
 			logger.error("Fail to send reconfiguration message to master");
 			logger.error(e.toString());

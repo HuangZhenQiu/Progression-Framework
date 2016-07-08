@@ -1,6 +1,7 @@
 package edu.uci.eecs.wukong.framework.service;
 
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,7 +24,7 @@ public class WeatherService extends AbstractHttpService {
 	}
 	
 	public short getTemperature() {
-		String json  = this.send(new HttpGet(this.CONFIG_URL), null);
+		String json  = this.send(new HttpPost(this.CONFIG_URL), null);
 		logger.debug("Received json message by calling weather service : " + json);
 		JsonElement root = parser.parse(json);
 		if (root != null && root.getAsJsonObject().get("main") != null) {

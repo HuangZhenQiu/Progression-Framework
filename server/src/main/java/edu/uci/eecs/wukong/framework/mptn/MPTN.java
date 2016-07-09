@@ -16,7 +16,6 @@ import org.slf4j.LoggerFactory;
 import edu.uci.eecs.wukong.framework.model.MPTNPackage;
 import edu.uci.eecs.wukong.framework.model.StateModel;
 import edu.uci.eecs.wukong.framework.model.WKPFPackage;
-import edu.uci.eecs.wukong.framework.nio.NIOUdpClient;
 import edu.uci.eecs.wukong.framework.nio.NIOUdpServer;
 import edu.uci.eecs.wukong.framework.util.Configuration;
 import edu.uci.eecs.wukong.framework.util.MPTNUtil;
@@ -28,8 +27,6 @@ import com.google.common.annotations.VisibleForTesting;
 public class MPTN implements MPTNMessageListener{
 	private final static Logger LOGGER = LoggerFactory.getLogger(MPTN.class);
 	private final static Configuration configuration = Configuration.getInstance();	
-	// Used for edge server;
-	private NIOUdpClient gatewayClient;
 	// Default Gateway Address;
 	private SocketAddress defaultAddress;
 	// Used for progression server, map node Id with gateway socket address
@@ -122,8 +119,6 @@ public class MPTN implements MPTNMessageListener{
 				}
 				this.serverIP = MPTNUtil.IPToInteger(this.serverAddress);
 				LOGGER.info("Starting progression server MPTN at ip address " + this.serverAddress);
-				this.gatewayClient = new NIOUdpClient(
-						configuration.getGatewayIP(), configuration.getGatewayPort());
 			} catch (Exception e) {
 				e.printStackTrace();
 				LOGGER.error(e.toString());
@@ -168,9 +163,6 @@ public class MPTN implements MPTNMessageListener{
 	
 	public void shutdown() {
 		server.shutdown();
-		if (!progression) {
-			gatewayClient.shutdown();
-		}
 	}
 	
 	public void register(WKPFMessageListener listener) {
@@ -180,7 +172,8 @@ public class MPTN implements MPTNMessageListener{
 	public synchronized void info() {
 		ByteBuffer buffer = ByteBuffer.allocate(11);
 		appendMPTNHeader(buffer, MPTNUtil.MPTN_MASTER_ID, HEADER_TYPE_2, (byte)0);
-		gatewayClient.send(buffer.array());
+		buffer.flip();
+		server.send(defaultAddress, buffer);
 	}
 	
 	public synchronized void acquireID() {
@@ -191,7 +184,8 @@ public class MPTN implements MPTNMessageListener{
 		}
 		WKPFUtil.appendWKPFPacket(buffer, MPTNUtil.MPTN_MAX_ID.intValue(), MPTNUtil.MPTN_MASTER_ID,
 				MPTNUtil.MPTN_MSQTYPE_IDREQ, this.uuid);
-		gatewayClient.send(buffer.array());
+		buffer.flip();
+		server.send(defaultAddress, buffer);
 	}
 	
 	
@@ -215,10 +209,10 @@ public class MPTN implements MPTNMessageListener{
 		WKPFUtil.appendWKPFPacket(buffer, longAddress, destId,
 				MPTNUtil.MPTN_MSATYPE_FWDREQ, payload);
 		LOGGER.debug(MPTNUtil.toHexString(buffer.array()));
-		
+		buffer.flip();
 		if (!progression) {
 			// edge server send message to its connected gateway
-			gatewayClient.send(buffer.array());
+			server.send(defaultAddress, buffer);
 		} else {
 			if (idGatewayMap.containsKey(destId)) {
 				server.send(idGatewayMap.get(destId), buffer);

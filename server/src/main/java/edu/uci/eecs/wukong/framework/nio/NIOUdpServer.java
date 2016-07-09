@@ -88,7 +88,7 @@ public class NIOUdpServer implements Runnable {
 	
 	public void send(SocketAddress address, ByteBuffer data) {
 		try {
-			if (activeChannels.containsKey(address)) {
+			/*if (activeChannels.containsKey(address)) {
 				DatagramChannel channel = activeChannels.get(address);
 				if (!channel.isOpen()) {
 					// Reconnect the channel
@@ -101,7 +101,9 @@ public class NIOUdpServer implements Runnable {
 				channel.bind(address);
 				activeChannels.put(address, channel);
 			}
-			activeChannels.get(address).write(data);
+			activeChannels.get(address).write(data);*/
+			serverChannel.send(data, address);
+
 		} catch (Exception e) {
 			logger.error("Fail to send message to address: " + address);
 		}

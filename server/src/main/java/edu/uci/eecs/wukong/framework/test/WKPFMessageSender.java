@@ -1,7 +1,7 @@
 package edu.uci.eecs.wukong.framework.test;
 
 import edu.uci.eecs.wukong.framework.model.WKPFPackage;
-import edu.uci.eecs.wukong.framework.mptn.MPTN;
+import edu.uci.eecs.wukong.framework.mptn.UDPMPTN;
 import edu.uci.eecs.wukong.framework.nio.NIOUdpClient;
 import edu.uci.eecs.wukong.framework.property.Location;
 import edu.uci.eecs.wukong.framework.property.Activity;
@@ -92,7 +92,7 @@ public class WKPFMessageSender {
 		if (collect) {
 			collector.send(port, (long)this.sequence);
 		}
-		send(MPTN.HEADER_TYPE_1, MPTN.MPTN_MSQTYPE_FWDREQ, buffer.array());
+		send(UDPMPTN.HEADER_TYPE_1, UDPMPTN.MPTN_MSQTYPE_FWDREQ, buffer.array());
 	}
 	
 	public void sendWriteLocationProperty(byte port, short wuClassId, byte propertyId, Location location, boolean collect) {
@@ -103,7 +103,7 @@ public class WKPFMessageSender {
 		buffer.putFloat(location.getX());
 		buffer.putFloat(location.getY());
 		buffer.putFloat(location.getZ());
-		send(MPTN.HEADER_TYPE_1, WKPFUtil.WKPF_WRITE_PROPERTY, buffer.array());
+		send(UDPMPTN.HEADER_TYPE_1, WKPFUtil.WKPF_WRITE_PROPERTY, buffer.array());
 	}
 	
 	public void sendWriteActivityProperty(byte port, short wuClassId, byte propertyId, Activity activity, boolean collect) {
@@ -114,7 +114,7 @@ public class WKPFMessageSender {
 		buffer.putLong(activity.getTimeStamp());
 		buffer.putShort(activity.getDeviceId());
 		buffer.putDouble(activity.getValue());
-		send(MPTN.HEADER_TYPE_1, WKPFUtil.WKPF_WRITE_PROPERTY, buffer.array());
+		send(UDPMPTN.HEADER_TYPE_1, WKPFUtil.WKPF_WRITE_PROPERTY, buffer.array());
 	}
 	
 	public void sendWriteShortProperty(byte port, short wuClassId, byte propertyId, short value, boolean collect) {
@@ -126,7 +126,7 @@ public class WKPFMessageSender {
 		if (collect) {
 			collector.send(port, (long)this.sequence);
 		}
-		send(MPTN.HEADER_TYPE_1, WKPFUtil.WKPF_WRITE_PROPERTY, buffer.array());
+		send(UDPMPTN.HEADER_TYPE_1, WKPFUtil.WKPF_WRITE_PROPERTY, buffer.array());
 	}
 	
 	
@@ -149,7 +149,7 @@ public class WKPFMessageSender {
 		ByteBuffer request = ByteBuffer.allocate(2);
 		request.put((byte) (payload.length % 256));
 		request.put((byte) (payload.length / 256));
-		WKPFPackage reply = sendWaitResponse(MPTN.HEADER_TYPE_1, WKPFUtil.WKPF_REPRG_OPEN, request.array());
+		WKPFPackage reply = sendWaitResponse(UDPMPTN.HEADER_TYPE_1, WKPFUtil.WKPF_REPRG_OPEN, request.array());
 		if (reply == null) {
 			LOGGER.error("No reply from node to REPRG_OPEN command");
 			return;
@@ -174,10 +174,10 @@ public class WKPFMessageSender {
 			LOGGER.info("Uploading bytes " + pos + " to " + (pos + length) + " of " + payload.length);
 			
 			if ((pos / pageSize) == ((pos + reqPayload.length) / pageSize)) {
-				send(MPTN.HEADER_TYPE_1, WKPFUtil.WKPF_REPRG_WRITE, reqPayload);
+				send(UDPMPTN.HEADER_TYPE_1, WKPFUtil.WKPF_REPRG_WRITE, reqPayload);
 				pos += length;
 			} else {
-				reply = sendWaitResponse(MPTN.HEADER_TYPE_1, WKPFUtil.WKPF_REPRG_WRITE, reqPayload);
+				reply = sendWaitResponse(UDPMPTN.HEADER_TYPE_1, WKPFUtil.WKPF_REPRG_WRITE, reqPayload);
 				if (reply == null) {
 					LOGGER.info("No reply received. Code updade failed.");
 					return;
@@ -197,7 +197,7 @@ public class WKPFMessageSender {
 				request.put((byte) (pos % 256));
 				request.put((byte) (pos / 256));
 				LOGGER.info("Send reprogram commit after laster packet");
-				reply = sendWaitResponse(MPTN.HEADER_TYPE_1, WKPFUtil.WKPF_REPRG_COMMIT, request.array());
+				reply = sendWaitResponse(UDPMPTN.HEADER_TYPE_1, WKPFUtil.WKPF_REPRG_COMMIT, request.array());
 				if (reply == null) {
 					LOGGER.error("No reply, commit failed.");
 					return;
@@ -221,7 +221,7 @@ public class WKPFMessageSender {
 		
 		request = ByteBuffer.allocate(1);
 		request.put(WKPFUtil.WKPF_REPRG_REBOOT);
-		send(MPTN.HEADER_TYPE_1, WKPFUtil.WKPF_REPRG_REBOOT, null);
+		send(UDPMPTN.HEADER_TYPE_1, WKPFUtil.WKPF_REPRG_REBOOT, null);
 		LOGGER.info("Sent reboot");
 		return;
 	}
@@ -229,7 +229,7 @@ public class WKPFMessageSender {
 	
 	public void sendNodeId(int destId, byte nodeId) {
 		ByteBuffer buffer = ByteBuffer.allocate(15);
-		appendMPTNHeader(buffer, destId, nodeId, MPTN.HEADER_TYPE_2, (byte)1);
+		appendMPTNHeader(buffer, destId, nodeId, UDPMPTN.HEADER_TYPE_2, (byte)1);
 		buffer.put(nodeId);
 		client.send(buffer.array());
 	}
@@ -241,7 +241,7 @@ public class WKPFMessageSender {
 	public WKPFPackage sendWaitResponse(byte headerType, byte mptnType, byte[] payload) {
 		PackageHolder holder = new PackageHolder(System.currentTimeMillis());
 		queue.put(sequence, holder);
-		client.send(pack(headerType, MPTNUtil.MPTN_MSATYPE_FWDREQ, mptnType, sequence, payload));
+		client.send(pack(headerType, MPTNUtil.MPTN_MSGTYPE_FWDREQ, mptnType, sequence, payload));
 		sequence++;
 		try {
 			
@@ -270,7 +270,7 @@ public class WKPFMessageSender {
 	 * @param payload
 	 */
 	public void send(byte headerType, byte messageType, byte[] payload) {
-		client.send(pack(headerType, MPTNUtil.MPTN_MSATYPE_FWDREQ, messageType, sequence++, payload));
+		client.send(pack(headerType, MPTNUtil.MPTN_MSGTYPE_FWDREQ, messageType, sequence++, payload));
 	}
 	
 	private byte[] pack(byte headerType, byte mptnMessageType, byte wkpfMessageType, short sequence, byte[] payload) {

@@ -4,10 +4,17 @@ import java.nio.ByteBuffer;
 
 import com.google.common.annotations.VisibleForTesting;
 
-import edu.uci.eecs.wukong.framework.mptn.MPTN;
+import edu.uci.eecs.wukong.framework.mptn.UDPMPTN;
 import edu.uci.eecs.wukong.framework.util.WKPFUtil;
 
-public class MPTNPackage {
+/**
+ * MPTN  UDP device message format that used for communication between gateway and udp device.
+ * 
+ * 
+ * @author peter
+ *
+ */
+public class UDPMPTNPackage {
 	private int h1;
 	private int h2;
 	private byte nodeId;
@@ -19,13 +26,13 @@ public class MPTNPackage {
 	private byte[] payload;
 	
 	@VisibleForTesting
-	public MPTNPackage(int length) {
+	public UDPMPTNPackage(int length) {
 		this.length = length;
 	}
 	
 	
-	public MPTNPackage(ByteBuffer buffer) throws Exception {
-		byte[] header = new byte[MPTN.MPTN_HEADER_LENGTH];
+	public UDPMPTNPackage(ByteBuffer buffer) throws Exception {
+		byte[] header = new byte[UDPMPTN.MPTN_HEADER_LENGTH];
 		buffer.get(header);
 		this.h1 = header[0] & 0xFF;
 		this.h2 = header[1] & 0xFF;

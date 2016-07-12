@@ -13,7 +13,7 @@ import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import edu.uci.eecs.wukong.framework.model.MPTNPackage;
+import edu.uci.eecs.wukong.framework.model.UDPMPTNPackage;
 import edu.uci.eecs.wukong.framework.model.StateModel;
 import edu.uci.eecs.wukong.framework.model.WKPFPackage;
 import edu.uci.eecs.wukong.framework.nio.NIOUdpServer;
@@ -24,8 +24,8 @@ import edu.uci.eecs.wukong.framework.wkpf.WKPFMessageListener;
 
 import com.google.common.annotations.VisibleForTesting;
 
-public class MPTN implements MPTNMessageListener{
-	private final static Logger LOGGER = LoggerFactory.getLogger(MPTN.class);
+public class UDPMPTN extends AbstractMPTN implements MPTNMessageListener<UDPMPTNPackage> {
+	private final static Logger LOGGER = LoggerFactory.getLogger(UDPMPTN.class);
 	private final static Configuration configuration = Configuration.getInstance();	
 	// Default Gateway Address;
 	private SocketAddress defaultAddress;
@@ -47,63 +47,8 @@ public class MPTN implements MPTNMessageListener{
 	private boolean progression;
 	
 	private List<WKPFMessageListener> listeners;
-	public static int MPTN_HEADER_LENGTH = 9;
-	public static byte HEADER_TYPE_1 = 1;
-	public static byte HEADER_TYPE_2 = 2;
 	
-	public static int MPTN_ID_LEN = 4;
-	public static int MPTN_MAX_ID = 2 ^ (MPTN_ID_LEN * 8) - 1;
-	public static int MPTN_MSQTYPE_LEN = 1;
-	
-	public static int CONNECTION_RETRIES = 1;
-	public static int NETWORK_TIMEOUT = 3;
-	
-	// transport interface sub network length
-	public static int ZW_ADDRESS_LEN = 1;
-	public static int ZB_ADDRESS_LEN = 2;
-	public static int IP_ADDRESS_LEN = 4;
-	
-	// MODE for adding and deleting node
-	public static int STOP_MODE = 0;
-	public static int ADD_MODE = 1;
-	public static int DEL_MODE = 2;
-	
-	// protocol handler admission control
-	public static int ONLY_FROM_TCP_SERVER = 1; // Master or peer gateway
-	public static int ONLY_FROM_TRANSPORT_INTERFACE = 2;
-	public static int VALID_FROM_ALL = 3;
-	
-	// ID service
-	public static byte MPTN_MSGTYPE_GWDISCOVER = 0;
-	public static byte MPTN_MSGTYPE_GWOFFER = 1;
-	public static byte MPTN_MSGTYPE_IDREQ = 2;
-	public static byte MPTN_MSGTYPE_IDACK = 3;
-	public static byte MPTN_MSGTYPE_IDNAK = 4;
-	public static byte MPTN_MSGTYPE_GWIDREQ = 5;
-	public static byte MPTN_MSGTYPE_GWIDACK = 6;
-	public static byte MPTN_MSGTYPE_GWIDNAK = 7;
-	
-    // Heartbeat
-	public static byte MPTN_MSGTYPE_RTPING = 8;
-	public static byte MPTN_MSGTYPE_RTREQ = 9;
-	public static byte MPTN_MSGTYPE_RTREP = 10;
-	
-	// RPC service with master
-	public static byte MPTN_MSQTYPE_RPCCMD = 16;
-	public static byte MPTN_MSQTYPE_RPCREP = 17;
-	
-	// Message forward
-	public static byte MPTN_MSQTYPE_FWDREQ = 24;
-	public static byte MPTN_MSQTYPE_FWDACK = 25;
-	public static byte MPTN_MSQTYPE_FWDNAK = 26;
-	
-	public int MASTER_ID = 0;
-	public int MPTN_UDP_PORT = 5775;
-	
-	public int GWIDREQ_PAYLOAD_LEN = 16;
-	public int IDREQ_PAYLOAD_LEN = 16;
-	
-	public MPTN(boolean progression) {
+	public UDPMPTN(boolean progression) {
 		this.progression = progression;
 		this.listeners = new ArrayList<WKPFMessageListener>();
 		this.idGatewayMap = new HashMap<Long, SocketAddress> ();
@@ -207,7 +152,7 @@ public class MPTN implements MPTNMessageListener{
 		ByteBuffer buffer = ByteBuffer.allocate(size);
 		appendMPTNHeader(buffer, nodeId, HEADER_TYPE_1, (byte)(payload.length + 9));
 		WKPFUtil.appendWKPFPacket(buffer, longAddress, destId,
-				MPTNUtil.MPTN_MSATYPE_FWDREQ, payload);
+				MPTNUtil.MPTN_MSGTYPE_FWDREQ, payload);
 		LOGGER.debug(MPTNUtil.toHexString(buffer.array()));
 		buffer.flip();
 		if (!progression) {
@@ -227,7 +172,7 @@ public class MPTN implements MPTNMessageListener{
 		MPTNUtil.appendMPTNHeader(buffer, serverIP, port, nodeId, type, payload_bytes);
 	}
 
-	public void onMessage(SocketAddress remoteAddress, MPTNPackage message) {
+	public void onMessage(SocketAddress remoteAddress, UDPMPTNPackage message) {
 		if (validateMPTNHeader(message)) {
 			if (message.getType() == HEADER_TYPE_1) { 
 				processFWDMessage(remoteAddress, message);
@@ -241,7 +186,7 @@ public class MPTN implements MPTNMessageListener{
 		}
 	}
 	
-	private boolean validateMPTNHeader(MPTNPackage message) {
+	private boolean validateMPTNHeader(UDPMPTNPackage message) {
 		if (message.getH1() != 0xAA || message.getH2() != 0x55) {
 			LOGGER.error("Received Incorrect Wukong Message.");
 			return false;
@@ -300,14 +245,14 @@ public class MPTN implements MPTNMessageListener{
 	 * @param message WKPF Message
 	 */
 	@VisibleForTesting
-	public byte processFWDMessage(SocketAddress remoteAddress, MPTNPackage message) {
+	public byte processFWDMessage(SocketAddress remoteAddress, UDPMPTNPackage message) {
 		if (message.getLength() >= 9) {
 			WKPFPackage wkpfPackage = new WKPFPackage(message.getPayload());
 			if (!idGatewayMap.containsKey(wkpfPackage.getSourceAddress())) {
 				idGatewayMap.put(wkpfPackage.getSourceAddress(), remoteAddress);
 			}
 			
-			if (wkpfPackage.getType() == MPTNUtil.MPTN_MSATYPE_FWDREQ) {
+			if (wkpfPackage.getType() == MPTNUtil.MPTN_MSGTYPE_FWDREQ) {
 				switch(wkpfPackage.getPayload()[0] & 0xFF) {
 					case WKPFUtil.WKPF_REPRG_OPEN & 0xFF:
 						fireWKPFRemoteProgramOpen(wkpfPackage);
@@ -352,7 +297,11 @@ public class MPTN implements MPTNMessageListener{
 						fireWKPFOnGetDeviceStatusReturn(wkpfPackage);
 						return WKPFUtil.WKPF_GET_DEVICE_STATUS_R;
 					case WKPFUtil.WKPF_SET_LOCK_R:
-						
+						fireWKPFOnSetLockReturn(wkpfPackage);
+					case WKPFUtil.WKPF_CHANGE_LINK_R:
+						fireWKPFOnChangeLinkReturn(wkpfPackage);
+					case WKPFUtil.WKPF_RELEASE_LOCK_R:
+						fireWKPFOnReleaseLockReturn(wkpfPackage);
 						
 					default:
 						LOGGER.error("Received unpexcted WKPF message type " + wkpfPackage);
@@ -471,7 +420,7 @@ public class MPTN implements MPTNMessageListener{
 		}
 	}
 	
-	private void fireWKPFOnReleaseLinkReturn(WKPFPackage message) {
+	private void fireWKPFOnReleaseLockReturn(WKPFPackage message) {
 		LOGGER.debug("Received release lock return");
 		for (WKPFMessageListener listener : listeners) {
 			listener.onWKPFReleaseLockReturn(message.getSourceAddress(), message.getPayload());

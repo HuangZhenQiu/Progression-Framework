@@ -25,7 +25,7 @@ import edu.uci.eecs.wukong.framework.model.WKPFMessageType;
 import edu.uci.eecs.wukong.framework.model.WuClassModel;
 import edu.uci.eecs.wukong.framework.model.WuObjectModel;
 import edu.uci.eecs.wukong.framework.model.WuPropertyModel;
-import edu.uci.eecs.wukong.framework.mptn.MPTN;
+import edu.uci.eecs.wukong.framework.mptn.UDPMPTN;
 import edu.uci.eecs.wukong.framework.prclass.EdgePrClass;
 import edu.uci.eecs.wukong.framework.prclass.PrClass;
 
@@ -43,7 +43,7 @@ public class BufferManager {
 	
 	// Timer to set index for buffer
 	private Timer timer;
-	private MPTN mptn;
+	private UDPMPTN mptn;
 	private BufferMetrics metrics;
 
 	@VisibleForTesting
@@ -61,7 +61,7 @@ public class BufferManager {
 		this.timer.schedule(new BufferMetricsTask(), 0, 10 * 1000);
 	}
 	
-	public void setMPTN(MPTN mptn) {
+	public void setMPTN(UDPMPTN mptn) {
 		this.mptn = mptn;
 	}
 	

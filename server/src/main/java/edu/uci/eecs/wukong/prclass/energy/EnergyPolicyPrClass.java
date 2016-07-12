@@ -11,7 +11,6 @@ import edu.uci.eecs.wukong.framework.model.PropertyType;
 import edu.uci.eecs.wukong.framework.prclass.PrClassMetrics;
 import edu.uci.eecs.wukong.framework.prclass.AgentPrClass;
 import edu.uci.eecs.wukong.framework.prclass.Poller;
-import edu.uci.eecs.wukong.framework.wkpf.WKPF;
 
 
 /**

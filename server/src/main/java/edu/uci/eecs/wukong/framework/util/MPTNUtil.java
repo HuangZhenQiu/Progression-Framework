@@ -20,7 +20,20 @@ public class MPTNUtil {
 	public final static byte MPTN_MSQTYPE_IDREQ = 2;
 	public final static byte MPTN_MSQTYPE_IDACK = 3;
 	public final static byte MPTN_MSQTYPE_IDNAK = 4;	
-	public final static byte MPTN_MSATYPE_FWDREQ = 24;
+	public final static byte MPTN_MSQTYPE_FWDREQ = 5;
+	public final static byte MPTN_MSGTYPE_GWIDACK = 6;
+	public final static byte MPTN_MSGTYPE_GWIDNAK = 7;
+	
+	public final static byte MPTN_MSGTYPE_RTPING = 8;
+	public final static byte MPTN_MSGTYPE_RTREQ = 9;
+	public final static byte MPTN_MSGTYPE_RTREP = 10;
+	
+	public final static byte MPTN_MSGTYPE_RPCCMD = 16;
+	public final static byte MPTN_MSGTYPE_RPCREP = 17;
+	
+	public final static byte MPTN_MSGTYPE_FWDREQ = 24;
+	public final static byte MPTN_MSGTYPE_FWDACK = 25;
+	public final static byte MPTN_MSGTYPE_FWDNAK = 26;
 	
 	public static final char[] HEX_CHARS = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
 	

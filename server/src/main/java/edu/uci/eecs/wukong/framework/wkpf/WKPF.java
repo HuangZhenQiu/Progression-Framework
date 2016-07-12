@@ -41,7 +41,7 @@ import edu.uci.eecs.wukong.framework.property.Activity;
 import edu.uci.eecs.wukong.framework.property.Location;
 import edu.uci.eecs.wukong.framework.property.Response;
 import edu.uci.eecs.wukong.framework.monitor.MonitorListener;
-import edu.uci.eecs.wukong.framework.mptn.MPTN;
+import edu.uci.eecs.wukong.framework.mptn.UDPMPTN;
 
 import com.google.common.annotations.VisibleForTesting;
 /**
@@ -53,7 +53,7 @@ import com.google.common.annotations.VisibleForTesting;
 public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 	private final static Logger LOGGER = LoggerFactory.getLogger(WKPF.class);
 	// Multiple Protocol Transportation Network
-	private MPTN mptn;
+	private UDPMPTN mptn;
 	// Location String set by master
 	private String location;
 	// Location Length
@@ -87,7 +87,7 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 		this.wuclasses = new ArrayList<WuClassModel> ();
 		this.portToWuObjectMap = new TreeMap<Byte, WuObjectModel> ();
 		this.listeners = new ArrayList<PluginInitListener> ();
-		this.mptn = new MPTN(progression);
+		this.mptn = new UDPMPTN(progression);
 		this.mptn.register(this);
 		this.djaData = new DJAData();
 		this.djaData.register(this);

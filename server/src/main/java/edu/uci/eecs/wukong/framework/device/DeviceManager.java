@@ -1,13 +1,11 @@
 package edu.uci.eecs.wukong.framework.device;
 
-import java.net.SocketAddress;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.uci.eecs.wukong.framework.gateway.WKPFRPCHandler;
-import edu.uci.eecs.wukong.framework.model.TCPMPTNPackage;
+import edu.uci.eecs.wukong.framework.wkpf.WKPFMessageListener;
 
-public class DeviceManager implements WKPFRPCHandler {
+public class DeviceManager implements WKPFMessageListener {
 	private List<Device> devices;
 	
 	public DeviceManager() {
@@ -17,53 +15,100 @@ public class DeviceManager implements WKPFRPCHandler {
 	public void addDevice(Device device) {
 		this.devices.add(device);
 	}
-	
 
 	@Override
-	public void onSend(SocketAddress remoteAddress, TCPMPTNPackage bytes) {
+	public void onWKPFGetWuClassList(long sourceId, byte[] message) {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
-	public void onGetDeviceType(SocketAddress remoteAddress, TCPMPTNPackage bytes) {
+	public void onWKPFGetWuObjectList(long sourceId, byte[] message) {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
-	public void onRouting(SocketAddress remoteAddress, TCPMPTNPackage bytes) {
+	public void onWKPFReadProperty(long sourceId, byte[] message) {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
-	public void onDiscover(SocketAddress remoteAddress, TCPMPTNPackage bytes) {
+	public void onWKPFWriteProperty(long sourceId, byte[] message) {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
-	public void onAdd(SocketAddress remoteAddress, TCPMPTNPackage bytes) {
+	public void onWKPFRequestPropertyInit(long sourceId, byte[] message) {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
-	public void onDelete(SocketAddress remoteAddress, TCPMPTNPackage bytes) {
+	public void onWKPFMonitoredData(long sourceId, byte[] message) {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
-	public void onStop(SocketAddress remoteAddress, TCPMPTNPackage bytes) {
+	public void onWKPFSetLocation(long sourceId, byte[] message) {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
-	public void onPoll(SocketAddress remoteAddress, TCPMPTNPackage bytes) {
+	public void onWKPFGetLocation(long sourceId, byte[] message) {
 		// TODO Auto-generated method stub
+		
+	}
 
+	@Override
+	public void onWKPFRemoteProgramOpen(long sourceId, byte[] message) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onWKPFRemoteProgramWrite(long sourceId, byte[] message) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onWKPFRemoteProgramCommit(long sourceId, byte[] message) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onWKPFLinkCounterReturn(long sourceId, byte[] message) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onWKPFDeviceStatusReturn(long sourceId, byte[] message) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onWKPFSetLockReturn(long sourceId, byte[] message) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onWKPFChangeLinkReturn(long sourceId, byte[] message) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onWKPFReleaseLockReturn(long sourceId, byte[] message) {
+		// TODO Auto-generated method stub
+		
 	}
 }

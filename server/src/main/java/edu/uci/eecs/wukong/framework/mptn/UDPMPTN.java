@@ -13,9 +13,7 @@ import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import edu.uci.eecs.wukong.framework.model.UDPMPTNPackage;
 import edu.uci.eecs.wukong.framework.model.StateModel;
-import edu.uci.eecs.wukong.framework.model.WKPFPackage;
 import edu.uci.eecs.wukong.framework.nio.NIOUdpServer;
 import edu.uci.eecs.wukong.framework.util.Configuration;
 import edu.uci.eecs.wukong.framework.util.MPTNUtil;
@@ -24,6 +22,17 @@ import edu.uci.eecs.wukong.framework.wkpf.WKPFMessageListener;
 
 import com.google.common.annotations.VisibleForTesting;
 
+/**
+ * UDPMPTN will be used in both progression server and edge server.
+ * 
+ * In edge server, it needs to get an device id from gateway.
+ * In progression server, it doesn't need to get device ID. Its default id is 1.
+ * which is the default monitoring destination in master
+ * 
+ * 
+ * @author peter
+ *
+ */
 public class UDPMPTN extends AbstractMPTN implements MPTNMessageListener<UDPMPTNPackage> {
 	private final static Logger LOGGER = LoggerFactory.getLogger(UDPMPTN.class);
 	private final static Configuration configuration = Configuration.getInstance();	
@@ -247,7 +256,7 @@ public class UDPMPTN extends AbstractMPTN implements MPTNMessageListener<UDPMPTN
 	@VisibleForTesting
 	public byte processFWDMessage(SocketAddress remoteAddress, UDPMPTNPackage message) {
 		if (message.getLength() >= 9) {
-			WKPFPackage wkpfPackage = new WKPFPackage(message.getPayload());
+			MPTNPackage wkpfPackage = new MPTNPackage(message.getPayload());
 			if (!idGatewayMap.containsKey(wkpfPackage.getSourceAddress())) {
 				idGatewayMap.put(wkpfPackage.getSourceAddress(), remoteAddress);
 			}
@@ -304,123 +313,123 @@ public class UDPMPTN extends AbstractMPTN implements MPTNMessageListener<UDPMPTN
 						fireWKPFOnReleaseLockReturn(wkpfPackage);
 						
 					default:
-						LOGGER.error("Received unpexcted WKPF message type " + wkpfPackage);
+						LOGGER.error("Received unpexcted MPTN message type " + wkpfPackage);
 				}
 			} else if (wkpfPackage.getType() == MPTNUtil.MPTN_MSQTYPE_IDACK) {
 				processIDMessage(wkpfPackage.getDestAddress());
 			} 
 		} else {
-			LOGGER.error("Received unpexcted WKPF message with length less than 9 bytes");
+			LOGGER.error("Received unpexcted MPTN message with length less than 9 bytes");
 		}
 		return WKPFUtil.WKPF_ERROR;
 	}
 	
-	private void fireWKPFRemoteProgramOpen(WKPFPackage message) {
+	private void fireWKPFRemoteProgramOpen(MPTNPackage message) {
 		LOGGER.debug("Received remote programming open message");
 		for (WKPFMessageListener listener : listeners) {
 			listener.onWKPFRemoteProgramOpen(message.getSourceAddress(), message.getPayload());
 		}
 	}
 	
-	private void fireWKPFRemoteProgramWrite(WKPFPackage message) {
+	private void fireWKPFRemoteProgramWrite(MPTNPackage message) {
 		LOGGER.debug("Received remote programming write message");
 		for (WKPFMessageListener listener : listeners) {
 			listener.onWKPFRemoteProgramWrite(message.getSourceAddress(), message.getPayload());
 		}
 	}
 	
-	private void fireWKPFRemoteProgramCommit(WKPFPackage message) {
+	private void fireWKPFRemoteProgramCommit(MPTNPackage message) {
 		LOGGER.debug("Received remote programming commit message");
 		for (WKPFMessageListener listener : listeners) {
 			listener.onWKPFRemoteProgramCommit(message.getSourceAddress(), message.getPayload());
 		}
 	}
 	
-	private void fireWKPFGetWuClassList(WKPFPackage message) {
+	private void fireWKPFGetWuClassList(MPTNPackage message) {
 		LOGGER.debug("Received get Wuclass List message");
 		for (WKPFMessageListener listener : listeners) {
 			listener.onWKPFGetWuClassList(message.getSourceAddress(), message.getPayload());
 		}
 	}
 	
-	private void fireWKPFGetWuObjectList(WKPFPackage message) {
+	private void fireWKPFGetWuObjectList(MPTNPackage message) {
 		LOGGER.debug("Received get WuObject List message");
 		for (WKPFMessageListener listener : listeners) {
 			listener.onWKPFGetWuObjectList(message.getSourceAddress(), message.getPayload());
 		}
 	}
 	
-	private void fireWKPFReadProperty(WKPFPackage message) {
+	private void fireWKPFReadProperty(MPTNPackage message) {
 		LOGGER.debug("Received read Property message");
 		for (WKPFMessageListener listener : listeners) {
 			listener.onWKPFReadProperty(message.getSourceAddress(), message.getPayload());
 		}
 	}
 	
-	private void fireWKPFWriteProperty(WKPFPackage message) {
+	private void fireWKPFWriteProperty(MPTNPackage message) {
 		LOGGER.debug("Received write Property message");
 		for (WKPFMessageListener listener : listeners) {
 			listener.onWKPFWriteProperty(message.getSourceAddress(), message.getPayload());
 		}
 	}
 	
-	private void fireWKPFRequestPropertyInit(WKPFPackage message) {
+	private void fireWKPFRequestPropertyInit(MPTNPackage message) {
 		LOGGER.debug("Received Request Property init message");
 		for (WKPFMessageListener listener : listeners) {
 			listener.onWKPFRequestPropertyInit(message.getSourceAddress(), message.getPayload());
 		}
 	}
 	
-	private void fireWKPFMonitoredData(WKPFPackage message) {
+	private void fireWKPFMonitoredData(MPTNPackage message) {
 		LOGGER.debug("Received Monitored data message");
 		for (WKPFMessageListener listener : listeners) {
 			listener.onWKPFMonitoredData(message.getSourceAddress(), message.getPayload());
 		}
 	}
 	
-	private void fireWKPFGetLocation(WKPFPackage message) {
+	private void fireWKPFGetLocation(MPTNPackage message) {
 		LOGGER.debug("Received get location message");
 		for (WKPFMessageListener listener : listeners) {
 			listener.onWKPFGetLocation(message.getSourceAddress(), message.getPayload());
 		}
 	}
 	
-	private void fireWKPFSetLocation(WKPFPackage message) {
+	private void fireWKPFSetLocation(MPTNPackage message) {
 		LOGGER.debug("Received set location message");
 		for (WKPFMessageListener listener : listeners) {
 			listener.onWKPFSetLocation(message.getSourceAddress(), message.getPayload());
 		}
 	}
 	
-	private void fireWKPFOnGetLinkCounterReturn(WKPFPackage message) {
+	private void fireWKPFOnGetLinkCounterReturn(MPTNPackage message) {
 		LOGGER.debug("Received get link counter message");
 		for (WKPFMessageListener listener : listeners) {
 			listener.onWKPFLinkCounterReturn(message.getSourceAddress(), message.getPayload());
 		}
 	}
 	
-	private void fireWKPFOnGetDeviceStatusReturn(WKPFPackage message) {
+	private void fireWKPFOnGetDeviceStatusReturn(MPTNPackage message) {
 		LOGGER.debug("Received get device status message");
 		for (WKPFMessageListener listener : listeners) {
 			listener.onWKPFDeviceStatusReturn(message.getSourceAddress(), message.getPayload());
 		}
 	}
 	
-	private void fireWKPFOnSetLockReturn(WKPFPackage message) {
+	private void fireWKPFOnSetLockReturn(MPTNPackage message) {
 		LOGGER.debug("Received set lock return message");
 		for (WKPFMessageListener listener : listeners) {
 			listener.onWKPFSetLockReturn(message.getSourceAddress(), message.getPayload());
 		}
 	}
 	
-	private void fireWKPFOnChangeLinkReturn(WKPFPackage message) {
+	private void fireWKPFOnChangeLinkReturn(MPTNPackage message) {
 		LOGGER.debug("Received change link return");
 		for (WKPFMessageListener listener : listeners) {
 			listener.onWKPFChangeLinkReturn(message.getSourceAddress(), message.getPayload());
 		}
 	}
 	
-	private void fireWKPFOnReleaseLockReturn(WKPFPackage message) {
+	private void fireWKPFOnReleaseLockReturn(MPTNPackage message) {
 		LOGGER.debug("Received release lock return");
 		for (WKPFMessageListener listener : listeners) {
 			listener.onWKPFReleaseLockReturn(message.getSourceAddress(), message.getPayload());

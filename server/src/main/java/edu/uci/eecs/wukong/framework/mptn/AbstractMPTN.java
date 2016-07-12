@@ -28,28 +28,30 @@ public abstract class AbstractMPTN {
 	public static int VALID_FROM_ALL = 3;
 	
 	// ID service
-	public static byte MPTN_MSGTYPE_GWDISCOVER = 0;
-	public static byte MPTN_MSGTYPE_GWOFFER = 1;
-	public static byte MPTN_MSGTYPE_IDREQ = 2;
-	public static byte MPTN_MSGTYPE_IDACK = 3;
-	public static byte MPTN_MSGTYPE_IDNAK = 4;
-	public static byte MPTN_MSGTYPE_GWIDREQ = 5;
-	public static byte MPTN_MSGTYPE_GWIDACK = 6;
-	public static byte MPTN_MSGTYPE_GWIDNAK = 7;
+	public static final byte MPTN_MSGTYPE_GWDISCOVER = 0;
+	public static final byte MPTN_MSGTYPE_GWOFFER = 1;
+	public static final byte MPTN_MSGTYPE_IDREQ = 2;
+	public static final byte MPTN_MSGTYPE_IDACK = 3;
+	public static final byte MPTN_MSGTYPE_IDNAK = 4;
+	public static final byte MPTN_MSGTYPE_GWIDREQ = 5;
+	public static final byte MPTN_MSGTYPE_GWIDACK = 6;
+	public static final byte MPTN_MSGTYPE_GWIDNAK = 7;
 	
     // Heartbeat
-	public static byte MPTN_MSGTYPE_RTPING = 8;
-	public static byte MPTN_MSGTYPE_RTREQ = 9;
-	public static byte MPTN_MSGTYPE_RTREP = 10;
+	public static final byte MPTN_MSGTYPE_RTPING = 8;
+	public static final byte MPTN_MSGTYPE_RTREQ = 9;
+	public static final byte MPTN_MSGTYPE_RTREP = 10;
 	
 	// RPC service with master
-	public static byte MPTN_MSQTYPE_RPCCMD = 16;
-	public static byte MPTN_MSQTYPE_RPCREP = 17;
+	public static final byte MPTN_MSGTYPE_RPCCMD = 16;
+	public static final byte MPTN_MSGTYPE_RPCREP = 17;
 	
 	// Message forward
-	public static byte MPTN_MSQTYPE_FWDREQ = 24;
-	public static byte MPTN_MSQTYPE_FWDACK = 25;
-	public static byte MPTN_MSQTYPE_FWDNAK = 26;
+	public static final byte MPTN_MSGTYPE_FWDREQ = 24;
+	public static final byte MPTN_MSGTYPE_FWDACK = 25;
+	public static final byte MPTN_MSGTYPE_FWDNAK = 26;
+	
+	public static final byte MPTN_ERROR = 99;
 	
 	public int MASTER_ID = 0;
 	public int MPTN_UDP_PORT = 5775;

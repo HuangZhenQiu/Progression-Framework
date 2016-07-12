@@ -3,10 +3,10 @@ package edu.uci.eecs.wukong.framework.test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import edu.uci.eecs.wukong.framework.model.UDPMPTNPackage;
-import edu.uci.eecs.wukong.framework.model.WKPFPackage;
 import edu.uci.eecs.wukong.framework.mptn.UDPMPTN;
+import edu.uci.eecs.wukong.framework.mptn.UDPMPTNPackage;
 import edu.uci.eecs.wukong.framework.mptn.MPTNMessageListener;
+import edu.uci.eecs.wukong.framework.mptn.MPTNPackage;
 import edu.uci.eecs.wukong.framework.nio.NIOUdpServer;
 import edu.uci.eecs.wukong.framework.util.MPTNUtil;
 
@@ -113,7 +113,7 @@ public class MockGateway implements MPTNMessageListener<UDPMPTNPackage> {
 	 */
 	private void processMessage(UDPMPTNPackage mptnPackage) throws InterruptedException {
 		if (mptnPackage.getLength() > 9) {
-			WKPFPackage pack = new WKPFPackage(mptnPackage.getPayload());
+			MPTNPackage pack = new MPTNPackage(mptnPackage.getPayload());
 			
 			/* receive async response*/
 			if(sender != null && sender.updatePackage(pack)) {

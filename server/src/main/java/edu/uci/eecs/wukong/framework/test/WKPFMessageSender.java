@@ -1,6 +1,6 @@
 package edu.uci.eecs.wukong.framework.test;
 
-import edu.uci.eecs.wukong.framework.model.WKPFPackage;
+import edu.uci.eecs.wukong.framework.mptn.MPTNPackage;
 import edu.uci.eecs.wukong.framework.mptn.UDPMPTN;
 import edu.uci.eecs.wukong.framework.nio.NIOUdpClient;
 import edu.uci.eecs.wukong.framework.property.Location;
@@ -37,14 +37,14 @@ public class WKPFMessageSender {
 	public static class PackageHolder {
 		private boolean ready;
 		private long sendTime;
-		private WKPFPackage wkpfPackage;
+		private MPTNPackage wkpfPackage;
 		
 		public PackageHolder(long time) {
 			this.ready = false;
 			this.sendTime = time;
 		}
 		
-		public void setPackge(WKPFPackage wkpfPackage) {
+		public void setPackge(MPTNPackage wkpfPackage) {
 			this.wkpfPackage = wkpfPackage;
 		}
 		
@@ -72,7 +72,7 @@ public class WKPFMessageSender {
 		}
 	}
 	
-	public synchronized boolean updatePackage(WKPFPackage wkpfPackage) {
+	public synchronized boolean updatePackage(MPTNPackage wkpfPackage) {
 		Short sequence = wkpfPackage.getSequence();
 		if (queue.get(sequence) != null) {
 			queue.get(sequence).wkpfPackage = wkpfPackage;
@@ -149,7 +149,7 @@ public class WKPFMessageSender {
 		ByteBuffer request = ByteBuffer.allocate(2);
 		request.put((byte) (payload.length % 256));
 		request.put((byte) (payload.length / 256));
-		WKPFPackage reply = sendWaitResponse(UDPMPTN.HEADER_TYPE_1, WKPFUtil.WKPF_REPRG_OPEN, request.array());
+		MPTNPackage reply = sendWaitResponse(UDPMPTN.HEADER_TYPE_1, WKPFUtil.WKPF_REPRG_OPEN, request.array());
 		if (reply == null) {
 			LOGGER.error("No reply from node to REPRG_OPEN command");
 			return;
@@ -238,7 +238,7 @@ public class WKPFMessageSender {
 		client.send(pack(headerType, MPTNUtil.MPTN_MSQTYPE_IDACK, (byte)0, sequence++, payload));
 	}
 	
-	public WKPFPackage sendWaitResponse(byte headerType, byte mptnType, byte[] payload) {
+	public MPTNPackage sendWaitResponse(byte headerType, byte mptnType, byte[] payload) {
 		PackageHolder holder = new PackageHolder(System.currentTimeMillis());
 		queue.put(sequence, holder);
 		client.send(pack(headerType, MPTNUtil.MPTN_MSGTYPE_FWDREQ, mptnType, sequence, payload));
@@ -250,7 +250,7 @@ public class WKPFMessageSender {
 			}
 			
 			LOGGER.info("Receive async response from client");
-			WKPFPackage wkpfPackage = holder.wkpfPackage;
+			MPTNPackage wkpfPackage = holder.wkpfPackage;
 			queue.remove(wkpfPackage.getSequence());
 			return wkpfPackage;
 		} catch (Exception e) {

@@ -1,16 +1,16 @@
-package edu.uci.eecs.wukong.framework.model;
+package edu.uci.eecs.wukong.framework.mptn;
 
 import java.util.Arrays;
 
 import edu.uci.eecs.wukong.framework.util.WKPFUtil;
 
-public class WKPFPackage {
+public class MPTNPackage {
 	private long sourceAddress;
 	private long destAddress;
 	private byte type;
 	private byte[] payload;
 	
-	public WKPFPackage(byte[] payload) {
+	public MPTNPackage(byte[] payload) {
 		this.destAddress =  WKPFUtil.getLong(payload, 0);
 		this.sourceAddress = WKPFUtil.getLong(payload, 4);
 		this.type = payload[8];

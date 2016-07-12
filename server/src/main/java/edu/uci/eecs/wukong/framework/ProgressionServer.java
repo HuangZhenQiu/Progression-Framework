@@ -65,24 +65,22 @@ public class ProgressionServer extends AbstractServer{
 	 *  go beyond the capability of current version WKPF.
 	 */	
 	private void init(PeerInfo peerInfo) {
-
 		server = new CommunicationServer(peerInfo, false, false, false);
 		
-		//register the blocking data service
+		// register the blocking data service
 		BlockingService blockingDataService = DataService.BlockingDataService.newReflectiveBlockingService(new ProgressionDataServiceFactory.BlockingDataServiceImpl());
 		logger.info("Register blokcking service: " + blockingDataService.getDescriptorForType().getName());
 		server.registerBlockingService(false, blockingDataService);
 		
 		
-		//register the nonblocking data service
+		// register the nonblocking data service
 		Service dataService = DataService.NonBlockingDataService.newReflectiveService(new ProgressionDataServiceFactory.NonblockingDataServiceImpl());
 		logger.info("Register nonblocking service: " + dataService.getDescriptorForType().getName());
 		server.registerService(false, dataService);
 		logger.info("Data services are registered in server");
-		
 	}
 	
-	//start the progression server
+	// start the progression server
 	public void start() {
 		try {
 			StateModel model = this.stateManager.recover();

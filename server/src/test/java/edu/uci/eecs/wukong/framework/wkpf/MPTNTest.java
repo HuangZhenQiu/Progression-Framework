@@ -4,9 +4,9 @@ import java.nio.ByteBuffer;
 
 import org.junit.Test;
 
-import edu.uci.eecs.wukong.framework.model.UDPMPTNPackage;
-import edu.uci.eecs.wukong.framework.model.WKPFPackage;
+import edu.uci.eecs.wukong.framework.mptn.MPTNPackage;
 import edu.uci.eecs.wukong.framework.mptn.UDPMPTN;
+import edu.uci.eecs.wukong.framework.mptn.UDPMPTNPackage;
 import edu.uci.eecs.wukong.framework.util.MPTNUtil;
 import edu.uci.eecs.wukong.framework.util.WKPFUtil;
 import junit.framework.TestCase;

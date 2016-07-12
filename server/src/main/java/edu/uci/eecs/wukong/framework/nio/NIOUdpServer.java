@@ -86,24 +86,10 @@ public class NIOUdpServer implements Runnable {
 		}
 	}
 	
+	/* Since it is only used for udp device, which only connects with since gateway*/
 	public void send(SocketAddress address, ByteBuffer data) {
 		try {
-			/*if (activeChannels.containsKey(address)) {
-				DatagramChannel channel = activeChannels.get(address);
-				if (!channel.isOpen()) {
-					// Reconnect the channel
-					channel.connect(address);
-					activeChannels.put(address, channel);
-				}
-			} else {
-				// If it is a address not in the active channels, it is the default gateway address.
-				DatagramChannel channel = DatagramChannel.open();
-				channel.bind(address);
-				activeChannels.put(address, channel);
-			}
-			activeChannels.get(address).write(data);*/
 			serverChannel.send(data, address);
-
 		} catch (Exception e) {
 			logger.error("Fail to send message to address: " + address);
 		}

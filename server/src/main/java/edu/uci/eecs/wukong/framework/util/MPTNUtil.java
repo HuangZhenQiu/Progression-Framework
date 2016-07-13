@@ -3,6 +3,8 @@ package edu.uci.eecs.wukong.framework.util;
 import java.nio.ByteBuffer;
 
 import com.google.common.primitives.UnsignedInteger;
+
+import edu.uci.eecs.wukong.framework.mptn.packet.TCPMPTNPacket;
 public class MPTNUtil {
 	
 	public final static int MPTN_ID_LEN = 4;
@@ -14,6 +16,10 @@ public class MPTNUtil {
 	public final static int MPTN_SRC_BYTE_OFFSET = MPTN_DEST_BYTE_OFFSET + MPTN_ID_LEN;
 	public final static int MPTN_MSATYPE_BYTE_OFFSET = MPTN_SRC_BYTE_OFFSET + MPTN_ID_LEN;
 	public final static int MPTN_PAYLOAD_BYTE_OFFSET = MPTN_MSATYPE_BYTE_OFFSET + MPTN_MSGTYPE_LEN;
+	
+	public final static int MPTN_TCP_NOUNCE_SIZE = 4;
+	public final static int MPTN_TCP_PACKAGE_SIZE = 8;
+	public final static int MPTN_TCP_HEADER_LENTGH = MPTN_ID_LEN + MPTN_TCP_NOUNCE_SIZE + MPTN_TCP_PACKAGE_SIZE;
 	
 	public static final int MPTN_HEADER_LENGTH = 9;
 	public static final byte HEADER_TYPE_1 = 1;
@@ -84,6 +90,15 @@ public class MPTNUtil {
 		} else {
 			return "";
 		}
+	}
+	
+	public static ByteBuffer createBufferFromTCPMPTNPacket(TCPMPTNPacket packet) {
+		ByteBuffer buffer = ByteBuffer.allocate(MPTNUtil.MPTN_TCP_HEADER_LENTGH + (int)packet.getLength());
+		buffer.putInt(packet.getPeerId());
+		buffer.putLong(packet.getNounce());
+		appendReversedInt(buffer, packet.getLength());
+		buffer.put(packet.getPayload());
+		return buffer;
 	}
 	
 	public static void appendReversedInt(ByteBuffer buffer, int value) {

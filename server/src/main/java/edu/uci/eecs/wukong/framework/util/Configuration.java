@@ -18,6 +18,7 @@ public class Configuration {
 	private static final String XMPP_PASSWORD = "XMPP.PASSWORD";
 	private static final String MASTER_ADDRESS = "MASTER.ADDRESS";
 	private static final String MASTER_PORT = "MASTER.PORT";
+	private static final String MASTER_TCP_PORT = "MASTER.TCP.PORT";
 	private static final String GATEWAY_IP = "GATEWAY.IP";
 	private static final String GATEWAY_PORT = "GATEWAY.PORT";
 	
@@ -202,8 +203,13 @@ public class Configuration {
 		return properties.getProperty(MASTER_ADDRESS);
 	}
 	
-	public String getMasterPort() {
-		return properties.getProperty(MASTER_PORT);
+	public Short getMasterPort() {
+		return Short.parseShort(properties.getProperty(MASTER_PORT));
+	}
+	
+	public Short getMasterTCPPort() {
+		return Short.parseShort(properties.getProperty(MASTER_TCP_PORT));
+
 	}
 	
 	public String getHueAddress() {

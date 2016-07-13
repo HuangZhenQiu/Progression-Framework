@@ -38,11 +38,11 @@ public class ConfigurationManager{
 	
 	private ConfigurationManager() {
 		this.masterConfig = new ConfigurationService(
-				"Master", configuration.getMasterAddress(), configuration.getMasterPort(), "configuration");
+				"Master", configuration.getMasterAddress(), configuration.getMasterPort().toString(), "configuration");
 		this.HueService = new ConfigurationService(
 				"Hue", configuration.getHueAddress(), configuration.getHuePort(), "api/newdeveloper/lights/1/state" /** temporary **/);
 		this.mappingService = new  MappingService(
-				"Map", configuration.getMasterAddress(), configuration.getMasterPort(), "applications");
+				"Map", configuration.getMasterAddress(), configuration.getMasterPort().toString(), "applications");
 		this.factorClient = FactorClientFactory.getFactorClient();
 	}
 	

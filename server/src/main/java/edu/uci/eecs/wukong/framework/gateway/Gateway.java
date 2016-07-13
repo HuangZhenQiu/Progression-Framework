@@ -1,13 +1,14 @@
 package edu.uci.eecs.wukong.framework.gateway;
 
 import java.net.SocketAddress;
-import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
-
+import edu.uci.eecs.wukong.framework.device.Device;
 import edu.uci.eecs.wukong.framework.device.DeviceManager;
 import edu.uci.eecs.wukong.framework.gateway.rpc.RPCCommandHandler;
 import edu.uci.eecs.wukong.framework.gateway.rpc.TinyRPCRequest;
@@ -20,7 +21,11 @@ import edu.uci.eecs.wukong.framework.util.WKPFUtil;
 public class Gateway implements RPCCommandHandler {
 	private final static Logger LOGGER = LoggerFactory.getLogger(Gateway.class);
 	private static Gson gson = new Gson();
-	private int id; // gateway ID
+	// gateway ID
+	private long id;
+	private Object modeLock = new Object();
+	// current mode of the gateway
+	private int mode;
 	private boolean enterLearnMode = false;
 	private DeviceManager manager;
 	private IDService idService;
@@ -28,11 +33,21 @@ public class Gateway implements RPCCommandHandler {
 	private static final String[] RPC_METHOD =
 		{"send", "getDeviceType", "routing", "discover", "add", "delete", "stop", "poll"};
 	
-	public Gateway(DeviceManager manager) {
-		this.manager = manager;
+	public Gateway() {
+		this.mode = MPTNUtil.STOP_MODE;
 		this.mptn = new TCPMPTN();
+		this.manager = new DeviceManager(mptn);
 		this.idService = new IDService(this);
 		this.mptn.register(idService);
+		this.idService.getGatewayID();
+	}
+	
+	public void addDevice(Device device) {
+		this.manager.addDevice(device);
+	}
+	
+	public void setId(long id) {
+		this.id = id;
 	}
 	
 	public void dispatchWKPFMessage(SocketAddress remoteAddress, MPTNPacket message) {
@@ -111,8 +126,8 @@ public class Gateway implements RPCCommandHandler {
 		}
 		
 		byte[] payload = gson.toJson(response).getBytes();
-		ByteBuffer buffer = ByteBuffer.allocate(MPTNUtil.MPTN_HEADER_LENGTH + payload.length);
-		this.mptn.send(MPTNUtil.MASTER_ID, buffer, false);
+		MPTNPacket packet = new MPTNPacket(message.getDestAddress(), message.getSourceAddress(), MPTNUtil.MPTN_MSGTYPE_RPCREP, payload);
+		this.mptn.send(MPTNUtil.MASTER_ID, packet, false);
 	}
 	
 	public TCPMPTN getMPTN() {
@@ -121,37 +136,76 @@ public class Gateway implements RPCCommandHandler {
 
 	@Override
 	public TinyRPCResponse onGetDeviceType(SocketAddress remoteAddress, TinyRPCRequest request) {
-		return request.getSuccessResponse(null);
+		int dest = (int)request.getParams().get("address");
+		LOGGER.info(String.format("get device type for %s", dest));
+		byte[] type = new byte[] {(byte)0xff, (byte)0xff, (byte)0xff};
+		return request.getSuccessResponse(type);
 	}
 
 	@Override
 	public TinyRPCResponse onRouting(SocketAddress remoteAddress, TinyRPCRequest request) {
-		return request.getSuccessResponse(null);
+		int dest = (int)request.getParams().get("address");
+		LOGGER.info(String.format("get routing info for %S", dest));
+		List<?> list = new ArrayList();
+		return request.getSuccessResponse(list);
 	}
 
 	@Override
-	public TinyRPCResponse onDiscover(SocketAddress remoteAddress, TinyRPCRequest request) {
-		return request.getSuccessResponse(null);
+	public synchronized TinyRPCResponse onDiscover(SocketAddress remoteAddress, TinyRPCRequest request) {
+		if (this.mode == MPTNUtil.STOP_MODE) {
+			LOGGER.error("Can't discover under stop mode");
+		}
+		return request.getSuccessResponse(this.manager.getDeviceIds());
 	}
 
 	@Override
 	public TinyRPCResponse onAdd(SocketAddress remoteAddress, TinyRPCRequest request) {
-		return request.getSuccessResponse(null);
+		boolean result = false;
+		synchronized (modeLock) {
+			this.enterLearnMode = true;
+			this.mode = MPTNUtil.ADD_MODE;
+			result = true;
+		}
+		return request.getSuccessResponse(result);
 	}
 
 	@Override
 	public TinyRPCResponse onDelete(SocketAddress remoteAddress, TinyRPCRequest request) {
-		return request.getSuccessResponse(null);	
+		boolean result = false;
+		synchronized (modeLock) {
+			this.enterLearnMode = true;
+			this.mode = MPTNUtil.DEL_MODE;
+			result = true;
+		}
+		
+		return request.getSuccessResponse(result);	
 	}
 
 	@Override
 	public TinyRPCResponse onStop(SocketAddress remoteAddress, TinyRPCRequest request) {
-		return request.getSuccessResponse(null);
+		boolean result = false;
+		synchronized (modeLock) {
+			this.enterLearnMode = false;
+			this.mode = MPTNUtil.STOP_MODE;
+			result = true;
+		}
+		
+		return request.getSuccessResponse(result);
 	}
 
 	@Override
 	public TinyRPCResponse onPoll(SocketAddress remoteAddress, TinyRPCRequest request) {
-		return request.getSuccessResponse(null);	
+		String result;
+		synchronized (modeLock) {
+			if (this.mode != MPTNUtil.STOP_MODE) {
+				result = "ready to " + this.mode;
+			} else {
+				// TODO (Peter Huang) update it when we allow add devices in progression server
+				result = "Stopped";
+			}
+		}
+		
+		return request.getSuccessResponse(result);	
 	}
 
 	@Override
@@ -164,5 +218,9 @@ public class Gateway implements RPCCommandHandler {
 		}
 		
 		return request.getSuccessResponse(null);
+	}
+	
+	public static void main(String[] args) {
+		Gateway gateway = new Gateway();
 	}
 }

@@ -10,10 +10,10 @@ import java.nio.ByteBuffer;
  */
 public class TCPMPTNPacket extends AbstractMPTNPacket {
 	private int peerId;
-	/* 8 unsigned char*/
-	private String nounce;
+	/* 4 unsigned char*/
+	private long nounce;
 	/* 8 unsigned long*/
-	private long length;
+	private int length;
 	/* package paylod */
 	private byte[] payload;
 	
@@ -21,7 +21,7 @@ public class TCPMPTNPacket extends AbstractMPTNPacket {
 		
 	}
 	
-	public TCPMPTNPacket(int peerId, String nounce, long length, byte[] payload) {
+	public TCPMPTNPacket(int peerId, long nounce, int length, byte[] payload) {
 		this.peerId = peerId;
 		this.nounce = nounce;
 		this.length = length;
@@ -33,11 +33,19 @@ public class TCPMPTNPacket extends AbstractMPTNPacket {
 		return this;
 	}
 	
-	public long getLength() {
+	public int getPeerId() {
+		return peerId;
+	}
+	
+	public int getLength() {
 		return length;
 	}
 	
 	public byte[] getPayload() {
 		return payload;
+	}
+	
+	public long getNounce() {
+		return this.nounce;
 	}
 }

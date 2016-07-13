@@ -17,6 +17,15 @@ public class DeviceManager implements WKPFMessageListener {
 	public void addDevice(Device device) {
 		this.devices.add(device);
 	}
+	
+	public List<Long> getDeviceIds() {
+		List<Long> ids = new ArrayList<Long> ();
+		for (Device device : devices) {
+			ids.add(device.getNetworkId());
+		}
+		
+		return ids;
+	}
 
 	@Override
 	public void onWKPFGetWuClassList(long sourceId, byte[] message) {

@@ -43,7 +43,7 @@ public class IDService implements IDProtocolHandler {
 		this.gateway = gateway;
 		this.addressLength = MPTNUtil.IP_ADDRESS_LEN;
 		this.gatewayId = MPTNUtil.MPTN_MAX_ID.intValue();
-		this.uuid = UUID.randomUUID().node();
+		this.uuid = UUID.randomUUID().getMostSignificantBits();
 		try {
 			InetAddress localHost = Inet4Address.getLocalHost();
 			NetworkInterface networkInterface = NetworkInterface.getByInetAddress(localHost);
@@ -61,10 +61,9 @@ public class IDService implements IDProtocolHandler {
 		
 		IDRequest request = new IDRequest(address, addressLength,
 				netmask, Configuration.getInstance().getGatewayPort(), uuid);
-		byte[] payload = gson.toJson(request).getBytes();
-		ByteBuffer buffer = ByteBuffer.allocate(MPTNUtil.MPTN_HEADER_LENGTH + payload.length);
-		MPTNUtil.appendMPTNPackage(buffer, (int) destId, (int) sourceId, messageType, payload);
-		MPTNPacket packet = gateway.getMPTN().send((int)destId, buffer, true);
+		byte[] payload = gson.toJson(request).getBytes();		
+		MPTNPacket requestPacket = new MPTNPacket(sourceId, destId, messageType, payload);
+		MPTNPacket packet = gateway.getMPTN().send((int)destId, requestPacket, true);
 		if (packet == null) {
 			LOGGER.error("GWIDREQ cannot get GWIDACK/NAK from master due to network problem");
 		} else if (packet.getType() == MPTNUtil.MPTN_MSGTYPE_FWDNAK) {
@@ -75,6 +74,7 @@ public class IDService implements IDProtocolHandler {
 			destId = packet.getDestAddress();
 			if (this.gatewayId == MPTNUtil.MPTN_MAX_ID.intValue()) {
 				this.gatewayId = packet.getDestAddress();
+				this.gateway.setId(packet.getDestAddress());
 				// this.network =
 				this.idPrefix = packet.getDestAddress() & netmask;
 				LOGGER.info(String.format("GWIDREQ successuflly get new ID %s including prefix", destId));

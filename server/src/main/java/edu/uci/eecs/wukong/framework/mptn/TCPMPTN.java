@@ -1,5 +1,6 @@
 package edu.uci.eecs.wukong.framework.mptn;
 
+import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -23,12 +24,16 @@ public class TCPMPTN extends AbstractMPTN implements MPTNMessageListener<TCPMPTN
 	private NIOTCPServer server;
 	private List<IDProtocolHandler> listeners;
 	private Map<Integer, SocketAddress> connectedSockets;
+	private long currentNouce = 0;
 	
 	public TCPMPTN() {
 		this.listeners = new ArrayList<IDProtocolHandler> ();
 		this.server = new NIOTCPServer(configuration.getGatewayPort());
-		this.connectedSockets = new HashMap<Integer, SocketAddress>();
 		this.server.addMPTNMessageListener(this);
+		
+		this.connectedSockets = new HashMap<Integer, SocketAddress>();
+		SocketAddress masterAddress = new InetSocketAddress(configuration.getMasterAddress(), configuration.getMasterTCPPort());
+		this.connectedSockets.put(MPTNUtil.MASTER_ID, masterAddress);
 		Thread serverThread = new Thread(server);
 		serverThread.start();
 	}
@@ -38,9 +43,12 @@ public class TCPMPTN extends AbstractMPTN implements MPTNMessageListener<TCPMPTN
 		this.listeners.add(listener);
 	}
 	
-	public MPTNPacket send(int destId, ByteBuffer message, boolean expectReply) {
+	public MPTNPacket send(int destId, MPTNPacket message, boolean expectReply) {
 		if (connectedSockets.containsKey(destId)) {
-			MPTNPacket result = server.send(connectedSockets.get(destId), destId, message, true);
+			currentNouce ++;
+			byte[] payload = message.asByteArray();
+			TCPMPTNPacket packet = new TCPMPTNPacket(destId, currentNouce, payload.length, payload);			
+			MPTNPacket result = server.send(connectedSockets.get(destId), destId, packet, true);
 			if (expectReply) {
 				if (result != null) {
 					return result;

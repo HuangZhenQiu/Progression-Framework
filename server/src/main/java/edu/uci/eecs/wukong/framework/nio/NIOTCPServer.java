@@ -47,7 +47,6 @@ public class NIOTCPServer implements Runnable{
 	private List<ChangeRequest> pendingChanges;
 	private Selector selector;
 	private ServerSocketChannel serverChannel;
-	private Long currentNouce;
 
 	public NIOTCPServer(int port) {
 		try {
@@ -64,7 +63,7 @@ public class NIOTCPServer implements Runnable{
 		    serverChannel.socket().bind(isa);
 		    serverChannel.register(selector, SelectionKey.OP_ACCEPT);
 		} catch (IOException e) {
-			logger.error("Fail to open tcp server socket for progression server: " + e.toString());
+			logger.error("Fail to open tcp server socket for TCP server: " + e.toString());
 			System.exit(-1);
 		}
 	}
@@ -73,25 +72,42 @@ public class NIOTCPServer implements Runnable{
 		this.listeners.add(listener);
 	}
 	
-	public MPTNPacket send(SocketAddress socket, int destId, ByteBuffer buffer, boolean expectReply) {
-		AsyncCallback<TCPMPTNPacket> callback;
+	public MPTNPacket send(SocketAddress socket, int destId, TCPMPTNPacket packet, boolean expectReply) {
+		AsyncCallback<TCPMPTNPacket> callback = null;
+		ByteBuffer buffer = MPTNUtil.createBufferFromTCPMPTNPacket(packet);
+		buffer.flip();
 		synchronized (this.pendingChanges) {
 			SocketChannel channel = activeChannels.get(socket);
-			this.pendingChanges.add(new ChangeRequest(channel, SelectionKey.OP_WRITE));
-			synchronized (this.outputQueue) {
-				
-				currentNouce ++;
-				callback = new AsyncCallback<TCPMPTNPacket>(destId, null);
-				nouceCache.put(currentNouce, callback);
-				List<ByteBuffer> buffers = this.outputQueue.get(socket);
-				if (buffers == null) {
-					buffers = new ArrayList<ByteBuffer> ();
-					this.outputQueue.put(channel, buffers);
+			if (channel == null) {
+				try {
+					channel = SocketChannel.open(socket);
+					channel.write(buffer);
+					/*channel.configureBlocking(false);
+					channel.setOption(StandardSocketOptions.SO_KEEPALIVE, true);
+					channel.setOption(StandardSocketOptions.TCP_NODELAY, true);
+					channel.register(selector, SelectionKey.OP_READ);
+					activeChannels.put(socket, channel);*/
+				} catch (IOException e) {
+					
+					logger.error("Fail to open tcp server socket  " + e.toString());
+					return null;
 				}
-				this.outputQueue.get(socket).add(buffer);
-
+			} else {			
+				this.pendingChanges.add(new ChangeRequest(channel, SelectionKey.OP_WRITE));
+				synchronized (this.outputQueue) {
+				
+					List<ByteBuffer> buffers = this.outputQueue.get(channel);
+					if (buffers == null) {
+						buffers = new ArrayList<ByteBuffer> ();
+						this.outputQueue.put(channel, buffers);
+					}
+					this.outputQueue.get(channel).add(buffer);
+				}
 			}
 		}
+		callback = new AsyncCallback<TCPMPTNPacket>(destId, null);
+		nouceCache.put(packet.getNounce(), callback);
+		
 		this.selector.wakeup();
 		
 		if (expectReply) {

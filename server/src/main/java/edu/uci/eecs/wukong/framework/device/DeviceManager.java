@@ -3,13 +3,15 @@ package edu.uci.eecs.wukong.framework.device;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.uci.eecs.wukong.framework.mptn.TCPMPTN;
 import edu.uci.eecs.wukong.framework.wkpf.WKPFMessageListener;
 
 public class DeviceManager implements WKPFMessageListener {
 	private List<Device> devices;
-	
-	public DeviceManager() {
-		devices = new ArrayList<Device> ();
+	private TCPMPTN mptn;
+	public DeviceManager(TCPMPTN mptn) {
+		this.devices = new ArrayList<Device> ();
+		this.mptn = mptn;
 	}
 	
 	public void addDevice(Device device) {

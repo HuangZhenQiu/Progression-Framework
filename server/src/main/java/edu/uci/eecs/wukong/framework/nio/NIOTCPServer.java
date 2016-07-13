@@ -22,8 +22,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import edu.uci.eecs.wukong.framework.mptn.MPTNMessageListener;
-import edu.uci.eecs.wukong.framework.mptn.TCPMPTNPackage;
 import edu.uci.eecs.wukong.framework.mptn.packet.MPTNPacket;
+import edu.uci.eecs.wukong.framework.mptn.packet.TCPMPTNPacket;
 import edu.uci.eecs.wukong.framework.util.MPTNUtil;
 
 /**
@@ -41,8 +41,8 @@ public class NIOTCPServer implements Runnable{
 	private ByteBuffer readBuffer = ByteBuffer.allocate(BUFFER_SIZE);
 	private Map<SocketAddress, SocketChannel> activeChannels;
 	private Map<SocketChannel, List<ByteBuffer>> outputQueue;
-	private Map<Long, AsyncCallback<TCPMPTNPackage>> nouceCache;
-	private List<MPTNMessageListener<TCPMPTNPackage>> listeners;
+	private Map<Long, AsyncCallback<TCPMPTNPacket>> nouceCache;
+	private List<MPTNMessageListener<TCPMPTNPacket>> listeners;
 	private ExecutorService executorService = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
 	private List<ChangeRequest> pendingChanges;
 	private Selector selector;
@@ -53,9 +53,9 @@ public class NIOTCPServer implements Runnable{
 		try {
 			outputQueue = new HashMap<SocketChannel, List<ByteBuffer>> ();
 			activeChannels = new HashMap<SocketAddress, SocketChannel> ();
-			nouceCache = new HashMap<Long, AsyncCallback<TCPMPTNPackage>> ();
+			nouceCache = new HashMap<Long, AsyncCallback<TCPMPTNPacket>> ();
 			pendingChanges = new ArrayList<ChangeRequest>();
-			listeners = new ArrayList<MPTNMessageListener<TCPMPTNPackage>> ();
+			listeners = new ArrayList<MPTNMessageListener<TCPMPTNPacket>> ();
 			selector = SelectorProvider.provider().openSelector();
 		    serverChannel = ServerSocketChannel.open();
 		    serverChannel.configureBlocking(false);
@@ -69,19 +69,19 @@ public class NIOTCPServer implements Runnable{
 		}
 	}
 	
-	public void addMPTNMessageListener(MPTNMessageListener<TCPMPTNPackage> listener) {
+	public void addMPTNMessageListener(MPTNMessageListener<TCPMPTNPacket> listener) {
 		this.listeners.add(listener);
 	}
 	
 	public MPTNPacket send(SocketAddress socket, int destId, ByteBuffer buffer, boolean expectReply) {
-		AsyncCallback<TCPMPTNPackage> callback;
+		AsyncCallback<TCPMPTNPacket> callback;
 		synchronized (this.pendingChanges) {
 			SocketChannel channel = activeChannels.get(socket);
 			this.pendingChanges.add(new ChangeRequest(channel, SelectionKey.OP_WRITE));
 			synchronized (this.outputQueue) {
 				
 				currentNouce ++;
-				callback = new AsyncCallback<TCPMPTNPackage>(destId, null);
+				callback = new AsyncCallback<TCPMPTNPacket>(destId, null);
 				nouceCache.put(currentNouce, callback);
 				List<ByteBuffer> buffers = this.outputQueue.get(socket);
 				if (buffers == null) {
@@ -171,7 +171,7 @@ public class NIOTCPServer implements Runnable{
 	    	//TODO (Peter Huang) consider big message that need multiple read
 	        numRead = socketChannel.read(readBuffer);
 	        executorService.execute(
-					new EventHandleThread<TCPMPTNPackage>(TCPMPTNPackage.class, socketChannel.getRemoteAddress(),
+					new EventHandleThread<TCPMPTNPacket>(TCPMPTNPacket.class, socketChannel.getRemoteAddress(),
 							MPTNUtil.deepCopy(readBuffer), listeners));
 	    } catch (IOException e) {
 	        key.cancel();

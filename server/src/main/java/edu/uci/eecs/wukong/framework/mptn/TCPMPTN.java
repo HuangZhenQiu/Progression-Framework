@@ -12,11 +12,12 @@ import org.slf4j.LoggerFactory;
 
 import edu.uci.eecs.wukong.framework.gateway.IDProtocolHandler;
 import edu.uci.eecs.wukong.framework.mptn.packet.MPTNPacket;
+import edu.uci.eecs.wukong.framework.mptn.packet.TCPMPTNPacket;
 import edu.uci.eecs.wukong.framework.nio.NIOTCPServer;
 import edu.uci.eecs.wukong.framework.util.Configuration;
 import edu.uci.eecs.wukong.framework.util.MPTNUtil;
 
-public class TCPMPTN extends AbstractMPTN implements MPTNMessageListener<TCPMPTNPackage> {
+public class TCPMPTN extends AbstractMPTN implements MPTNMessageListener<TCPMPTNPacket> {
 	private final static Logger LOGGER = LoggerFactory.getLogger(TCPMPTN.class);
 	private final static Configuration configuration = Configuration.getInstance();	
 	private NIOTCPServer server;
@@ -52,7 +53,7 @@ public class TCPMPTN extends AbstractMPTN implements MPTNMessageListener<TCPMPTN
 	
 
 	@Override
-	public void onMessage(SocketAddress remoteAddress, TCPMPTNPackage message) {
+	public void onMessage(SocketAddress remoteAddress, TCPMPTNPacket message) {
 		if (message.getLength() >= 9) {
 			MPTNPacket mptn = new MPTNPacket(message.getPayload());
 			switch(mptn.getType() & 0xFF) {

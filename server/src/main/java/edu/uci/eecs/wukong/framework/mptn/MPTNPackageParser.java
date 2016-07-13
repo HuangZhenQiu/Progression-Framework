@@ -2,7 +2,9 @@ package edu.uci.eecs.wukong.framework.mptn;
 
 import java.nio.ByteBuffer;
 
-public class MPTNPackageParser<T extends AbstractMPTNPackage> {
+import edu.uci.eecs.wukong.framework.mptn.packet.AbstractMPTNPacket;
+
+public class MPTNPackageParser<T extends AbstractMPTNPacket> {
 	private Class<T> type;
 	
 	public MPTNPackageParser(Class<T> type) {

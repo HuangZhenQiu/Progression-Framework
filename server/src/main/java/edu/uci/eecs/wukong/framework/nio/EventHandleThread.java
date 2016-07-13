@@ -7,11 +7,11 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import edu.uci.eecs.wukong.framework.mptn.AbstractMPTNPackage;
 import edu.uci.eecs.wukong.framework.mptn.MPTNMessageListener;
 import edu.uci.eecs.wukong.framework.mptn.MPTNPackageParser;
+import edu.uci.eecs.wukong.framework.mptn.packet.AbstractMPTNPacket;
 
-public class EventHandleThread<T extends AbstractMPTNPackage> implements Runnable {
+public class EventHandleThread<T extends AbstractMPTNPacket> implements Runnable {
 	private static Logger logger = LoggerFactory.getLogger(EventHandleThread.class);
     private ByteBuffer buffer;
     private SocketAddress remoteAddress;

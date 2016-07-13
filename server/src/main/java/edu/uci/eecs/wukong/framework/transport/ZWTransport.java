@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import edu.uci.eecs.wukong.framework.jni.ZwaveJNI;
 import edu.uci.eecs.wukong.framework.mptn.UDPMPTN;
+import edu.uci.eecs.wukong.framework.util.MPTNUtil;
 
 public class ZWTransport extends Transport {
 	private static Logger logger = LoggerFactory.getLogger(ZWTransport.class);
@@ -195,7 +196,7 @@ public class ZWTransport extends Transport {
 
 	@Override
 	public int getAddressLength() {
-		return UDPMPTN.ZW_ADDRESS_LEN;
+		return MPTNUtil.ZW_ADDRESS_LEN;
 	}
 
 	@Override

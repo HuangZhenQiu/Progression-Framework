@@ -2,7 +2,7 @@ package edu.uci.eecs.wukong.framework.gateway;
 
 import java.net.SocketAddress;
 
-import edu.uci.eecs.wukong.framework.mptn.MPTNPackage;
+import edu.uci.eecs.wukong.framework.mptn.packet.MPTNPacket;
 
 /**
  * RPC handler that handles message for devices management
@@ -12,19 +12,17 @@ import edu.uci.eecs.wukong.framework.mptn.MPTNPackage;
  */
 public interface RPCCommandHandler {
 	
-	public void onSend(SocketAddress remoteAddress, MPTNPackage bytes);
+	public void onGetDeviceType(SocketAddress remoteAddress, MPTNPacket bytes);
 	
-	public void onGetDeviceType(SocketAddress remoteAddress, MPTNPackage bytes);
+	public void onRouting(SocketAddress remoteAddress, MPTNPacket bytes);
 	
-	public void onRouting(SocketAddress remoteAddress, MPTNPackage bytes);
+	public void onDiscover(SocketAddress remoteAddress, MPTNPacket bytes);
 	
-	public void onDiscover(SocketAddress remoteAddress, MPTNPackage bytes);
+	public void onAdd(SocketAddress remoteAddress, MPTNPacket bytes);
 	
-	public void onAdd(SocketAddress remoteAddress, MPTNPackage bytes);
+	public void onDelete(SocketAddress remoteAddress, MPTNPacket bytes);
 	
-	public void onDelete(SocketAddress remoteAddress, MPTNPackage bytes);
+	public void onStop(SocketAddress remoteAddress, MPTNPacket bytes);
 	
-	public void onStop(SocketAddress remoteAddress, MPTNPackage bytes);
-	
-	public void onPoll(SocketAddress remoteAddress, MPTNPackage bytes);
+	public void onPoll(SocketAddress remoteAddress, MPTNPacket bytes);
 }

@@ -2,13 +2,15 @@ package edu.uci.eecs.wukong.framework.mptn;
 
 import java.nio.ByteBuffer;
 
+import edu.uci.eecs.wukong.framework.mptn.packet.AbstractMPTNPacket;
+
 /**
  * TCP MPTN Package format used for communication between master and gateway, gateway and gateway
  * 
  * @author peter
  *
  */
-public class TCPMPTNPackage extends AbstractMPTNPackage {
+public class TCPMPTNPackage extends AbstractMPTNPacket {
 	private int peerId;
 	/* 8 unsigned char*/
 	private String nounce;
@@ -29,7 +31,7 @@ public class TCPMPTNPackage extends AbstractMPTNPackage {
 	}
 
 	@Override
-	public AbstractMPTNPackage parse(ByteBuffer buffer) {
+	public AbstractMPTNPacket parse(ByteBuffer buffer) {
 		return this;
 	}
 	

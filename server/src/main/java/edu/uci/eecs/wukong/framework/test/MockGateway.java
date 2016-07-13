@@ -4,9 +4,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import edu.uci.eecs.wukong.framework.mptn.UDPMPTN;
-import edu.uci.eecs.wukong.framework.mptn.UDPMPTNPackage;
+import edu.uci.eecs.wukong.framework.mptn.packet.MPTNPacket;
+import edu.uci.eecs.wukong.framework.mptn.packet.UDPMPTNPacket;
 import edu.uci.eecs.wukong.framework.mptn.MPTNMessageListener;
-import edu.uci.eecs.wukong.framework.mptn.MPTNPackage;
 import edu.uci.eecs.wukong.framework.nio.NIOUdpServer;
 import edu.uci.eecs.wukong.framework.util.MPTNUtil;
 
@@ -25,7 +25,7 @@ import java.util.Timer;
  * Simulate the function of gateway to assign network Id to target progression server which is being tested.
  * The the meaning time receive the reply message, and calculate the metrics of server.
  */
-public class MockGateway implements MPTNMessageListener<UDPMPTNPackage> {
+public class MockGateway implements MPTNMessageListener<UDPMPTNPacket> {
 	private final static Logger LOGGER = LoggerFactory.getLogger(UDPMPTN.class);
 	public final static long MOCK_GATEWAY_ADDRESS = 1;
 	private NIOUdpServer server;
@@ -62,7 +62,7 @@ public class MockGateway implements MPTNMessageListener<UDPMPTNPackage> {
 	}
 
 	@Override
-	public void onMessage(SocketAddress remoteAddress, UDPMPTNPackage mptnPackage) {
+	public void onMessage(SocketAddress remoteAddress, UDPMPTNPacket mptnPackage) {
 		try {
 			LOGGER.info("Get packet " + MPTNUtil.toHexString(mptnPackage.getPayload()));
 					
@@ -71,14 +71,14 @@ public class MockGateway implements MPTNMessageListener<UDPMPTNPackage> {
 				return;
 			}
 			
-			if (mptnPackage.getType() == UDPMPTN.HEADER_TYPE_2) {  // get local ID				
+			if (mptnPackage.getType() == MPTNUtil.HEADER_TYPE_2) {  // get local ID				
 				InetAddress address = InetAddress.getByAddress(mptnPackage.getSourceIPBytes());
 				// this.nodeId = (byte) ((~mask) & mptnPackage.getSourceIP());
 				this.longAddress = mptnPackage.getSourceIP();
 				setLongAddressBytes(longAddress);
 				createWKPFMessageSender(address.getHostAddress(), mptnPackage.getSoucePort(), nodeId, longAddress);
 				processInfoMessage((byte) nodeId);
-			} else if (mptnPackage.getType() == UDPMPTN.HEADER_TYPE_1){  // get Long ID
+			} else if (mptnPackage.getType() == MPTNUtil.HEADER_TYPE_1){  // get Long ID
 				processMessage(mptnPackage);
 			} else {
 				LOGGER.error("Received message error message type");
@@ -111,19 +111,19 @@ public class MockGateway implements MPTNMessageListener<UDPMPTNPackage> {
 	 * @param length
 	 * @throws InterruptedException 
 	 */
-	private void processMessage(UDPMPTNPackage mptnPackage) throws InterruptedException {
+	private void processMessage(UDPMPTNPacket mptnPackage) throws InterruptedException {
 		if (mptnPackage.getLength() > 9) {
-			MPTNPackage pack = new MPTNPackage(mptnPackage.getPayload());
+			MPTNPacket pack = new MPTNPacket(mptnPackage.getPayload());
 			
 			/* receive async response*/
 			if(sender != null && sender.updatePackage(pack)) {
 				return;
 			}
 		
-			if (pack.getType() == UDPMPTN.MPTN_MSGTYPE_IDREQ) {
+			if (pack.getType() == MPTNUtil.MPTN_MSGTYPE_IDREQ) {
 				ByteBuffer payload = ByteBuffer.allocate(4);
 				payload.putInt(longAddress);
-				sender.sendLongAddress(UDPMPTN.HEADER_TYPE_1, payload.array());
+				sender.sendLongAddress(MPTNUtil.HEADER_TYPE_1, payload.array());
 				Thread.sleep(3000);
 				/* start to generate mock FBP */
 				byte[] infusion = builder.build();
@@ -132,7 +132,7 @@ public class MockGateway implements MPTNMessageListener<UDPMPTNPackage> {
 				/* Schedule load generators  */
 				schedule();
 				startLoad();
-			} else if (pack.getType() == UDPMPTN.MPTN_MSQTYPE_FWDREQ) {
+			} else if (pack.getType() == MPTNUtil.MPTN_MSGTYPE_FWDREQ) {
 				/* Collect performance data */
 				
 				

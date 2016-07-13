@@ -7,33 +7,67 @@ public class MPTNUtil {
 	
 	public final static int MPTN_ID_LEN = 4;
 	public final static int MPTN_MASTER_ID = 0;
-	public final static UnsignedInteger MPTN_MAX_ID =UnsignedInteger.MAX_VALUE;
+	public final static int MPTN_PROGRESSION_SERVER = 1;
+	public final static UnsignedInteger MPTN_MAX_ID = UnsignedInteger.MAX_VALUE;
 	public final static int MPTN_MSGTYPE_LEN  = 1;
 	public final static int MPTN_DEST_BYTE_OFFSET = 0;
 	public final static int MPTN_SRC_BYTE_OFFSET = MPTN_DEST_BYTE_OFFSET + MPTN_ID_LEN;
 	public final static int MPTN_MSATYPE_BYTE_OFFSET = MPTN_SRC_BYTE_OFFSET + MPTN_ID_LEN;
 	public final static int MPTN_PAYLOAD_BYTE_OFFSET = MPTN_MSATYPE_BYTE_OFFSET + MPTN_MSGTYPE_LEN;
 	
-	// Message types of multiple protocol transmission network in wukong
-	public final static byte MPTN_MSQTYPE_GWDISCOVER = 0;
-	public final static byte MPTN_MSQTYPE_GWOFFER = 1;
-	public final static byte MPTN_MSQTYPE_IDREQ = 2;
-	public final static byte MPTN_MSQTYPE_IDACK = 3;
-	public final static byte MPTN_MSQTYPE_IDNAK = 4;	
-	public final static byte MPTN_MSQTYPE_FWDREQ = 5;
-	public final static byte MPTN_MSGTYPE_GWIDACK = 6;
-	public final static byte MPTN_MSGTYPE_GWIDNAK = 7;
+	public static final int MPTN_HEADER_LENGTH = 9;
+	public static final byte HEADER_TYPE_1 = 1;
+	public static final byte HEADER_TYPE_2 = 2;
 	
-	public final static byte MPTN_MSGTYPE_RTPING = 8;
-	public final static byte MPTN_MSGTYPE_RTREQ = 9;
-	public final static byte MPTN_MSGTYPE_RTREP = 10;
+	public static final int CONNECTION_RETRIES = 1;
+	public static final int NETWORK_TIMEOUT = 3;
 	
-	public final static byte MPTN_MSGTYPE_RPCCMD = 16;
-	public final static byte MPTN_MSGTYPE_RPCREP = 17;
+	// transport interface sub network length
+	public static final int ZW_ADDRESS_LEN = 1;
+	public static final int ZB_ADDRESS_LEN = 2;
+	public static final int IP_ADDRESS_LEN = 4;
 	
-	public final static byte MPTN_MSGTYPE_FWDREQ = 24;
-	public final static byte MPTN_MSGTYPE_FWDACK = 25;
-	public final static byte MPTN_MSGTYPE_FWDNAK = 26;
+	// MODE for adding and deleting node
+	public static final int STOP_MODE = 0;
+	public static final int ADD_MODE = 1;
+	public static final int DEL_MODE = 2;
+	
+	// protocol handler admission control
+	public static final int ONLY_FROM_TCP_SERVER = 1; // Master or peer gateway
+	public static final int ONLY_FROM_TRANSPORT_INTERFACE = 2;
+	public static final int VALID_FROM_ALL = 3;
+	
+	// ID service
+	public static final byte MPTN_MSGTYPE_GWDISCOVER = 0;
+	public static final byte MPTN_MSGTYPE_GWOFFER = 1;
+	public static final byte MPTN_MSGTYPE_IDREQ = 2;
+	public static final byte MPTN_MSGTYPE_IDACK = 3;
+	public static final byte MPTN_MSGTYPE_IDNAK = 4;
+	public static final byte MPTN_MSGTYPE_GWIDREQ = 5;
+	public static final byte MPTN_MSGTYPE_GWIDACK = 6;
+	public static final byte MPTN_MSGTYPE_GWIDNAK = 7;
+	
+    // Heartbeat
+	public static final byte MPTN_MSGTYPE_RTPING = 8;
+	public static final byte MPTN_MSGTYPE_RTREQ = 9;
+	public static final byte MPTN_MSGTYPE_RTREP = 10;
+	
+	// RPC service with master
+	public static final byte MPTN_MSGTYPE_RPCCMD = 16;
+	public static final byte MPTN_MSGTYPE_RPCREP = 17;
+	
+	// Message forward
+	public static final byte MPTN_MSGTYPE_FWDREQ = 24;
+	public static final byte MPTN_MSGTYPE_FWDACK = 25;
+	public static final byte MPTN_MSGTYPE_FWDNAK = 26;
+	
+	public static final byte MPTN_ERROR = 99;
+	
+	public static final int MASTER_ID = 0;
+	public static final int MPTN_UDP_PORT = 5775;
+	
+	public static final int GWIDREQ_PAYLOAD_LEN = 16;
+	public static final int IDREQ_PAYLOAD_LEN = 16;
 	
 	public static final char[] HEX_CHARS = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
 	
@@ -59,7 +93,7 @@ public class MPTNUtil {
 		buffer.put(getByteValue(value, 24));
 	}
 	
-	public static void appendMPTNHeader(ByteBuffer buffer, int ipaddress, short port,
+	public static void appendUDPMPTNHeader(ByteBuffer buffer, int ipaddress, short port,
 			int nodeId, byte type, byte length) {
 		buffer.put((byte)0xAA);
 		buffer.put((byte)0x55);
@@ -69,6 +103,13 @@ public class MPTNUtil {
 		buffer.put(new Integer(port/256).byteValue());
 		buffer.put(type);
 		buffer.put(length);
+	}
+	
+	public static void appendMPTNPackage(ByteBuffer buffer, int source, int dest, byte type, byte[] payload) {
+		buffer.putInt(dest);
+		buffer.putInt(source);
+		buffer.put(type);
+		buffer.put(payload);
 	}
 	
 	public static int IPToInteger(String ipstr) {

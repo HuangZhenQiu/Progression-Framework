@@ -23,6 +23,7 @@ import org.slf4j.LoggerFactory;
 
 import edu.uci.eecs.wukong.framework.mptn.MPTNMessageListener;
 import edu.uci.eecs.wukong.framework.mptn.TCPMPTNPackage;
+import edu.uci.eecs.wukong.framework.mptn.packet.MPTNPacket;
 import edu.uci.eecs.wukong.framework.util.MPTNUtil;
 
 /**
@@ -72,7 +73,7 @@ public class NIOTCPServer implements Runnable{
 		this.listeners.add(listener);
 	}
 	
-	public void Send(SocketAddress socket, int destId, ByteBuffer buffer, boolean expectReply) {
+	public MPTNPacket send(SocketAddress socket, int destId, ByteBuffer buffer, boolean expectReply) {
 		AsyncCallback<TCPMPTNPackage> callback;
 		synchronized (this.pendingChanges) {
 			SocketChannel channel = activeChannels.get(socket);
@@ -97,7 +98,11 @@ public class NIOTCPServer implements Runnable{
 			while(!callback.ready()) {
 				this.selector.wakeup();
 			}
+			
+			return new MPTNPacket(callback.get().getPayload());
 		}
+		
+		return null;
 	}
 
 

@@ -4,9 +4,9 @@ import java.nio.ByteBuffer;
 
 import org.junit.Test;
 
-import edu.uci.eecs.wukong.framework.mptn.MPTNPackage;
 import edu.uci.eecs.wukong.framework.mptn.UDPMPTN;
-import edu.uci.eecs.wukong.framework.mptn.UDPMPTNPackage;
+import edu.uci.eecs.wukong.framework.mptn.packet.MPTNPacket;
+import edu.uci.eecs.wukong.framework.mptn.packet.UDPMPTNPacket;
 import edu.uci.eecs.wukong.framework.util.MPTNUtil;
 import edu.uci.eecs.wukong.framework.util.WKPFUtil;
 import junit.framework.TestCase;
@@ -26,7 +26,7 @@ public class MPTNTest extends TestCase {
 		buffer.put((byte)1);
 		buffer.put((byte)0);
 		buffer.flip();
-		UDPMPTNPackage mptnPackage = new UDPMPTNPackage(12);
+		UDPMPTNPacket mptnPackage = new UDPMPTNPacket(12);
 		mptnPackage.setPayload(buffer.array());
 		assertEquals(WKPFUtil.WKPF_WRITE_PROPERTY, mptn.processFWDMessage(null, mptnPackage));
 	}

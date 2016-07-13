@@ -1,9 +1,11 @@
-package edu.uci.eecs.wukong.framework.mptn;
+package edu.uci.eecs.wukong.framework.mptn.packet;
 
 import java.nio.ByteBuffer;
 
 import com.google.common.annotations.VisibleForTesting;
 
+import edu.uci.eecs.wukong.framework.mptn.UDPMPTN;
+import edu.uci.eecs.wukong.framework.util.MPTNUtil;
 import edu.uci.eecs.wukong.framework.util.WKPFUtil;
 
 /**
@@ -13,7 +15,7 @@ import edu.uci.eecs.wukong.framework.util.WKPFUtil;
  * @author peter
  *
  */
-public class UDPMPTNPackage extends AbstractMPTNPackage {
+public class UDPMPTNPacket extends AbstractMPTNPacket {
 	private int h1;
 	private int h2;
 	private byte nodeId;
@@ -25,21 +27,21 @@ public class UDPMPTNPackage extends AbstractMPTNPackage {
 	private byte[] payload;
 	
 	@VisibleForTesting
-	public UDPMPTNPackage(int length) {
+	public UDPMPTNPacket(int length) {
 		this.length = length;
 	}
 	
-	public UDPMPTNPackage() {
+	public UDPMPTNPacket() {
 		
 	}
 	
-	public UDPMPTNPackage(ByteBuffer buffer) throws Exception {
+	public UDPMPTNPacket(ByteBuffer buffer) throws Exception {
 		parse(buffer);
 	}
 	
 	@Override
-	public AbstractMPTNPackage parse(ByteBuffer buffer) {
-		byte[] header = new byte[UDPMPTN.MPTN_HEADER_LENGTH];
+	public AbstractMPTNPacket parse(ByteBuffer buffer) {
+		byte[] header = new byte[MPTNUtil.MPTN_HEADER_LENGTH];
 		buffer.get(header);
 		this.h1 = header[0] & 0xFF;
 		this.h2 = header[1] & 0xFF;

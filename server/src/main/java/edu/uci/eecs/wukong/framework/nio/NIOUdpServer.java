@@ -1,7 +1,7 @@
 package edu.uci.eecs.wukong.framework.nio;
 
 import edu.uci.eecs.wukong.framework.mptn.MPTNMessageListener;
-import edu.uci.eecs.wukong.framework.mptn.UDPMPTNPackage;
+import edu.uci.eecs.wukong.framework.mptn.packet.UDPMPTNPacket;
 import edu.uci.eecs.wukong.framework.util.MPTNUtil;
 
 import java.io.IOException;
@@ -30,17 +30,17 @@ public class NIOUdpServer implements Runnable {
 	private int port;
 	private Selector selector;
 	private DatagramChannel serverChannel;
-	private List<MPTNMessageListener<UDPMPTNPackage>> listeners;
+	private List<MPTNMessageListener<UDPMPTNPacket>> listeners;
 	private Map<SocketAddress, DatagramChannel> activeChannels;
 	private ExecutorService executorService = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
 	
 	public NIOUdpServer(int port) {
 		this.port = port;
-		this.listeners = new ArrayList<MPTNMessageListener<UDPMPTNPackage>>();
+		this.listeners = new ArrayList<MPTNMessageListener<UDPMPTNPacket>>();
 		this.activeChannels = new HashMap<SocketAddress, DatagramChannel> ();
 	}
 	
-	public void addMPTNMessageListener(MPTNMessageListener<UDPMPTNPackage> listener) {
+	public void addMPTNMessageListener(MPTNMessageListener<UDPMPTNPacket> listener) {
 		this.listeners.add(listener);
 	}
 	
@@ -104,7 +104,7 @@ public class NIOUdpServer implements Runnable {
 			activeChannels.put(remoteAddr, channel);
 		}
 		executorService.execute(
-				new EventHandleThread<UDPMPTNPackage>(UDPMPTNPackage.class, channel.getRemoteAddress(),
+				new EventHandleThread<UDPMPTNPacket>(UDPMPTNPacket.class, channel.getRemoteAddress(),
 						MPTNUtil.deepCopy(attachment.getBuffer()), listeners));
 		attachment.getBuffer().clear();
 	}

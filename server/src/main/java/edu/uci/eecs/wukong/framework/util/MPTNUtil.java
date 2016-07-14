@@ -114,11 +114,19 @@ public class MPTNUtil {
 	}
 	
 	public static ByteBuffer createBufferFromTCPMPTNPacket(TCPMPTNPacket packet) {
-		ByteBuffer buffer = ByteBuffer.allocate(MPTNUtil.MPTN_TCP_HEADER_LENTGH + (int)packet.getLength());
-		buffer.putInt(packet.getPeerId());
-		buffer.putLong(packet.getNounce());
-		appendReversedInt(buffer, packet.getLength());
-		buffer.put(packet.getPayload());
+		ByteBuffer buffer;
+		if (packet.getPeerId() == MASTER_ID) {
+			buffer = ByteBuffer.allocate(MPTNUtil.MPTN_TCP_HEADER_LENTGH + (int)packet.getLength());
+			buffer.putInt(packet.getPeerId());
+			buffer.putLong(packet.getNounce());
+			appendReversedInt(buffer, packet.getLength());
+			buffer.put(packet.getPayload());
+		} else { // It is reply message
+			buffer = ByteBuffer.allocate(12 + (int)packet.getLength());
+			buffer.putLong(packet.getNounce());
+			appendReversedInt(buffer, packet.getLength());
+			buffer.put(packet.getPayload());
+		}
 		return buffer;
 	}
 	

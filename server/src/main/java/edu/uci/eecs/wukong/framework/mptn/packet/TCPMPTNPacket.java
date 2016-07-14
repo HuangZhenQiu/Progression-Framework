@@ -58,4 +58,14 @@ public class TCPMPTNPacket extends AbstractMPTNPacket {
 	public long getNounce() {
 		return this.nounce;
 	}
+	
+	public String toString() {
+		StringBuffer buffer = new StringBuffer();
+		buffer.append("[peerid = " + peerId);
+		buffer.append(", nounce = " + nounce);
+		buffer.append(", nounce = " + length);
+		buffer.append(", payload = " + payload);
+		
+		return buffer.toString();
+	}
 }

@@ -62,7 +62,7 @@ public class IDService implements IDProtocolHandler {
 				netmask, Configuration.getInstance().getGatewayPort(), uuid);
 		byte[] payload = gson.toJson(request).getBytes();		
 		MPTNPacket requestPacket = new MPTNPacket(sourceId, destId, messageType, payload);
-		MPTNPacket packet = gateway.getMPTN().send((int)destId, requestPacket, true);
+		MPTNPacket packet = gateway.getMPTN().send((int)destId, MPTNUtil.MASTER_ID, -1, requestPacket, true);
 		if (packet == null) {
 			LOGGER.error("GWIDREQ cannot get GWIDACK/NAK from master due to network problem");
 		} else if (packet.getType() == MPTNUtil.MPTN_MSGTYPE_FWDNAK) {
@@ -88,12 +88,12 @@ public class IDService implements IDProtocolHandler {
 	}
 
 	@Override
-	public void onGatewayIDDisover(SocketAddress remoteAddress, MPTNPacket packet) {
+	public void onGatewayIDDisover(SocketAddress remoteAddress, long nouce, MPTNPacket packet) {
 		LOGGER.info("Gateway ID discover request is not supported in progression server");
 	}
 
 	@Override
-	public void onRoutingTablePing(SocketAddress remoteAddress, MPTNPacket packet) {
+	public void onRoutingTablePing(SocketAddress remoteAddress, long nouce, MPTNPacket packet) {
 		if (packet.getPayload() == null || packet.getPayload().length == 0) {
 			LOGGER.error("RTPING should have the payload");
 			return;
@@ -124,13 +124,13 @@ public class IDService implements IDProtocolHandler {
 	}
 
 	@Override
-	public void onRoutingTableRequest(SocketAddress remoteAddress, MPTNPacket packet) {
+	public void onRoutingTableRequest(SocketAddress remoteAddress, long nouce, MPTNPacket packet) {
 		LOGGER.info("Routing table request is not supported in progression server");
 
 	}
 
 	@Override
-	public void onRountingTableReply(SocketAddress remoteAddress, MPTNPacket packet) {
+	public void onRountingTableReply(SocketAddress remoteAddress, long nouce, MPTNPacket packet) {
 		if (packet.getPayload() == null || packet.getPayload().length == 0) {
 			LOGGER.error("Routing table reply should have the payload");
 			return;
@@ -151,7 +151,7 @@ public class IDService implements IDProtocolHandler {
 	}
 
 	@Override
-	public void onForwardRequest(SocketAddress remoteAddress, MPTNPacket packet) {
+	public void onForwardRequest(SocketAddress remoteAddress, long nouce, MPTNPacket packet) {
 		if (packet.getPayload() == null || packet.getPayload().length == 0) {
 			LOGGER.error("FWDREQ should have the payload");
 			return;
@@ -170,12 +170,12 @@ public class IDService implements IDProtocolHandler {
 	}
 
 	@Override
-	public void onGatewayIDRequest(SocketAddress remoteAddress, MPTNPacket packet) {
+	public void onGatewayIDRequest(SocketAddress remoteAddress, long nouce, MPTNPacket packet) {
 		LOGGER.info("ID request is not supported in progression server");
 	}
 
 	@Override
-	public void onRPCCommand(SocketAddress remoteAddress, MPTNPacket packet) {
+	public void onRPCCommand(SocketAddress remoteAddress, long nouce, MPTNPacket packet) {
 		if (packet.getPayload() == null || packet.getPayload().length == 0) {
 			LOGGER.error("RPCCMD should have the payload");
 			return;
@@ -187,6 +187,6 @@ public class IDService implements IDProtocolHandler {
 			return;
 		}
 		
-		gateway.dispatchRPCMessage(remoteAddress, packet);
+		gateway.dispatchRPCMessage(remoteAddress, nouce, packet);
 	}
 }

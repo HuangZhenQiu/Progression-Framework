@@ -28,6 +28,7 @@ public class EventHandleThread<T extends AbstractMPTNPacket> implements Runnable
 	
 	public void run() { 
 		try {
+			logger.info("Execute Event Handling");
 			fireMPTNMessage(packet);
 		} catch (Exception e) {
 			e.printStackTrace();

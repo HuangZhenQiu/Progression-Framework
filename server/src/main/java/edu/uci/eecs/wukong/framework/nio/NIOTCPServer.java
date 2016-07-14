@@ -40,7 +40,7 @@ import edu.uci.eecs.wukong.framework.util.WKPFUtil;
 public class NIOTCPServer implements Runnable{
 	private static Logger logger = LoggerFactory.getLogger(NIOTCPServer.class);
 	private static final int BUFFER_SIZE = 4096;
-	private static int THREAD_POOL_SIZE = 5;
+	private static int THREAD_POOL_SIZE = 10;
 	private ByteBuffer readBuffer = ByteBuffer.allocate(BUFFER_SIZE);
 	private ByteBuffer idBytes = ByteBuffer.allocate(MPTNUtil.MPTN_ID_LEN);
 	private ByteBuffer nouceBytes = ByteBuffer.allocate(MPTNUtil.MPTN_TCP_NOUNCE_SIZE);
@@ -175,14 +175,14 @@ public class NIOTCPServer implements Runnable{
 	    socketChannel.setOption(StandardSocketOptions.SO_KEEPALIVE, true);
 	    socketChannel.setOption(StandardSocketOptions.TCP_NODELAY, true);
 	    socketChannel.register(selector, SelectionKey.OP_READ);
+	    activeChannels.put(socketChannel.getRemoteAddress(), socketChannel);
 	    logger.info("Client is connected");
 	}
 
 	private void read(SelectionKey key) throws IOException {
 		logger.info("Start to Read");
-		System.out.println("Start to Read");
 	    SocketChannel socketChannel = (SocketChannel) key.channel();
-
+		System.out.println("Start to Read from channel " + socketChannel.getRemoteAddress().toString());
 	    // Clear out our read buffer so it's ready for new data
 	    readBuffer.clear();
 	    idBytes.clear();
@@ -214,8 +214,14 @@ public class NIOTCPServer implements Runnable{
 	        	nouceBytes.flip();
 	        	nouce = nouceBytes.getLong();
 	        } else {
-	        	logger.error("Broken nouce, its length is " + numRead + "rather than 4");
-	        	return;
+	        	logger.error("Broken nouce, its length is " + numRead + "rather than 8");
+	        	if (numRead == -1) {
+	    	        logger.error("Graceful shutdown channel " + socketChannel.getRemoteAddress().toString());
+	    	        key.channel().close();
+	    	        key.cancel();
+
+	    	        return;
+	    	    }
 	        }
 	        
 	        numRead = socketChannel.read(lengthBytes);
@@ -223,18 +229,28 @@ public class NIOTCPServer implements Runnable{
 	        	lengthBytes.flip();
 	        	length = WKPFUtil.getBigEndianInteger(lengthBytes.array(), 0);
 	        } else {
+	        	
 	        	return;
 	        }
 	        
-	        numRead = 0;
+	        int totalRead = 0;
 	        while (numRead < length) {
-	        	numRead += socketChannel.read(readBuffer);
+	        	numRead = socketChannel.read(readBuffer);
+	        	if (numRead == -1) {
+	    	        logger.error("Graceful shutdown channel " + socketChannel.getRemoteAddress().toString());
+	    	        key.channel().close();
+	    	        key.cancel();
+
+	    	        return;
+	    	    }
+	        	totalRead += numRead;
 	        }
 	        
-	        logger.info("Received TCPMPTN Message whose size is" + numRead);
+	        logger.info("Received TCPMPTN Message whose size is" + totalRead);
 	        readBuffer.flip();
 	        
 	        TCPMPTNPacket packet = new TCPMPTNPacket(nodeId, nouce, (int)length, readBuffer.array());
+	        logger.info("Received TCPMPTN packet " + packet.toString());
 	        AsyncCallback<TCPMPTNPacket> callback= nouceCache.get(packet.getNounce());
 	        if (callback == null) {
 		        readBuffer.flip();
@@ -242,6 +258,7 @@ public class NIOTCPServer implements Runnable{
 						new EventHandleThread<TCPMPTNPacket>(TCPMPTNPacket.class, socketChannel.getRemoteAddress(),
 								packet, listeners));
 	        } else {
+	        	logger.info("Received replay message ");
 	        	callback.setValue(packet);
 	        }
 	    } catch (IOException e) {
@@ -251,13 +268,6 @@ public class NIOTCPServer implements Runnable{
 	        return;
 	    }
 
-	    if (numRead == -1) {
-	        logger.error("Graceful shutdown channel " + socketChannel.getRemoteAddress().toString());
-	        key.channel().close();
-	        key.cancel();
-
-	        return;
-	    }
 	    
 	    synchronized (outputQueue) {
 		    List<ByteBuffer> buffers = this.outputQueue.get(socketChannel);
@@ -272,12 +282,10 @@ public class NIOTCPServer implements Runnable{
 	
 	private void write(SelectionKey key) throws IOException {
 		logger.info("Start to Write");
-		System.out.println("Start to Write");
 		SocketChannel socketChannel = (SocketChannel) key.channel();
-
 		synchronized (this.outputQueue) {
 			List<ByteBuffer> queue = this.outputQueue.get(socketChannel);
-
+			System.out.println("Start to Write " + socketChannel.getRemoteAddress().toString() + " queue " + queue.size());
 			// Write until there's not more data ...
 			while (!queue.isEmpty()) {
 				ByteBuffer buf = (ByteBuffer) queue.get(0);
@@ -296,5 +304,6 @@ public class NIOTCPServer implements Runnable{
 				key.interestOps(SelectionKey.OP_READ);
 			}
 		}
+		System.out.println("Finish Write");
 	}
 }

@@ -7,14 +7,14 @@ package edu.uci.eecs.wukong.framework.gateway;
  *
  */
 public class IDRequest {
-	private String IFADDR;
+	private long IFADDR;
 	private int IFADDRLEN;
 	private long IFNETMASK;
 	private int PORT;
-	private long UUID;
+	private byte[] UUID;
 	
-	public IDRequest(String address, int length,
-			long netmask, int port, long uuid) {
+	public IDRequest(long address, int length,
+			long netmask, int port, byte[] uuid) {
 		this.IFADDR = address;
 		this.IFADDRLEN = length;
 		this.IFNETMASK = netmask;

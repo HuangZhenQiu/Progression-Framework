@@ -1,6 +1,8 @@
 package edu.uci.eecs.wukong.framework.nio;
 
 import edu.uci.eecs.wukong.framework.mptn.MPTNMessageListener;
+import edu.uci.eecs.wukong.framework.mptn.MPTNPackageParser;
+import edu.uci.eecs.wukong.framework.mptn.packet.TCPMPTNPacket;
 import edu.uci.eecs.wukong.framework.mptn.packet.UDPMPTNPacket;
 import edu.uci.eecs.wukong.framework.util.MPTNUtil;
 
@@ -30,12 +32,14 @@ public class NIOUdpServer implements Runnable {
 	private int port;
 	private Selector selector;
 	private DatagramChannel serverChannel;
+	private MPTNPackageParser<UDPMPTNPacket> parser;
 	private List<MPTNMessageListener<UDPMPTNPacket>> listeners;
 	private Map<SocketAddress, DatagramChannel> activeChannels;
 	private ExecutorService executorService = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
 	
 	public NIOUdpServer(int port) {
 		this.port = port;
+		this.parser = new MPTNPackageParser<UDPMPTNPacket>(UDPMPTNPacket.class);
 		this.listeners = new ArrayList<MPTNMessageListener<UDPMPTNPacket>>();
 		this.activeChannels = new HashMap<SocketAddress, DatagramChannel> ();
 	}
@@ -103,9 +107,12 @@ public class NIOUdpServer implements Runnable {
 		if (activeChannels.containsKey(remoteAddr)) {
 			activeChannels.put(remoteAddr, channel);
 		}
+		
+		UDPMPTNPacket packet = parser.parse(attachment.getBuffer());
+		
 		executorService.execute(
 				new EventHandleThread<UDPMPTNPacket>(UDPMPTNPacket.class, channel.getRemoteAddress(),
-						MPTNUtil.deepCopy(attachment.getBuffer()), listeners));
+						packet, listeners));
 		attachment.getBuffer().clear();
 	}
 	

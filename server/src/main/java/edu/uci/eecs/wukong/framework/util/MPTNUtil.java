@@ -1,6 +1,7 @@
 package edu.uci.eecs.wukong.framework.util;
 
 import java.nio.ByteBuffer;
+import java.util.UUID;
 
 import com.google.common.primitives.UnsignedInteger;
 
@@ -17,8 +18,8 @@ public class MPTNUtil {
 	public final static int MPTN_MSATYPE_BYTE_OFFSET = MPTN_SRC_BYTE_OFFSET + MPTN_ID_LEN;
 	public final static int MPTN_PAYLOAD_BYTE_OFFSET = MPTN_MSATYPE_BYTE_OFFSET + MPTN_MSGTYPE_LEN;
 	
-	public final static int MPTN_TCP_NOUNCE_SIZE = 4;
-	public final static int MPTN_TCP_PACKAGE_SIZE = 8;
+	public final static int MPTN_TCP_NOUNCE_SIZE = 8;
+	public final static int MPTN_TCP_PACKAGE_SIZE = 4;
 	public final static int MPTN_TCP_HEADER_LENTGH = MPTN_ID_LEN + MPTN_TCP_NOUNCE_SIZE + MPTN_TCP_PACKAGE_SIZE;
 	
 	public static final int MPTN_HEADER_LENGTH = 9;
@@ -92,6 +93,26 @@ public class MPTNUtil {
 		}
 	}
 	
+	public static long getNetMaskValue(int length) {
+		long mask = (long)Math.pow(2, length) - 1;
+		return mask << (32 - length);
+	}
+	
+	public static byte[] getUUIDBytes() {
+		UUID uuid = UUID.randomUUID();
+		ByteBuffer bb = ByteBuffer.wrap(new byte[16]);
+		appendUnsignedBytes(bb, uuid.getMostSignificantBits());
+		appendUnsignedBytes(bb, uuid.getLeastSignificantBits());
+		return bb.array();
+	}
+	
+	public static void appendUnsignedBytes(ByteBuffer buffer, long value) {
+		for (int i = 7; i >= 0; i--) {
+			byte v = getByteValue(value, 8 * i);
+			buffer.put((byte)((v + 256) % 128));
+		}
+	}
+	
 	public static ByteBuffer createBufferFromTCPMPTNPacket(TCPMPTNPacket packet) {
 		ByteBuffer buffer = ByteBuffer.allocate(MPTNUtil.MPTN_TCP_HEADER_LENTGH + (int)packet.getLength());
 		buffer.putInt(packet.getPeerId());
@@ -150,5 +171,9 @@ public class MPTNUtil {
 	
 	private static byte getByteValue(int value, int deviation) {
 		return new Integer(value >> deviation).byteValue();
+	}
+	
+	private static byte getByteValue(long value, int deviation) {
+		return new Long(value >> deviation).byteValue();
 	}
 }

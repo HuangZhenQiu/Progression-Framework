@@ -27,13 +27,12 @@ public class TCPMPTN extends AbstractMPTN implements MPTNMessageListener<TCPMPTN
 	private long currentNouce = 0;
 	
 	public TCPMPTN() {
-		this.listeners = new ArrayList<IDProtocolHandler> ();
-		this.server = new NIOTCPServer(configuration.getGatewayPort());
-		this.server.addMPTNMessageListener(this);
-		
+		this.listeners = new ArrayList<IDProtocolHandler> ();		
 		this.connectedSockets = new HashMap<Integer, SocketAddress>();
 		SocketAddress masterAddress = new InetSocketAddress(configuration.getMasterAddress(), configuration.getMasterTCPPort());
 		this.connectedSockets.put(MPTNUtil.MASTER_ID, masterAddress);
+		this.server = new NIOTCPServer(masterAddress, configuration.getGatewayPort());
+		this.server.addMPTNMessageListener(this);
 		Thread serverThread = new Thread(server);
 		serverThread.start();
 	}
@@ -94,42 +93,50 @@ public class TCPMPTN extends AbstractMPTN implements MPTNMessageListener<TCPMPTN
 	}
 	
 	private void fireGatewayIDDisover(SocketAddress remoteAddress, MPTNPacket bytes) {
+		LOGGER.info("Received GatewayIDDisover MPTN message");
 		for (IDProtocolHandler handler : listeners) {
 			handler.onGatewayIDDisover(remoteAddress, bytes);
 		}
 	}
 	
 	private void fireRoutingTablePing(SocketAddress remoteAddress, MPTNPacket bytes) {
+		LOGGER.info("Received RoutingTablePing MPTN message");
 		for (IDProtocolHandler handler : listeners) {
 			handler.onRoutingTablePing(remoteAddress, bytes);
 		}
 	}
 	
 	private void fireRoutingTableRequest(SocketAddress remoteAddress, MPTNPacket bytes) {
+		LOGGER.info("Received RoutingTableRequest MPTN message");
 		for (IDProtocolHandler handler : listeners) {
 			handler.onRoutingTableRequest(remoteAddress, bytes);
 		}
 	}
 	
 	private void fireRountingTableReply(SocketAddress remoteAddress, MPTNPacket bytes) {
+		LOGGER.info("Received RountingTableReply MPTN message");
 		for (IDProtocolHandler handler : listeners) {
 			handler.onRountingTableReply(remoteAddress, bytes);
 		}
 	}
 	
 	private void fireForwardRequest(SocketAddress remoteAddress, MPTNPacket bytes) {
+		LOGGER.info("Received ForwardRequest MPTN message");
 		for (IDProtocolHandler handler : listeners) {
 			handler.onForwardRequest(remoteAddress, bytes);
 		}
 	}
 	
+	
 	private void fireGatewayIDRequest(SocketAddress remoteAddress, MPTNPacket bytes) {
+		LOGGER.info("Received GatewayIDRequest MPTN message");
 		for (IDProtocolHandler handler : listeners) {
 			handler.onGatewayIDRequest(remoteAddress, bytes);
 		}
 	}
 	
 	private void fireRPCCommand(SocketAddress remoteAddress, MPTNPacket bytes) {
+		LOGGER.info("Received RPCCommand MPTN message");
 		for (IDProtocolHandler handler : listeners) {
 			handler.onRPCCommand(remoteAddress, bytes);
 		}

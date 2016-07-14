@@ -4,8 +4,6 @@ import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketAddress;
-import java.nio.ByteBuffer;
-import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,9 +28,9 @@ public class IDService implements IDProtocolHandler {
 	private Gateway gateway;
 	private long gatewayId;
 	private long netmask;
-	private String address;
+	private long address;
 	private int addressLength;
-	private long uuid;
+	private byte[] uuid;
 	// Need to check format
 	private long network;
 	private long idPrefix;
@@ -43,12 +41,13 @@ public class IDService implements IDProtocolHandler {
 		this.gateway = gateway;
 		this.addressLength = MPTNUtil.IP_ADDRESS_LEN;
 		this.gatewayId = MPTNUtil.MPTN_MAX_ID.intValue();
-		this.uuid = UUID.randomUUID().getMostSignificantBits();
+		this.uuid = MPTNUtil.getUUIDBytes();
 		try {
 			InetAddress localHost = Inet4Address.getLocalHost();
 			NetworkInterface networkInterface = NetworkInterface.getByInetAddress(localHost);
-			address = networkInterface.getInterfaceAddresses().get(1).getAddress().getHostAddress();
-			netmask = networkInterface.getInterfaceAddresses().get(1).getNetworkPrefixLength();
+			address = MPTNUtil.IPToInteger(networkInterface.getInterfaceAddresses().get(1).getAddress().getHostAddress());
+			netmask = MPTNUtil.getNetMaskValue(
+					networkInterface.getInterfaceAddresses().get(1).getNetworkPrefixLength());
 		} catch (Exception e) {
 			LOGGER.error("ID Service can't initialize network interface");
 		}
@@ -190,5 +189,4 @@ public class IDService implements IDProtocolHandler {
 		
 		gateway.dispatchRPCMessage(remoteAddress, packet);
 	}
-
 }

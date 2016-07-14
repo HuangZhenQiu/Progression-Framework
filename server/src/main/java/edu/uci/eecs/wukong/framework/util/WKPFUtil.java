@@ -124,10 +124,10 @@ public class WKPFUtil {
 	}
 	
 	public static long getBigEndianLong(byte[] buffer, int start) {
-		long result = (new Long(buffer[start]) + 256) % 256;
-		result += ((new Long(buffer[start + 1]) + 256) % 256) << 8;
-		result += ((new Long(buffer[start + 2]) + 256) % 256) << 16;
-		result += ((new Long(buffer[start + 3]) + 256) % 256) << 24;
+		long result = ((buffer[start] + 256) % 256);
+		result += ((buffer[start + 1] + 256) % 256) << 8;
+		result += ((buffer[start + 2] + 256) % 256) << 16;
+		result += ((buffer[start + 3] + 256)) << 24;
 		
 		return result;
 	}

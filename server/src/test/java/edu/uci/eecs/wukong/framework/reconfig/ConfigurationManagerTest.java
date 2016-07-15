@@ -18,6 +18,6 @@ public class ConfigurationManagerTest extends TestCase {
 		List<Predict> predicts = new ArrayList<Predict> ();
 		Predict predict = new Predict(1, PredictType.Location, PredictOperatorType.EQ, "/WuKong");
 		predicts.add(predict);
-		manager.remapping("0cbc6611f5540bd0809a388dc95a615b", predicts);
+		manager.remapping("ec227a88a37f94285b148879fe672783", predicts);
 	}
 }

@@ -8,7 +8,6 @@ import edu.uci.eecs.wukong.framework.api.Extension;
 import edu.uci.eecs.wukong.framework.prclass.AgentPrClass;
 import edu.uci.eecs.wukong.framework.prclass.Poller;
 import edu.uci.eecs.wukong.framework.prclass.PrClassMetrics;
-import edu.uci.eecs.wukong.framework.wkpf.WKPF;
 import edu.uci.eecs.wukong.framework.annotation.WuClass;
 import edu.uci.eecs.wukong.framework.annotation.WuProperty;
 import edu.uci.eecs.wukong.framework.model.DataType;

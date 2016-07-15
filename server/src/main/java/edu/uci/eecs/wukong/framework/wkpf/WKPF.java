@@ -87,7 +87,8 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 		this.wuclasses = new ArrayList<WuClassModel> ();
 		this.portToWuObjectMap = new TreeMap<Byte, WuObjectModel> ();
 		this.listeners = new ArrayList<PluginInitListener> ();
-		this.mptn = new UDPMPTN(progression);
+		// TODO for progression study temporarily disable it
+		this.mptn = new UDPMPTN(false);
 		this.mptn.register(this);
 		this.djaData = new DJAData();
 		this.djaData.register(this);

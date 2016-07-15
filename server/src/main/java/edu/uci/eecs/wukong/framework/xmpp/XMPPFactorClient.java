@@ -1,6 +1,8 @@
 package edu.uci.eecs.wukong.framework.xmpp;
 
 import com.google.gson.Gson;
+
+import java.io.IOException;
 import java.util.Collection;
 
 import edu.uci.eecs.wukong.framework.factor.BaseFactor;
@@ -11,6 +13,9 @@ import edu.uci.eecs.wukong.framework.xmpp.FactorExtensionElementProvider;
 import edu.uci.eecs.wukong.framework.util.Configuration;
 
 import org.jivesoftware.smack.ConnectionConfiguration;
+import org.jivesoftware.smack.ReconnectionManager;
+import org.jivesoftware.smack.SmackException;
+import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.provider.ProviderManager;
 import org.jivesoftware.smack.roster.Roster;
@@ -23,6 +28,7 @@ import org.jivesoftware.smackx.pubsub.PayloadItem;
 import org.jivesoftware.smackx.pubsub.PubSubManager;
 import org.jivesoftware.smackx.pubsub.PublishModel;
 import org.jivesoftware.smackx.pubsub.listener.ItemEventListener;
+import org.jivesoftware.smackx.ping.PingManager;
 import org.jivesoftware.smackx.pubsub.AccessModel;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
@@ -42,18 +48,11 @@ public class XMPPFactorClient implements FactorClient, RosterListener {
 	private PubSubManager manager;
 	private Roster roster;
 	
-	public static synchronized XMPPFactorClient getInstance() {
-		if (client == null) {
-			client = new XMPPFactorClient();
-		}
-		return client;
-	}
-	
-	private XMPPFactorClient(){
+	public XMPPFactorClient(String userName, String password){
 		try {
 			DomainBareJid serviceName = JidCreate.domainBareFrom(systemConfig.getXMPPServerName());
 			connectionConfig = XMPPTCPConnectionConfiguration.builder()
-				.setUsernameAndPassword(systemConfig.getXMPPUserName(), systemConfig.getXMPPPassword())
+				.setUsernameAndPassword(userName, password)
 				.setResource("test")
 				.setDebuggerEnabled(true)
 				.setSecurityMode(ConnectionConfiguration.SecurityMode.disabled)
@@ -63,22 +62,40 @@ public class XMPPFactorClient implements FactorClient, RosterListener {
 			
 			logger.info(systemConfig.getXMPPServerName());
 			tcpConnection = new XMPPTCPConnection(connectionConfig);
-			tcpConnection.setPacketReplyTimeout(10000);
+			tcpConnection.setPacketReplyTimeout(100000);
+			// heart beat
+		 	PingManager.getInstanceFor(tcpConnection).setPingInterval(600);
 		 	// Disable roster loading at login
 			roster = Roster.getInstanceFor(tcpConnection);
 		 	roster.addRosterListener(this);
 		 	roster.setRosterLoadedAtLogin(false);
 		 	roster.setSubscriptionMode(Roster.SubscriptionMode.manual);
+		 	
+		 	
+		 	// ReconnectionManager
+		 	ReconnectionManager reconnectionManager = ReconnectionManager.getInstanceFor(tcpConnection);
+		 	reconnectionManager.setFixedDelay(15);
+            ReconnectionManager.setDefaultReconnectionPolicy(ReconnectionManager.ReconnectionPolicy.FIXED_DELAY);
+            reconnectionManager.enableAutomaticReconnection();
+
 		 	// Connect to server
-		 	tcpConnection.connect();
+	        try {
+	        	tcpConnection.connect();
+	        } catch (SmackException e) {
+	            e.printStackTrace();
+	        } catch (IOException e) {
+	            e.printStackTrace();
+	        } catch (XMPPException e) {
+	            e.printStackTrace();
+	        }
+	        
 		 	tcpConnection.login();
-			manager = PubSubManager.getInstance(tcpConnection);
+			manager = PubSubManager.getInstance(tcpConnection);	
 			addCustomizedProvider();
 			logger.info("Successfully connected with XMPP server:" + systemConfig.getXMPPServerName());
 		} catch(Exception e) {
 			e.printStackTrace();
 			logger.error("Fail to create XMPP Client, please check username and password in config");
-			System.exit(-1);
 		}
 	}
 	
@@ -93,11 +110,9 @@ public class XMPPFactorClient implements FactorClient, RosterListener {
 	public void subscribe(String nodeId, FactorClientListener listener) {
 		try {
 			if (listener instanceof ItemEventListener) {
-				ItemEventListener<PayloadItem<FactorExtensionElement>> itemEventListener = 
-						(ItemEventListener<PayloadItem<FactorExtensionElement>>) listener;
 				Node eventNode = getOrCreateNode (nodeId);
 				if (eventNode != null) {
-					eventNode.addItemEventListener(itemEventListener);
+					eventNode.addItemEventListener(listener);
 					eventNode.subscribe(tcpConnection.getUser().asEntityBareJidString());
 					logger.info("XMPP client subcribe nodeId: " + nodeId);
 				} else {
@@ -126,7 +141,7 @@ public class XMPPFactorClient implements FactorClient, RosterListener {
 		try {
 			LeafNode node = getOrCreateNode(id);
 			if (node != null) {
-				FactorExtensionElement element =  new FactorExtensionElement(id, context.getClass().toString(), gson.toJson(context));
+				FactorExtensionElement element =  new FactorExtensionElement(id, context.getClass().getCanonicalName(), gson.toJson(context));
 				PayloadItem<FactorExtensionElement> item = new PayloadItem<FactorExtensionElement>(element);
 				node.publish(item);
 				logger.info("Published message " + context + " to node " + id);

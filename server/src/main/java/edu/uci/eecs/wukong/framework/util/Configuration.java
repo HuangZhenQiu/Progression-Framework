@@ -16,6 +16,8 @@ public class Configuration {
 	private static final String XMPP_PORT = "XMPP.PORT";
 	private static final String XMPP_USERNAME = "XMPP.USERNAME";
 	private static final String XMPP_PASSWORD = "XMPP.PASSWORD";
+	private static final String XMPP_TEST_USERNAME = "XMPP.TEST.USERNAME";
+	private static final String XMPP_TEST_PASSWORD = "XMPP.TEST.PASSWORD";
 	private static final String MASTER_ADDRESS = "MASTER.ADDRESS";
 	private static final String MASTER_PORT = "MASTER.PORT";
 	private static final String MASTER_TCP_PORT = "MASTER.TCP.PORT";
@@ -197,6 +199,14 @@ public class Configuration {
 	
 	public String getXMPPPassword() {
 		return properties.getProperty(XMPP_PASSWORD);
+	}
+	
+	public String getXMPPTestUserName() {
+		return properties.getProperty(XMPP_TEST_USERNAME);
+	}
+	
+	public String getXMPPTestPassword() {
+		return properties.getProperty(XMPP_TEST_PASSWORD);
 	}
 	
 	public String getMasterAddress() {

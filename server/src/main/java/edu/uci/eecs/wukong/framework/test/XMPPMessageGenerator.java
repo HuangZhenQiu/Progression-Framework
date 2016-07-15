@@ -14,9 +14,11 @@ import edu.uci.eecs.wukong.framework.xmpp.XMPPFactorListener;
 import edu.uci.eecs.wukong.framework.factor.BaseFactor;
 import edu.uci.eecs.wukong.framework.factor.FactorClientListener;
 import edu.uci.eecs.wukong.framework.factor.FactorListener;
+import edu.uci.eecs.wukong.framework.util.Configuration;
 import edu.uci.eecs.wukong.framework.xmpp.FactorExtensionElement;
 
 public class XMPPMessageGenerator {
+	private final static Configuration systemConfig = Configuration.getInstance(); 
 	private static String TEST_TOPIC = "test";
 	private XMPPFactorClient client;
 	private TestListener listener;
@@ -29,7 +31,7 @@ public class XMPPMessageGenerator {
 		}
 	}
 	
-	private static class TestListener extends FactorClientListener implements ItemEventListener<PayloadItem<FactorExtensionElement>> {
+	private static class TestListener extends FactorClientListener {
 		private static Logger logger = LoggerFactory.getLogger(XMPPFactorListener.class);
 		public TestListener(ConcurrentMap<String, BaseFactor> factors, List<FactorListener> factorListeners) {
 			super(factors, factorListeners);
@@ -46,7 +48,7 @@ public class XMPPMessageGenerator {
 	}
 	
 	public XMPPMessageGenerator() {
-		client = XMPPFactorClient.getInstance();
+		client = new XMPPFactorClient(systemConfig.getXMPPTestUserName(), systemConfig.getXMPPTestPassword());
 		listener = new TestListener(null, null);
 	}
 	

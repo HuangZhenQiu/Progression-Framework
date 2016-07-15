@@ -11,7 +11,7 @@ import edu.uci.eecs.wukong.framework.model.LinkTable;
 import edu.uci.eecs.wukong.framework.model.InitValue;
 import edu.uci.eecs.wukong.framework.model.InitValueTable;
 import edu.uci.eecs.wukong.framework.util.WKPFUtil;
-
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -297,13 +297,11 @@ public class DJAData {
 			return "";
 		}
 		
-		StringBuilder builder = new StringBuilder();
 		// start of component map
 		int start = index + 3;
 		int length = WKPFUtil.getBigEndianShort(buffer, index);
-		builder.append(Arrays.copyOfRange(buffer, start, start + length));
-		
-		return builder.toString();
+		byte[] bytes = Arrays.copyOfRange(buffer, start, start + length);
+		return new String(bytes, Charset.forName("UTF-8"));
 	}
 	
 	/**

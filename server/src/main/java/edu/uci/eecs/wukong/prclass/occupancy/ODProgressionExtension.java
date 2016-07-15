@@ -3,6 +3,7 @@ package edu.uci.eecs.wukong.prclass.occupancy;
 import java.lang.Comparable;
 import java.util.List;
 import java.util.PriorityQueue;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.time.LocalDateTime;
 
@@ -12,6 +13,7 @@ import edu.uci.eecs.wukong.framework.api.TimerExecutable;
 import edu.uci.eecs.wukong.framework.annotation.WuTimer;
 import edu.uci.eecs.wukong.framework.buffer.RingBuffer;
 import edu.uci.eecs.wukong.framework.extension.AbstractExecutionExtension;
+import edu.uci.eecs.wukong.framework.predict.Predict;
 import edu.uci.eecs.wukong.prclass.occupancy.OccupancyDetection;
 
 import com.google.common.annotations.VisibleForTesting;
@@ -86,6 +88,13 @@ public class ODProgressionExtension extends AbstractExecutionExtension<Occupancy
 			boolean occupancy = predict(slotsUtilNow + 1);
 			if (occupancy == false) {
 				// trigger re-mapping for user absent mode
+				List<Predict> predicts = new ArrayList<Predict> ();
+				this.getPrClass().remap(predicts);
+			} else {
+				// trigger re-mapping for user occupancy mode for 
+				// trigger re-mapping for user absent mode
+				List<Predict> predicts = new ArrayList<Predict> ();
+				this.getPrClass().remap(predicts);
 			}
 		}
 	}

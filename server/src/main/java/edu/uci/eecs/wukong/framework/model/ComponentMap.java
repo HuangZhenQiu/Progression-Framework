@@ -50,6 +50,17 @@ public class ComponentMap {
 		return length;
 	}
 	
+	public List<Component> getReplicatedComponent() {
+		List<Component> components = new ArrayList<Component> ();
+		for (Component component : components) {
+			if (component.getEndPointSize() > 1) {
+				components.add(component); 
+			}
+		}
+		
+		return components;
+	}
+	
 	public boolean contains(short wuClassId) {
 		return componentMap.containsKey(wuClassId);
 	}

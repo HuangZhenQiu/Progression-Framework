@@ -37,10 +37,10 @@ public class FaultTolerantPolicyPrClass extends SystemPrClass {
 			mtype = WKPFMessageType.GetDeviceStatusReturn, dtype = DataType.GlobalChannel)
 	private byte heartBeat;
 
-	@WuProperty(name = "changelink", id = 1, type = PropertyType.Input,
-			mtype = WKPFMessageType.ChangeLinkReturn, dtype = DataType.GlobalChannel)
+	@WuProperty(name = "changeComponent", id = 1, type = PropertyType.Input,
+			mtype = WKPFMessageType.ChangeComponentMapReturn, dtype = DataType.GlobalChannel)
 
-	private byte changeLink;
+	private byte changeComponent;
 
 	public FaultTolerantPolicyPrClass(Poller poller, PrClassMetrics metrics) {
 		super("FaultTolerantPolicy", poller, metrics);
@@ -50,7 +50,7 @@ public class FaultTolerantPolicyPrClass extends SystemPrClass {
 	@Override
 	public List<Extension> registerExtension() {
 		List<Extension> extensions = new ArrayList<Extension> ();
-		extensions.add(new FaultTolerantProgressionExtenson(this));
+		extensions.add(new FaultTolerantExecutionExtenson(this));
 		return extensions;
 	}
 

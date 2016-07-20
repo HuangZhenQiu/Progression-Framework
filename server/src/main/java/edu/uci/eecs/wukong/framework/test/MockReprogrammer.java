@@ -27,7 +27,7 @@ public class MockReprogrammer {
 	
 	public void addPrObject(short wuclassId, int address, byte port) {
 		if (!map.contains(wuclassId)) {
-			Component component = new Component(wuclassId);
+			Component component = new Component(wuclassId, (short)1);
 			map.addComponent(component);
 		}
 		

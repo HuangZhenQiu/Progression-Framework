@@ -33,4 +33,6 @@ public interface WKPFMessageListener {
 	public void onWKPFChangeLinkReturn(long sourceId, byte[] message);
 	
 	public void onWKPFReleaseLockReturn(long sourceId, byte[] message);
+	
+	public void onWKPFChangeComponentMapReturn(long sourceID, byte[] message);
 }

@@ -14,10 +14,12 @@ import edu.uci.eecs.wukong.framework.model.EndPoint;
  */
 public class Component {
 	private short wuclassId;
+	private short id;
 	private List<EndPoint> endPoints;
 	
-	public Component(short wuclassId) {
+	public Component(short wuclassId, short id) {
 		this.wuclassId = wuclassId;
+		this.id = id;
 		this.endPoints = new ArrayList<EndPoint> ();
 	}
 	
@@ -63,6 +65,18 @@ public class Component {
 		}
 		
 		return null;
+	}
+	
+	public EndPoint getSecondaryEndPoint() {
+		if (endPoints.size() >= 2) {
+			return endPoints.get(1);
+		}
+		
+		return null;
+	}
+	
+	public short getId() {
+		return this.id;
 	}
 	
 	@Override

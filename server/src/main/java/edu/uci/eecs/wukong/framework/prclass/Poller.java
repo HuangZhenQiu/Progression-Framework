@@ -9,6 +9,9 @@ public class Poller {
 		this.wkpf = wkpf;
 	}
 	
+	public int getNodeId() {
+		return wkpf.getNetworkId();
+	}
 	
 	public void sendGetLinkCounter(Long address, short linkId) {
 		this.wkpf.sendGetLinkCounter(address, linkId);
@@ -22,8 +25,16 @@ public class Poller {
 		this.wkpf.sendSetLock(address, linkId);
 	}
 	
-	public void changeLink(Long address, short linkId, short componentId, short endpointId) {
-		this.wkpf.sendChangeLink(address, linkId, componentId, endpointId);
+	public void changeComponentMap(Long dest, short componentId, long oldNodeId, byte oldPid,
+			long newNodeId, byte newPid) {
+		this.wkpf.sendChangeComponentMap(dest, componentId, (int)oldNodeId, oldPid, (int)newNodeId, newPid);
+	}
+	
+	public void changeLink(Long dest, short sourceId, byte sourcePid,
+			short destId, byte destPid, short newSourceId, byte newSourcePid,
+			short newDestId, byte newDestPid) {
+		this.wkpf.sendChangeLink(dest, sourceId, sourcePid, destId,
+				destPid, newSourceId, newSourcePid, newDestId, newDestPid);
 	}
 	
 	public void releaseLock(Long address, short linkId) {

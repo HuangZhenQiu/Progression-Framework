@@ -9,6 +9,7 @@ public enum WKPFMessageType {
 	GetDeviceStatusReturn("GetDeviceStatusReturn"),
 	SetLockReturn("SetLockReturn"),
 	ChangeLinkReturn("ChangeLinkReturn"),
+	ChangeComponentMapReturn("ChangeComponentMapReturn"),
 	ReleaseLockReturn("ReleaseLockReturn");
 	
 	private final String name;
@@ -19,6 +20,7 @@ public enum WKPFMessageType {
 		messageMap.put((byte)0x95, WriteProperty);
 		messageMap.put((byte)0xB2, GetCounterReturn);
 		messageMap.put((byte)0xB4, GetDeviceStatusReturn);
+		messageMap.put((byte)0xB8, ChangeComponentMapReturn);
 		messageMap.put((byte)0xA7, SetLockReturn);
 		messageMap.put((byte)0xA5, ChangeLinkReturn);
 		messageMap.put((byte)0xA9, ReleaseLockReturn);

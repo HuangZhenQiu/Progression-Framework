@@ -51,6 +51,14 @@ public class WKPFUtil {
 	public static final byte WKPF_GET_LOCATION_R          = (byte)0x9B;
 	public static final byte WKPF_SET_LOCATION            = (byte)0x9C;
 	public static final byte WKPF_SET_LOCATION_R          = (byte)0x9D;
+	public static final byte WKPF_GET_FEATURE             = (byte)0x9E;
+	public static final byte WKPF_GET_FEATURE_R           = (byte)0x9F;
+	public static final byte WKPF_SET_FEATURE             = (byte)0xA0;
+	public static final byte WKPF_SET_FEATURE_R           = (byte)0xA1;
+	public static final byte WKPF_CHANGE_MAP              = (byte)0xA2;
+	public static final byte WKPF_CHANGE_MAP_R            = (byte)0xA3;
+	
+	
 	public static final byte WKPF_CHANGE_LINK             = (byte)0xA4;
 	public static final byte WKPF_CHANGE_LINK_R           = (byte)0xA5;
 	public static final byte WKPF_SET_LOCK                = (byte)0xA6;

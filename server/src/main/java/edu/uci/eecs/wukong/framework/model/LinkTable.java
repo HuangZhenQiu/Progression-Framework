@@ -44,6 +44,28 @@ public class LinkTable {
 		return 2 + links.size() * LINK_LENGTH;
 	}
 	
+	public List<Link> getInLink(Component component) {
+		List<Link> inlinks = new ArrayList<Link>();
+		for (Link link : links) {
+			if (link.getDestId() == component.getId()) {
+				inlinks.add(link);
+			}
+		}
+		
+		return inlinks;
+	}
+	
+	public List<Link> getOutLink(Component component) {
+		List<Link> outlinks = new ArrayList<Link>();
+		for (Link link : links) {
+			if (link.getSourceId() == component.getId()) {
+				outlinks.add(link);
+			}
+		}
+		
+		return outlinks;
+	}
+	
 	public List<Link> getOutLinks(int srcId, byte propertyId) {
 		List<Link> outLinks = new ArrayList<Link> ();
 		for (Link link : links) {

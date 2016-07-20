@@ -244,18 +244,42 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 		mptn.send(dest.intValue(), buffer.array());
 	}
 	
-	public void sendChangeLink(Long dest, short linkId, short componentId, short endpointId) {
+	public void sendChangeComponentMap(Long dest, short componentId, int oldNodeId, byte oldPid,
+			int newNodeId, byte newPid) {
 		this.sequence ++;
-		ByteBuffer buffer = ByteBuffer.allocate(14);
+		ByteBuffer buffer = ByteBuffer.allocate(15);
+		buffer.put(WKPFUtil.WKPF_CHANGE_MAP);
+		buffer.put((byte) (this.sequence % 256));
+		buffer.put((byte) (this.sequence / 256));
+		buffer.put((byte) (componentId % 256));
+		buffer.put((byte) (componentId / 256));
+		MPTNUtil.appendReversedInt(buffer, oldNodeId);
+		buffer.put((byte) oldPid);
+		MPTNUtil.appendReversedInt(buffer, newNodeId);
+		buffer.put((byte) newPid);
+		mptn.send(dest.intValue(), buffer.array());
+	}
+	
+	public void sendChangeLink(Long dest, short sourceId, byte sourcePid,
+			short destId, byte destPid, short newSourceId, byte newSourcePid,
+			short newDestId, byte newDestPid) {
+		this.sequence ++;
+		ByteBuffer buffer = ByteBuffer.allocate(15);
 		buffer.put(WKPFUtil.WKPF_CHANGE_LINK);
 		buffer.put((byte) (this.sequence % 256));
 		buffer.put((byte) (this.sequence / 256));
-		buffer.put((byte) (linkId % 256));
-		buffer.put((byte) (linkId / 256));
-		buffer.put((byte) (componentId % 256));
-		buffer.put((byte) (componentId / 256));
-		buffer.put((byte) (endpointId % 256));
-		buffer.put((byte) (endpointId / 256));
+		buffer.put((byte) (sourceId % 256));
+		buffer.put((byte) (sourceId / 256));
+		buffer.put((byte) sourcePid);
+		buffer.put((byte) (destId % 256));
+		buffer.put((byte) (destId / 256));
+		buffer.put((byte) destPid);
+		buffer.put((byte) (newSourceId % 256));
+		buffer.put((byte) (newSourceId / 256));
+		buffer.put((byte) newSourcePid);
+		buffer.put((byte) (newDestId % 256));
+		buffer.put((byte) (newDestId / 256));
+		buffer.put((byte) newDestPid);
 		mptn.send(dest.intValue(), buffer.array());
 	}
 	
@@ -768,10 +792,9 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 	}
 	
 	public void onWKPFDeviceStatusReturn(long sourceId, byte[] message) {
-		byte status = message[3];
-		LOGGER.debug(String.format("Received status %d for device %d.", status, sourceId));
+		LOGGER.debug(String.format("Received status return for device %d.", sourceId));
 		NPP npp = new NPP(sourceId, (byte)0, (byte)0);
-		bufferManager.addGlobalRealTimeData(npp, WKPFMessageType.GetDeviceStatusReturn, status);
+		bufferManager.addGlobalRealTimeData(npp, WKPFMessageType.GetDeviceStatusReturn, 1);
 	}
 	
 	public void onWKPFSetLockReturn(long sourceId, byte[] message) {
@@ -796,6 +819,13 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 		LOGGER.debug(String.format("Received release lock status %d for link %d.", status, linkId));
 		NPP npp = new NPP(sourceId, (byte)0, (byte)0);
 		bufferManager.addGlobalRealTimeData(npp, WKPFMessageType.ReleaseLockReturn, status);
+	}
+	
+	public void onWKPFChangeComponentMapReturn(long sourceId, byte[] message) {
+		byte status = message[3];
+		LOGGER.debug(String.format("Received change component map return %d", status));
+		NPP npp = new NPP(sourceId, (byte)0, (byte)0);
+		bufferManager.addGlobalRealTimeData(npp, WKPFMessageType.ChangeComponentMapReturn, status);
 	}
 	
 	public int getNetworkId() {

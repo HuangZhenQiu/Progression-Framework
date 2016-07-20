@@ -26,7 +26,7 @@ public @interface WuProperty {
 	DataType dtype() default DataType.Channel;
 	
 	// Define the message type of the input global channel, only used when data type is global channel
-	WKPFMessageType mType() default WKPFMessageType.GetDeviceStatusReturn;
+	WKPFMessageType mtype() default WKPFMessageType.GetDeviceStatusReturn;
 	
 	// Define the category of sensor, only used when data type is SystemBuffer
 	SensorType stype() default SensorType.Default;

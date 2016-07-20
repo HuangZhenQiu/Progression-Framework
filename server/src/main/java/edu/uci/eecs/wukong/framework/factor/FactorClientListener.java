@@ -11,7 +11,6 @@ import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-import org.jivesoftware.smack.packet.ExtensionElement;
 import org.jivesoftware.smackx.pubsub.ItemPublishEvent;
 import org.jivesoftware.smackx.pubsub.PayloadItem;
 import org.jivesoftware.smackx.pubsub.SimplePayload;
@@ -20,10 +19,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
-import com.sun.xml.internal.bind.v2.runtime.reflect.Lister;
 
 import edu.uci.eecs.wukong.framework.xmpp.FactorExtensionElement;
-import edu.uci.eecs.wukong.framework.xmpp.XMPPFactorClient;
 
 /**
  * FactorClientListener is base class for integrating listeners of every type of pub/sub system.
@@ -62,7 +59,7 @@ public abstract class FactorClientListener implements ItemEventListener<PayloadI
 		            if (element.getContent() != null) {
 						Class<BaseFactor> factorClass = (Class<BaseFactor>) Class.forName(element.getClassName());
 						BaseFactor factor = gson.fromJson(element.getContent(), factorClass);
-						logger.info("received factor from xmpp");
+						logger.info("received factor from xmpp sent time is " + factor.getTimestamp());
 						factors.put(factor.getTopicId(), factor);
 						for(FactorListener listener : this.factorListeners) {
 							listener.onFactorArrival(factor);

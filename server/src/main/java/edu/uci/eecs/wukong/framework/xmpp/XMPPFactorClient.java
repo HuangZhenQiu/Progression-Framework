@@ -137,6 +137,17 @@ public class XMPPFactorClient implements FactorClient, RosterListener {
 		return createNode(id);
 	}
 	
+	public void deleteContent(String id) {
+		try {
+			LeafNode node = getOrCreateNode(id);
+			if (node != null) {
+				node.deleteAllItems();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public void publish(String id, BaseFactor context) {
 		try {
 			LeafNode node = getOrCreateNode(id);

@@ -8,6 +8,7 @@ import edu.uci.eecs.wukong.framework.annotation.WuProperty;
 import edu.uci.eecs.wukong.framework.api.Extension;
 import edu.uci.eecs.wukong.framework.model.DataType;
 import edu.uci.eecs.wukong.framework.model.PropertyType;
+import edu.uci.eecs.wukong.framework.model.WKPFMessageType;
 import edu.uci.eecs.wukong.framework.prclass.PrClassMetrics;
 import edu.uci.eecs.wukong.framework.prclass.AgentPrClass;
 import edu.uci.eecs.wukong.framework.prclass.Poller;
@@ -21,7 +22,7 @@ import edu.uci.eecs.wukong.framework.prclass.Poller;
 
 @WuClass(id = 10117)
 public class EnergyPolicyPrClass extends AgentPrClass {
-	@WuProperty(id = 0, name="input", type = PropertyType.Input, dtype = DataType.GlobalChannel)
+	@WuProperty(id = 0, name="input", type = PropertyType.Input, mtype = WKPFMessageType.GetCounterReturn, dtype = DataType.GlobalChannel)
 	private int input; //first short represent linkId second short represent counter value
 
 	public EnergyPolicyPrClass(Poller poller, PrClassMetrics metrics) {

@@ -8,6 +8,7 @@ import edu.uci.eecs.wukong.framework.annotation.WuClass;
 import edu.uci.eecs.wukong.framework.annotation.WuProperty;
 import edu.uci.eecs.wukong.framework.model.DataType;
 import edu.uci.eecs.wukong.framework.model.PropertyType;
+import edu.uci.eecs.wukong.framework.model.WKPFMessageType;
 import edu.uci.eecs.wukong.framework.prclass.Poller;
 import edu.uci.eecs.wukong.framework.prclass.PrClassMetrics;
 import edu.uci.eecs.wukong.framework.prclass.SystemPrClass;
@@ -32,8 +33,14 @@ import edu.uci.eecs.wukong.framework.wkpf.WKPF;
 @WuClass(id = 10119)
 public class FaultTolerantPolicyPrClass extends SystemPrClass {
 
-	@WuProperty(name = "heartBeat", id = 0, type = PropertyType.Input, dtype = DataType.GlobalChannel)
+	@WuProperty(name = "heartBeat", id = 0, type = PropertyType.Input,
+			mtype = WKPFMessageType.GetDeviceStatusReturn, dtype = DataType.GlobalChannel)
 	private byte heartBeat;
+
+	@WuProperty(name = "changelink", id = 1, type = PropertyType.Input,
+			mtype = WKPFMessageType.ChangeLinkReturn, dtype = DataType.GlobalChannel)
+
+	private byte changeLink;
 
 	public FaultTolerantPolicyPrClass(Poller poller, PrClassMetrics metrics) {
 		super("FaultTolerantPolicy", poller, metrics);

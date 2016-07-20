@@ -5,6 +5,7 @@ public abstract class BaseFactor {
 	private String publisher;
 	private long timestamp;
 	private long lasttime;
+	private byte[] payload;
 	private boolean isTriggered;
 	
 	public BaseFactor(String topicId) {
@@ -41,5 +42,13 @@ public abstract class BaseFactor {
 
 	public void setTriggered(boolean isTriggered) {
 		this.isTriggered = isTriggered;
+	}
+
+	public byte[] getPayload() {
+		return payload;
+	}
+
+	public void setPayload(byte[] payload) {
+		this.payload = payload;
 	}
 }

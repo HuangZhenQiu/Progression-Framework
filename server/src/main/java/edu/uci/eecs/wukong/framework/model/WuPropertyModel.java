@@ -23,7 +23,7 @@ public class WuPropertyModel {
 		this.ptype = property.type();
 		this.dtype = property.dtype();
 		this.stype = property.stype();
-		this.mtype = property.mType();
+		this.mtype = property.mtype();
 		this.capacity = property.capacity();
 		this.interval = property.interval();
 		this.timeUnit = property.timeUnit();

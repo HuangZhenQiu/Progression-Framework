@@ -17,8 +17,8 @@ public enum WKPFMessageType {
 	
 	static {
 		messageMap.put((byte)0x95, WriteProperty);
-		messageMap.put((byte)0x61, GetCounterReturn);
-		messageMap.put((byte)0x63, GetDeviceStatusReturn);
+		messageMap.put((byte)0xB2, GetCounterReturn);
+		messageMap.put((byte)0xB4, GetDeviceStatusReturn);
 		messageMap.put((byte)0xA7, SetLockReturn);
 		messageMap.put((byte)0xA5, ChangeLinkReturn);
 		messageMap.put((byte)0xA9, ReleaseLockReturn);

@@ -75,8 +75,6 @@ public abstract class SystemPrClass extends EdgePrClass implements RemoteProgram
 		
 		if (self != null) {
 			components.remove(self);
-		} else {
-			LOGGER.error("Can't find the component reployed into the progression server");
 		}
 		
 		return components;

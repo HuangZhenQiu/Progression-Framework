@@ -136,9 +136,13 @@ public class DJAData {
 		ComponentMap map = extractComponentMap();
 		InitValueTable initValue = extractInitValueTable();
 		String appId = extractAppId();
-		for (RemoteProgrammingListener listener : listeners) {
-			listener.update(table, map, initValue, appId);
+		if (listeners.size() > 1) {
+			for (int i = 1; i < listeners.size(); i++) {
+				listeners.get(i).update(table, map, initValue, appId);
+			}
 		}
+		// bind  plugins after update component map in each plugin
+		listeners.get(0).update(table, map, initValue, appId);
 	}
 	
 	/** Initialisation list format (little endian)

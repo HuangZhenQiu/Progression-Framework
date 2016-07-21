@@ -49,6 +49,6 @@ public class TimerEdgeClass extends EdgePrClass{
 	}
 	
 	public boolean getOutput() {
-		return this.getOutput();
+		return this.output;
 	}
 }

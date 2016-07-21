@@ -40,7 +40,7 @@ public class Component {
 	}
 	
 	public List<EndPoint> getEndPoints() {
-		return this.getEndPoints();
+		return this.endPoints;
 	}
 	
 	public void addEndPoint(EndPoint endpoint) {

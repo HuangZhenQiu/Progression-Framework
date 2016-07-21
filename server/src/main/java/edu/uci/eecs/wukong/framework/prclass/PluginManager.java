@@ -233,6 +233,10 @@ public class PluginManager implements PluginInitListener {
 	public void bindPlugins(List<WuObjectModel> objects) {
 		LOGGER.info("Start to bind plugins into plugin manager, the size of objects is " + objects.size());
 		bindedWuObjects.clear();
+		
+		// Update wuobject information before binding for dja will be used by init
+		fireUpdateEvent();
+		
 		for (WuObjectModel model : objects) {
 			if (model.getPrClass().isInitialized()) {
 				bindPlugin(model);
@@ -242,8 +246,6 @@ public class PluginManager implements PluginInitListener {
 			}
 		}
 		
-		// Update wuobject information
-		fireUpdateEvent();
 	}
 	
 	/**

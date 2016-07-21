@@ -312,11 +312,19 @@ public class UDPMPTN extends AbstractMPTN implements MPTNMessageListener<UDPMPTN
 						return WKPFUtil.WKPF_GET_DEVICE_STATUS_R;
 					case WKPFUtil.WKPF_SET_LOCK_R:
 						fireWKPFOnSetLockReturn(wkpfPackage);
+						return WKPFUtil.WKPF_SET_LOCK_R;
 					case WKPFUtil.WKPF_CHANGE_LINK_R:
 						fireWKPFOnChangeLinkReturn(wkpfPackage);
+						return WKPFUtil.WKPF_CHANGE_LINK_R;
 					case WKPFUtil.WKPF_RELEASE_LOCK_R:
 						fireWKPFOnReleaseLockReturn(wkpfPackage);
-						
+						return WKPFUtil.WKPF_RELEASE_LOCK_R;
+					case WKPFUtil.WKPF_CHANGE_MAP:
+						fireWKPFOnChangeMap(wkpfPackage);
+						return WKPFUtil.WKPF_CHANGE_MAP;
+					case WKPFUtil.WKPF_CHANGE_MAP_R:
+						filreWKPFOnChangeMapReturn(wkpfPackage);
+						return WKPFUtil.WKPF_CHANGE_MAP;
 					default:
 						LOGGER.error("Received unpexcted MPTN message type " + wkpfPackage);
 				}
@@ -431,6 +439,20 @@ public class UDPMPTN extends AbstractMPTN implements MPTNMessageListener<UDPMPTN
 		LOGGER.debug("Received set lock return message");
 		for (WKPFMessageListener listener : listeners) {
 			listener.onWKPFSetLockReturn(message.getSourceAddress(), message.getPayload());
+		}
+	}
+	
+	private void fireWKPFOnChangeMap(MPTNPacket message) {
+		LOGGER.info("Received change map request");
+		for (WKPFMessageListener listener : listeners) {
+			listener.onWKPFChangeComponent(message.getSourceAddress(), message.getPayload());
+		}
+	}
+	
+	private void filreWKPFOnChangeMapReturn(MPTNPacket message) {
+		LOGGER.info("Received change map return");
+		for (WKPFMessageListener listener : listeners) {
+			listener.onWKPFChangeComponentReturn(message.getSourceAddress(), message.getPayload());
 		}
 	}
 	

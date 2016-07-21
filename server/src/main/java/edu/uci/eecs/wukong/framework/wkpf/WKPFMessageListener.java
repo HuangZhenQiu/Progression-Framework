@@ -38,5 +38,5 @@ public interface WKPFMessageListener {
 	
 	public void onWKPFChangeComponent(long sourceId, byte[] message);
 	
-	public void onWKPFChangeComponentMapReturn(long sourceID, byte[] message);
+	public void onWKPFChangeComponentReturn(long sourceID, byte[] message);
 }

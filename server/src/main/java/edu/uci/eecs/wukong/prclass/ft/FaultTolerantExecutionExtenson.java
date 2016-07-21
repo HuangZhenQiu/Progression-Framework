@@ -89,15 +89,15 @@ public class FaultTolerantExecutionExtenson extends AbstractExecutionExtension<F
 							ExepectedMessage message = itr.next();
 							if (message.networkId == data.getNpp().getNid()
 									&& message.type == WKPFMessageType.GetDeviceStatusReturn) {
-								expectedMessages.remove(message);
+								itr.remove();
 							}
 						}
 					}
 				} else {
 					// received device status message from unknown device.
 				}
-			} else if (data.getType().equals(WKPFMessageType.ChangeLinkReturn)) {
-				LOGGER.info("Received ChangeLinkReturn from " + data.getNpp().getNid());
+			} else if (data.getType().equals(WKPFMessageType.ChangeComponentMapReturn)) {
+				LOGGER.info("Received ChangeMap Return from " + data.getNpp().getNid());
 			}
 		}
 	}
@@ -120,11 +120,11 @@ public class FaultTolerantExecutionExtenson extends AbstractExecutionExtension<F
 			while(itr.hasNext()) {
 				ExepectedMessage message = itr.next();
 				if (message.deadline > System.currentTimeMillis()) {
-					expectedMessages.remove(message);
 					// Update the status of device to failure
 					deviceStatus.put(message.networkId, Boolean.FALSE);
 					// Update the counter
 					failureCounter.put(message.networkId, failureCounter.get(message.networkId) + 1);
+					itr.remove();
 				}
 			}
 			

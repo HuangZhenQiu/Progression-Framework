@@ -862,7 +862,7 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 		bufferManager.addGlobalRealTimeData(npp, WKPFMessageType.ReleaseLockReturn, status);
 	}
 	
-	public void onWKPFChangeComponentMapReturn(long sourceId, byte[] message) {
+	public void onWKPFChangeComponentReturn(long sourceId, byte[] message) {
 		byte status = message[3];
 		LOGGER.info(String.format("Received change component map return %d", status));
 		NPP npp = new NPP(sourceId, (byte)0, (byte)0);

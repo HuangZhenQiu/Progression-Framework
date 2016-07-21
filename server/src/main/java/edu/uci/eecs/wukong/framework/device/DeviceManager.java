@@ -124,7 +124,7 @@ public class DeviceManager implements WKPFMessageListener {
 	}
 
 	@Override
-	public void onWKPFChangeComponentMapReturn(long sourceID, byte[] message) {
+	public void onWKPFChangeComponentReturn(long sourceID, byte[] message) {
 		// TODO Auto-generated method stub
 		
 	}

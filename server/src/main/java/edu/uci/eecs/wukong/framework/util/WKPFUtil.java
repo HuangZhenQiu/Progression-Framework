@@ -149,19 +149,19 @@ public class WKPFUtil {
 	 * @return the converted int
 	 */
 	public static int getBigEndianInteger(byte[] buffer, int start) {
-		int result = buffer[start];
-		result += buffer[start + 1] << 8;
-		result += buffer[start + 2] << 16;
-		result += buffer[start + 3] << 24;
+		int result = getUnsignedByteValue(buffer[start]);
+		result += getUnsignedByteValue(buffer[start + 1]) << 8;
+		result += getUnsignedByteValue(buffer[start + 2]) << 16;
+		result += getUnsignedByteValue(buffer[start + 3]) << 24;
 		
 		return (int) (result & 0xffffffffL);
 	}
 	
 	public static long getBigEndianLong(byte[] buffer, int start) {
-		long result = ((buffer[start] + 256) % 256);
-		result += ((buffer[start + 1] + 256) % 256) << 8;
-		result += ((buffer[start + 2] + 256) % 256) << 16;
-		result += ((buffer[start + 3] + 256)) << 24;
+		long result = getUnsignedByteValue(buffer[start]);
+		result += getUnsignedByteValue(buffer[start + 1]) << 8;
+		result += getUnsignedByteValue(buffer[start + 2]) << 16;
+		result += getUnsignedByteValue(buffer[start + 3]) << 24;
 		
 		return result;
 	}
@@ -172,7 +172,7 @@ public class WKPFUtil {
 	 */
 	public static int getUnsignedByteValue(byte data) {
 		if (data < 0) {
-			return 256 + data;
+			return 128 - data;
 		}
 		
 		return data;

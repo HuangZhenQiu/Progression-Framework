@@ -105,14 +105,9 @@ public class DJAData {
 	 */
 	public synchronized boolean append(int start, byte[] data) {
 		LOGGER.info("Start to append data into DJAData at position " + start + " with data length " + data.length);
-		if (start < pos) {
-			LOGGER.error("Rewrite on a memory place with data");
-			return false;
-		}
-		
-		if (start > pos) {
-			LOGGER.error("Write to unexpected memory position");
-			return false;
+		// Because of udp disorder package remove the the start point check
+		if (start >= pos) {
+			pos = start + data.length;
 		}
 		
 		if (start + data.length >= size - 1) {
@@ -120,7 +115,6 @@ public class DJAData {
 		}
 		
 		System.arraycopy(data, 0, buffer, start, data.length);
-		pos += data.length;
 		
 		LOGGER.debug("Appended data into DJAData, next pos is " + pos);
 		return true;

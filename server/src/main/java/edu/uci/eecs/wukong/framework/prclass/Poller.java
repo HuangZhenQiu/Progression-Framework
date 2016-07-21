@@ -1,8 +1,13 @@
 package edu.uci.eecs.wukong.framework.prclass;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import edu.uci.eecs.wukong.framework.wkpf.WKPF;
+import edu.uci.eecs.wukong.prclass.ft.FaultTolerantExecutionExtenson;
 
 public class Poller {
+	private final static Logger LOGGER = LoggerFactory.getLogger(Poller.class);
 	private WKPF wkpf;
 
 	public Poller(WKPF wkpf) {
@@ -18,6 +23,7 @@ public class Poller {
 	}
 	
 	public void sendHeartBeatRequest(Long address) {
+		LOGGER.info("Send hearbeat message to node " + address);
 		this.wkpf.sendGetDeviceStatus(address);
 	}
 	
@@ -27,6 +33,7 @@ public class Poller {
 	
 	public void changeComponentMap(Long dest, short componentId, long oldNodeId, byte oldPid,
 			long newNodeId, byte newPid) {
+		LOGGER.info("Send change map message to node " + dest);
 		this.wkpf.sendChangeComponentMap(dest, componentId, (int)oldNodeId, oldPid, (int)newNodeId, newPid);
 	}
 	

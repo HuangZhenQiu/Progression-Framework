@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import edu.uci.eecs.wukong.edge.timertest.TimerEdgeClass;
+import edu.uci.eecs.wukong.framework.annotation.WuTimer;
 import edu.uci.eecs.wukong.framework.api.TimerExecutable;
 import edu.uci.eecs.wukong.framework.extension.AbstractExecutionExtension;
 
@@ -15,6 +16,7 @@ public class TimerTestExecutionExtension extends AbstractExecutionExtension<Time
 		super(prClass);
 	}
 
+	@WuTimer(interval = 5)
 	public void execute() {
 		if (prClass instanceof TimerEdgeClass) {
 			TimerEdgeClass timerPrClass = (TimerEdgeClass) prClass;

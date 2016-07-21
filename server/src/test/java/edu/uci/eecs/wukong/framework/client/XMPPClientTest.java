@@ -15,8 +15,9 @@ public class XMPPClientTest {
 			factor.setTimestamp(System.currentTimeMillis());
 			// factor.setPayload(overhad);
 			XMPPFactorClient client = new XMPPFactorClient(
-					systemConfig.getXMPPTestUserName(), systemConfig.getXMPPPassword());
-			client.publish("test", factor);
+					systemConfig.getXMPPUserName(), systemConfig.getXMPPPassword());
+			client.deleteContent("test");
+			// client.publish("test", factor);
 			Thread.sleep(5000);
 		} catch (InterruptedException exception) {
 			System.out.println(exception.toString());

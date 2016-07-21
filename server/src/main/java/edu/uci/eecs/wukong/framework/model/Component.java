@@ -39,6 +39,10 @@ public class Component {
 		return 3 + EndPoint.ENDPOINT_LENGTH * endPoints.size();
 	}
 	
+	public List<EndPoint> getEndPoints() {
+		return this.getEndPoints();
+	}
+	
 	public void addEndPoint(EndPoint endpoint) {
 		endPoints.add(endpoint);
 	}

@@ -24,7 +24,7 @@ import edu.uci.eecs.wukong.framework.prclass.PrClassMetrics;
 public class TimerEdgeClass extends EdgePrClass{
 	
 	@WuProperty(name = "output", id = 0, type = PropertyType.Output, dtype = DataType.Short)
-	private short output;
+	private boolean output;
 	
 	public TimerEdgeClass(PrClassMetrics metrics) {
 		super("TimerPrClass", metrics);
@@ -43,8 +43,12 @@ public class TimerEdgeClass extends EdgePrClass{
 		return null;
 	}
 	
-	public void setOutput(short newOutput) {
+	public void setOutput(boolean newOutput) {
 		this.support.firePropertyChange("output", output, newOutput);
 		this.output = newOutput;
+	}
+	
+	public boolean getOutput() {
+		return this.getOutput();
 	}
 }

@@ -784,6 +784,35 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 		djaData.fireUpdateEvent();
 	}
 	
+	@Override
+	public void onWKPFChangeComponent(long sourceId, byte[] message) {
+		ByteBuffer buffer = ByteBuffer.allocate(5);
+		buffer.put(WKPFUtil.WKPF_CHANGE_MAP_R);
+		buffer.put(message[1]);
+		buffer.put(message[2]);
+		
+		// java byte is signed
+		int componentId = WKPFUtil.getUnsignedByteValue(message[4]) * 256 + WKPFUtil.getUnsignedByteValue(message[3]);
+		long oldNodeId = WKPFUtil.getUnsignedByteValue(message[5]);
+		oldNodeId = (oldNodeId << 8) + WKPFUtil.getUnsignedByteValue(message[6]);
+		oldNodeId = (oldNodeId << 8) + WKPFUtil.getUnsignedByteValue(message[7]);
+		oldNodeId = (oldNodeId << 8) + WKPFUtil.getUnsignedByteValue(message[8]);
+		byte oldPid =  (byte)WKPFUtil.getUnsignedByteValue(message[9]);
+		long newNodeId = WKPFUtil.getUnsignedByteValue(message[10]);
+		newNodeId = (newNodeId << 8) + WKPFUtil.getUnsignedByteValue(message[11]);
+		newNodeId = (newNodeId << 8) + WKPFUtil.getUnsignedByteValue(message[12]);
+		newNodeId = (newNodeId << 8) + WKPFUtil.getUnsignedByteValue(message[13]);
+		byte newPid = (byte)WKPFUtil.getUnsignedByteValue(message[14]);
+		boolean result = this.componentMap.updateComponent(componentId, oldNodeId, oldPid, newNodeId, newPid);
+		if (result) {
+			buffer.put(WKPFUtil.WKPF_OK);
+		} else {
+			buffer.put(WKPFUtil.WKPF_ERR_COMPONENT_NOT_FOUND);
+		}
+		// send the result back
+		mptn.send(sourceId, buffer.array());
+	}
+	
 	public void onWKPFLinkCounterReturn(long sourceId, byte[] message) {
 		short linkId = WKPFUtil.getBigEndianShort(message, 3);
 		short count = WKPFUtil.getBigEndianShort(message, 5);

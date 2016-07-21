@@ -128,4 +128,10 @@ public class DeviceManager implements WKPFMessageListener {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public void onWKPFChangeComponent(long sourceId, byte[] message) {
+		// TODO Auto-generated method stub
+		
+	}
 }

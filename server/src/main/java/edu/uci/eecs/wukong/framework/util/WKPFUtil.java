@@ -10,7 +10,33 @@ public class WKPFUtil {
 	
 	/* Virtual and Can create Instance, It should be 3 in the end. Temporarily, we treat it as  */
 	public static final byte PLUGIN_WUCLASS_TYPE = 0; // Need to confirm with Niels
-	public static final int WKPF_WRITE_PROPERTY_LENGTH = 8; // Until type 
+	public static final int WKPF_WRITE_PROPERTY_LENGTH = 8; // Until type
+	
+	public static final byte WKPF_OK = 0;
+	public static final byte WKPF_ERR_WUOBJECT_NOT_FOUND = 1;
+	public static final byte WKPF_ERR_PROPERTY_NOT_FOUND = 2;
+	public static final byte WKPF_ERR_WUCLASS_NOT_FOUND = 3;
+	public static final byte WKPF_ERR_READ_ONLY = 4;
+	public static final byte WKPF_ERR_WRITE_ONLY = 5;
+	public static final byte WKPF_ERR_PORT_IN_USE = 6;
+	public static final byte WKPF_ERR_WUCLASS_ID_IN_USE = 7;
+	public static final byte WKPF_ERR_OUT_OF_MEMORY = 8;
+	public static final byte WKPF_ERR_WRONG_DATATYPE = 9;
+	public static final byte WKPF_ERR_WUOBJECT_ALREADY_ALLOCATED = 10;
+	public static final byte WKPF_ERR_NEED_VIRTUAL_WUCLASS_INSTANCE = 11;
+	public static final byte WKPF_ERR_NVMCOMM_SEND_ERROR = 12;
+	public static final byte WKPF_ERR_NVMCOMM_NO_REPLY = 13;
+	public static final byte WKPF_ERR_REMOTE_PROPERTY_FROM_JAVASET_NOT_SUPPORTED = 14;
+	public static final byte WKPF_ERR_COMPONENT_NOT_FOUND = 15;
+	public static final byte WKPF_ERR_LOCATION_TOO_LONG = 16;
+	public static final byte WKPF_ERR_UNKNOWN_FEATURE = 17;
+	public static final byte WKPF_ERR_LINK_NOT_FOUND = 18;
+	public static final byte WKPF_ERR_ENDPOINT_NOT_FOUND = 19;
+	public static final byte WKPF_ERR_CANT_CREATE_INSTANCE_OF_WUCLASS = 20;
+	public static final byte WKPF_ERR_LOCK_FAIL = 21;
+	public static final byte WKPF_ERR_UNLOCK_FAIL = 22;
+	public static final byte WKPF_LOCKED = 23;
+	public static final byte WKPF_ERR_SHOULDNT_HAPPEN = (byte)0xFF;
 	
 	public static final byte WKPF_PROPERTY_TYPE_SHORT = 0;
 	public static final byte WKPF_PROPERTY_TYPE_BOOLEAN = 1;

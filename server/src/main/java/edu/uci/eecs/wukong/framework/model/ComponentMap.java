@@ -41,6 +41,22 @@ public class ComponentMap {
 		return buffer.array();
 	}
 	
+	public boolean updateComponent(int componentId, long oldNodeId, byte oldPid,
+			long newNodeId, byte newPid) {
+		if (componentId <= this.components.size()) {
+			Component component = components.get(componentId);
+			for (EndPoint point : component.getEndPoints()) {
+				if (point.getNodeId() == oldNodeId && point.getPortId() == oldPid) {
+					// Replace it with new one
+					point = new EndPoint(newNodeId, newPid);
+					return true;
+				}
+			}
+		}
+		
+		return false;
+	}
+	
 	public int length() {
 		int length = 2 + 2 * components.size();
 		for (Component component : components) {

@@ -20,7 +20,7 @@ public class GlobalChannel<T> extends Channel<T>{
 	}
 
 	public void append(NPP npp, WKPFMessageType type, T data) {
-		ChannelData<T> channelData = new ChannelData<T>(npp, data);
+		ChannelData<T> channelData = new ChannelData<T>(npp, type, data);
 		for (Channelable<T> listener : listeners) {
 			listener.execute(channelData);
 		}

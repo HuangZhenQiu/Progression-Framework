@@ -805,6 +805,7 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 		byte newPid = (byte)WKPFUtil.getUnsignedByteValue(message[14]);
 		boolean result = this.componentMap.updateComponent(componentId, oldNodeId, oldPid, newNodeId, newPid);
 		if (result) {
+			LOGGER.info(String.format("Successfully update component %d endpint from [%d, %d] to [%d, %d]", componentId, oldNodeId, oldPid, newNodeId, newPid));
 			buffer.put(WKPFUtil.WKPF_OK);
 		} else {
 			buffer.put(WKPFUtil.WKPF_ERR_COMPONENT_NOT_FOUND);
@@ -852,7 +853,7 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 	
 	public void onWKPFChangeComponentMapReturn(long sourceId, byte[] message) {
 		byte status = message[3];
-		LOGGER.debug(String.format("Received change component map return %d", status));
+		LOGGER.info(String.format("Received change component map return %d", status));
 		NPP npp = new NPP(sourceId, (byte)0, (byte)0);
 		bufferManager.addGlobalRealTimeData(npp, WKPFMessageType.ChangeComponentMapReturn, status);
 	}

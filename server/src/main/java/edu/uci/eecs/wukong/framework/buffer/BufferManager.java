@@ -318,7 +318,7 @@ public class BufferManager {
 	
 	@SuppressWarnings("unchecked")
 	public <T> void addGlobalRealTimeData(NPP key, WKPFMessageType type, T value) {
-		if(!channelMap.containsKey(key)) {
+		if(!globalChannelMap.containsKey(type)) {
 			// LOGGER.error("Try to insert into a channel doesn't exist:" + key);
 			return;
 		}

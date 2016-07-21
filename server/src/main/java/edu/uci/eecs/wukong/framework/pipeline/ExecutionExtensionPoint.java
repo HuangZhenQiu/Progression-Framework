@@ -44,15 +44,13 @@ public class ExecutionExtensionPoint extends ExtensionPoint<AbstractExecutionExt
 		if (extension instanceof TimerExecutable) {
 			TimerExecutable executable = (TimerExecutable) extension;
 			float internal = PipelineUtil.getIntervalFromMethodAnnotation(executable);
-			logger.info("Registering Timer Executor for every " + internal + "seconds  for plugin "
-					+ extension.getPrClass().getName() + " of port " + extension.getPrClass().getPortId());
 			ProgressionTimerTask timerTask = new ProgressionTimerTask(executable);
 			timer.scheduleAtFixedRate(timerTask, 5000 + pluginTaskMap.size() * 50, new Float(internal * configuration.getExtensionTimerUnit()).longValue());
 			pluginTaskMap.put(extension.getPrClass(), timerTask);
 			logger.info("Registered Timer Executor for every " + internal + "seconds  for plugin "
 					+ extension.getPrClass().getName() + " of port " + extension.getPrClass().getPortId());
 		}
-		logger.info("Registered Progression extension for plugin "
+		logger.info("Registered Execution extension for plugin "
 				+ extension.getPrClass().getName() + " of port " + extension.getPrClass().getPortId());
 	}
 	
@@ -75,7 +73,11 @@ public class ExecutionExtensionPoint extends ExtensionPoint<AbstractExecutionExt
 		
 		@Override
 		public void run() {
-			executable.execute();
+			try {
+				executable.execute();
+			} catch (Exception e) {
+				logger.error("Exception catched for execution of " + executable.toString() + e.toString());
+			}
 		}
 		
 	}

@@ -67,7 +67,7 @@ public abstract class SystemPrClass extends EdgePrClass implements RemoteProgram
 		List<Component> components = map.getReplicatedComponent();
 		Component self = null;
 		for (Component component : components) {
-			if (component.getPrimaryEndPoint().getNodeId() == poller.getNodeId()) {
+			if (component.getPrimaryEndPoint().getNodeId() == poller.getLongAddress()) {
 				self = component;
 				break;
 			}

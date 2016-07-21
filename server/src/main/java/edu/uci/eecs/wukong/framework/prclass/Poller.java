@@ -14,6 +14,9 @@ public class Poller {
 		this.wkpf = wkpf;
 	}
 	
+	public long getLongAddress() {
+		return wkpf.getLongAddress();
+	}
 	public int getNodeId() {
 		return wkpf.getNetworkId();
 	}

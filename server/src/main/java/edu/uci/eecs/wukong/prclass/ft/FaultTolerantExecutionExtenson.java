@@ -80,6 +80,7 @@ public class FaultTolerantExecutionExtenson extends AbstractExecutionExtension<F
 						// It it already set to faulty, we need to set it back.
 						if (!deviceStatus.get(data.getNpp().getNid())) {
 							deviceStatus.put(data.getNpp().getNid(), Boolean.TRUE);
+							failureCounter.put(data.getNpp().getNid(), 0);
 						}
 						
 						// remove all of the pending message

@@ -5,12 +5,13 @@ public class ChannelData<T> {
 	private WKPFMessageType type;
 	private T value;
 	
-	public ChannelData(NPP npp, T value) {
+	public ChannelData(NPP npp,  T value) {
 		this.npp = npp;
 		this.value = value;
 	}
 	
-	public ChannelData(WKPFMessageType type, T value) {
+	public ChannelData(NPP npp, WKPFMessageType type, T value) {
+		this.npp = npp;
 		this.type = type;
 		this.value = value;
 	}

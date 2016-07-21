@@ -304,6 +304,9 @@ public class UDPMPTN extends AbstractMPTN implements MPTNMessageListener<UDPMPTN
 					case WKPFUtil.WKPF_GET_LINK_COUNTER_R & 0xFF:
 						fireWKPFOnGetLinkCounterReturn(wkpfPackage);
 						return WKPFUtil.WKPF_GET_LINK_COUNTER_R;
+					case WKPFUtil.WKPF_GET_DEVICE_STATUS & 0xFF:
+						fireWKPFOnGetDeviceStatus(wkpfPackage);
+						return  WKPFUtil.WKPF_GET_DEVICE_STATUS;
 					case WKPFUtil.WKPF_GET_DEVICE_STATUS_R & 0xFF:
 						fireWKPFOnGetDeviceStatusReturn(wkpfPackage);
 						return WKPFUtil.WKPF_GET_DEVICE_STATUS_R;
@@ -407,6 +410,13 @@ public class UDPMPTN extends AbstractMPTN implements MPTNMessageListener<UDPMPTN
 		LOGGER.debug("Received get link counter message");
 		for (WKPFMessageListener listener : listeners) {
 			listener.onWKPFLinkCounterReturn(message.getSourceAddress(), message.getPayload());
+		}
+	}
+	
+	private void fireWKPFOnGetDeviceStatus(MPTNPacket message) {
+		LOGGER.debug("Received get device status message");
+		for (WKPFMessageListener listener : listeners) {
+			listener.onWKPFGetDeviceStatus(message.getSourceAddress(), message.getPayload());
 		}
 	}
 	

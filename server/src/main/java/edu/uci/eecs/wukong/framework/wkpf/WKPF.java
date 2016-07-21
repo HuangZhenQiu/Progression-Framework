@@ -821,6 +821,17 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 		LOGGER.debug(String.format("Received count %d for link %d.", count, linkId));
 	}
 	
+	@Override
+	public void onWKPFGetDeviceStatus(long sourceId, byte[] message) {
+		ByteBuffer buffer = ByteBuffer.allocate(4);
+		buffer.put(WKPFUtil.WKPF_GET_DEVICE_STATUS_R);
+		buffer.put(message[1]);
+		buffer.put(message[2]);
+		buffer.put(WKPFUtil.WKPF_OK);
+		// send the result back
+		mptn.send(sourceId, buffer.array());
+	}
+	
 	public void onWKPFDeviceStatusReturn(long sourceId, byte[] message) {
 		LOGGER.debug(String.format("Received status return for device %d.", sourceId));
 		NPP npp = new NPP(sourceId, (byte)0, (byte)0);

@@ -134,4 +134,10 @@ public class DeviceManager implements WKPFMessageListener {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public void onWKPFGetDeviceStatus(long sourceId, byte[] message) {
+		// TODO Auto-generated method stub
+		
+	}
 }

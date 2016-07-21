@@ -324,9 +324,9 @@ public class UDPMPTN extends AbstractMPTN implements MPTNMessageListener<UDPMPTN
 						return WKPFUtil.WKPF_CHANGE_MAP;
 					case WKPFUtil.WKPF_CHANGE_MAP_R & 0xFF:
 						filreWKPFOnChangeMapReturn(wkpfPackage);
-						return WKPFUtil.WKPF_CHANGE_MAP;
+						return WKPFUtil.WKPF_CHANGE_MAP_R;
 					default:
-						LOGGER.error("Received unpexcted MPTN message type " + wkpfPackage);
+						LOGGER.error("Received unexpected MPTN message type " + (wkpfPackage.getPayload()[0] & 0xFF));
 				}
 			} else if (wkpfPackage.getType() == MPTNUtil.MPTN_MSGTYPE_IDACK) {
 				processIDMessage(wkpfPackage.getDestAddress());

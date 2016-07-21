@@ -310,19 +310,19 @@ public class UDPMPTN extends AbstractMPTN implements MPTNMessageListener<UDPMPTN
 					case WKPFUtil.WKPF_GET_DEVICE_STATUS_R & 0xFF:
 						fireWKPFOnGetDeviceStatusReturn(wkpfPackage);
 						return WKPFUtil.WKPF_GET_DEVICE_STATUS_R;
-					case WKPFUtil.WKPF_SET_LOCK_R:
+					case WKPFUtil.WKPF_SET_LOCK_R & 0xFF:
 						fireWKPFOnSetLockReturn(wkpfPackage);
 						return WKPFUtil.WKPF_SET_LOCK_R;
-					case WKPFUtil.WKPF_CHANGE_LINK_R:
+					case WKPFUtil.WKPF_CHANGE_LINK_R & 0xFF:
 						fireWKPFOnChangeLinkReturn(wkpfPackage);
 						return WKPFUtil.WKPF_CHANGE_LINK_R;
-					case WKPFUtil.WKPF_RELEASE_LOCK_R:
+					case WKPFUtil.WKPF_RELEASE_LOCK_R & 0xFF:
 						fireWKPFOnReleaseLockReturn(wkpfPackage);
 						return WKPFUtil.WKPF_RELEASE_LOCK_R;
-					case WKPFUtil.WKPF_CHANGE_MAP:
+					case WKPFUtil.WKPF_CHANGE_MAP & 0xFF:
 						fireWKPFOnChangeMap(wkpfPackage);
 						return WKPFUtil.WKPF_CHANGE_MAP;
-					case WKPFUtil.WKPF_CHANGE_MAP_R:
+					case WKPFUtil.WKPF_CHANGE_MAP_R & 0xFF:
 						filreWKPFOnChangeMapReturn(wkpfPackage);
 						return WKPFUtil.WKPF_CHANGE_MAP;
 					default:

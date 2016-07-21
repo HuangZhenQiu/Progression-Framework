@@ -68,7 +68,7 @@ public class ComponentMap {
 	
 	public List<Component> getReplicatedComponent() {
 		List<Component> components = new ArrayList<Component> ();
-		for (Component component : components) {
+		for (Component component : this.components) {
 			if (component.getEndPointSize() > 1) {
 				components.add(component); 
 			}

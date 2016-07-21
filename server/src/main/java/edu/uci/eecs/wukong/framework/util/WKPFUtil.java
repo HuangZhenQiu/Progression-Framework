@@ -149,7 +149,7 @@ public class WKPFUtil {
 	 * @return the converted int
 	 */
 	public static int getBigEndianInteger(byte[] buffer, int start) {
-		int result = getUnsignedByteValue(buffer[start]);
+		int result = (int)getUnsignedByteValue(buffer[start]);
 		result += getUnsignedByteValue(buffer[start + 1]) << 8;
 		result += getUnsignedByteValue(buffer[start + 2]) << 16;
 		result += getUnsignedByteValue(buffer[start + 3]) << 24;
@@ -170,9 +170,9 @@ public class WKPFUtil {
 	 * @param data signed java byte
 	 * @return unsigned byte
 	 */
-	public static int getUnsignedByteValue(byte data) {
+	public static long getUnsignedByteValue(byte data) {
 		if (data < 0) {
-			return 128 - data;
+			return (long)(256 + data);
 		}
 		
 		return data;

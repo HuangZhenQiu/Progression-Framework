@@ -730,7 +730,7 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 		buffer.put(message[1]);
 		buffer.put(message[2]);
 		// java byte is signed
-		int totalSize = WKPFUtil.getUnsignedByteValue(message[4]) * 256 + WKPFUtil.getUnsignedByteValue(message[3]);
+		int totalSize = (int)(WKPFUtil.getUnsignedByteValue(message[4]) * 256 + WKPFUtil.getUnsignedByteValue(message[3]));
 		if (djaData.open(totalSize)) {
 			buffer.put(WKPFUtil.WKPF_REPROG_OK);
 		} else {
@@ -749,7 +749,7 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 	public void onWKPFRemoteProgramWrite(long sourceId, byte[] message) {
 		ByteBuffer buffer = ByteBuffer.allocate(5);
 		// java byte is signed
-		int position = WKPFUtil.getUnsignedByteValue(message[4]) * 256 + WKPFUtil.getUnsignedByteValue(message[3]);
+		int position = (int)(WKPFUtil.getUnsignedByteValue(message[4]) * 256 + WKPFUtil.getUnsignedByteValue(message[3]));
 		byte[] data = Arrays.copyOfRange(message, 5, message.length);
 		buffer.put(WKPFUtil.WKPF_REPRG_WRITE_R);
 		buffer.put(message[1]);
@@ -792,7 +792,7 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 		buffer.put(message[2]);
 		
 		// java byte is signed
-		int componentId = WKPFUtil.getUnsignedByteValue(message[4]) * 256 + WKPFUtil.getUnsignedByteValue(message[3]);
+		int componentId = (int)(WKPFUtil.getUnsignedByteValue(message[4]) * 256 + WKPFUtil.getUnsignedByteValue(message[3]));
 		long oldNodeId = WKPFUtil.getUnsignedByteValue(message[5]);
 		oldNodeId = (oldNodeId << 8) + WKPFUtil.getUnsignedByteValue(message[6]);
 		oldNodeId = (oldNodeId << 8) + WKPFUtil.getUnsignedByteValue(message[7]);

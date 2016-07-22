@@ -21,10 +21,10 @@ public class TimerTestExecutionExtension extends AbstractExecutionExtension<Time
 		if (prClass instanceof TimerEdgeClass) {
 			TimerEdgeClass timerPrClass = (TimerEdgeClass) prClass;
 			if (((TimerEdgeClass) prClass).getOutput()) {
-				logger.info("Update output to value false");
+				// logger.info("Update output to value false");
 				timerPrClass.setOutput(false);
 			} else {
-				logger.info("Update output to value true");
+				// logger.info("Update output to value true");
 				timerPrClass.setOutput(true);
 			}
 		}

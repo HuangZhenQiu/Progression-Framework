@@ -6,6 +6,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import edu.uci.eecs.wukong.framework.model.Component;
 import edu.uci.eecs.wukong.framework.model.EndPoint;
 
@@ -13,6 +16,8 @@ import edu.uci.eecs.wukong.framework.model.EndPoint;
  * It is a type of DJA file in Wukong. It contains all of the components in a FBP.
  */
 public class ComponentMap {
+	private static Logger logger = LoggerFactory.getLogger(ComponentMap.class);
+
 	private List<Component> components;
 	private Map<Short, List<Component>> componentMap;
 	
@@ -45,12 +50,16 @@ public class ComponentMap {
 			long newNodeId, byte newPid) {
 		if (componentId <= this.components.size()) {
 			Component component = components.get(componentId);
+			int i = 0;
 			for (EndPoint point : component.getEndPoints()) {
 				if (point.getNodeId() == oldNodeId && point.getPortId() == oldPid) {
 					// Replace it with new one
-					point = new EndPoint(newNodeId, newPid);
+					EndPoint old = point; 
+					component.getEndPoints().set(i, new EndPoint(newNodeId, newPid));
+					logger.info("Updated endpoint from %s to %s", old, component.getEndPoints().get(i));
 					return true;
 				}
+				i ++;
 			}
 		}
 		

@@ -17,7 +17,7 @@ public class PrClassPropertyMonitor {
 	
 	private PropertyChangeListener listener = new PropertyChangeListener() {
 		 public void propertyChange(PropertyChangeEvent evt) {
-			 logger.info("Detected Property " + evt.getPropertyName() + " Updated.");
+			 logger.debug("Detected Property " + evt.getPropertyName() + " Updated.");
 			 manager.updateProperty(evt);
 		 }
 	};
@@ -38,7 +38,7 @@ public class PrClassPropertyMonitor {
 			if (!properties.contains(name)) {
 				plugin.addPropertyChangeListener(name, listener);
 				properties.add(name); 
-				logger.info("Add monitored output property " + name + " for PrClass " + plugin);
+				logger.debug("Add monitored output property " + name + " for PrClass " + plugin);
 			}
 		}
 	}

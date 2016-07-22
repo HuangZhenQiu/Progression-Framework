@@ -122,15 +122,15 @@ public class PluginManager implements PluginInitListener {
 							Integer number = Integer.parseInt(tokenizer.nextToken());
 							pluginsMap.put(pluginName, number);
 						} catch (Exception e) {
-							LOGGER.info("Failt to parse the second part of plugin config : " + line);
+							LOGGER.error("Failt to parse the second part of plugin config : " + line);
 						}
 					} else {
-						LOGGER.info("Unrecgonized plugin string format : " + line);
+						LOGGER.error("Unrecgonized plugin string format : " + line);
 					}
 				}
 			}
 		} catch (Exception e) {
-			System.out.println("Plugin Definition File '" + path + "' not found in the classpath");
+			LOGGER.error("Plugin Definition File '" + path + "' not found in the classpath");
 			System.exit(-1);
 		}
 	}
@@ -150,7 +150,7 @@ public class PluginManager implements PluginInitListener {
 			WuClassModel wuClassModel = createWuClassModel(pluginEntry.getKey(), c);
 			
 			if (wuClassModel != null) {
-				LOGGER.info("Initialized Wuclass in progression server : " + wuClassModel);
+				LOGGER.debug("Initialized Wuclass in server : " + wuClassModel);
 				for (int i = 0; i< pluginEntry.getValue(); i++) {
 					// A temporary solution for easier mapping and deployment.
 					// Create an instance for each plugin classes as hard WuClass.
@@ -171,7 +171,7 @@ public class PluginManager implements PluginInitListener {
 					plugins.add(plugin);
 					WuObjectModel wuObjectModel = new WuObjectModel(wuClassModel, plugin);
 					wkpf.addWuObject(plugin.getPortId(), wuObjectModel);
-					LOGGER.info("Registered " + plugin.getName() +  " in progression server on port " + plugin.getPortId());
+					LOGGER.debug("Registered " + plugin.getName() +  " in progression server on port " + plugin.getPortId());
 				}
 			}
 		}
@@ -259,7 +259,7 @@ public class PluginManager implements PluginInitListener {
     			contextManager.unsubscribe(pipePrClass);
     			bufferManager.unbind(model);
     			pipeline.unregisterExtension(model);
-    			LOGGER.info("Finished bind pipeline prclass with context manager, pipeline and property monitor.");
+    			LOGGER.debug("Finished bind pipeline prclass with context manager, pipeline and property monitor.");
     		} else if (model.getType().getType().equals(PrClass.PrClassType.SIMPLE_PRCLASS)) {
     			bufferManager.unbind(model);
     			unbindSimplePrClassTimer((SimplePrClass)model.getPrClass());
@@ -356,11 +356,11 @@ public class PluginManager implements PluginInitListener {
 		} else if (value instanceof Response) {
 			length = 4;
 		} else  {
-			LOGGER.info("Stop to update unrecgonized proeprty type: " + Object.class);
+			LOGGER.error("Stop to update unrecgonized proeprty type: " + Object.class);
 			return;
 		}
 		
-		LOGGER.info("Trigger send set property for " + name + " whose portId is " + plugin.getPortId() + " and value is " + value);
+		LOGGER.debug("Trigger send set property for " + name + " whose portId is " + plugin.getPortId() + " and value is " + value);
 		wkpf.sendSetProperty(plugin.getPortId(), name, value, length);
 	}
 	

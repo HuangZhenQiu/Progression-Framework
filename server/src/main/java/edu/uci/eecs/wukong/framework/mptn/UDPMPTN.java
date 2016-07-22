@@ -422,14 +422,14 @@ public class UDPMPTN extends AbstractMPTN implements MPTNMessageListener<UDPMPTN
 	}
 	
 	private void fireWKPFOnGetDeviceStatus(MPTNPacket message) {
-		LOGGER.debug("Received get device status message");
+		LOGGER.info("Received get device status message");
 		for (WKPFMessageListener listener : listeners) {
 			listener.onWKPFGetDeviceStatus(message.getSourceAddress(), message.getPayload());
 		}
 	}
 	
 	private void fireWKPFOnGetDeviceStatusReturn(MPTNPacket message) {
-		LOGGER.debug("Received get device status message");
+		LOGGER.info("Received get device status message");
 		for (WKPFMessageListener listener : listeners) {
 			listener.onWKPFDeviceStatusReturn(message.getSourceAddress(), message.getPayload());
 		}

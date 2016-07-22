@@ -63,6 +63,8 @@ public class ComponentMap {
 			}
 		}
 		
+		logger.info("Can't find endpoint from for component id %d, wiht nodeId= %d and pid = %d",
+				componentId, oldNodeId, oldPid);
 		return false;
 	}
 	

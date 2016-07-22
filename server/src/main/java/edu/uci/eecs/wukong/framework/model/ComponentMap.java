@@ -56,15 +56,15 @@ public class ComponentMap {
 					// Replace it with new one
 					EndPoint old = point; 
 					component.getEndPoints().set(i, new EndPoint(newNodeId, newPid));
-					logger.info("Updated endpoint from %s to %s", old, component.getEndPoints().get(i));
+					logger.info(String.format("Updated endpoint from %s to %s", old, component.getEndPoints().get(i)));
 					return true;
 				}
 				i ++;
 			}
 		}
 		
-		logger.info("Can't find endpoint from for component id %d, wiht nodeId= %d and pid = %d",
-				componentId, oldNodeId, oldPid);
+		logger.info(String.format("Can't find endpoint from for component id %d, wiht nodeId= %d and pid = %d",
+				componentId, oldNodeId, oldPid));
 		return false;
 	}
 	

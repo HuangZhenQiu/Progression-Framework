@@ -794,14 +794,14 @@ public class WKPF implements WKPFMessageListener, RemoteProgrammingListener {
 		// java byte is signed
 		int componentId = (int)(WKPFUtil.getUnsignedByteValue(message[4]) * 256 + WKPFUtil.getUnsignedByteValue(message[3]));
 		long oldNodeId = WKPFUtil.getUnsignedByteValue(message[5]);
-		oldNodeId = (oldNodeId << 8) + WKPFUtil.getUnsignedByteValue(message[6]);
-		oldNodeId = (oldNodeId << 8) + WKPFUtil.getUnsignedByteValue(message[7]);
-		oldNodeId = (oldNodeId << 8) + WKPFUtil.getUnsignedByteValue(message[8]);
+		oldNodeId += (WKPFUtil.getUnsignedByteValue(message[6]) << 8);
+		oldNodeId += (WKPFUtil.getUnsignedByteValue(message[7]) << 16);
+		oldNodeId += (WKPFUtil.getUnsignedByteValue(message[8]) << 24);
 		byte oldPid =  (byte)WKPFUtil.getUnsignedByteValue(message[9]);
 		long newNodeId = WKPFUtil.getUnsignedByteValue(message[10]);
-		newNodeId = (newNodeId << 8) + WKPFUtil.getUnsignedByteValue(message[11]);
-		newNodeId = (newNodeId << 8) + WKPFUtil.getUnsignedByteValue(message[12]);
-		newNodeId = (newNodeId << 8) + WKPFUtil.getUnsignedByteValue(message[13]);
+		newNodeId += (WKPFUtil.getUnsignedByteValue(message[11]) << 8);
+		newNodeId += (WKPFUtil.getUnsignedByteValue(message[12]) << 16);
+		newNodeId += (WKPFUtil.getUnsignedByteValue(message[13]) << 24);
 		byte newPid = (byte)WKPFUtil.getUnsignedByteValue(message[14]);
 		boolean result = this.componentMap.updateComponent(componentId, oldNodeId, oldPid, newNodeId, newPid);
 		if (result) {

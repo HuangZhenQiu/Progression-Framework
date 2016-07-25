@@ -37,6 +37,8 @@ After run this command, you can simply import the project into eclipse.
 ### Configuration
 The structure of project confirms to gradle standards. For now, the whole project only contains one sub project which called framework. For now, the config files for server and log4j are located in the path of `framework/src/main/resource`. You may update the setting of xmpp, gateway and wukong server in the `config.properties`.
 
+Make sure you set the environment variable PROGRESSION_HOME = "Path to your progression-framework folder".
+
 
 ### Build Project
 After config the server to your Wukong Ecosystem setting. You may run the command below to build the project.

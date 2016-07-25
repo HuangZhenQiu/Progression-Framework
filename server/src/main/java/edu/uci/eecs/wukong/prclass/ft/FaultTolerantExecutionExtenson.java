@@ -103,7 +103,7 @@ public class FaultTolerantExecutionExtenson extends AbstractExecutionExtension<F
 	}
 
 	@Override
-	@WuTimer(interval = 5)
+	@WuTimer(interval = 2)
 	public void execute() {
 		
 		// Send polling message to all of the target device
@@ -131,7 +131,7 @@ public class FaultTolerantExecutionExtenson extends AbstractExecutionExtension<F
 			Iterator<Long> nodeIds = failureCounter.keySet().iterator();
 			while(nodeIds.hasNext()) {
 				Long nodeId = nodeIds.next();
-				if (failureCounter.get(nodeId) > 3) {
+				if (failureCounter.get(nodeId) >= 3) {
 					List<Component> components = this.prClass.getComponentsPrimaryInNode(nodeId);
 					for (Component component : components) {
 						EndPoint dest = component.getSecondaryEndPoint();

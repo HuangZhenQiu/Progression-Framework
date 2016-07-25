@@ -11,7 +11,7 @@ allprojects {
     mavenCentral()
     mavenLocal()
     maven {
-       url "http://jahmm.googlecode.com/svn/repo/"
+       url "http://repo.spring.io/libs-release-remote"
     }
  }
 }

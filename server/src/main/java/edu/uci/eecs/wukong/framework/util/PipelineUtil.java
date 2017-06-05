@@ -9,10 +9,10 @@ import edu.uci.eecs.wukong.framework.prclass.SimplePrClass;
 
 public class PipelineUtil {
 	public final static int DEFAULT_INTERVAL = 5;
-	
+
 	public static float getIntervalFromMethodAnnotation(TimerExecutable object) {
 		try {
-			Method method = object.getClass().getDeclaredMethod("execute", null);
+			Method method = object.getClass().getDeclaredMethod("execute");
 			Annotation[] annotations = method.getAnnotations();
 			for (Annotation annotation : annotations) {
 				if (annotation.annotationType().equals(WuTimer.class)) {
@@ -29,7 +29,7 @@ public class PipelineUtil {
 	
 	public static float getIntervalFromClassAnnotation(SimplePrClass prClass) {
 		try {
-			Method method = prClass.getClass().getDeclaredMethod("update", null);
+			Method method = prClass.getClass().getDeclaredMethod("update");
 			Annotation[] annotations = method.getAnnotations();
 			for (Annotation annotation : annotations) {
 				if (annotation.annotationType().equals(WuTimer.class)) {

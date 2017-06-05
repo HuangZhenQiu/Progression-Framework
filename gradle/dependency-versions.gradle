@@ -27,4 +27,5 @@ ext {
   jerseyContainerServletCoreVersion = "2.7"
   jerseyContainerJettyHttpVersion = "2.7"
   jerseyMediaMoxyVersion = "2.7"
+  flinkVersion = "1.2.0"
 }

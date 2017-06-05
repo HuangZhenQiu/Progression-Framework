@@ -7,6 +7,8 @@ buildscript {
 }
 
 allprojects {
+  apply plugin: 'idea'
+
   repositories {
     mavenCentral()
     mavenLocal()
@@ -28,65 +30,96 @@ subprojects {
   }
 }
 
-project(':server') {
-  apply plugin: 'java'
+project(':flink-server') {
+    apply plugin: 'java'
 
-  task fatJar (type: Jar) {
-    manifest {
-        attributes 'Main-Class': 'edu.uci.eecs.wukong.framework.ProgressionServer'
+    task fatJar (type: Jar) {
+        manifest {
+            attributes 'Main-Class': 'edu.uci.eecs.wukong.framework.FlinkServer'
+        }
+        baseName = project.name + '-all'
+        from {
+            configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+        }
+        with jar
     }
-    baseName = project.name + '-all'
-    from {
-    	configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
-  	}
-  	with jar
-    exclude 'META-INF/*.RSA', 'META-INF/*.SF', 'META-INF/*.DSA'
-  }
 
-  dependencies {
-     compile "be.ac.ulg.montefiore.run.jahmm:jahmm:$jahmmVersion"
-     compile "io.dropwizard.metrics:metrics-core:$dropwizardMetricsVersion"
-     compile "io.dropwizard.metrics:metrics-graphite:$dropwizardMetricsVersion"
-     compile "junit:junit:$junitVersion"
-     compile "io.netty:netty-all:$nettyVersion"
-     compile "com.google.protobuf:protobuf-java:$protobufVersion"
-     compile "com.google.code.gson:gson:$gsonVersion"
-     compile "org.apache.httpcomponents:httpclient:$httpClientVersion"
-     compile "commons-httpclient:commons-httpclient:$commonsClientVersion"
-     compile "commons-cli:commons-cli:$commonsCliVersion"
-     compile "org.apache.commons:commons-math3:$commonsMathVersion"
-     compile "com.google.guava:guava:$guavaVersion"
-     compile "org.eclipse.jetty.aggregate:jetty-all:$jettyVersion"
-     compile "org.slf4j:slf4j-api:$slf4jVersion"
-     compile "org.slf4j:jcl-over-slf4j:$slf4jVersion"
-     compile "org.slf4j:slf4j-jdk14:$slf4jVersion"
-     compile "org.slf4j:slf4j-simple:$slf4jVersion"
-     compile "org.slf4j:slf4j-log4j12:$slf4jVersion"
-     compile "org.igniterealtime.smack:smack-java7:$smackJavaVersion"
-     compile "org.igniterealtime.smack:smack-core:$smackCoreVersion"
-     compile "org.igniterealtime.smack:smack-extensions:$smackExtensionVersion"
-     compile "org.igniterealtime.smack:smack-tcp:$smackTcpVersion"
-     compile "org.mongodb:mongo-java-driver:$mongoDriverVersion"
-     compile "com.googlecode.protobuf-rpc-pro:protobuf-rpc-pro-duplex:$protobufRpcVersion"
-     compile "commons-lang:commons-lang:$commonsLangVersion"
-     compile "nz.ac.waikato.cms.weka:weka-dev:$wekaVersion"
-     compile "org.mockito:mockito-all:$mockitoVersion"
-     compile "org.ow2.chameleon.fuchsia.base.philips-hue:org.ow2.chameleon.fuchsia.base.philips-hue.huedsk-bundle:$hueVersion"
-     compile "tw.edu.ntu.csie:libsvm:$libsvm"
-     compile "org.glassfish.jersey.core:jersey-server:$jerseyServerVersion"
-     compile "org.glassfish.jersey.containers:jersey-container-servlet-core:$jerseyContainerServletCoreVersion"
-     compile "org.glassfish.jersey.media:jersey-media-moxy:$jerseyMediaMoxyVersion"
-     compile "org.glassfish.jersey.containers:jersey-container-jetty-http:$jerseyContainerJettyHttpVersion"
-  }
+    dependencies {
+        compile "org.apache.flink:flink-core:$flinkVersion"
+        compile "org.apache.flink:flink-java:$flinkVersion"
+        compile "org.apache.flink:flink-scala_2.11:$flinkVersion"
+        compile "org.apache.flink:flink-table_2.11:$flinkVersion"
+        compile "org.apache.flink:flink-streaming-java_2.11:$flinkVersion"
+        compile "org.apache.flink:flink-clients_2.11:$flinkVersion"
+    }
+}
+
+project(':server') {
+    apply plugin: 'java'
+
+    task fatJar (type: Jar) {
+        manifest {
+            attributes 'Main-Class': 'edu.uci.eecs.wukong.framework.ProgressionServer'
+        }
+        baseName = project.name + '-all'
+        from {
+            configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+        }
+        with jar
+        exclude 'META-INF/*.RSA', 'META-INF/*.SF', 'META-INF/*.DSA'
+    }
+
+    dependencies {
+        compile "be.ac.ulg.montefiore.run.jahmm:jahmm:$jahmmVersion"
+        compile "io.dropwizard.metrics:metrics-core:$dropwizardMetricsVersion"
+        compile "io.dropwizard.metrics:metrics-graphite:$dropwizardMetricsVersion"
+        compile "junit:junit:$junitVersion"
+        compile "io.netty:netty-all:$nettyVersion"
+        compile "com.google.protobuf:protobuf-java:$protobufVersion"
+        compile "com.google.code.gson:gson:$gsonVersion"
+        compile "org.apache.httpcomponents:httpclient:$httpClientVersion"
+        compile "commons-httpclient:commons-httpclient:$commonsClientVersion"
+        compile "commons-cli:commons-cli:$commonsCliVersion"
+        compile "org.apache.commons:commons-math3:$commonsMathVersion"
+        compile "com.google.guava:guava:$guavaVersion"
+        compile "org.eclipse.jetty.aggregate:jetty-all:$jettyVersion"
+        compile "org.slf4j:slf4j-api:$slf4jVersion"
+        compile "org.slf4j:jcl-over-slf4j:$slf4jVersion"
+        compile "org.slf4j:slf4j-jdk14:$slf4jVersion"
+        compile "org.slf4j:slf4j-simple:$slf4jVersion"
+        compile "org.slf4j:slf4j-log4j12:$slf4jVersion"
+        compile "org.igniterealtime.smack:smack-java7:$smackJavaVersion"
+        compile "org.igniterealtime.smack:smack-core:$smackCoreVersion"
+        compile "org.igniterealtime.smack:smack-extensions:$smackExtensionVersion"
+        compile "org.igniterealtime.smack:smack-tcp:$smackTcpVersion"
+        compile "org.mongodb:mongo-java-driver:$mongoDriverVersion"
+        compile "com.googlecode.protobuf-rpc-pro:protobuf-rpc-pro-duplex:$protobufRpcVersion"
+        compile "commons-lang:commons-lang:$commonsLangVersion"
+        compile "nz.ac.waikato.cms.weka:weka-dev:$wekaVersion"
+        compile "org.mockito:mockito-all:$mockitoVersion"
+        compile "org.ow2.chameleon.fuchsia.base.philips-hue:org.ow2.chameleon.fuchsia.base.philips-hue.huedsk-bundle:$hueVersion"
+        compile "tw.edu.ntu.csie:libsvm:$libsvm"
+        compile "org.glassfish.jersey.core:jersey-server:$jerseyServerVersion"
+        compile "org.glassfish.jersey.containers:jersey-container-servlet-core:$jerseyContainerServletCoreVersion"
+        compile "org.glassfish.jersey.media:jersey-media-moxy:$jerseyMediaMoxyVersion"
+        compile "org.glassfish.jersey.containers:jersey-container-jetty-http:$jerseyContainerJettyHttpVersion"
+    }
 }
 
 task copyToBin () {
     copy {
-    	String propSource = "server/build/libs/server-all.jar"
-   		String propDest = "bin"
-    	from file(propSource)
-    	into file(propDest)
+        String propSource = "server/build/libs/server-all.jar"
+        String propDest = "bin"
+        from file(propSource)
+        into file(propDest)
+    }
+
+    copy {
+        String propSource = "flink-server/build/libs/flink-server-all.jar"
+        String propDest = "bin"
+        from file(propSource)
+        into file(propDest)
     }
 }
 
-task buildServer (dependsOn: [':server:build', ':server:fatJar', 'copyToBin'])
+task buildServer (dependsOn: [':server:build', ':server:fatJar', ':flink-server:build', ':flink-server:fatJar', 'copyToBin', ])

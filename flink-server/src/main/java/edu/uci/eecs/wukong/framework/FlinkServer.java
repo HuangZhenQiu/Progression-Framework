@@ -30,7 +30,7 @@ public class FlinkServer {
                     }
                 })
                 .keyBy("key")
-                .countWindow(6)
+                .countWindow(6) // hhl04: 16; cairo: 14
                 .reduce(new ReduceFunction<SensorEvent>() {
                     @Override
                     public SensorEvent reduce(SensorEvent a, SensorEvent b) {
@@ -121,22 +121,5 @@ public class FlinkServer {
         public void setWindowFeatures(Map<String, List<Object>> windowFeatures) {
             this.windowFeatures = windowFeatures;
         }
-    }
-
-    public enum ActivityClass {
-        Other,
-        Bed_to_toilet,
-        Breakfast,
-        R1_sleep,
-        R1_wake,
-        R1_work_in_office,
-        Dinner,
-        Laundry,
-        Leave_home,
-        Lunch,
-        Night_wandering,
-        R2_sleep,
-        R2_take_medicine,
-        R2_wake
     }
 }

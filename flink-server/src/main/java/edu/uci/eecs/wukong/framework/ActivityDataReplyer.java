@@ -52,7 +52,7 @@ public class ActivityDataReplyer {
                     outputStream.writeBytes(line);
                     outputStream.flush();
                     logger.info(String.format("Sending out event %s", line));
-                    Thread.sleep(2000);
+                    Thread.sleep(10);
                 }
             } catch (Exception e) {
                 logger.error("Failure to send data to client", e);

@@ -1,4 +1,4 @@
-package edu.uci.eecs.wukong.framework;
+package edu.uci.eecs.wukong.framework.local;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;

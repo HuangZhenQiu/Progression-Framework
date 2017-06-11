@@ -1,5 +1,7 @@
-package edu.uci.eecs.wukong.framework;
+package edu.uci.eecs.wukong.framework.local;
 
+import edu.uci.eecs.wukong.framework.ActivityClass;
+import edu.uci.eecs.wukong.framework.ActivityDataStream;
 import edu.uci.eecs.wukong.framework.ActivityDataStream.ActivityWindow;
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.api.common.functions.MapFunction;

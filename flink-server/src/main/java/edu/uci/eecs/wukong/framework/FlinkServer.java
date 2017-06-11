@@ -1,5 +1,6 @@
 package edu.uci.eecs.wukong.framework;
 
+import edu.uci.eecs.wukong.framework.ActivityDataStream.ActivityWindow;
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.common.functions.ReduceFunction;
@@ -19,13 +20,14 @@ public class FlinkServer {
         LocalStreamEnvironment env = new LocalStreamEnvironment();
         // get input data by connecting to the socket
         DataStream<String> text = env.socketTextStream("localhost", 9000, "\n");
+
+        // TopicModel topicModel = new TopicModel();
         // parse the data, group it, window it, and aggregate the counts
         DataStream<SensorEvent> windowCounts = text
                 .flatMap(new FlatMapFunction<String, SensorEvent>() {
                     @Override
                     public void flatMap(String raw, Collector<SensorEvent> out) {
                         System.out.println(raw);
-                        //TODO (Bolun) add the feature exaction logic
                         out.collect(new SensorEvent(raw));
                     }
                 })
@@ -36,17 +38,17 @@ public class FlinkServer {
                     public SensorEvent reduce(SensorEvent a, SensorEvent b) {
                         logger.debug(a.getRaw());
                         // Combine features of multiple event together
-                        a.appendFeatures(b.raw, b.features);
+                        a.merge(b);
                         return a;
                     }
                 }).map(new MapFunction<SensorEvent, SensorEvent>() {
-
                     @Override
                     public SensorEvent map(SensorEvent value) throws Exception {
-                        //TODO (Bolun)
-                        // 1) apply topic model on windowFeatures
-                        // 2) do the classification on random forest and change the activityClass field of SensorEvent
-
+                        ActivityWindow window = ActivityDataStream.createActivityWindow(value.getWindowRaw());
+                        value.updateAcitityWindow(window); // It is the feature values for topic model
+                        // double[] topic probabilities = topicModel.predict(value.getActivityClass());
+                        System.out.println("Classification is triggered");
+                        //TODO (Bolun) add topic probabilities into original feature list to call random forest
                         return value;
                     }
                 });
@@ -60,16 +62,20 @@ public class FlinkServer {
     public static class SensorEvent {
         public final String key = "1";
         public String raw;
-        private ActivityClass activityClass;
-        private List<Object> features = new ArrayList<>();
-        private Map<String, List<Object>> windowFeatures = new HashMap<>();
+        public List<String> windowRaw;
+        public ActivityWindow activityWindow = null;
+        private ActivityClass activityClass = ActivityClass.Other;
+        private List<Object> features;
 
         public SensorEvent() {
-            activityClass = ActivityClass.Other;
+
         }
 
         public SensorEvent(String raw) {
             this.raw = raw;
+            this.windowRaw = new ArrayList<>();
+            this.windowRaw.add(raw);
+            this.features =  new ArrayList<>();
         }
 
         @Override
@@ -77,13 +83,17 @@ public class FlinkServer {
             return raw;
         }
 
-        public void generateFeatures() {
-            //It is the place to add features into the sensorEvent
-            windowFeatures.put(raw, features);
+        public void merge(SensorEvent b) {
+            this.windowRaw.addAll(b.windowRaw);
         }
 
-        public void appendFeatures(String raw, List<Object> features) {
-            windowFeatures.put(raw, features);
+        public List<String> getWindowRaw() {
+            return windowRaw;
+        }
+
+        public void updateAcitityWindow(
+                ActivityWindow activityWindow) {
+            this.activityWindow = activityWindow;
         }
 
         public String getKey() {
@@ -92,10 +102,6 @@ public class FlinkServer {
 
         public String getRaw() {
             return raw;
-        }
-
-        public void setRaw(String raw) {
-            this.raw = raw;
         }
 
         public ActivityClass getActivityClass() {
@@ -114,12 +120,5 @@ public class FlinkServer {
             this.features = features;
         }
 
-        public Map<String, List<Object>> getWindowFeatures() {
-            return windowFeatures;
-        }
-
-        public void setWindowFeatures(Map<String, List<Object>> windowFeatures) {
-            this.windowFeatures = windowFeatures;
-        }
     }
 }

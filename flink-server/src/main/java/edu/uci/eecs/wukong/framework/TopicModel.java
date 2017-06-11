@@ -11,8 +11,9 @@ import java.util.regex.*;
 import java.io.*;
 
 public class TopicModel {
-
     private ParallelTopicModel model;
+    private TopicInferencer inferencer;
+    private Pipe pipe;
     private double alpha = 0.1;
     private double beta = 0.01;
 
@@ -23,7 +24,6 @@ public class TopicModel {
         // Pipes
         pipeList.add( new SvmLight2FeatureVectorAndLabel() );
         InstanceList instances = new InstanceList (new SerialPipes(pipeList));
-
 
         InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream("lda.txt");
         BufferedReader fileReader = new BufferedReader(new InputStreamReader(inputStream));
@@ -46,8 +46,8 @@ public class TopicModel {
         model.setNumIterations(1500);
         model.setRandomSeed(1);
         model.estimate();
-
-
+        pipe = instances.getPipe();
+        inferencer = model.getInferencer();
 
 
 //        // Show the words and topics in the first instance
@@ -104,5 +104,11 @@ public class TopicModel {
 //        TopicInferencer inferencer = model.getInferencer();
 //        double[] testProbabilities = inferencer.getSampledDistribution(testing.get(0), 10, 1, 5);
 //        System.out.println("0\t" + testProbabilities[0]);
+    }
+
+    public double[] predict(ActivityDataStream.ActivityWindow activityWindow) {
+        InstanceList newDoc = new InstanceList(pipe);
+        newDoc.addThruPipe(new Instance(activityWindow.toString(), null, "test", null));
+        return inferencer.getSampledDistribution(newDoc.get(0), 10, 1, 5);
     }
 }

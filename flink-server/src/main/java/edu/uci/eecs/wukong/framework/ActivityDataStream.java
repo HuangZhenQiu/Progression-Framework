@@ -2,6 +2,7 @@ package edu.uci.eecs.wukong.framework;
 
 import java.sql.Timestamp;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ActivityDataStream {
@@ -18,6 +19,11 @@ public class ActivityDataStream {
         this.flag_activity_start = false;
         this.last_act = ActivityClass.Other.toString();
         this.window_map = new HashMap<String, ActivityWindow>();
+    }
+
+    public static ActivityWindow createActivityWindow(List<String> raw) {
+        // TOOD BL create a ActivityWindow from raw sensor data in a window
+        return new ActivityWindow();
     }
 
     public String parseRawLine(String raw){
@@ -106,12 +112,17 @@ public class ActivityDataStream {
         return null;
     }
 
-    public class ActivityWindow {
+    public static class ActivityWindow {
         public String daystamp_start;
         public String timestamp_start;
         public String previous_act;
         public String start_sensor_id;
         public Map<String, Integer> sensor_id_to_count;
+
+        public ActivityWindow() {
+
+        }
+
         public ActivityWindow(String daystamp, String timestamp, String parent_act, String sensor_id){
             this.daystamp_start = new String(daystamp);
             this.timestamp_start = new String(timestamp);
@@ -119,6 +130,11 @@ public class ActivityDataStream {
             this.start_sensor_id = new String(sensor_id);
             this.sensor_id_to_count = new HashMap<String, Integer>();
             this.sensor_id_to_count.put(sensor_id, 1);
+        }
+
+        public String toString() {
+            // Format data in the class to the format of a line in Ida.txt
+            return "";
         }
     }
 }

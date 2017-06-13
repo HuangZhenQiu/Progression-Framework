@@ -6,5 +6,5 @@ package edu.uci.eecs.wukong.framework.ec2;
  * key.
  *
  */
-public class OnlineFlinkJob {
+public class ActivityClassificationJob {
 }

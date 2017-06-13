@@ -28,6 +28,7 @@ ext {
   jerseyContainerJettyHttpVersion = "2.7"
   jerseyMediaMoxyVersion = "2.7"
   flinkVersion = "1.2.0"
-  quickMLVersion = "0.4.9.9"
+  quickMLVersion = "10.16"
   malletVersion = "2.0.8"
+  kinesisProducerVersion = "0.9.0"
 }

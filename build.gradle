@@ -63,6 +63,7 @@ project(':flink-server') {
         compile "org.apache.flink:flink-clients_2.11:$flinkVersion"
         compile "cc.mallet:mallet:$malletVersion"
         compile "com.github.sanity:quickml:$quickMLVersion"
+        compile "com.twitter.common:stats-util:0.0.60"
         compile "com.amazonaws:amazon-kinesis-producer:$kinesisProducerVersion"
     }
 }

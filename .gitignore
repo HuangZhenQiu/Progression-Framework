@@ -1,5 +1,7 @@
 /build
 /target
+/server-api/build
+/server/build
 /flink-server/build
 /bin/*.jar
 *.class

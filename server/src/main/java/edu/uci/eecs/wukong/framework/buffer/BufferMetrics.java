@@ -3,9 +3,9 @@ package edu.uci.eecs.wukong.framework.buffer;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import edu.uci.eecs.wukong.framework.api.metrics.Gauge;
-import edu.uci.eecs.wukong.framework.api.metrics.MetricsRegistry;
+import edu.uci.eecs.wukong.framework.metrics.Gauge;
 import edu.uci.eecs.wukong.framework.metrics.MetricsHelper;
+import edu.uci.eecs.wukong.framework.metrics.MetricsRegistry;
 import edu.uci.eecs.wukong.framework.model.NPP;
 
 public class BufferMetrics extends MetricsHelper {

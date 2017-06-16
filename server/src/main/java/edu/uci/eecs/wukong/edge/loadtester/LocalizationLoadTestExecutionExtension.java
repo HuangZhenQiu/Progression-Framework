@@ -4,14 +4,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
+import edu.uci.eecs.wukong.framework.metrics.Counter;
+import edu.uci.eecs.wukong.framework.metrics.Timer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import edu.uci.eecs.wukong.framework.annotation.WuTimer;
 import edu.uci.eecs.wukong.framework.api.TimerExecutable;
 import edu.uci.eecs.wukong.framework.api.Channelable;
-import edu.uci.eecs.wukong.framework.api.metrics.Counter;
-import edu.uci.eecs.wukong.framework.api.metrics.Timer;
 import edu.uci.eecs.wukong.framework.extension.AbstractExecutionExtension;
 import edu.uci.eecs.wukong.framework.model.ChannelData;
 import edu.uci.eecs.wukong.framework.property.Location;

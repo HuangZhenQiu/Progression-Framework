@@ -1,11 +1,11 @@
 package edu.uci.eecs.wukong.framework.pipeline;
 
 
-import edu.uci.eecs.wukong.framework.api.metrics.MetricsRegistry;
-import edu.uci.eecs.wukong.framework.api.metrics.Gauge;
-import edu.uci.eecs.wukong.framework.api.metrics.Timer;
 import edu.uci.eecs.wukong.framework.graph.ExtensionPoint;
+import edu.uci.eecs.wukong.framework.metrics.Gauge;
 import edu.uci.eecs.wukong.framework.metrics.MetricsHelper;
+import edu.uci.eecs.wukong.framework.metrics.MetricsRegistry;
+import edu.uci.eecs.wukong.framework.metrics.Timer;
 import edu.uci.eecs.wukong.framework.util.DaemanThreadFactory;
 
 import java.lang.Runnable;

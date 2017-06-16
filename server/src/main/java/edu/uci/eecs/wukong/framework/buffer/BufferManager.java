@@ -7,12 +7,12 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.lang.IllegalArgumentException;
 
+import edu.uci.eecs.wukong.framework.metrics.Gauge;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import edu.uci.eecs.wukong.framework.api.Channelable;
 import edu.uci.eecs.wukong.framework.api.Extension;
-import edu.uci.eecs.wukong.framework.api.metrics.Gauge;
 import edu.uci.eecs.wukong.framework.buffer.BufferUnits.ByteUnit;
 import edu.uci.eecs.wukong.framework.buffer.BufferUnits.ShortUnit;
 import edu.uci.eecs.wukong.framework.channel.BasicChannel;

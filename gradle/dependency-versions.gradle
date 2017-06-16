@@ -31,4 +31,5 @@ ext {
   quickMLVersion = "10.16"
   malletVersion = "2.0.8"
   kinesisProducerVersion = "0.9.0"
+  commonsVersion = "3.0"
 }

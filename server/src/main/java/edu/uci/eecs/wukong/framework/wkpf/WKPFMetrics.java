@@ -1,10 +1,10 @@
 package edu.uci.eecs.wukong.framework.wkpf;
 
+import edu.uci.eecs.wukong.framework.metrics.Counter;
+import edu.uci.eecs.wukong.framework.metrics.MetricsRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import edu.uci.eecs.wukong.framework.api.metrics.Counter;
-import edu.uci.eecs.wukong.framework.api.metrics.MetricsRegistry;
 import edu.uci.eecs.wukong.framework.metrics.MetricsHelper;
 
 public class WKPFMetrics extends MetricsHelper {

@@ -1,8 +1,8 @@
 package edu.uci.eecs.wukong.framework.factor;
 
-import edu.uci.eecs.wukong.framework.api.metrics.MetricsRegistry;
-import edu.uci.eecs.wukong.framework.api.metrics.Counter;
+import edu.uci.eecs.wukong.framework.metrics.Counter;
 import edu.uci.eecs.wukong.framework.metrics.MetricsHelper;
+import edu.uci.eecs.wukong.framework.metrics.MetricsRegistry;
 
 
 public class FactorMetrics extends MetricsHelper {

@@ -1,12 +1,11 @@
 package edu.uci.eecs.wukong.framework.api;
 
-import java.util.Map;
-
 import com.google.common.collect.ImmutableMap;
-
 import edu.uci.eecs.wukong.framework.factor.BaseFactor;
 import edu.uci.eecs.wukong.framework.factor.FactorClient;
 import edu.uci.eecs.wukong.framework.factor.LocationFactor;
+
+import java.util.Map;
 
 public class ExecutionContext {
 	private static String LOCATION = "Location";

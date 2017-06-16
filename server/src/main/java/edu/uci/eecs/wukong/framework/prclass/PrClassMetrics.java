@@ -1,10 +1,10 @@
 package edu.uci.eecs.wukong.framework.prclass;
 
 import edu.uci.eecs.wukong.framework.api.Extension;
-import edu.uci.eecs.wukong.framework.api.metrics.Counter;
-import edu.uci.eecs.wukong.framework.api.metrics.Timer;
-import edu.uci.eecs.wukong.framework.api.metrics.MetricsRegistry;
+import edu.uci.eecs.wukong.framework.metrics.Counter;
 import edu.uci.eecs.wukong.framework.metrics.MetricsHelper;
+import edu.uci.eecs.wukong.framework.metrics.MetricsRegistry;
+import edu.uci.eecs.wukong.framework.metrics.Timer;
 
 import java.util.Map;
 import java.util.HashMap;

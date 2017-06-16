@@ -4,6 +4,7 @@ import com.googlecode.protobuf.pro.duplex.PeerInfo;
 import com.google.protobuf.BlockingService;
 import com.google.protobuf.Service;
 
+import edu.uci.eecs.wukong.framework.metrics.MetricsReporter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.commons.cli.CommandLine;
@@ -13,7 +14,6 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
-import edu.uci.eecs.wukong.framework.api.metrics.MetricsReporter;
 import edu.uci.eecs.wukong.framework.checkpoint.CheckPointManager;
 import edu.uci.eecs.wukong.framework.metrics.reporter.GraphiteMetricsReporter;
 import edu.uci.eecs.wukong.framework.monitor.MonitorManager;

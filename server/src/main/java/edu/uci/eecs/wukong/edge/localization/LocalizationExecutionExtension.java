@@ -2,13 +2,13 @@ package edu.uci.eecs.wukong.edge.localization;
 
 import java.util.Arrays;
 
+import edu.uci.eecs.wukong.framework.metrics.Timer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import edu.uci.eecs.wukong.framework.api.Channelable;
 import edu.uci.eecs.wukong.framework.api.FactorExecutable;
 import edu.uci.eecs.wukong.framework.api.Initiable;
-import edu.uci.eecs.wukong.framework.api.metrics.Timer;
 import edu.uci.eecs.wukong.framework.extension.AbstractExecutionExtension;
 import edu.uci.eecs.wukong.framework.factor.BaseFactor;
 import edu.uci.eecs.wukong.framework.model.ChannelData;

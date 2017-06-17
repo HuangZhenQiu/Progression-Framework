@@ -281,9 +281,14 @@ public class TopicModel {
     public static void main(String[] args) throws Exception {
         String model_path = TopicModel.class.getClassLoader().getResource("trainedtopicmodel.txt").toURI().toString().split(":")[1];
         String act_array_path = TopicModel.class.getClassLoader().getResource("activityarray2topic.txt").toURI().toString().split(":")[1];
-//        TopicModel m = new TopicModel();
-//        m.writeToFile( model_path, act_array_path);
-        TopicModel m = new TopicModel(model_path, act_array_path);
+        long startTime = System.nanoTime();
+        TopicModel m = new TopicModel();
+        long endTime = System.nanoTime();
+        m.writeToFile( model_path, act_array_path);
+
+        long duration = (endTime - startTime);
+        System.out.println("Time duration" + Long.toString(duration) + "nano second");
+//        TopicModel m = new TopicModel(model_path, act_array_path);
     }
 }
 

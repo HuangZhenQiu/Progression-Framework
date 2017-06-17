@@ -1,6 +1,6 @@
 package edu.uci.eecs.wukong.framework;
 
-public enum SensorClass {
+public enum SensorClass { //cairo
     M001,
     M002,
     M003,

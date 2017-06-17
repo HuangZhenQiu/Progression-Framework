@@ -1,5 +1,8 @@
 package edu.uci.eecs.wukong.framework;
 
+import scala.Int;
+
+import java.io.*;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
@@ -83,6 +86,11 @@ public class MutualInfoMatrix {
         }
     }
 
+    public void setValue(int row, int col, int value){
+        this.mut_info_matrix[row][col] = value;
+    }
+
+
     public double[][] getMatrix(){
         double[][] ret_matrix = new double[sensor_count][sensor_count];
         for (int i = 0; i < sensor_count; ++i){
@@ -93,8 +101,74 @@ public class MutualInfoMatrix {
         return ret_matrix;
     }
 
+    public void setActivityWindowNum(int value){
+        this.activity_window_num = value;
+    }
+
     public int getActivityWindowNum(){
         return this.activity_window_num;
+    }
+
+    public void writeToFile(String path) throws IOException {
+        BufferedWriter outputWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path)));
+        outputWriter.write(Integer.toString(activity_window_num));
+        outputWriter.newLine();
+
+        for (int[] row : this.mut_info_matrix) {
+            for (int item : row){
+                outputWriter.write(Integer.toString(item) + ",");
+            }
+            outputWriter.newLine();
+        }
+        outputWriter.flush();
+        outputWriter.close();
+    }
+
+    public static MutualInfoMatrix readFromFile(String filename) throws IOException {
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(filename)));
+        MutualInfoMatrix matrix = new MutualInfoMatrix();
+
+        String line;
+        if ((line = bufferedReader.readLine()) != null){
+            matrix.setActivityWindowNum(Integer.parseInt(line));
+        }
+
+        int row = 0;
+        while ((line = bufferedReader.readLine()) != null) {
+            String[] tokens = line.split(",");
+            int col = 0;
+            for (String token : tokens){
+                matrix.setValue(row, col, Integer.parseInt(token));
+                col++;
+            }
+            row++;
+        }
+        return matrix;
+    }
+
+    public static void main(String[] args) throws Exception {
+        MutualInfoMatrix matrix;
+        String path = MutualInfoMatrix.class.getClassLoader().getResource("mutualinfomatrix.txt").toURI().toString().split(":")[1];
+        String line;
+
+        boolean toGenerateModel = false;
+
+        if (toGenerateModel) {
+
+            matrix = new MutualInfoMatrix();
+            InputStream inputStream = MutualInfoMatrix.class.getClassLoader().getResourceAsStream("data.txt");
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+
+            while ((line = bufferedReader.readLine()) != null) {
+                matrix.updateByRawLine(line);
+            }
+            System.out.println(path);
+            matrix.writeToFile(path);
+        } else {
+            matrix = MutualInfoMatrix.readFromFile(path);
+            System.out.println(matrix.getActivityWindowNum());
+        }
+
     }
 
     public class ActivityWindow {

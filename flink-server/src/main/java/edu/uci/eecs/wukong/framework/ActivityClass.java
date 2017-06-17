@@ -1,5 +1,5 @@
 package edu.uci.eecs.wukong.framework;
-public enum ActivityClass {
+public enum ActivityClass { //cairo
     Other,
     Bed_to_toilet,
     Breakfast,

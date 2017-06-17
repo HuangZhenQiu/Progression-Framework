@@ -5,6 +5,7 @@ import cc.mallet.types.*;
 import cc.mallet.pipe.*;
 import cc.mallet.pipe.iterator.*;
 import cc.mallet.topics.*;
+import com.amazonaws.services.sns.model.Topic;
 
 import java.util.*;
 import java.util.regex.*;
@@ -20,37 +21,84 @@ public class TopicModel {
     private double[] activityArray;
     private double[][] topicWordDist;
 
-    public TopicModel() throws IOException {
-        ArrayList<Pipe> pipeList = new ArrayList<Pipe>();
+    public TopicModel (String modelPathToRead, String activityArrayPath) throws IOException {
+        numTopics = ActivityClass.values().length;
 
-        pipeList.add(new SvmLight2FeatureSequence());
-        InstanceList instances = new InstanceList(new SerialPipes(pipeList));
-
-        InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream("lda.txt");
-        BufferedReader fileReader = new BufferedReader(new InputStreamReader(inputStream));
-        instances.addThruPipe(new CsvIterator(fileReader, Pattern.compile("^(.*)$"), 1, 0, 0));
-
-        this.numTopics = ActivityClass.values().length;
-        this.model = new ParallelTopicModel(numTopics, alpha * numTopics, beta);
-
-        model.addInstances(instances);
-
-        model.setNumThreads(1);
-
-        model.setNumIterations(1500);
-        model.setRandomSeed(1);
-        model.estimate();
-
-        activityArray = getActivityArray(instances);
+        if (modelPathToRead != null){
+            try{
+                model = ParallelTopicModel.read(new File(modelPathToRead));
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
         topicWordDist = getTopicToWordDistribution();
+
+        if (activityArrayPath != null){
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(activityArrayPath)));
+            activityArray = new double[numTopics];
+
+            String line;
+            int index = 0;
+            if ((line = bufferedReader.readLine()) != null) {
+                String[] tokens = line.split(",");
+                for (String item : tokens){
+                    activityArray[index++] = Double.parseDouble(item);
+                }
+            }
+        }
 
 //        pipe = instances.getPipe();
 //        inferencer = model.getInferencer();
     }
 
+    public TopicModel(){
+        numTopics = ActivityClass.values().length;
+        model = new ParallelTopicModel(this.numTopics, this.alpha * this.numTopics, this.beta);
+        trainTopicModel();
+        topicWordDist = getTopicToWordDistribution();
+    }
+
+    public void trainTopicModel() {
+        ArrayList<Pipe> pipeList = new ArrayList<Pipe>();
+        pipeList.add(new TopicModel.SvmLight2FeatureSequence());
+        InstanceList instances = new InstanceList(new SerialPipes(pipeList));
+
+        InputStream inputStream = TopicModel.class.getClassLoader().getResourceAsStream("lda.txt");
+        BufferedReader fileReader = new BufferedReader(new InputStreamReader(inputStream));
+        instances.addThruPipe(new CsvIterator(fileReader, Pattern.compile("^(.*)$"), 1, 0, 0));
+
+        model.addInstances(instances);
+        model.setNumThreads(1);
+        model.setNumIterations(1500);
+        model.setRandomSeed(1);
+        try {
+            model.estimate();
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+
+        activityArray = getActivityArray(instances);
+    }
+
+    public void writeToFile(String modelPathToWrite, String activityArrayPath) throws IOException{
+
+        if(modelPathToWrite != null) {
+            model.write(new File(modelPathToWrite));
+        }
+
+        if(activityArrayPath != null){
+            BufferedWriter outputWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(activityArrayPath)));
+
+            for (double item : activityArray) {
+                outputWriter.write(Double.toString(item) + ",");
+            }
+            outputWriter.flush();
+            outputWriter.close();
+        }
+    }
+
     public double[] inferHighLevelFeatures(int[] basicFeature){
         double[] highLevelFeature = new double[basicFeature.length];
-
 
         int index = 0;
         for (double[] row : topicWordDist){
@@ -66,13 +114,11 @@ public class TopicModel {
         return highLevelFeature;
     }
 
-
-
-//    public double[] predict(ActivityDataStream.ActivityWindow activityWindow) {
-//        InstanceList newDoc = new InstanceList(pipe);
-//        newDoc.addThruPipe(new Instance(activityWindow.toString(), null, "test", null));
-//        return inferencer.getSampledDistribution(newDoc.get(0), 10, 1, 5);
-//    }
+    public double[] predict(ActivityDataStream.ActivityWindow activityWindow) {
+        InstanceList newDoc = new InstanceList(pipe);
+        newDoc.addThruPipe(new Instance(activityWindow.toString(), null, "test", null));
+        return inferencer.getSampledDistribution(newDoc.get(0), 10, 1, 5);
+    }
 
     private double[] getActivityArray(InstanceList instances){
         int numSample = instances.size();
@@ -126,14 +172,7 @@ public class TopicModel {
         return act_array;
     }
 
-//    public static void main(String[] args) throws Exception {
-//        TopicModel m = new TopicModel();
-//
-//    }
-
-
     private double[][] getTopicToWordDistribution(){
-
         int[][] typeTopicCounts = this.model.getTypeTopicCounts();
         int topicMask = this.model.topicMask, topicBits = this.model.topicBits;
         int numTypes = typeTopicCounts.length;
@@ -189,67 +228,62 @@ public class TopicModel {
 
         return docTopics;
     }
-}
 
-class SvmLight2FeatureSequence extends Pipe{
-    private static final long serialVersionUID = 1L;
+    public static class SvmLight2FeatureSequence extends Pipe{
+        private static final long serialVersionUID = 1L;
 
-    public SvmLight2FeatureSequence () {
-        super (new Alphabet(), new LabelAlphabet());
-    }
-
-    @Override public Instance pipe(Instance carrier) {
-        // we expect the data for each instance to be
-        // a line from the SVMLight format text file
-        String dataStr = (String)carrier.getData();
-
-        // ignore comments at the end
-        if (dataStr.contains("#")) {
-            dataStr = dataStr.substring(0, dataStr.indexOf('#'));
+        public SvmLight2FeatureSequence () {
+            super (new Alphabet(), new LabelAlphabet());
         }
 
-        String[] terms = dataStr.split("\\s+");
+        @Override public Instance pipe(Instance carrier) {
+            // we expect the data for each instance to be
+            // a line from the SVMLight format text file
+            String dataStr = (String)carrier.getData();
 
-        String classStr = terms[0];
-        // In SVMLight +1 and 1 are the same label.
-        // Adding a special case to normalize...
-        if (classStr.equals("+1")) {
-            classStr = "1";
-        }
-        Label label = ((LabelAlphabet)getTargetAlphabet()).lookupLabel(classStr, true);
-        carrier.setTarget(label);
+            // ignore comments at the end
+            if (dataStr.contains("#")) {
+                dataStr = dataStr.substring(0, dataStr.indexOf('#'));
+            }
 
-        // the rest are feature-value pairs
-//        ArrayList<Integer> indices = new ArrayList<Integer>();
-//        ArrayList<Integer> values = new ArrayList<Integer>();
-        FeatureSequence featureSequence =
-                new FeatureSequence ((Alphabet) getDataAlphabet(), terms.length);
-        for (int termIndex = 1; termIndex < terms.length; termIndex++) {
-            if (!terms[termIndex].equals("")) {
-                String[] s = terms[termIndex].split(":");
-                if (s.length != 2) {
-                    throw new RuntimeException("invalid format: " + terms[termIndex] + " (should be feature:value)");
-                }
-                String feature = s[0];
-//                int index = getDataAlphabet().lookupIndex(feature, true);
+            String[] terms = dataStr.split("\\s+");
 
-                for (int times = Integer.parseInt(s[1]); times > 0; times--){
-                    featureSequence.add(feature);
+            String classStr = terms[0];
+            // In SVMLight +1 and 1 are the same label.
+            // Adding a special case to normalize...
+            if (classStr.equals("+1")) {
+                classStr = "1";
+            }
+            Label label = ((LabelAlphabet)getTargetAlphabet()).lookupLabel(classStr, true);
+            carrier.setTarget(label);
+
+            FeatureSequence featureSequence =
+                    new FeatureSequence (getDataAlphabet(), terms.length);
+            for (int termIndex = 1; termIndex < terms.length; termIndex++) {
+                if (!terms[termIndex].equals("")) {
+                    String[] s = terms[termIndex].split(":");
+                    if (s.length != 2) {
+                        throw new RuntimeException("invalid format: " + terms[termIndex] + " (should be feature:value)");
+                    }
+                    String feature = s[0];
+
+                    for (int times = Integer.parseInt(s[1]); times > 0; times--){
+                        featureSequence.add(feature);
+                    }
                 }
             }
-        }
-        carrier.setData(featureSequence);
+            carrier.setData(featureSequence);
 
-//        assert(indices.size() == values.size());
-//        int[] indicesArr = new int[indices.size()];
-//        double[] valuesArr = new double[values.size()];
-//        for (int i = 0; i < indicesArr.length; i++) {
-//            indicesArr[i] = indices.get(i);
-//            valuesArr[i] = values.get(i);
-//        }
-//
-//        FeatureVector fv = new FeatureVector(getDataAlphabet(), indicesArr, valuesArr);
-//        carrier.setData(fv);
-        return carrier;
+            return carrier;
+        }
+    }
+
+    public static void main(String[] args) throws Exception {
+        String model_path = TopicModel.class.getClassLoader().getResource("trainedtopicmodel.txt").toURI().toString().split(":")[1];
+        String act_array_path = TopicModel.class.getClassLoader().getResource("activityarray2topic.txt").toURI().toString().split(":")[1];
+//        TopicModel m = new TopicModel();
+//        m.writeToFile( model_path, act_array_path);
+        TopicModel m = new TopicModel(model_path, act_array_path);
     }
 }
+

@@ -28,43 +28,9 @@ public class RandomForest {
             attributes.put(Integer.toString(i+1), finalFeatures[i]);
         }
         int ret = Integer.parseInt(randomForest.predict(attributes).toString());
-        System.out.println("Prediction: " + ret);
+//        System.out.println("Prediction: " + ret);
         return ret;
     }
-
-//    public static void main(String[] args) throws IOException {
-//        final BufferedReader br = new BufferedReader(new InputStreamReader((new GZIPInputStream(RandomForest.class.getClassLoader().getResourceAsStream("iris.data.gz")))));
-//        final List<ClassifierInstance> irisDataset = Lists.newLinkedList();
-//
-//        String[] headings = new String[]{"sepal-length", "sepal-width", "petal-length", "petal-width"};
-//
-//        String line = br.readLine();
-//        while (line != null) {
-//            String[] splitLine = line.split(",");
-//
-//            AttributesMap attributes = AttributesMap.newHashMap();
-//            for (int x = 0; x < splitLine.length - 1; x++) {
-//                attributes.put(headings[x], Double.valueOf((String)splitLine[x]));
-//            }
-//            irisDataset.add(new ClassifierInstance(attributes, splitLine[splitLine.length - 1]));
-//            line = br.readLine();
-//        }
-//
-//        final RandomDecisionForest randomForest = new RandomDecisionForestBuilder<>(new DecisionTreeBuilder<>()
-//                // The default isn't desirable here because this dataset has so few attributes
-//                .attributeIgnoringStrategy(new IgnoreAttributesWithConstantProbability(0.2)))
-//                .buildPredictiveModel(irisDataset);
-//
-//        AttributesMap attributes = new AttributesMap();
-//        attributes.put("sepal-length", 5.84);
-//        attributes.put("sepal-width", 3.05);
-//        attributes.put("petal-length", 3.76);
-//        attributes.put("petal-width", 1.20);
-//        System.out.println("Prediction: " + randomForest.predict(attributes));
-//        for (ClassifierInstance instance : irisDataset) {
-//            System.out.println("classification: " + randomForest.getClassificationByMaxProb(instance.getAttributes()));
-//        }
-//    }
 
     public List<ClassifierInstance> getSvmInstances(String filename) {
         List<ClassifierInstance> instances = Lists.newArrayList();
@@ -94,5 +60,39 @@ public class RandomForest {
             throw new RuntimeException(e.getMessage());
         }
         return instances;
+    }
+
+    public static void main(String[] args) throws IOException {
+        final BufferedReader br = new BufferedReader(new InputStreamReader((new GZIPInputStream(RandomForest.class.getClassLoader().getResourceAsStream("iris.data.gz")))));
+        final List<ClassifierInstance> irisDataset = Lists.newLinkedList();
+
+        String[] headings = new String[]{"sepal-length", "sepal-width", "petal-length", "petal-width"};
+
+        String line = br.readLine();
+        while (line != null) {
+            String[] splitLine = line.split(",");
+
+            AttributesMap attributes = AttributesMap.newHashMap();
+            for (int x = 0; x < splitLine.length - 1; x++) {
+                attributes.put(headings[x], Double.valueOf(splitLine[x]));
+            }
+            irisDataset.add(new ClassifierInstance(attributes, splitLine[splitLine.length - 1]));
+            line = br.readLine();
+        }
+
+        final RandomDecisionForest randomForest = new RandomDecisionForestBuilder<>(new DecisionTreeBuilder<>()
+                // The default isn't desirable here because this dataset has so few attributes
+                .attributeIgnoringStrategy(new IgnoreAttributesWithConstantProbability(0.2)))
+                .buildPredictiveModel(irisDataset);
+
+        AttributesMap attributes = new AttributesMap();
+        attributes.put("sepal-length", 5.84);
+        attributes.put("sepal-width", 3.05);
+        attributes.put("petal-length", 3.76);
+        attributes.put("petal-width", 1.20);
+        System.out.println("Prediction: " + randomForest.predict(attributes));
+        for (ClassifierInstance instance : irisDataset) {
+            System.out.println("classification: " + randomForest.getClassificationByMaxProb(instance.getAttributes()));
+        }
     }
 }

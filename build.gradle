@@ -3,8 +3,13 @@ buildscript {
     mavenCentral()
   }
 
+  dependencies {
+    classpath group: 'com.github.jengelman.gradle.plugins', name: 'shadow', version: '1.2.4'
+  }
   apply from: file('gradle/buildscript.gradle'), to: buildscript
 }
+
+apply plugin: 'com.github.johnrengelman.shadow'
 
 allprojects {
   apply plugin: 'idea'
@@ -58,8 +63,9 @@ project(':flink-server') {
     task fatJar (type: Jar) {
         zip64 true
         manifest {
-            attributes 'Main-Class': 'edu.uci.eecs.wukong.framework.FlinkServer'
+            attributes 'Main-Class': 'edu.uci.eecs.wukong.framework.local.FlinkServer'
         }
+        exclude 'META-INF/*.RSA', 'META-INF/*.SF', 'META-INF/*.DSA'
         baseName = project.name + '-all'
         from {
             files(sourceSets.main.output.classesDir)
@@ -83,6 +89,9 @@ project(':flink-server') {
         compile "com.twitter.common:stats-util:0.0.60"
         compile "com.amazonaws:amazon-kinesis-producer:$kinesisProducerVersion"
         compile "com.google.guava:guava:$guavaVersion"
+        compile "org.apache.flink:flink-metrics-dropwizard:1.2.0"
+        compile "org.apache.flink:flink-metrics-graphite:1.1.0"
+
     }
 }
 
@@ -93,12 +102,12 @@ project(':server') {
         manifest {
             attributes 'Main-Class': 'edu.uci.eecs.wukong.framework.ProgressionServer'
         }
+        exclude 'META-INF/*.RSA', 'META-INF/*.SF', 'META-INF/*.DSA'
         baseName = project.name + '-all'
         from {
             configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
         }
         with jar
-        exclude 'META-INF/*.RSA', 'META-INF/*.SF', 'META-INF/*.DSA'
     }
 
     dependencies {

@@ -278,6 +278,19 @@ public class TopicModel {
         }
     }
 
+    public static TopicModel createByDefault(){
+        TopicModel tm = null;
+        try {
+            String model_path = TopicModel.class.getClassLoader().getResource("trainedtopicmodel.txt").toURI().toString().split(":")[1];
+            String act_array_path = TopicModel.class.getClassLoader().getResource("activityarray2topic.txt").toURI().toString().split(":")[1];
+            tm  = new TopicModel(model_path, act_array_path);
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return tm;
+    }
+
     public static void main(String[] args) throws Exception {
         String model_path = TopicModel.class.getClassLoader().getResource("trainedtopicmodel.txt").toURI().toString().split(":")[1];
         String act_array_path = TopicModel.class.getClassLoader().getResource("activityarray2topic.txt").toURI().toString().split(":")[1];

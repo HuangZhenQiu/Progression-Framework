@@ -6,6 +6,7 @@ import java.io.*;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 public class MutualInfoMatrix {
     private int sensor_count;
@@ -144,6 +145,16 @@ public class MutualInfoMatrix {
             row++;
         }
         return matrix;
+    }
+
+    public static MutualInfoMatrix createByDefaultFile() {
+        MutualInfoMatrix m = null;
+        try{
+            m = MutualInfoMatrix.readFromFile(MutualInfoMatrix.class.getClassLoader().getResource("mutualinfomatrix.txt").toURI().toString().split(":")[1]);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return m;
     }
 
     public static void main(String[] args) throws Exception {

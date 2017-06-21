@@ -37,7 +37,8 @@ public class RandomForest {
         InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(filename);
         try (BufferedReader br = new BufferedReader(new InputStreamReader(inputStream))) {
             for (String line; (line = br.readLine()) != null; ) {
-                List<String> rawInstance = Arrays.asList(line.split(" "));
+                List<String> rawInstance = Arrays.asList(line.split("\t"));
+//                System.out.println("LABEL "+rawInstance.get(0));
                 Double label = Double.valueOf(rawInstance.get(0));
                 AttributesMap map = AttributesMap.newHashMap();
 

@@ -4,7 +4,6 @@ import com.google.common.collect.Lists;
 import quickml.data.*;
 import quickml.data.instances.ClassifierInstance;
 
-import quickml.supervised.*;
 import quickml.supervised.ensembles.randomForest.randomDecisionForest.*;
 import quickml.supervised.tree.attributeIgnoringStrategies.*;
 import quickml.supervised.tree.decisionTree.*;

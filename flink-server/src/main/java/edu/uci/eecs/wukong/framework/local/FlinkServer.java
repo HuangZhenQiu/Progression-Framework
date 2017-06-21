@@ -1,6 +1,5 @@
 package edu.uci.eecs.wukong.framework.local;
 
-import com.amazonaws.services.sns.model.Topic;
 import edu.uci.eecs.wukong.framework.*;
 import edu.uci.eecs.wukong.framework.ActivityDataStream.ActivityWindow;
 import org.apache.flink.api.common.functions.*;
@@ -13,7 +12,6 @@ import org.apache.flink.streaming.api.environment.LocalStreamEnvironment;
 import org.apache.flink.util.Collector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sun.management.Sensor;
 
 import java.io.InputStream;
 import java.sql.Timestamp;
@@ -45,16 +43,13 @@ public class FlinkServer {
         // get input data by connecting to the socket
         DataStream<String> text = env.socketTextStream("localhost", 9000, "\n");
 
-         final TopicModel tm = TopicModel.createByDefault();
-         final RandomForest rf = new RandomForest();
-         final MutualInfoMatrix matrix = MutualInfoMatrix.createByDefaultFile();
         // parse the data, group it, window it, and aggregate the counts
         DataStream<SensorEvent> windowCounts = text
                 .flatMap(new FlatMapFunction<String, SensorEvent>() {
                     @Override
                     public void flatMap(String raw, Collector<SensorEvent> out) {
                         System.out.println(raw);
-                        out.collect(new SensorEvent(raw, matrix, tm, System.currentTimeMillis()));
+                        out.collect(new SensorEvent(raw, System.currentTimeMillis()));
                     }
                 })
                 .keyBy("key")
@@ -72,6 +67,9 @@ public class FlinkServer {
                     private com.codahale.metrics.Meter meter;
                     private Meter recordExecutionTime;
                     private Counter counter;
+                    private TopicModel tm;
+                    private RandomForest rf;
+                    MutualInfoMatrix matrix;
 
                     @Override
                     public void open(Configuration parameters) throws Exception {
@@ -79,6 +77,9 @@ public class FlinkServer {
                         recordExecutionTime = getRuntimeContext().getMetricGroup().meter("executionMeter",
                                 new DropwizardMeterWrapper(meter));
                         counter = getRuntimeContext().getMetricGroup().counter("windowCounter");
+                        tm = TopicModel.createByDefault();
+                        rf = new RandomForest();
+                        matrix = MutualInfoMatrix.createByDefaultFile();
                     }
 
                     @Override
@@ -86,7 +87,7 @@ public class FlinkServer {
 //                        ActivityWindow window = ActivityDataStream.createActivityWindow(value.getWindowRaw());
 //                        value.updateAcitityWindow(window); // It is the feature values for topic model
                         // double[] topic probabilities = topicModel.predict(value.getActivityClass());
-                        double [] final_features = value.extractFeatures();
+                        double [] final_features = value.extractFeatures(tm, matrix);
                         rf.predictByFinalFeatures(final_features);
                         System.out.println("Classification is triggered");
                         //TODO (Bolun) add topic probabilities into original feature list to call random forest
@@ -109,21 +110,18 @@ public class FlinkServer {
         public ActivityWindow activityWindow = null;
         private ActivityClass activityClass = ActivityClass.Other;
         private List<Features> slidingWindow;
-        private MutualInfoMatrix matrix;
-        private TopicModel tm;
+
         public SensorEvent() {
 
         }
 
-        public SensorEvent(String raw, MutualInfoMatrix matrix, TopicModel tm, long timeStamp) {
+        public SensorEvent(String raw, long timeStamp) {
             this.raw = raw;
             this.timeStamp = timeStamp;
             this.windowRaw = new ArrayList<>();
             this.windowRaw.add(raw);
             this.slidingWindow =  new ArrayList<Features>();
             this.slidingWindow.add(new Features(raw));
-            this.matrix = matrix;
-            this.tm = tm;
         }
 
         @Override
@@ -151,7 +149,7 @@ public class FlinkServer {
             return windowRaw;
         }
 
-        public double[] extractFeatures(){
+        public double[] extractFeatures(TopicModel tm, MutualInfoMatrix mutualInfoMatrix){
             int parent_act = this.slidingWindow.get(this.slidingWindow.size() - 1).current_act, current_act = parent_act;
             Timestamp daytime_start, daytime_end;
             daytime_start = this.slidingWindow.get(0).daystamp;
@@ -186,7 +184,7 @@ public class FlinkServer {
             int count = 8;
             int row = sensor_last_id;
 
-            double [][] matrix = this.matrix.getMatrix();
+            double [][] matrix = mutualInfoMatrix.getMatrix();
             double [] matrix_row = matrix[row];
             double [] mut_info = new double[SensorClass.values().length];
 
@@ -281,7 +279,36 @@ public class FlinkServer {
             this.slidingWindow = features;
         }
 
+        public long getTimeStamp() {
+            return timeStamp;
+        }
+
+        public void setTimeStamp(long timeStamp) {
+            this.timeStamp = timeStamp;
+        }
+
+        public void setRaw(String raw) {
+            this.raw = raw;
+        }
+
+        public void setWindowRaw(List<String> windowRaw) {
+            this.windowRaw = windowRaw;
+        }
+
+        public ActivityWindow getActivityWindow() {
+            return activityWindow;
+        }
+
+        public void setActivityWindow(ActivityWindow activityWindow) {
+            this.activityWindow = activityWindow;
+        }
+
+        public List<Features> getSlidingWindow() {
+            return slidingWindow;
+        }
+
+        public void setSlidingWindow(List<Features> slidingWindow) {
+            this.slidingWindow = slidingWindow;
+        }
     }
-
-
 }

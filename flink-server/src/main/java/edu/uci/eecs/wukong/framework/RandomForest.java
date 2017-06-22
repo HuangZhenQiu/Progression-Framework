@@ -7,6 +7,7 @@ import quickml.data.instances.ClassifierInstance;
 import quickml.supervised.ensembles.randomForest.randomDecisionForest.*;
 import quickml.supervised.tree.attributeIgnoringStrategies.*;
 import quickml.supervised.tree.decisionTree.*;
+import scala.Int;
 
 import java.io.*;
 import java.util.Arrays;
@@ -26,7 +27,7 @@ public class RandomForest {
         for (int i = 0; i < finalFeatures.length; ++i){
             attributes.put(Integer.toString(i+1), finalFeatures[i]);
         }
-        int ret = Integer.parseInt(randomForest.predict(attributes).toString());
+        int ret = Integer.parseInt(randomForest.getClassificationByMaxProb(attributes).toString());
 //        System.out.println("Prediction: " + ret);
         return ret;
     }
@@ -38,7 +39,7 @@ public class RandomForest {
             for (String line; (line = br.readLine()) != null; ) {
                 List<String> rawInstance = Arrays.asList(line.split("\t"));
 //                System.out.println("LABEL "+rawInstance.get(0));
-                Double label = Double.valueOf(rawInstance.get(0));
+                Integer label = Integer.valueOf(rawInstance.get(0));
                 AttributesMap map = AttributesMap.newHashMap();
 
                 for (String rawAttributeAndValue : rawInstance.subList(1, rawInstance.size())) {

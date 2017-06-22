@@ -88,8 +88,8 @@ public class FlinkServer {
 //                        value.updateAcitityWindow(window); // It is the feature values for topic model
                         // double[] topic probabilities = topicModel.predict(value.getActivityClass());
                         double [] final_features = value.extractFeatures(tm, matrix);
-                        rf.predictByFinalFeatures(final_features);
-                        System.out.println("Classification is triggered");
+                        int label = rf.predictByFinalFeatures(final_features);
+                        System.out.println("Classification is triggered : it's " + ActivityClass.values()[label].toString());
                         //TODO (Bolun) add topic probabilities into original feature list to call random forest
                         recordExecutionTime.markEvent(System.currentTimeMillis() - value.timeStamp);
                         return value;
@@ -212,6 +212,7 @@ public class FlinkServer {
             }
             count = SensorClass.values().length + 8;
             double[] lda_features = tm.inferHighLevelFeatures(extractLDAFeatures(wd, ts, te, parent_act, lda_sensor_list));
+//            System.out.println("LDA FEATURES LENGTH is " + Integer.toString(lda_features.length));
             for (int i = 0; i < lda_features.length; i++){
                 ret[i+count] = lda_features[i];
             }
@@ -221,13 +222,14 @@ public class FlinkServer {
         public int[] extractLDAFeatures(int weekday, double  time_start, double time_end, int parent_act, int[] lda_sensor_list){
             int [] ret = new int[7+24+ActivityClass.values().length+lda_sensor_list.length];
             int count = 0;
-            for (int i = 0; i < 7; i++, count++){
+            for (int i = 0; i < 7; i++){
                 if(weekday != i){
                     ret[i] = 0;
                 } else {
                     ret[i] = 1;
                 }
             }
+            count += 7;
             for (int i = 0; i < 24; i++){
                 if(i >= time_start && i <= time_end){
                     ret[i+count] = 1;
@@ -244,7 +246,7 @@ public class FlinkServer {
                 }
             }
             count += ActivityClass.values().length;
-            for (int i = 0; i< lda_sensor_list.length; i++, count++){
+            for (int i = 0; i< lda_sensor_list.length; i++){
                 ret[i+count] = lda_sensor_list[i];
             }
             return ret;

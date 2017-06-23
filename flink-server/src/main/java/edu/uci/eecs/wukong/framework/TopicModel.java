@@ -1,11 +1,9 @@
 package edu.uci.eecs.wukong.framework;
 
-import cc.mallet.util.*;
 import cc.mallet.types.*;
 import cc.mallet.pipe.*;
 import cc.mallet.pipe.iterator.*;
 import cc.mallet.topics.*;
-import com.amazonaws.services.sns.model.Topic;
 
 import java.util.*;
 import java.util.regex.*;
@@ -21,20 +19,20 @@ public class TopicModel {
     private double[] activityArray;
     private double[][] topicWordDist;
 
-    public TopicModel (String modelPathToRead, String activityArrayPath) throws IOException {
+    public TopicModel (InputStream modelStream, InputStream activityStream) throws IOException {
         numTopics = ActivityClass.values().length;
 
-        if (modelPathToRead != null){
+        if (modelStream != null){
             try{
-                model = ParallelTopicModel.read(new File(modelPathToRead));
+                model = WuKongParallelTopicModel.read(modelStream);
             }catch (Exception e){
                 e.printStackTrace();
             }
         }
         topicWordDist = getTopicToWordDistribution();
 
-        if (activityArrayPath != null){
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(activityArrayPath)));
+        if (activityStream != null){
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(activityStream));
             activityArray = new double[numTopics];
 
             String line;
@@ -288,9 +286,9 @@ public class TopicModel {
     public static TopicModel createByDefault(){
         TopicModel tm = null;
         try {
-            String model_path = TopicModel.class.getClassLoader().getResource("trainedtopicmodel.txt").toURI().toString().split(":")[1];
-            String act_array_path = TopicModel.class.getClassLoader().getResource("activityarray2topic.txt").toURI().toString().split(":")[1];
-            tm  = new TopicModel(model_path, act_array_path);
+            InputStream modelStream = TopicModel.class.getClassLoader().getResourceAsStream("trainedtopicmodel.txt");
+            InputStream activityStream = TopicModel.class.getClassLoader().getResourceAsStream("activityarray2topic.txt");
+            tm  = new TopicModel(modelStream, activityStream);
         }catch (Exception e) {
             e.printStackTrace();
         }

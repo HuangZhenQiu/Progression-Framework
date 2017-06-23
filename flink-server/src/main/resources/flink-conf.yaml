@@ -3,4 +3,5 @@ metrics.reporter.graphite.class: org.apache.flink.metrics.graphite.GraphiteRepor
 metrics.reporter.graphite.host: 128.195.205.194
 metrics.reporter.graphite.port: 2003
 metrics.reporter.graphite.protocol: TCP
+akka.version: 0.9
 

@@ -10,7 +10,7 @@ import java.util.regex.*;
 import java.io.*;
 
 public class TopicModel {
-    private ParallelTopicModel model;
+    private WuKongParallelTopicModel model;
     private TopicInferencer inferencer;
     private Pipe pipe;
     private double alpha = 0.1;
@@ -51,7 +51,7 @@ public class TopicModel {
 
     public TopicModel(){
         numTopics = ActivityClass.values().length;
-        model = new ParallelTopicModel(this.numTopics, this.alpha * this.numTopics, this.beta);
+        model = new WuKongParallelTopicModel(this.numTopics, this.alpha * this.numTopics, this.beta);
         trainTopicModel();
         topicWordDist = getTopicToWordDistribution();
     }
@@ -297,18 +297,18 @@ public class TopicModel {
     }
 
     public static void main(String[] args) throws Exception {
-//        String model_path = TopicModel.class.getClassLoader().getResource("trainedtopicmodel.txt").toURI().toString().split(":")[1];
-//        String act_array_path = TopicModel.class.getClassLoader().getResource("activityarray2topic.txt").toURI().toString().split(":")[1];
-//        long startTime = System.nanoTime();
-//        TopicModel m = new TopicModel();
-//        long endTime = System.nanoTime();
-//        m.writeToFile( model_path, act_array_path);
-//
-//        long duration = (endTime - startTime);
-//        System.out.println("Time duration" + Long.toString(duration) + "nano second");
-        TopicModel m = TopicModel.createByDefault();
-        int[] row_col = m.getTopicToWordMatrixDimension();
-        System.out.println("Row " + Integer.toString(row_col[0])+" Col " + Integer.toString(row_col[1]));
+        String model_path = TopicModel.class.getClassLoader().getResource("trainedtopicmodel.txt").toURI().toString().split(":")[1];
+        String act_array_path = TopicModel.class.getClassLoader().getResource("activityarray2topic.txt").toURI().toString().split(":")[1];
+        long startTime = System.nanoTime();
+        TopicModel m = new TopicModel();
+        long endTime = System.nanoTime();
+        m.writeToFile( model_path, act_array_path);
+
+        long duration = (endTime - startTime);
+        System.out.println("Time duration" + Long.toString(duration) + "nano second");
+//        TopicModel m = TopicModel.createByDefault();
+//        int[] row_col = m.getTopicToWordMatrixDimension();
+//        System.out.println("Row " + Integer.toString(row_col[0])+" Col " + Integer.toString(row_col[1]));
 
     }
 

@@ -21,7 +21,7 @@ public class WuKongParallelTopicModel extends ParallelTopicModel {
         super(topicAlphabet, alphaSum, beta);
     }
 
-    public static ParallelTopicModel read(InputStream inputStream) throws Exception {
+    public static WuKongParallelTopicModel read(InputStream inputStream) throws Exception {
 
         ObjectInputStream ois = new ObjectInputStream (inputStream);
         WuKongParallelTopicModel topicModel = (WuKongParallelTopicModel) ois.readObject();

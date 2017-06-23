@@ -91,6 +91,7 @@ public class FlinkServer {
                         int label = rf.predictByFinalFeatures(final_features);
                         System.out.println("Classification is triggered : it's " + ActivityClass.values()[label].toString());
                         //TODO (Bolun) add topic probabilities into original feature list to call random forest
+                        System.out.println("execu : " + Long.toString(System.currentTimeMillis() - value.timeStamp));
                         recordExecutionTime.markEvent(System.currentTimeMillis() - value.timeStamp);
                         return value;
                     }

@@ -41,7 +41,7 @@ public class FlinkServer {
         Configuration conf = createConfiguration();
         LocalStreamEnvironment env = new LocalStreamEnvironment(conf);
         // get input data by connecting to the socket
-        DataStream<String> text = env.socketTextStream("localhost", 9000, "\n");
+        DataStream<String> text = env.socketTextStream(args[0], Integer.parseInt(args[1]), "\n");
 
         // parse the data, group it, window it, and aggregate the counts
         DataStream<SensorEvent> windowCounts = text

@@ -123,7 +123,7 @@ public class GraphiteMetricsReporter implements MetricsReporter {
 	}
 
 	@Override
-	public void register(String source, ReadableMetricsRegistry registry) {
+	public void register(final String source, ReadableMetricsRegistry registry) {
 		if (!this.listeners.containsKey(registry)) {
 			ReadableMetricsRegistryListener metricsListener = new ReadableMetricsRegistryListener() {
 

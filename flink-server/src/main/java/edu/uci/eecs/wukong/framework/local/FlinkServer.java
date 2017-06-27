@@ -37,7 +37,6 @@ public class FlinkServer {
         return conf;
     }
     public static void main(String[] args) throws Exception {
-
         Configuration conf = createConfiguration();
         LocalStreamEnvironment env = new LocalStreamEnvironment(conf);
         // get input data by connecting to the socket
@@ -48,7 +47,7 @@ public class FlinkServer {
                 .flatMap(new FlatMapFunction<String, SensorEvent>() {
                     @Override
                     public void flatMap(String raw, Collector<SensorEvent> out) {
-                        System.out.println(raw);
+//                        System.out.println(raw);
                         out.collect(new SensorEvent(raw, System.currentTimeMillis()));
                     }
                 })
@@ -57,7 +56,7 @@ public class FlinkServer {
                 .reduce(new ReduceFunction<SensorEvent>(){
                     @Override
                     public SensorEvent reduce(SensorEvent a, SensorEvent b) {
-                        logger.debug(a.getRaw());
+//                        logger.debug(a.getRaw());
                         // Combine slidingWindow of multiple event together
                         a.merge(b);
                         return a;
@@ -78,7 +77,7 @@ public class FlinkServer {
                                 new DropwizardMeterWrapper(meter));
                         counter = getRuntimeContext().getMetricGroup().counter("windowCounter");
                         tm = TopicModel.createByDefault();
-                        rf = new RandomForest();
+                        rf = RandomForest.createByDefault();
                         matrix = MutualInfoMatrix.createByDefaultFile();
                     }
 
@@ -89,9 +88,9 @@ public class FlinkServer {
                         // double[] topic probabilities = topicModel.predict(value.getActivityClass());
                         double [] final_features = value.extractFeatures(tm, matrix);
                         int label = rf.predictByFinalFeatures(final_features);
-                        System.out.println("Classification is triggered : it's " + ActivityClass.values()[label].toString());
+//                        System.out.println("Classification is triggered : it's " + ActivityClass.values()[label].toString());
                         //TODO (Bolun) add topic probabilities into original feature list to call random forest
-                        System.out.println("execu : " + Long.toString(System.currentTimeMillis() - value.timeStamp));
+//                        System.out.println("execu : " + Long.toString(System.currentTimeMillis() - value.timeStamp));
                         recordExecutionTime.markEvent(System.currentTimeMillis() - value.timeStamp);
                         return value;
                     }

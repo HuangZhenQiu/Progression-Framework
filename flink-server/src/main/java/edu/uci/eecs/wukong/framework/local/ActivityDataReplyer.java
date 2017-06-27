@@ -47,12 +47,14 @@ public class ActivityDataReplyer {
             String line = null;
 
             try {
-                while (!StringUtils.isEmpty(line = reader.readLine())) {
+                int count = 1008;
+                while (!StringUtils.isEmpty(line = reader.readLine()) && count-- > 0) {
                     line += "\n";
                     outputStream.writeBytes(line);
                     outputStream.flush();
                     logger.info(String.format("Sending out event %s", line));
-                    Thread.sleep(1);
+                    Thread.sleep(2000);
+
                 }
             } catch (Exception e) {
                 logger.error("Failure to send data to client", e);

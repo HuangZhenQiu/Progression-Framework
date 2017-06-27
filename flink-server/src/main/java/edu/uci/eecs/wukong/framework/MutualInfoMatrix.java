@@ -125,8 +125,8 @@ public class MutualInfoMatrix {
         outputWriter.close();
     }
 
-    public static MutualInfoMatrix readFromFile(String filename) throws IOException {
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(filename)));
+    public static MutualInfoMatrix readFromFile(InputStream stream) throws IOException {
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(stream));
         MutualInfoMatrix matrix = new MutualInfoMatrix();
 
         String line;
@@ -150,7 +150,7 @@ public class MutualInfoMatrix {
     public static MutualInfoMatrix createByDefaultFile() {
         MutualInfoMatrix m = null;
         try{
-            m = MutualInfoMatrix.readFromFile(MutualInfoMatrix.class.getClassLoader().getResource("mutualinfomatrix.txt").toURI().toString().split(":")[1]);
+            m = MutualInfoMatrix.readFromFile(MutualInfoMatrix.class.getClassLoader().getResourceAsStream("mutualinfomatrix.txt"));
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -176,7 +176,7 @@ public class MutualInfoMatrix {
             System.out.println(path);
             matrix.writeToFile(path);
         } else {
-            matrix = MutualInfoMatrix.readFromFile(path);
+            matrix = MutualInfoMatrix.readFromFile(new FileInputStream(path));
             System.out.println(matrix.getActivityWindowNum());
         }
 

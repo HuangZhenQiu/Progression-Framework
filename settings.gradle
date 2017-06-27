@@ -2,3 +2,5 @@ rootProject.name="Progression-Framework"
 include 'server-api'
 include "server"
 include 'flink-server'
+include 'flink-job'
+

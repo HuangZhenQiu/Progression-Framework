@@ -47,7 +47,7 @@ public class AbtractActivityClassifier {
                                 new DropwizardMeterWrapper(meter));
                         counter = getRuntimeContext().getMetricGroup().counter("windowCounter");
                         tm = TopicModel.createByDefault();
-                        rf = new RandomForest();
+                        rf = RandomForest.createByDefault();
                         matrix = MutualInfoMatrix.createByDefaultFile();
                     }
 
@@ -55,9 +55,9 @@ public class AbtractActivityClassifier {
                     public SensorEvent map(SensorEvent value) throws Exception {
                         double[] final_features = value.extractFeatures(tm, matrix);
                         int label = rf.predictByFinalFeatures(final_features);
-                        System.out.println("Classification is triggered : it's " + ActivityClass.values()[label].toString());
                         //TODO (Bolun) add topic probabilities into original feature list to call random forest
                         recordExecutionTime.markEvent(System.currentTimeMillis() - value.timeStamp);
+                        System.out.println("Classification is triggered : it's " + ActivityClass.values()[label].toString());
                         return value;
                     }
                 });

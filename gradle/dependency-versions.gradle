@@ -32,4 +32,5 @@ ext {
   malletVersion = "2.0.8"
   kinesisProducerVersion = "0.9.0"
   commonsVersion = "3.0"
+  m3Version = "2.1.2"
 }

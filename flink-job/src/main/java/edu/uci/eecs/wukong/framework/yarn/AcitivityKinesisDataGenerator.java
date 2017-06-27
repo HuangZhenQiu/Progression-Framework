@@ -1,4 +1,4 @@
-package edu.uci.eecs.wukong.framework.ec2;
+package edu.uci.eecs.wukong.framework.yarn;
 
 import com.amazonaws.kinesis.producer.*;
 import com.google.common.collect.Iterables;
@@ -21,8 +21,8 @@ import java.util.concurrent.atomic.AtomicLong;
  * https://github.com/awslabs/amazon-kinesis-client
  *
  */
-public class AcitivityDataGenerator implements Runnable {
-    private static final Logger logger = LoggerFactory.getLogger(AcitivityDataGenerator.class);
+public class AcitivityKinesisDataGenerator implements Runnable {
+    private static final Logger logger = LoggerFactory.getLogger(AcitivityKinesisDataGenerator.class);
     private static final int DATA_SIZE = 128;
     private static final int SECONDS_TO_RUN = 5;
     private static final int RECORDS_PER_SECOND = 2000;
@@ -33,7 +33,7 @@ public class AcitivityDataGenerator implements Runnable {
     private AtomicLong sequenceNumber = new AtomicLong(0);
     final AtomicLong completed = new AtomicLong(0);
 
-    public AcitivityDataGenerator(){
+    public AcitivityKinesisDataGenerator(){
         producer = createProducer();
     }
 

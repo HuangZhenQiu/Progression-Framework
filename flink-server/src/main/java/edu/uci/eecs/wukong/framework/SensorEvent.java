@@ -12,6 +12,8 @@ public class SensorEvent {
     public ActivityDataStream.ActivityWindow activityWindow = null;
     private ActivityClass activityClass = ActivityClass.Other;
     private List<Features> slidingWindow;
+    public long elaspsedTime;
+    public long processingTime;
 
     public SensorEvent() {
 
@@ -43,6 +45,8 @@ public class SensorEvent {
                 return lhs.daystamp.compareTo(rhs.daystamp) > 0 ? -1 : (lhs.daystamp.compareTo(rhs.daystamp) < 0) ? 1 : 0;
             }
         });
+        this.timeStamp = (this.timeStamp < b.timeStamp ? this.timeStamp : b.timeStamp);
+
         this.windowRaw.addAll(b.windowRaw);
 //            this.activityClass = this.slidingWindow.get(this.slidingWindow.size() - 1).current_act;
     }

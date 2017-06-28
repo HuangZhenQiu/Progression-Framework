@@ -17,7 +17,7 @@ import java.sql.Timestamp;
 import java.util.*;
 
 public class FlinkServer extends AbtractActivityClassifier{
-    private static final Logger logger = LoggerFactory.getLogger(FlinkServer.class);
+//    private static final Logger logger = LoggerFactory.getLogger(FlinkServer.class);
 
     // The local env can't load flink correctly
     private static Configuration createConfiguration() throws Exception {
@@ -40,7 +40,7 @@ public class FlinkServer extends AbtractActivityClassifier{
         Configuration conf = createConfiguration();
         LocalStreamEnvironment env = new LocalStreamEnvironment(conf);
         // get input data by connecting to the socket
-        DataStream<String> text = env.socketTextStream("localhost", 9000, "\n");
+        DataStream<String> text = env.socketTextStream(args[0], Integer.parseInt(args[1]), "\n");
 
         // parse the data, group it, window it, and aggregate the counts
         DataStream<SensorEvent> classifications = transform(text);

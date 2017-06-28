@@ -78,6 +78,7 @@ project(':flink-job') {
         compile "com.amazonaws:amazon-kinesis-producer:$kinesisProducerVersion"
         compile "org.apache.flink:flink-connector-kafka-0.10_2.10:$flinkVersion"
         compile "org.apache.kafka:kafka-clients:0.8.2.1"
+        compile "com.alibaba:fastjson:1.2.33"
     }
 }
 

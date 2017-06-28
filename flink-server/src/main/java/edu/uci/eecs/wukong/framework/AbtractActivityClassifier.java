@@ -31,7 +31,7 @@ public class AbtractActivityClassifier {
                         out.collect(new SensorEvent(raw, System.nanoTime()));
                     }
                 })
-                .keyBy("key")
+                .keyBy("host")
                 .countWindow(14) // hhl04: 16; cairo: 14
                 .reduce(new ReduceFunction<SensorEvent>() {
                     @Override

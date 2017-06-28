@@ -5,7 +5,7 @@ import java.util.*;
 
 // Data type for words with count
 public class SensorEvent {
-    public final String key = "1";
+    public String host = "1";
     public long timeStamp;
     public String raw;
     public List<String> windowRaw;
@@ -20,6 +20,11 @@ public class SensorEvent {
     }
 
     public SensorEvent(String raw, long timeStamp) {
+        this("default", raw, timeStamp);
+    }
+
+    public SensorEvent(String host, String raw, long timeStamp) {
+        this.host = host;
         this.raw = raw;
         this.timeStamp = timeStamp;
         this.windowRaw = new ArrayList<>();
@@ -163,8 +168,8 @@ public class SensorEvent {
         this.activityWindow = activityWindow;
     }
 
-    public String getKey() {
-        return key;
+    public String getHost() {
+        return host;
     }
 
     public String getRaw() {

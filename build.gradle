@@ -75,8 +75,12 @@ project(':flink-job') {
     dependencies {
         compile project(':flink-server')
         compile "com.uber.m3:java-m3-client:$m3Version"
+        compile "org.apache.flink:flink-streaming-java_2.10:$flinkVersion"
+        compile "org.apache.flink:flink-streaming-scala_2.10:$flinkVersion"
+        compile "org.apache.flink:flink-clients_2.10:$flinkVersion"
         compile "com.amazonaws:amazon-kinesis-producer:$kinesisProducerVersion"
         compile "org.apache.flink:flink-connector-kafka-0.10_2.10:$flinkVersion"
+        compile "org.apache.flink:flink-runtime_2.10:$flinkVersion"
         compile "org.apache.kafka:kafka-clients:0.8.2.1"
         compile "com.alibaba:fastjson:1.2.33"
     }
@@ -99,9 +103,9 @@ project(':flink-server') {
 
     dependencies {
         compile project(':server-api')
-        compile "org.apache.flink:flink-streaming-java_2.11:$flinkVersion"
-        compile "org.apache.flink:flink-streaming-scala_2.11:$flinkVersion"
-        compile "org.apache.flink:flink-clients_2.11:$flinkVersion"
+        compile "org.apache.flink:flink-streaming-java_2.10:$flinkVersion"
+        compile "org.apache.flink:flink-streaming-scala_2.10:$flinkVersion"
+        compile "org.apache.flink:flink-clients_2.10:$flinkVersion"
         compile "cc.mallet:mallet:$malletVersion"
         compile "com.github.sanity:quickml:$quickMLVersion"
         compile "com.twitter.common:stats-util:0.0.60"

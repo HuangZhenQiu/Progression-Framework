@@ -4,6 +4,10 @@ import edu.uci.eecs.wukong.framework.util.DaemanThreadFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.sun.management.OperatingSystemMXBean;
+
+import javax.management.MBeanServerConnection;
+import java.io.IOException;
 import java.lang.management.*;
 import java.util.HashMap;
 import java.util.List;
@@ -16,8 +20,10 @@ public class JvmMetrics extends MetricsHelper implements Runnable {
 	private final static Logger LOGGER = LoggerFactory.getLogger(JvmMetrics.class);
 	private final static String JVM_METRICS = "JVM-METRICS";
 	private final static float M = 1024 * 1024;
-	
+
+	private MBeanServerConnection mbsc = ManagementFactory.getPlatformMBeanServer();
 	private MemoryMXBean memoryBean = ManagementFactory.getMemoryMXBean();
+	private OperatingSystemMXBean osMBean;
 	private List<GarbageCollectorMXBean> gcBeans = ManagementFactory.getGarbageCollectorMXBeans();
 	private ThreadMXBean threadBean = ManagementFactory.getThreadMXBean();
 	private ClassLoadingMXBean classLoadingMXBean = ManagementFactory.getClassLoadingMXBean();
@@ -37,13 +43,17 @@ public class JvmMetrics extends MetricsHelper implements Runnable {
 	private Gauge<Long> gThreadsWaiting = newGauge("threads-waiting", 0L);
 	private Gauge<Long> gThreadsTimedWaiting = newGauge("threads-timed-waiting", 0L);
 	private Gauge<Long> gThreadsTerminated = newGauge("threads-terminated", 0L);
+	private Gauge<Double> processCPULoad = newGauge("process-cpu-load", 0.0);
+	private Gauge<Double> systemCPULoad = newGauge("system-cpu-load", 0.0);
+
 	private Counter cGcCount = newCounter("gc-count");
 	private Counter cGcTimeMillis = newCounter("gc-time-millis");
 	
 
-	public JvmMetrics(MetricsRegistry registry) {
+	public JvmMetrics(MetricsRegistry registry) throws IOException {
 		super(registry);
-		// TODO Auto-generated constructor stub
+		osMBean = ManagementFactory.newPlatformMXBeanProxy(
+				mbsc, ManagementFactory.OPERATING_SYSTEM_MXBEAN_NAME, OperatingSystemMXBean.class);
 	}
 	
 	public void start() {
@@ -59,6 +69,12 @@ public class JvmMetrics extends MetricsHelper implements Runnable {
 		updateMemoeryUsage();
 		updateGcUsage();
 		updateThreadUsage();
+		updateCPULoad();
+	}
+
+	private void updateCPULoad() {
+		processCPULoad.set(osMBean.getProcessCpuLoad());
+		systemCPULoad.set(osMBean.getSystemCpuLoad());
 	}
 	
 	private void updateMemoeryUsage() {

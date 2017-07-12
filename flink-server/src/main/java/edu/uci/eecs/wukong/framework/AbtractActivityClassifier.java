@@ -28,10 +28,10 @@ public class AbtractActivityClassifier {
                     @Override
                     public void flatMap(String raw, Collector<SensorEvent> out) {
 //                        System.out.println(raw);
-                        out.collect(new SensorEvent(raw, System.nanoTime()));
+                        out.collect(new SensorEvent(raw, System.nanoTime(), System.nanoTime()));
                     }
                 })
-                .keyBy("key")
+                .keyBy("host")
                 .countWindow(16) // hhl04: 16; cairo: 14
                 .reduce(new ReduceFunction<SensorEvent>() {
                     @Override

@@ -5,7 +5,7 @@ import java.util.*;
 
 // Data type for words with count
 public class SensorEvent {
-    public final String key = "1";
+    public String host = "1";
     public long timeStamp;
     public String raw;
     public List<String> windowRaw;
@@ -13,15 +13,22 @@ public class SensorEvent {
     private ActivityClass activityClass = ActivityClass.Other;
     private List<Features> slidingWindow;
     public long elaspsedTime;
+    public long arrivalTime;
     public long processingTime;
 
     public SensorEvent() {
 
     }
 
-    public SensorEvent(String raw, long timeStamp) {
+    public SensorEvent(String raw, long timeStamp, long arrivalTime) {
+        this("default", raw, timeStamp, arrivalTime);
+    }
+
+    public SensorEvent(String host, String raw, long timeStamp, long arrivalTime) {
+        this.host = host;
         this.raw = raw;
         this.timeStamp = timeStamp;
+        this.arrivalTime = arrivalTime;
         this.windowRaw = new ArrayList<>();
         this.windowRaw.add(raw);
         this.slidingWindow =  new ArrayList<Features>();
@@ -46,7 +53,7 @@ public class SensorEvent {
             }
         });
         this.timeStamp = (this.timeStamp < b.timeStamp ? this.timeStamp : b.timeStamp);
-
+        this.arrivalTime = (this.arrivalTime < b.arrivalTime ? this.arrivalTime : b.arrivalTime);
         this.windowRaw.addAll(b.windowRaw);
 //            this.activityClass = this.slidingWindow.get(this.slidingWindow.size() - 1).current_act;
     }
@@ -163,8 +170,8 @@ public class SensorEvent {
         this.activityWindow = activityWindow;
     }
 
-    public String getKey() {
-        return key;
+    public String getHost() {
+        return host;
     }
 
     public String getRaw() {
@@ -193,6 +200,18 @@ public class SensorEvent {
 
     public void setTimeStamp(long timeStamp) {
         this.timeStamp = timeStamp;
+    }
+
+    public long getArrivalTime() {
+        return arrivalTime;
+    }
+
+    public void setArrivalTime(long arrivalTime) {
+        this.arrivalTime = arrivalTime;
+    }
+
+    public void setHost(String host) {
+        this.host = host;
     }
 
     public void setRaw(String raw) {

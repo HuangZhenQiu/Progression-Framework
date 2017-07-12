@@ -32,7 +32,7 @@ public class AbtractActivityClassifier {
                     }
                 })
                 .keyBy("key")
-                .countWindow(14) // hhl04: 16; cairo: 14
+                .countWindow(16) // hhl04: 16; cairo: 14
                 .reduce(new ReduceFunction<SensorEvent>() {
                     @Override
                     public SensorEvent reduce(SensorEvent a, SensorEvent b) {

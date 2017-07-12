@@ -139,7 +139,7 @@ public class RandomForest implements Serializable{
             irisDataset.add(new ClassifierInstance(attributes, splitLine[splitLine.length - 1]));
             line = br.readLine();
         }
-        File yourFile = new File("/home/l/myobject.data");
+        File yourFile = new File("/home//myobject.data");
 
         RandomForest rf = new RandomForest(irisDataset, 0.2);
 

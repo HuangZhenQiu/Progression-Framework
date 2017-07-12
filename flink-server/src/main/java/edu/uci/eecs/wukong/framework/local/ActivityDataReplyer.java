@@ -23,20 +23,25 @@ public class ActivityDataReplyer {
         executorService = Executors.newFixedThreadPool(5);
     }
 
-    public void run() throws Exception {
+    public void run(int sleepms, int datasize) throws Exception {
         while (true) {
             Socket connectionSocket = serverSocket.accept();
             logger.info(String.format("Received request from %s", connectionSocket.getInetAddress()));
-            executorService.execute(new DataWriter(connectionSocket));
+            executorService.execute(new DataWriter(connectionSocket, sleepms, datasize));
         }
     }
 
     private class DataWriter implements Runnable {
         private Socket socket;
         private DataOutputStream outputStream;
-        public DataWriter(Socket socket) throws Exception {
+        private int sleepms;
+        private int datasize;
+
+        public DataWriter(Socket socket, int sleepms, int datasize) throws Exception {
             this.socket = socket;
-            outputStream = new DataOutputStream(socket.getOutputStream());
+            this.outputStream = new DataOutputStream(socket.getOutputStream());
+            this.sleepms = sleepms;
+            this.datasize = datasize;
         }
 
         @Override
@@ -47,14 +52,16 @@ public class ActivityDataReplyer {
             String line = null;
 
             try {
-                int count = 1008;
+                int count = datasize;
                 while (!StringUtils.isEmpty(line = reader.readLine()) && count-- > 0) {
                     line += "\n";
                     outputStream.writeBytes(line);
                     outputStream.flush();
-                    logger.info(String.format("Sending out event %s", line));
-                    Thread.sleep(2000);
-
+                    if(count % 1000 == 0) {
+                        logger.info(String.format("countdown %d total %d ", count, datasize));
+                    }
+//                    logger.info(String.format("Sending out event %s", line));
+                    Thread.sleep(sleepms);
                 }
             } catch (Exception e) {
                 logger.error("Failure to send data to client", e);
@@ -76,7 +83,9 @@ public class ActivityDataReplyer {
     }
 
     public static void main(String[] args) throws Exception {
+//        ActivityDataReplyer dataReplyer = new ActivityDataReplyer(Integer.parseInt(args[0]));
         ActivityDataReplyer dataReplyer = new ActivityDataReplyer(9000);
-        dataReplyer.run();
+//        dataReplyer.run(Integer.parseInt(args[1]), Integer.parseInt(args[2]));
+        dataReplyer.run(10, 16*1008);
     }
 }

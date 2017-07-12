@@ -1,19 +1,16 @@
 package edu.uci.eecs.wukong.framework.local;
 
 import edu.uci.eecs.wukong.framework.*;
-import org.apache.flink.api.common.functions.*;
+import org.apache.commons.lang.StringUtils;
 import org.apache.flink.configuration.Configuration;
-import org.apache.flink.dropwizard.metrics.DropwizardMeterWrapper;
-import org.apache.flink.metrics.Counter;
-import org.apache.flink.metrics.Meter;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.LocalStreamEnvironment;
-import org.apache.flink.util.Collector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.InputStream;
+import java.io.*;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class FlinkServer extends AbtractActivityClassifier{
@@ -35,18 +32,72 @@ public class FlinkServer extends AbtractActivityClassifier{
 
         return conf;
     }
+
+    public static void SequentialTest() throws Exception{
+        InputStream inputStream = FlinkServer.class.getClassLoader().getResourceAsStream("data.txt");
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+        String line = null;
+        Queue<SensorEvent> myqueue = new LinkedList<SensorEvent>();
+        TopicModel tm = TopicModel.createByDefault();
+        RandomForest rf = RandomForest.createByDefault();
+        MutualInfoMatrix matrix = MutualInfoMatrix.createByDefaultFile();
+
+        Date date = new Date() ;
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss") ;
+        PrintWriter pw = new PrintWriter(new File("/tmp/flink-log-"+dateFormat.format(date)+".csv"));
+
+        int FULLSIZE = 14;
+        int count = 1008;
+        while(!StringUtils.isEmpty(line = reader.readLine())  && count-- > 0){
+            myqueue.add(new SensorEvent(line, System.nanoTime()));
+            if (myqueue.size() == FULLSIZE){
+                ArrayList<SensorEvent> list = new ArrayList<SensorEvent>(myqueue);
+                SensorEvent value = list.get(0);
+                for (int i = 1; i < FULLSIZE; i++){
+                    value.merge(list.get(i));
+                }
+
+                long startTime = System.nanoTime();
+                double[] final_features = value.extractFeatures(tm, matrix);
+                int label = rf.predictByFinalFeatures(final_features);
+                long endTime = System.nanoTime();
+
+                value.elaspsedTime = endTime - value.timeStamp;
+                value.processingTime = endTime - startTime;
+
+                StringBuilder sb = new StringBuilder();
+                sb.append(value.timeStamp);
+                sb.append(',');
+                sb.append(value.elaspsedTime);
+                sb.append(',');
+                sb.append(value.processingTime);
+                sb.append('\n');
+
+                pw.write(sb.toString());
+
+                myqueue.remove();
+            }
+        }
+        pw.flush();
+        pw.close();
+    }
+
     public static void main(String[] args) throws Exception {
 
         Configuration conf = createConfiguration();
         LocalStreamEnvironment env = new LocalStreamEnvironment(conf);
         // get input data by connecting to the socket
-        DataStream<String> text = env.socketTextStream(args[0], Integer.parseInt(args[1]), "\n");
+//        DataStream<String> text = env.socketTextStream(args[0], Integer.parseInt(args[1]), "\n");
+        DataStream<String> text = env.socketTextStream("localhost", 9000, "\n");
 
         // parse the data, group it, window it, and aggregate the counts
         DataStream<SensorEvent> classifications = transform(text);
 
         // print the results with a single thread, rather than in parallel
-        classifications.print().setParallelism(1);
+//        classifications.print().setParallelism(1);
         env.execute("Socket Window WordCount");
+
+//        SequentialTest();
+
     }
 }

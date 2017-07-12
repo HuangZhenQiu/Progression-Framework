@@ -1,8 +1,12 @@
 package edu.uci.eecs.wukong.framework.local;
 
 import edu.uci.eecs.wukong.framework.*;
+import edu.uci.eecs.wukong.framework.metrics.JvmMetrics;
+import edu.uci.eecs.wukong.framework.metrics.MetricsRegistryHolder;
+import edu.uci.eecs.wukong.framework.metrics.reporter.GraphiteMetricsReporter;
 import org.apache.commons.lang.StringUtils;
 import org.apache.flink.configuration.Configuration;
+import org.apache.flink.metrics.graphite.GraphiteReporter;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.LocalStreamEnvironment;
 import org.slf4j.Logger;
@@ -49,7 +53,7 @@ public class FlinkServer extends AbtractActivityClassifier{
         int FULLSIZE = 14;
         int count = 1008;
         while(!StringUtils.isEmpty(line = reader.readLine())  && count-- > 0){
-            myqueue.add(new SensorEvent(line, System.nanoTime()));
+            myqueue.add(new SensorEvent(line, System.nanoTime(), System.nanoTime()));
             if (myqueue.size() == FULLSIZE){
                 ArrayList<SensorEvent> list = new ArrayList<SensorEvent>(myqueue);
                 SensorEvent value = list.get(0);
@@ -83,7 +87,11 @@ public class FlinkServer extends AbtractActivityClassifier{
     }
 
     public static void main(String[] args) throws Exception {
-
+        GraphiteMetricsReporter reporter = new GraphiteMetricsReporter("Reporter");
+        MetricsRegistryHolder holder = new MetricsRegistryHolder();
+        JvmMetrics jvmMetrics = new JvmMetrics(holder);
+        reporter.register("Flink-Server", holder);
+        reporter.start();
         Configuration conf = createConfiguration();
         LocalStreamEnvironment env = new LocalStreamEnvironment(conf);
         // get input data by connecting to the socket
@@ -96,7 +104,6 @@ public class FlinkServer extends AbtractActivityClassifier{
         // print the results with a single thread, rather than in parallel
 //        classifications.print().setParallelism(1);
         env.execute("Socket Window WordCount");
-
 //        SequentialTest();
 
     }

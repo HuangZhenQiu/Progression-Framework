@@ -50,10 +50,15 @@ public class JvmMetrics extends MetricsHelper implements Runnable {
 	private Counter cGcTimeMillis = newCounter("gc-time-millis");
 	
 
-	public JvmMetrics(MetricsRegistry registry) throws IOException {
+	public JvmMetrics(MetricsRegistry registry)  {
 		super(registry);
-		osMBean = ManagementFactory.newPlatformMXBeanProxy(
-				mbsc, ManagementFactory.OPERATING_SYSTEM_MXBEAN_NAME, OperatingSystemMXBean.class);
+
+		try {
+			osMBean = ManagementFactory.newPlatformMXBeanProxy(
+					mbsc, ManagementFactory.OPERATING_SYSTEM_MXBEAN_NAME, OperatingSystemMXBean.class);
+		} catch (IOException e) {
+			System.exit(-1);
+		}
 	}
 	
 	public void start() {
